@@ -1,11 +1,11 @@
-//const Mongoose = require('mongoose');
-const Schema = require('mongoose').Schema;
+// const Mongoose = require('mongoose');
+const {Schema} = require("mongoose");
 
 const schema = {
   session_id: {
     type: String,
     index: true,
-    unique: true,
+    unique: true
   },
   context: {
     type: String,
@@ -13,7 +13,7 @@ const schema = {
   },
   username: {
     type: String,
-    ref:"user"
+    ref: "user"
   },
   Attributes: {
     type: Object,
@@ -30,8 +30,7 @@ const schema = {
 };
 
 module.exports = class session extends nodefony.Entity {
-
-  constructor(bundle) {
+  constructor (bundle) {
     /*
      *   @param bundle instance
      *   @param Entity name
@@ -41,22 +40,21 @@ module.exports = class session extends nodefony.Entity {
     super(bundle, "session", "mongoose", "nodefony");
   }
 
-  registerModel(db) {
-    let mySchema = new Schema(schema, {
-      collection: 'sessions',
+  registerModel (db) {
+    const mySchema = new Schema(schema, {
+      collection: "sessions",
       timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt'
+        createdAt: "createdAt",
+        updatedAt: "updatedAt"
       }
     });
     mySchema.statics.fetchAll = function (callback) {
-      return this.findAll().then(function (result) {
-        return callback(null, result);
-      }).catch(function (error) {
-        if (error) {
-          return callback(error, null);
-        }
-      });
+      return this.findAll().then((result) => callback(null, result))
+        .catch((error) => {
+          if (error) {
+            return callback(error, null);
+          }
+        });
     };
     return db.model(this.name, mySchema);
   }

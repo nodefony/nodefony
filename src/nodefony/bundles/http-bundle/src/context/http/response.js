@@ -1,32 +1,30 @@
 const http = require("http");
-const mime = require('mime');
+const mime = require("mime");
 
-const ansiRegex= function ({onlyFirst = false} = {}){
+const ansiRegex = function ({onlyFirst = false} = {}) {
   const pattern = [
-		'[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
-		'(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))'
-	].join('|');
-	return new RegExp(pattern, onlyFirst ? undefined : 'g');
+    "[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)",
+    "(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))"
+  ].join("|");
+  return new RegExp(pattern, onlyFirst ? undefined : "g");
 };
 
-const stripAinsi = function(val){
-  return  ( typeof val === 'string') ? val.replace(ansiRegex(), '') : val;
+const stripAinsi = function (val) {
+  return typeof val === "string" ? val.replace(ansiRegex(), "") : val;
 };
 
-module.exports = nodefony.register("Response", function () {
-
+module.exports = nodefony.register("Response", () => {
   const Response = class httpResponse {
-
-    constructor(response, container) {
-      //if (response instanceof http.ServerResponse || response instanceof http2.Http2ServerResponse) {
+    constructor (response, container) {
+      // if (response instanceof http.ServerResponse || response instanceof http2.Http2ServerResponse) {
       this.response = response;
-      //}
-      this.context = container.get('context');
+      // }
+      this.context = container.get("context");
       this.container = container;
-      //BODY
+      // BODY
       this.body = "";
-      this.encoding = this.setEncoding('utf8');
-      //cookies
+      this.encoding = this.setEncoding("utf8");
+      // cookies
       this.cookies = {};
       // struct headers
       this.headers = {};
@@ -35,13 +33,13 @@ module.exports = nodefony.register("Response", function () {
       this.ended = false;
       this.streamFile = null;
       // default http code
-      //this.setStatusCode(200, null);
-      //timeout default
+      // this.setStatusCode(200, null);
+      // timeout default
       this.timeout = this.context.kernelHttp.responseTimeout[this.context.type];
       this.contentType = null;
     }
 
-    clean() {
+    clean () {
       this.response = null;
       delete this.response;
       this.cookies = null;
@@ -50,50 +48,49 @@ module.exports = nodefony.register("Response", function () {
       delete this.headers;
       this.body = null;
       delete this.body;
-      //this.streamFile = null;
-      //delete this.streamFile;
+      // this.streamFile = null;
+      // delete this.streamFile;
     }
 
-    isHtml() {
-      return (mime.getExtension(this.getHeader("Content-Type")) === "html");
+    isHtml () {
+      return mime.getExtension(this.getHeader("Content-Type")) === "html";
     }
 
-    setTimeout(ms) {
+    setTimeout (ms) {
       this.timeout = ms;
     }
 
-    addCookie(cookie) {
+    addCookie (cookie) {
       if (cookie instanceof nodefony.cookies.cookie) {
         return this.cookies[cookie.name] = cookie;
-      } else {
-        throw new Error("Response addCookies not valid cookies");
       }
+      throw new Error("Response addCookies not valid cookies");
     }
 
-    setCookies() {
-      for (let cook in this.cookies) {
+    setCookies () {
+      for (const cook in this.cookies) {
         this.setCookie(this.cookies[cook]);
       }
     }
 
-    setCookie(cookie) {
-      let serialize = cookie.serialize();
-      this.log("ADD COOKIE ==> " + serialize, "DEBUG");
-      return this.setHeader('Set-Cookie', serialize);
+    setCookie (cookie) {
+      const serialize = cookie.serialize();
+      this.log(`ADD COOKIE ==> ${serialize}`, "DEBUG");
+      return this.setHeader("Set-Cookie", serialize);
     }
 
-    log(pci, severity, msgid, msg) {
+    log (pci, severity, msgid, msg) {
       if (!msgid) {
-        msgid = this.context.type + " RESPONSE ";
+        msgid = `${this.context.type} RESPONSE `;
       }
       return this.context.log(pci, severity, msgid, msg);
     }
 
-    //ADD INPLICIT HEADER
-    setHeader(name, value) {
+    // ADD INPLICIT HEADER
+    setHeader (name, value) {
       if (this.response) {
         if (this.flushing) {
-          let obj = {};
+          const obj = {};
           obj[name] = value;
           return this.addTrailers(obj);
         }
@@ -103,46 +100,46 @@ module.exports = nodefony.register("Response", function () {
       }
     }
 
-    setHeaders(obj) {
+    setHeaders (obj) {
       if (!this.response.headersSent) {
         if (obj instanceof Object) {
-          for (let head in obj) {
+          for (const head in obj) {
             this.setHeader(head, obj[head]);
           }
         }
         return this.headers = this.response.getHeaders();
       }
-      this.log("headers already sended ","WARNING")
+      this.log("headers already sended ", "WARNING");
       return this.headers = this.response.getHeaders();
     }
 
-    getHeader(name) {
+    getHeader (name) {
       return this.response.getHeader(name);
     }
 
-    getHeaders() {
+    getHeaders () {
       return this.response.getHeaders();
     }
 
-    setContentType(type, encoding) {
+    setContentType (type, encoding) {
       let myType = this.getMimeType(type);
       if (!myType) {
-        this.log("Content-Type not valid !!! : " + type, "WARNING");
+        this.log(`Content-Type not valid !!! : ${type}`, "WARNING");
         myType = "application/octet-stream";
       }
       this.contentType = myType;
-      return this.setHeader("Content-Type", myType + " ; charset=" + (encoding || this.encoding));
+      return this.setHeader("Content-Type", `${myType} ; charset=${encoding || this.encoding}`);
     }
 
-    getMimeType(name) {
+    getMimeType (name) {
       return mime.getType(name);
     }
 
-    setEncoding(encoding) {
+    setEncoding (encoding) {
       return this.encoding = encoding;
     }
 
-    setStatusCode(status, message) {
+    setStatusCode (status, message) {
       if (status && typeof status !== "number") {
         status = parseInt(status, 10);
         if (isNaN(status)) {
@@ -152,13 +149,11 @@ module.exports = nodefony.register("Response", function () {
       this.statusCode = status || this.statusCode;
       if (message) {
         this.statusMessage = stripAinsi(message);
-      } else {
-        if (!this.statusMessage) {
-          if (http.STATUS_CODES[this.statusCode]) {
-            this.statusMessage = http.STATUS_CODES[this.statusCode];
-          } else {
-            this.statusMessage = http.STATUS_CODES[500];
-          }
+      } else if (!this.statusMessage) {
+        if (http.STATUS_CODES[this.statusCode]) {
+          this.statusMessage = http.STATUS_CODES[this.statusCode];
+        } else {
+          this.statusMessage = http.STATUS_CODES[500];
         }
       }
       return {
@@ -167,50 +162,49 @@ module.exports = nodefony.register("Response", function () {
       };
     }
 
-    getStatus() {
+    getStatus () {
       return {
         code: this.getStatusCode(),
         message: this.getStatusMessage()
       };
     }
 
-    getStatusCode() {
+    getStatusCode () {
       return this.statusCode;
     }
 
-    getStatusMessage(code) {
+    getStatusMessage (code) {
       if (code) {
         return http.STATUS_CODES[code] || this.statusMessage || this.response.statusMessage;
       }
       if (this.response) {
         return this.statusMessage || this.response.statusMessage || http.STATUS_CODES[this.statusCode];
-      } else {
-        return this.statusMessage || http.STATUS_CODES[this.statusCode];
       }
+      return this.statusMessage || http.STATUS_CODES[this.statusCode];
     }
 
-    setBody(ele, encoding = null) {
-      //console.trace("setBody : ", ele.length)
+    setBody (ele, encoding = null) {
+      // console.trace("setBody : ", ele.length)
       return this.body = Buffer.from(ele, encoding || this.encoding);
     }
 
-    getLength(ele) {
+    getLength (ele) {
       return Buffer.byteLength(ele || this.body);
     }
 
-    writeHead(statusCode, headers) {
+    writeHead (statusCode, headers) {
       if (statusCode) {
         this.setStatusCode(statusCode);
       }
       if (!this.response.headersSent) {
-        //this.response.statusMessage = this.statusMessage;
+        // this.response.statusMessage = this.statusMessage;
         try {
           if (this.context.method === "HEAD" || this.context.contentLength) {
-            this.setHeader('Content-Length', this.getLength());
+            this.setHeader("Content-Length", this.getLength());
           }
-          if( this.statusCode ){
-            if(parseInt(this.statusCode, 10 ) > 599 ){
-              this.statusCode = 500
+          if (this.statusCode) {
+            if (parseInt(this.statusCode, 10) > 599) {
+              this.statusCode = 500;
             }
           }
           return this.response.writeHead(
@@ -226,7 +220,7 @@ module.exports = nodefony.register("Response", function () {
       }
     }
 
-    flushHeaders() {
+    flushHeaders () {
       try {
         return this.response.flushHeaders();
       } catch (e) {
@@ -234,7 +228,7 @@ module.exports = nodefony.register("Response", function () {
       }
     }
 
-    addTrailers(headers) {
+    addTrailers (headers) {
       try {
         return this.response.addTrailers(headers);
       } catch (e) {
@@ -242,13 +236,13 @@ module.exports = nodefony.register("Response", function () {
       }
     }
 
-    flush(data, encoding) {
+    flush (data, encoding) {
       this.flushing = true;
-      this.setHeader("Transfer-Encoding", 'chunked');
+      this.setHeader("Transfer-Encoding", "chunked");
       return this.send(data, encoding, true);
     }
 
-    send(data, encoding, flush = false) {
+    send (data, encoding, flush = false) {
       try {
         if (this.context.isRedirect) {
           if (!this.stream.headersSent) {
@@ -263,29 +257,29 @@ module.exports = nodefony.register("Response", function () {
         if (!flush) {
           this.context.displayDebugBar();
         }
-        return this.response.write(this.body, (encoding || this.encoding));
+        return this.response.write(this.body, encoding || this.encoding);
       } catch (e) {
         throw e;
       }
     }
 
-    write(data, encoding) {
+    write (data, encoding) {
       return this.send(data, encoding);
     }
 
-    writeContinue() {
+    writeContinue () {
       return this.response.writeContinue();
     }
 
-    end(data, encoding) {
+    end (data, encoding) {
       if (this.response) {
         this.ended = true;
-        return Promise.resolve(this.response.end(data, (encoding || this.encoding)));
+        return Promise.resolve(this.response.end(data, encoding || this.encoding));
       }
       return Promise.resolve(null);
     }
 
-    redirect(url, status, headers) {
+    redirect (url, status, headers) {
       this.context.isRedirect = true;
       status = parseInt(status, 10);
       if (status === 302) {

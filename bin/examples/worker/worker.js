@@ -1,5 +1,5 @@
 #!/usr/bin/env node --experimental-worker
- // nodefony
+// nodefony
 let nodefony = null;
 try {
   nodefony = require("nodefony");
@@ -14,7 +14,7 @@ const {
   isMainThread,
   parentPort,
   workerData
-} = require('worker_threads');
+} = require("worker_threads");
 
 const path = require("path");
 const service = path.resolve(__dirname, "service.js");
@@ -23,30 +23,30 @@ const service = path.resolve(__dirname, "service.js");
 new nodefony.cli("MAIN", {
   pid: true,
   onStart: (cli) => {
-    //console.log(cli)
+    // console.log(cli)
     try {
       const subChannel = new MessageChannel();
-      subChannel.port2.on('message', (value) => {
-        console.log('received:', value);
+      subChannel.port2.on("message", (value) => {
+        console.log("received:", value);
       });
       const worker = new Worker(service, {
         workerData: {}
       });
-      worker.on('online', () => {
-        cli.logger(`Worker online !`, "INFO", );
+      worker.on("online", () => {
+        cli.logger("Worker online !", "INFO");
       });
       cli.logger(worker.threadId);
       worker.postMessage(subChannel.port1, [subChannel.port1]);
 
-      worker.on('message', (message) => {
-        cli.logger(message, "INFO", `MAIN EVENT MESSAGE`);
+      worker.on("message", (message) => {
+        cli.logger(message, "INFO", "MAIN EVENT MESSAGE");
       });
 
-      worker.on('error', (e) => {
+      worker.on("error", (e) => {
         cli.logger(e, "ERROR");
       });
 
-      worker.on('exit', (code) => {
+      worker.on("exit", (code) => {
         if (code !== 0) {
           throw new Error(`Worker stopped with exit code ${code}`);
         }
@@ -59,17 +59,13 @@ new nodefony.cli("MAIN", {
 });
 
 
-
-
-
-
-/*else {
+/* else {
   const script = workerData;
   console.log(script)
   parentPort.postMessage(script);
 }*/
 
-/*if (isMainThread) {
+/* if (isMainThread) {
   const worker = new Worker(service);
   const subChannel = new MessageChannel();
   worker.postMessage({

@@ -5,23 +5,22 @@ const {
   Transaction,
   Op
 } = require("sequelize");
-//const Op = Sequelize.Op;
+// const Op = Sequelize.Op;
 
-nodefony.register.call(nodefony.session.storage, "sequelize", function() {
-
+nodefony.register.call(nodefony.session.storage, "sequelize", () => {
   const dbSessionStorage = class dbSessionStorage {
-    constructor(manager) {
+    constructor (manager) {
       this.manager = manager;
       this.orm = this.manager.get("sequelize");
       this.orm.once("onOrmReady", () => {
         this.entity = this.orm.getEntity("session");
         if (!this.entity) {
-          throw new Error(`Entity session not ready`)
+          throw new Error("Entity session not ready");
         }
-        this.dialect = this.entity.sequelize.options.dialect
-        this.applyTransaction = this.manager.settings.applyTransaction
+        this.dialect = this.entity.sequelize.options.dialect;
+        this.applyTransaction = this.manager.settings.applyTransaction;
         if (this.applyTransaction === true) {
-          this.applyTransaction = this.dialect === "sqlite" ? false : true;
+          this.applyTransaction = this.dialect !== "sqlite";
         }
         this.userEntity = this.orm.getEntity("user");
       });
@@ -29,39 +28,39 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
       this.contextSessions = [];
     }
 
-    async finderGC(msMaxlifetime, contextSession){
+    async finderGC (msMaxlifetime, contextSession) {
       if (!this.entity) {
         return Promise.resolve(true);
       }
-      let transaction = null
+      let transaction = null;
       if (this.applyTransaction) {
         transaction = await this.entity.sequelize.transaction();
       }
-      let mydate = new Date(new Date() - msMaxlifetime);
-      let query = {
+      const mydate = new Date(new Date() - msMaxlifetime);
+      const query = {
         transaction
       };
-      query.attributes = ['context', 'updatedAt', 'session_id'];
+      query.attributes = ["context", "updatedAt", "session_id"];
       query.force = true;
       query.where = {
         updatedAt: {
-          //$lt: mydate
+          // $lt: mydate
           [Op.lt]: mydate
         }
       };
       if (contextSession) {
-        query.where.context = contextSession
+        query.where.context = contextSession;
       }
       return this.entity.destroy(query)
         .then(async (results) => {
           if (transaction) {
-            await transaction.commit()
+            await transaction.commit();
           }
           let severity = "DEBUG";
           if (results) {
             severity = "INFO";
           }
-          this.manager.log("Context : " + (contextSession || "default") + " GARBAGE COLLECTOR ==> " + results + "  DELETED", severity);
+          this.manager.log(`Context : ${contextSession || "default"} GARBAGE COLLECTOR ==> ${results}  DELETED`, severity);
           return results;
         })
         .catch(async (error) => {
@@ -72,7 +71,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
         });
     }
 
-    start(id, contextSession) {
+    start (id, contextSession) {
       try {
         return this.read(id, contextSession);
       } catch (e) {
@@ -80,25 +79,25 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
       }
     }
 
-    async open(contextSession) {
+    async open (contextSession) {
       if (this.orm.kernel.type !== "CONSOLE") {
         await this.gc(this.gc_maxlifetime, contextSession);
         if (!this.entity) {
           return Promise.resolve(0);
         }
-        let transaction = null
+        let transaction = null;
         if (this.applyTransaction) {
           transaction = await this.entity.sequelize.transaction();
         }
         return this.entity.count({
-            where: {
-              "context": contextSession
-            },
-            transaction
-          })
+          where: {
+            "context": contextSession
+          },
+          transaction
+        })
           .then(async (sessionCount) => {
             if (transaction) {
-              await transaction.commit()
+              await transaction.commit();
             }
             const log = `CONTEXT ${contextSession ? contextSession : "default"} SEQUELIZE SESSIONS STORAGE ==> ${this.manager.settings.handler.toUpperCase()} COUNT SESSIONS : ${sessionCount}`;
             this.manager.log(log, "INFO");
@@ -112,29 +111,29 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
       }
     }
 
-    close() {
+    close () {
       this.gc(this.gc_maxlifetime);
       return true;
     }
 
-    async destroy(id, contextSession) {
+    async destroy (id, contextSession) {
       if (!this.entity) {
-        throw new Error(`Entity Session not ready`);
+        throw new Error("Entity Session not ready");
       }
-      let transaction = null
+      let transaction = null;
       if (this.applyTransaction) {
         transaction = await this.entity.sequelize.transaction();
       }
-      let where = {
+      const where = {
         session_id: id
       };
       if (contextSession) {
         where.context = contextSession;
       }
       return this.entity.findOne({
-          where: where,
-          transaction
-        })
+        where,
+        transaction
+      })
         .then((result) => {
           if (result) {
             return result.destroy({
@@ -142,16 +141,17 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
               transaction
             }).then(async (session) => {
               if (transaction) {
-                await transaction.commit()
+                await transaction.commit();
               }
-              this.manager.log("DB DESTROY SESSION context : " + session.context + " ID : " + session.session_id + " DELETED");
-            }).catch(async (error) => {
-              if (transaction && !transaction.finished) {
-                await transaction.rollback();
-              }
-              this.manager.log("DB DESTROY SESSION context : " + contextSession + " ID : " + id, "ERROR");
-              throw error;
-            });
+              this.manager.log(`DB DESTROY SESSION context : ${session.context} ID : ${session.session_id} DELETED`);
+            })
+              .catch(async (error) => {
+                if (transaction && !transaction.finished) {
+                  await transaction.rollback();
+                }
+                this.manager.log(`DB DESTROY SESSION context : ${contextSession} ID : ${id}`, "ERROR");
+                throw error;
+              });
           }
         })
         .catch(async (error) => {
@@ -162,25 +162,23 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
         });
     }
 
-    async gc(maxlifetime, contextSession) {
-      let msMaxlifetime = ((maxlifetime || this.gc_maxlifetime) * 1000);
+    async gc (maxlifetime, contextSession) {
+      const msMaxlifetime = (maxlifetime || this.gc_maxlifetime) * 1000;
       if (contextSession) {
-        await this.finderGC( msMaxlifetime, contextSession);
-      } else {
-        if (this.contextSessions.length) {
-          for (let i = 0; i < this.contextSessions.length; i++) {
-            await this.finderGC(msMaxlifetime, this.contextSessions[i]);
-          }
+        await this.finderGC(msMaxlifetime, contextSession);
+      } else if (this.contextSessions.length) {
+        for (let i = 0; i < this.contextSessions.length; i++) {
+          await this.finderGC(msMaxlifetime, this.contextSessions[i]);
         }
       }
     }
 
-    async read(id, contextSession) {
+    async read (id, contextSession) {
       if (!this.entity) {
-        throw new Error(`Entity Session not ready`);
+        throw new Error("Entity Session not ready");
       }
       let myWhere = null;
-      let transaction = null
+      let transaction = null;
       if (this.applyTransaction) {
         transaction = await this.entity.sequelize.transaction();
       }
@@ -188,7 +186,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
         myWhere = {
           where: {
             session_id: id,
-            context: (contextSession)
+            context: contextSession
           },
           include: [{
             model: this.userEntity,
@@ -212,7 +210,7 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
         .then(async (result) => {
           if (result) {
             if (transaction) {
-              await transaction.commit()
+              await transaction.commit();
             }
             return {
               id: result.session_id,
@@ -223,9 +221,8 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
               updated: result.updatedAt,
               username: result.username
             };
-          } else {
-            return {};
           }
+          return {};
         })
         .catch(async (error) => {
           if (transaction && !transaction.finished) {
@@ -236,68 +233,67 @@ nodefony.register.call(nodefony.session.storage, "sequelize", function() {
         });
     }
 
-    async write(id, serialize, contextSession) {
+    async write (id, serialize, contextSession) {
       if (!this.entity) {
-        throw new Error(`Entity Session not ready`);
+        throw new Error("Entity Session not ready");
       }
-      let transaction = null
+      let transaction = null;
       if (this.applyTransaction) {
         transaction = await this.entity.sequelize.transaction();
       }
-      let data = nodefony.extend({}, serialize, {
+      const data = nodefony.extend({}, serialize, {
         session_id: id,
         context: contextSession || "default"
       });
       if (data.username) {
-        data.username = data.username.username
+        data.username = data.username.username;
       }
       return this.entity.findOne({
-          where: {
-            session_id: id,
-            context: (contextSession || "default")
-          },
+        where: {
+          session_id: id,
+          context: contextSession || "default"
+        },
+        transaction
+      }).then((result) => {
+        if (result) {
+          return result.update(data, {
+            where: {
+              session_id: id,
+              context: contextSession || "default"
+            },
+            transaction
+          })
+            .then(async (session) => {
+              if (transaction) {
+                await transaction.commit();
+              }
+              return session;
+            })
+            .catch(async (error) => {
+              if (transaction && !transaction.finished) {
+                await transaction.rollback();
+              }
+              throw error;
+            });
+        }
+        return this.entity.create(data, {
+          isNewRecord: true,
           transaction
-        }).then((result) => {
-          if (result) {
-            return result.update(data, {
-                where: {
-                  session_id: id,
-                  context: (contextSession || "default")
-                },
-                transaction
-              })
-              .then(async (session) => {
-                if (transaction) {
-                  await transaction.commit()
-                }
-                return session;
-              })
-              .catch(async (error) => {
-                if (transaction && !transaction.finished) {
-                  await transaction.rollback();
-                }
-                throw error;
-              });
-          } else {
-            return this.entity.create(data, {
-                isNewRecord: true,
-                transaction
-              })
-              .then(async (session) => {
-                if (transaction) {
-                  await transaction.commit()
-                }
-                this.manager.log("ADD SESSION : " + session.session_id + (session.username ? " username :" + session.username : ""), "DEBUG");
-                return session;
-              })
-              .catch(async (error) => {
-                if (transaction && !transaction.finished) {
-                  await transaction.rollback();
-                }
-                throw error;
-              });
-          }
         })
+          .then(async (session) => {
+            if (transaction) {
+              await transaction.commit();
+            }
+            this.manager.log(`ADD SESSION : ${session.session_id}${session.username ? ` username :${session.username}` : ""}`, "DEBUG");
+            return session;
+          })
+          .catch(async (error) => {
+            if (transaction && !transaction.finished) {
+              await transaction.rollback();
+            }
+            throw error;
+          });
+      })
         .catch(async (error) => {
           if (transaction && !transaction.finished) {
             await transaction.rollback();

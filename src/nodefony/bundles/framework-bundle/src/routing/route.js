@@ -7,12 +7,13 @@ const decode = function (str) {
 };
 let crypto;
 try {
-  crypto = require('node:crypto');
+  crypto = require("node:crypto");
 } catch (err) {
-  crypto = require('crypto');
-  //console.log('crypto support is disabled!', err);
+  crypto = require("crypto");
+  // console.log('crypto support is disabled!', err);
 }
-const {createHash} = crypto
+const {createHash} = crypto;
+
 /*
  *	CLASS ROUTE
  *
@@ -20,7 +21,7 @@ const {createHash} = crypto
 const regRoute = /(\/)?(\.)?\{([^}]+)\}(?:\(([^)]*)\))?(\?)?/g;
 
 class Route {
-  constructor(name, obj) {
+  constructor (name, obj) {
     this.name = name;
     this.path = "";
     this.host = null;
@@ -33,9 +34,9 @@ class Route {
     this.hash = null;
     this.prefix = "";
 
-    //TODO
+    // TODO
     this.options = {};
-    //TODO http | websocket
+    // TODO http | websocket
     this.schemes = null;
     if (obj) {
       this.setName(obj.id);
@@ -47,15 +48,15 @@ class Route {
     }
   }
 
-  setDefaults(arg) {
+  setDefaults (arg) {
     if (arg) {
-      for (let ob in arg) {
+      for (const ob in arg) {
         this.addDefault(ob, arg[ob]);
       }
     }
   }
 
-  toString() {
+  toString () {
     return JSON.stringify({
       name: this.name,
       path: this.path,
@@ -68,37 +69,36 @@ class Route {
     }, null, " ");
   }
 
-  generateId() {
-    this.hash = createHash("md5").update(JSON.stringify(this)).digest("hex");
+  generateId () {
+    this.hash = createHash("md5").update(JSON.stringify(this))
+      .digest("hex");
     return this.hash;
   }
 
-  setName(name) {
+  setName (name) {
     if (name) {
       this.name = name;
     }
   }
 
-  setPattern(pattern) {
+  setPattern (pattern) {
     if (pattern) {
       this.path = this.prefix + pattern;
-    } else {
-      if (this.prefix) {
-        if (this.path) {
-          this.path = this.prefix + this.path;
-        } else {
-          this.path = this.prefix;
-        }
+    } else if (this.prefix) {
+      if (this.path) {
+        this.path = this.prefix + this.path;
+      } else {
+        this.path = this.prefix;
       }
     }
     return this.path;
   }
 
-  setHostname(hostname) {
+  setHostname (hostname) {
     this.host = hostname || null;
   }
 
-  setPrefix(prefix) {
+  setPrefix (prefix) {
     if (prefix === "/") {
       this.prefix = "";
     } else {
@@ -107,28 +107,28 @@ class Route {
     this.setPattern();
   }
 
-  addDefault(key, value) {
+  addDefault (key, value) {
     this.defaults[key] = value;
   }
 
-  addRequirement(key, value) {
+  addRequirement (key, value) {
     this.requirements[key] = value;
   }
 
-  getRequirement(key) {
+  getRequirement (key) {
     return this.requirements[key];
   }
 
-  hasRequirements() {
+  hasRequirements () {
     return Object.keys(this.requirements).length;
   }
 
-  addOptions(key, value) {
+  addOptions (key, value) {
     this.options[key] = value;
   }
 
-  checkDefaultParameters(variable) {
-    for (let def in this.defaults) {
+  checkDefaultParameters (variable) {
+    for (const def in this.defaults) {
       switch (def) {
       case "controller":
         continue;
@@ -141,7 +141,7 @@ class Route {
     return false;
   }
 
-  hydrateDefaultParameters(res) {
+  hydrateDefaultParameters (res) {
     if (this.variables.length) {
       for (let i = 0; i < this.variables.length; i++) {
         if (this.defaults[this.variables[i]]) {
@@ -151,7 +151,7 @@ class Route {
         }
       }
     } else {
-      for (let def in this.defaults) {
+      for (const def in this.defaults) {
         switch (def) {
         case "controller":
           continue;
@@ -162,32 +162,31 @@ class Route {
     }
   }
 
-  compile() {
+  compile () {
     if (!this.path) {
       return;
     }
     const pathPrefix = this.path.replace("//", "/");
     let pattern = pathPrefix.replace(regRoute, (match, slash, dot, key, capture, opt, offset) => {
-      let incl = (pathPrefix[match.length + offset] || '/') === '/';
+      const incl = (pathPrefix[match.length + offset] || "/") === "/";
       this.variables.push(key);
       if (this.checkDefaultParameters(key)) {
-        return (incl ? '(?:' : '') + (slash ? slash + "?" : '') + (incl ? '' : '(?:') + (dot || '') + '(' + (capture || '[^/]*') + '))' + (opt || '');
-      } else {
-        return (incl ? '(?:' : '') + (slash || '') + (incl ? '' : '(?:') + (dot || '') + '(' + (capture || '[^/]+') + '))' + (opt || '');
+        return `${(incl ? "(?:" : "") + (slash ? `${slash}?` : "") + (incl ? "" : "(?:") + (dot || "")}(${capture || "[^/]*"}))${opt || ""}`;
       }
+      return `${(incl ? "(?:" : "") + (slash || "") + (incl ? "" : "(?:") + (dot || "")}(${capture || "[^/]+"}))${opt || ""}`;
     });
     if (pattern[pattern.length - 1] === "*") {
-      pattern = pattern.replace(/([\/.])/g, '\\$1').replace(/\*/g, '(.*)\/?');
+      pattern = pattern.replace(/([\/.])/g, "\\$1").replace(/\*/g, "(.*)\/?");
     } else {
-      pattern = pattern.replace(/([\/.])/g, '\\$1');
+      pattern = pattern.replace(/([\/.])/g, "\\$1");
     }
-    this.pattern = new RegExp('^' + pattern + '[/]?$', 'i');
-    //this.pattern = new RegExp('^' + pattern +'$' , 'i');
+    this.pattern = new RegExp(`^${pattern}[/]?$`, "i");
+    // this.pattern = new RegExp('^' + pattern +'$' , 'i');
     return this.pattern;
   }
 
-  match(context) {
-    let res = context.request.url.pathname.match(this.pattern);
+  match (context) {
+    const res = context.request.url.pathname.match(this.pattern);
     if (!res) {
       return res;
     }
@@ -196,13 +195,13 @@ class Route {
     } catch (e) {
       throw e;
     }
-    //check requierments
+    // check requierments
     try {
       this.matchRequirements(context);
     } catch (e) {
       throw e;
     }
-    //check Hostname
+    // check Hostname
     try {
       this.matchHostname(context);
     } catch (e) {
@@ -211,9 +210,9 @@ class Route {
     let map = [];
     try {
       res.slice(1).forEach((param, i) => {
-        let k = this.variables[i] || 'wildcard';
-        param = param && decode(param);
-        let req = this.getRequirement(k);
+        const k = this.variables[i] || "wildcard";
+        param &&= decode(param);
+        const req = this.getRequirement(k);
         let result = null;
         if (req) {
           switch (nodefony.typeOf(req)) {
@@ -225,17 +224,17 @@ class Route {
             break;
           default:
             throw {
-              BreakException: "Requirement Routing config Exception variable : " + k + " must be RegExp or string : " + nodefony.typeOf(req)
+              BreakException: `Requirement Routing config Exception variable : ${k} must be RegExp or string : ${nodefony.typeOf(req)}`
             };
           }
           if (!result) {
             map = false;
             throw {
-              BreakException: "Requirement Exception variable : " + k + " ==> " + param + " doesn't match with " + req
+              BreakException: `Requirement Exception variable : ${k} ==> ${param} doesn't match with ${req}`
             };
           }
         }
-        let index = map.push(param);
+        const index = map.push(param);
         map[k] = map[index - 1];
       });
     } catch (e) {
@@ -245,12 +244,12 @@ class Route {
       throw e;
     }
     if (map && map.wildcard) {
-      map['*'] = map.wildcard;
+      map["*"] = map.wildcard;
     }
     return map;
   }
 
-  setFirewallConfigRoute(obj) {
+  setFirewallConfigRoute (obj) {
     if (!obj) {
       return;
     }
@@ -259,12 +258,12 @@ class Route {
     }
   }
 
-  matchHostname(context) {
+  matchHostname (context) {
     if (this.host) {
       if (this.host === context.domain) {
         return true;
       }
-      let error = new Error("Domain " + context.domain + " Unauthorized");
+      const error = new Error(`Domain ${context.domain} Unauthorized`);
       error.code = 401;
       error.type = "domain";
       throw error;
@@ -272,16 +271,16 @@ class Route {
     return true;
   }
 
-  matchRequirements(context) {
+  matchRequirements (context) {
     if (this.hasRequirements()) {
-      for (let i in this.requirements) {
+      for (const i in this.requirements) {
         switch (i) {
         case "method":
           switch (typeof this.requirements[i]) {
           case "string":
-            let req = this.requirements[i].replace(/\s/g, "").toUpperCase();
+            const req = this.requirements[i].replace(/\s/g, "").toUpperCase();
             if (req.split(",").lastIndexOf(context.method) < 0) {
-              let error = new Error("Method " + context.method + " Unauthorized");
+              const error = new Error(`Method ${context.method} Unauthorized`);
               error.code = 405;
               error.type = "method";
               throw error;
@@ -290,7 +289,7 @@ class Route {
           case "object":
             if (this.requirements[i].indexOf(context.method) < 0) {
               if (this.requirements[i].indexOf(context.method.toLowerCase()) < 0) {
-                let error = new Error("Method " + context.method + " Unauthorized");
+                const error = new Error(`Method ${context.method} Unauthorized`);
                 error.code = 405;
                 error.type = "method";
                 throw error;
@@ -298,12 +297,12 @@ class Route {
             }
             break;
           default:
-            throw new Error("Bad config route method : " + this.requirements[i]);
+            throw new Error(`Bad config route method : ${this.requirements[i]}`);
           }
           break;
         case "domain":
           if (context.domain !== this.requirements[i]) {
-            let error = new Error("Domain " + context.domain + " Unauthorized");
+            const error = new Error(`Domain ${context.domain} Unauthorized`);
             error.code = 403;
             error.type = "domain";
             throw error;
@@ -312,9 +311,9 @@ class Route {
         case "protocol":
           switch (context.method) {
           case "WEBSOCKET":
-            //console.log("this.requirements[i]" +this.requirements[i]);
+            // console.log("this.requirements[i]" +this.requirements[i]);
             if (context.acceptedProtocol !== this.requirements[i]) {
-              let error = new Error("Protocol " + context.acceptedProtocol + " Unauthorized");
+              const error = new Error(`Protocol ${context.acceptedProtocol} Unauthorized`);
               error.code = 1002;
               error.type = "protocol";
               throw error;

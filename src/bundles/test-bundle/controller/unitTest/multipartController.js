@@ -1,12 +1,11 @@
 module.exports = class multipartController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
   }
 
-  requestMultiPartAction() {
+  requestMultiPartAction () {
 
-    /*console.dir(this.queryFile, {
+    /* console.dir(this.queryFile, {
       //depth: null,
       colors: true
     });*/
@@ -15,7 +14,7 @@ module.exports = class multipartController extends nodefony.controller {
       get: this.queryGet,
       post: this.queryPost,
       file: this.queryFile,
-      data:this.request.data.toString()
+      data: this.request.data.toString()
     });
   }
 };

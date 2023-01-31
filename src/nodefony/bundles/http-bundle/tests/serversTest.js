@@ -10,45 +10,40 @@
  *
  */
 
-//var http = require("http");
-//var https = require("https");
-//var WebSocketClient = require('websocket').client;
-//var tunnel = require('tunnel');
+// var http = require("http");
+// var https = require("https");
+// var WebSocketClient = require('websocket').client;
+// var tunnel = require('tunnel');
 
-const assert = require('assert');
+const assert = require("assert");
 
 const request = require("request");
 
 
-describe("NODEFONY BUNDLE HTTP", function () {
+describe("NODEFONY BUNDLE HTTP", () => {
+  describe("CONFIGURATIONS ", () => {
 
-  describe('CONFIGURATIONS ', function () {
-
-    /*it("KERNEL", function(done){
+    /* it("KERNEL", function(done){
     	console.log( kernel.settings.system.version );
     	done();
     });*/
 
   });
 
-  describe('WEB', function () {
-
-
-    it("HTTP-SERVICE", function (doneHttp) {
-
-      var options = {
-        url: "http://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpPort,
+  describe("WEB", () => {
+    it("HTTP-SERVICE", (doneHttp) => {
+      const options = {
+        url: `http://${kernel.settings.system.domain}:${kernel.settings.system.httpPort}`,
         headers: {
-          'User-Agent': 'nodefony'
+          "User-Agent": "nodefony"
         }
       };
 
-      request(options, (error, res /*, body*/ ) => {
-
+      request(options, (error, res /* , body*/) => {
         if (error) {
           throw error;
         }
-        var ret = null;
+        let ret = null;
         switch (res.statusCode) {
         case "302":
           ret = 200;
@@ -58,33 +53,29 @@ describe("NODEFONY BUNDLE HTTP", function () {
         }
         assert.equal(res.statusCode, ret);
         assert.equal(res.headers.server, "nodefony");
-        res.setEncoding('utf8');
+        res.setEncoding("utf8");
         doneHttp();
-
       });
-
-
     });
 
-    it("HTTPS-SERVICE", function (doneHttps) {
+    it("HTTPS-SERVICE", (doneHttps) => {
+      const service = kernel.get("httpsServer");
+      const res = service.getCertificats();
 
-      var service = kernel.get("httpsServer");
-      var res = service.getCertificats();
-
-      var options = {
-        url: "https://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpsPort,
+      const options = {
+        url: `https://${kernel.settings.system.domain}:${kernel.settings.system.httpsPort}`,
         agentOptions: {
           key: res.key,
           cert: res.cert,
-          ca: res.ca,
+          ca: res.ca
         }
       };
 
-      request(options, (error, res /*, body*/ ) => {
+      request(options, (error, res /* , body*/) => {
         if (error) {
           throw error;
         }
-        var ret = null;
+        let ret = null;
         switch (res.statusCode) {
         case "302":
           ret = 200;
@@ -94,13 +85,9 @@ describe("NODEFONY BUNDLE HTTP", function () {
         }
         assert.equal(res.statusCode, ret);
         assert.equal(res.headers.server, "nodefony");
-        res.setEncoding('utf8');
+        res.setEncoding("utf8");
         doneHttps();
-
       });
-
     });
-
   });
-
 });

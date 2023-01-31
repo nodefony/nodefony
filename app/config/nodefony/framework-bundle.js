@@ -10,7 +10,7 @@ module.exports = {
     outputFileSystem: "file-system", // memory-fs not implemented yet
     stats: {
       colors: true,
-      preset: 'normal' // normal || minimal || verbose || detailed  || summary
+      preset: "normal" // normal || minimal || verbose || detailed  || summary
     },
     watchOptions: {
       ignored: /node_modules|assets/,

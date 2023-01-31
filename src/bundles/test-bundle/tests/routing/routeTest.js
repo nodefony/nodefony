@@ -10,36 +10,33 @@
  *
  */
 
-var http = require("http");
-var https = require("https");
-var WebSocketClient = require('websocket').client;
-//var tunnel = require('tunnel');
+const http = require("http");
+const https = require("https");
+const WebSocketClient = require("websocket").client;
+// var tunnel = require('tunnel');
 
-var querystring = require('querystring');
-const assert = require('assert');
+const querystring = require("querystring");
+const assert = require("assert");
 
 
-
-describe("BUNDLE TEST", function () {
-
-  before(function () {
+describe("BUNDLE TEST", () => {
+  before(() => {
     global.options = {
       hostname: kernel.settings.system.domain,
       port: kernel.settings.system.httpPort,
-      //path: '/myroute/',
-      method: 'GET'
+      // path: '/myroute/',
+      method: "GET"
     };
   });
 
-  describe('ROUTING DEFAULT_VALUE', function () {
-
-    it("myroute/", function (done) {
-      global.options.path = '/myroute/';
-      var request = http.request(global.options, function (res) {
+  describe("ROUTING DEFAULT_VALUE", () => {
+    it("myroute/", (done) => {
+      global.options.path = "/myroute/";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var res = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const res = JSON.parse(chunk);
           assert.deepStrictEqual(res, {
             page: "51",
             element: "defaultValue"
@@ -49,13 +46,13 @@ describe("BUNDLE TEST", function () {
       });
       request.end();
     });
-    it("myroute", function (done) {
-      global.options.path = '/myroute';
-      var request = http.request(global.options, function (res) {
+    it("myroute", (done) => {
+      global.options.path = "/myroute";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var res = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const res = JSON.parse(chunk);
           assert.deepStrictEqual(res, {
             page: "51",
             element: "defaultValue"
@@ -66,13 +63,13 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("myroute/51", function (done) {
-      global.options.path = '/myroute/51';
-      var request = http.request(global.options, function (res) {
+    it("myroute/51", (done) => {
+      global.options.path = "/myroute/51";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var res = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const res = JSON.parse(chunk);
           assert.deepStrictEqual(res, {
             page: "51",
             element: "myRouteDefaultValue"
@@ -83,13 +80,13 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("myroute/51/", function (done) {
-      global.options.path = '/myroute/51/';
-      var request = http.request(global.options, function (res) {
+    it("myroute/51/", (done) => {
+      global.options.path = "/myroute/51/";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var res = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const res = JSON.parse(chunk);
           assert.deepStrictEqual(res, {
             page: "51",
             element: "myRouteDefaultValue"
@@ -100,13 +97,13 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("myroute/51/foo", function (done) {
-      global.options.path = '/myroute/51/foo';
-      var request = http.request(global.options, function (res) {
+    it("myroute/51/foo", (done) => {
+      global.options.path = "/myroute/51/foo";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var res = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const res = JSON.parse(chunk);
           assert.deepStrictEqual(res, {
             page: "51",
             element: "foo"
@@ -116,13 +113,13 @@ describe("BUNDLE TEST", function () {
       });
       request.end();
     });
-    it("myroute/51/foo/", function (done) {
-      global.options.path = '/myroute/51/foo/';
-      var request = http.request(global.options, function (res) {
+    it("myroute/51/foo/", (done) => {
+      global.options.path = "/myroute/51/foo/";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var res = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const res = JSON.parse(chunk);
           assert.deepStrictEqual(res, {
             page: "51",
             element: "foo"
@@ -134,40 +131,40 @@ describe("BUNDLE TEST", function () {
     });
   });
 
-  describe('ROUTING REQUIEREMENTS REGEXP', function () {
-    it("<requirement key='page'>^\d\d$</requirement>", function (done) {
-      global.options.path = '/myroute/515/foo/';
-      var request = http.request(global.options, function (res) {
+  describe("ROUTING REQUIEREMENTS REGEXP", () => {
+    it("<requirement key='page'>^\d\d$</requirement>", (done) => {
+      global.options.path = "/myroute/515/foo/";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 500);
-        res.setEncoding('utf8');
-        res.on('data', () => {});
+        res.setEncoding("utf8");
+        res.on("data", () => {});
         done();
       });
       request.end();
     });
   });
 
-  describe('ROUTING pattern:  /wildcard/*', function () {
-    it(" URL =>/wildcard/route1", function (done) {
-      global.options.path = '/wildcard/route1';
-      var request = http.request(global.options, function (res) {
+  describe("ROUTING pattern:  /wildcard/*", () => {
+    it(" URL =>/wildcard/route1", (done) => {
+      global.options.path = "/wildcard/route1";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.equal(ret.path, "/wildcard/route1");
           done();
         });
       });
       request.end();
     });
-    it("URL => /wildcard/route1/route2", function (done) {
-      global.options.path = '/wildcard/route1/route2';
-      var request = http.request(global.options, function (res) {
+    it("URL => /wildcard/route1/route2", (done) => {
+      global.options.path = "/wildcard/route1/route2";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.equal(ret.path, "/wildcard/route1/route2");
           done();
         });
@@ -176,14 +173,14 @@ describe("BUNDLE TEST", function () {
     });
   });
 
-  describe('ROUTING pattern:  /wildcard1*', function () {
-    it(" URL =>/wildcard1", function (done) {
-      global.options.path = '/wildcard1';
-      var request = http.request(global.options, function (res) {
+  describe("ROUTING pattern:  /wildcard1*", () => {
+    it(" URL =>/wildcard1", (done) => {
+      global.options.path = "/wildcard1";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.equal(ret.path, "/wildcard1");
           assert.equal(ret.ele, "");
           done();
@@ -191,13 +188,13 @@ describe("BUNDLE TEST", function () {
       });
       request.end();
     });
-    it(" URL =>/wildcard1/route1", function (done) {
-      global.options.path = '/wildcard1/route1';
-      var request = http.request(global.options, function (res) {
+    it(" URL =>/wildcard1/route1", (done) => {
+      global.options.path = "/wildcard1/route1";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.equal(ret.path, "/wildcard1/route1");
           assert.equal(ret.ele, "/route1");
           done();
@@ -205,13 +202,13 @@ describe("BUNDLE TEST", function () {
       });
       request.end();
     });
-    it("URL => /wildcard1/route1/route2", function (done) {
-      global.options.path = '/wildcard1/route1/route2';
-      var request = http.request(global.options, function (res) {
+    it("URL => /wildcard1/route1/route2", (done) => {
+      global.options.path = "/wildcard1/route1/route2";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.equal(ret.path, "/wildcard1/route1/route2");
           assert.equal(ret.ele, "/route1/route2");
           done();
@@ -222,16 +219,14 @@ describe("BUNDLE TEST", function () {
   });
 
 
-
-
-  describe('ROUTING pattern:  /wildcard2/{*}', function () {
-    it(" URL =>/wildcard2/route1", function (done) {
-      global.options.path = '/wildcard2/route1';
-      var request = http.request(global.options, function (res) {
+  describe("ROUTING pattern:  /wildcard2/{*}", () => {
+    it(" URL =>/wildcard2/route1", (done) => {
+      global.options.path = "/wildcard2/route1";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.equal(ret.path, "/wildcard2/route1");
           assert.equal(ret.ele, "route1");
           done();
@@ -239,25 +234,25 @@ describe("BUNDLE TEST", function () {
       });
       request.end();
     });
-    it("URL => /wildcard2/route1/error", function (done) {
-      global.options.path = '/wildcard2/route1/error';
-      var request = http.request(global.options, function (res) {
+    it("URL => /wildcard2/route1/error", (done) => {
+      global.options.path = "/wildcard2/route1/error";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 404);
-        res.setEncoding('utf8');
+        res.setEncoding("utf8");
         done();
       });
       request.end();
     });
   });
 
-  describe('ROUTING wildcard type {*}', function () {
-    it(" URL =>/wildcard3/{*}/route2", function (done) {
-      global.options.path = '/wildcard3/myroute/route2';
-      var request = http.request(global.options, function (res) {
+  describe("ROUTING wildcard type {*}", () => {
+    it(" URL =>/wildcard3/{*}/route2", (done) => {
+      global.options.path = "/wildcard3/myroute/route2";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.equal(ret.path, "/wildcard3/myroute/route2");
           assert.equal(ret.ele, "myroute");
           done();
@@ -265,13 +260,13 @@ describe("BUNDLE TEST", function () {
       });
       request.end();
     });
-    it("PATTERN => /wildcard4/{*}/route2/{*}/test}", function (done) {
-      global.options.path = '/wildcard4/myRoute/route2/myRoute1/test';
-      var request = http.request(global.options, function (res) {
+    it("PATTERN => /wildcard4/{*}/route2/{*}/test}", (done) => {
+      global.options.path = "/wildcard4/myRoute/route2/myRoute1/test";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.equal(ret.path, "/wildcard4/myRoute/route2/myRoute1/test");
           assert.equal(ret.ele, "myRoute");
           assert.equal(ret.ele2, "myRoute1");
@@ -282,14 +277,14 @@ describe("BUNDLE TEST", function () {
     });
   });
 
-  describe('ROUTING requirement method', function () {
-    it("PATTERN => GET /requirement/method", function (done) {
-      global.options.path = '/requirement/method';
-      var request = http.request(global.options, function (res) {
+  describe("ROUTING requirement method", () => {
+    it("PATTERN => GET /requirement/method", (done) => {
+      global.options.path = "/requirement/method";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.equal(ret.method, "GET");
           done();
         });
@@ -297,24 +292,24 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("PATTERN => POST /requirement/method", function (done) {
-      global.options.path = '/requirement/method';
-      global.options.method = 'POST';
-      var data = {
+    it("PATTERN => POST /requirement/method", (done) => {
+      global.options.path = "/requirement/method";
+      global.options.method = "POST";
+      const data = {
         foo: "bar",
         bar: "foo"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
         assert.equal(res.statusMessage, "OK");
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var res = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const res = JSON.parse(chunk);
           assert.deepStrictEqual(res.method, "POST");
           assert.deepStrictEqual(res.query, data);
           assert.deepStrictEqual(res.queryPost, data);
@@ -326,39 +321,37 @@ describe("BUNDLE TEST", function () {
       request.write(post_data);
       request.end();
     });
-    it("PATTERN => PUT /requirement/method", function (done) {
-      global.options.path = '/requirement/method';
-      global.options.method = 'PUT';
-      var data = {
+    it("PATTERN => PUT /requirement/method", (done) => {
+      global.options.path = "/requirement/method";
+      global.options.method = "PUT";
+      const data = {
         foo: "bar",
         bar: "foo"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 405);
         assert.equal(res.statusMessage, "Method PUT Unauthorized");
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          //console.log(chunk)
-          var res = JSON.parse(chunk);
-          //assert.deepStrictEqual(res.method, "PUT");
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          // console.log(chunk)
+          const res = JSON.parse(chunk);
+          // assert.deepStrictEqual(res.method, "PUT");
           assert.deepStrictEqual(res.message, "Method PUT Unauthorized");
           assert.deepStrictEqual(res.code, 405);
-          //assert.deepStrictEqual(res.query, data);
-          //assert.deepStrictEqual(res.queryPost, data);
-          //assert.deepStrictEqual(res.queryGet, {});
-          //assert.deepStrictEqual(res.resolver, null);
+          // assert.deepStrictEqual(res.query, data);
+          // assert.deepStrictEqual(res.queryPost, data);
+          // assert.deepStrictEqual(res.queryGet, {});
+          // assert.deepStrictEqual(res.resolver, null);
           done();
         });
       });
       request.write(post_data);
       request.end();
     });
-
   });
-
 });

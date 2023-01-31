@@ -5,8 +5,7 @@ const {
 } = nodefony.Sequelize;
 
 module.exports = class session extends nodefony.Entity {
-
-  constructor(bundle) {
+  constructor (bundle) {
     /*
      *   @param bundle instance
      *   @param Entity name
@@ -15,7 +14,7 @@ module.exports = class session extends nodefony.Entity {
      */
     super(bundle, "session", "sequelize", "nodefony");
 
-    /*this.orm.on("onOrmReady", ( orm ) => {
+    /* this.orm.on("onOrmReady", ( orm ) => {
         let user = this.orm.getEntity("user");
         //console.log(user instanceof Model)
         //console.log(this.model)
@@ -43,7 +42,7 @@ module.exports = class session extends nodefony.Entity {
       });*/
   }
 
-  getSchema() {
+  getSchema () {
     return {
       session_id: {
         type: DataTypes.STRING(126),
@@ -51,17 +50,19 @@ module.exports = class session extends nodefony.Entity {
       },
       context: {
         type: DataTypes.STRING(126),
-        defaultValue: "default",
-        //primaryKey: true
+        defaultValue: "default"
+        // primaryKey: true
       },
-      /*username: {
+
+      /* username: {
         type: DataTypes.STRING(126),
         defaultValue: "",
         allowNull: true
       },*/
       Attributes: {
         type: DataTypes.JSON
-        /*set(value) {
+
+        /* set(value) {
           return this.setDataValue('Attributes', JSON.stringify(value));
         },
         get(value) {
@@ -70,7 +71,8 @@ module.exports = class session extends nodefony.Entity {
       },
       flashBag: {
         type: DataTypes.JSON
-        /*set: function (value) {
+
+        /* set: function (value) {
           return this.setDataValue('flashBag', JSON.stringify(value));
         },
         get(value) {
@@ -78,8 +80,9 @@ module.exports = class session extends nodefony.Entity {
         }*/
       },
       metaBag: {
-        type: DataTypes.JSON,
-        /*set(value) {
+        type: DataTypes.JSON
+
+        /* set(value) {
           return this.setDataValue('metaBag', JSON.stringify(value));
         },
         get(value) {
@@ -97,39 +100,37 @@ module.exports = class session extends nodefony.Entity {
     };
   }
 
-  registerModel(db) {
+  registerModel (db) {
     class MyModel extends Model {
-
-      static associate(models) {
+      static associate (models) {
         // define association here
         if (models.user) {
           models.user.hasMany(models.session, {
             foreignKey: {
               allowNull: true,
-              name:"username"
+              name: "username"
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
-          })
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE"
+          });
           models.session.belongsTo(models.user, {
             foreignKey: {
               allowNull: true,
-              name:"username"
+              name: "username"
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE"
           });
         } else {
-          this.log("ENTITY ASSOCIATION user NOT AVAILABLE" , "WARNING");
-          //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
+          this.log("ENTITY ASSOCIATION user NOT AVAILABLE", "WARNING");
+          // throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
         }
       }
 
-      fetchAll(callback) {
+      fetchAll (callback) {
         return this.findAll()
-          .then(function(result) {
-            return callback(null, result);
-          }).catch(function(error) {
+          .then((result) => callback(null, result))
+          .catch((error) => {
             if (error) {
               return callback(error, null);
             }
@@ -141,6 +142,5 @@ module.exports = class session extends nodefony.Entity {
       modelName: this.name
     });
     return MyModel;
-
   }
 };

@@ -1,8 +1,6 @@
-module.exports = nodefony.register.call(nodefony.io.protocol, "json-rpc", function () {
-
+module.exports = nodefony.register.call(nodefony.io.protocol, "json-rpc", () => {
   class Jsonrpc extends nodefony.io.protocol.reader {
-
-    constructor( /*rootName, settings*/ ) {
+    constructor (/* rootName, settings*/) {
       super(null, {
         extention: "json"
       });
@@ -20,23 +18,23 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "json-rpc", functi
       };
     }
 
-    methodError(error, id) {
-      var ele = nodefony.extend({}, this.response, {
-        error: error,
-        id: id
+    methodError (error, id) {
+      const ele = nodefony.extend({}, this.response, {
+        error,
+        id
       });
       return this.builderResponse(ele);
     }
 
-    methodSuccees(result, id) {
-      var ele = nodefony.extend({}, this.response, {
-        result: result,
-        id: id
+    methodSuccees (result, id) {
+      const ele = nodefony.extend({}, this.response, {
+        result,
+        id
       });
       return this.builderResponse(ele);
     }
 
-    onMessage(message) {
+    onMessage (message) {
       switch (nodefony.typeOf(message)) {
       case "string":
         var ret = null;

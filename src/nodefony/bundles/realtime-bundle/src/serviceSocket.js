@@ -1,5 +1,5 @@
 module.exports = class ServiceSocket extends nodefony.Service {
-  constructor(options) {
+  constructor (options) {
     const service = options.container.get(options.name);
     if (!service) {
       throw new Error(`service : ${options.name} not found`);
@@ -10,11 +10,11 @@ module.exports = class ServiceSocket extends nodefony.Service {
     this.id = nodefony.generateId();
   }
 
-  setConnection(id) {
+  setConnection (id) {
     this.idConnection = id;
   }
 
-  toJson() {
+  toJson () {
     return {
       id: this.id,
       type: "service",
@@ -22,7 +22,7 @@ module.exports = class ServiceSocket extends nodefony.Service {
     };
   }
 
-  async connect() {
+  async connect () {
     try {
       return await this.service.connect();
     } catch (e) {
@@ -30,7 +30,7 @@ module.exports = class ServiceSocket extends nodefony.Service {
     }
   }
 
-  async send(message) {
+  async send (message) {
     try {
       return await this.service.onMessage(message);
     } catch (e) {
@@ -38,7 +38,7 @@ module.exports = class ServiceSocket extends nodefony.Service {
     }
   }
 
-  async destroy() {
+  async destroy () {
     try {
       return await this.service.destroy();
     } catch (e) {
@@ -46,7 +46,7 @@ module.exports = class ServiceSocket extends nodefony.Service {
     }
   }
 
-  async close() {
+  async close () {
     try {
       return await this.service.close();
     } catch (e) {

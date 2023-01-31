@@ -1,39 +1,39 @@
 const vm = require("vm");
 const path = require("path");
 const Module = require("module");
-const fs = require('fs');
-const pm2 = require('pm2');
-//console.log(require.resolve("pm2"))
+const fs = require("fs");
+const pm2 = require("pm2");
+// console.log(require.resolve("pm2"))
 const Nodefony = require(path.resolve(__dirname, "nodefony.es6"));
 
-module.exports = function () {
+module.exports = (function () {
   // Create Context copy library in context  see load runInThisContext
   const context = vm.createContext(this);
 
-  //context.require = require;
-  //context.module = module;
-  //context.exports = exports;
-  //context.__dirname = __dirname;
-  //context.__filename = __filename;
+  // context.require = require;
+  // context.module = module;
+  // context.exports = exports;
+  // context.__dirname = __dirname;
+  // context.__filename = __filename;
   context.path = require("path");
   context.fs = require("fs");
   context.yaml = require("js-yaml");
-  context.util = require('util');
-  context.cluster = require('cluster');
+  context.util = require("util");
+  context.cluster = require("cluster");
   context.url = require("url");
-  context.xmlParser = require('xml2js').Parser;
-  context.dns = require('dns');
-  //context.async = require('async');
-  //context.nodedomain = require('domain');
-  context.Promise = require('promise');
-  //context.inquirer = require('inquirer');
-  context.clc = require('cli-color');
+  context.xmlParser = require("xml2js").Parser;
+  context.dns = require("dns");
+  // context.async = require('async');
+  // context.nodedomain = require('domain');
+  context.Promise = require("promise");
+  // context.inquirer = require('inquirer');
+  context.clc = require("cli-color");
   context.shell = require("shelljs");
   context.twig = require("twig");
-  //context.crypto = crypto;
+  // context.crypto = crypto;
   context.BlueBird = require("bluebird");
   context.pm2 = pm2;
-  //context.Rx = require("rxjs");
+  // context.Rx = require("rxjs");
   const nodefony = new Nodefony(context);
 
   /**
@@ -47,8 +47,7 @@ module.exports = function () {
   const regJs = /.*\.js$|.*\.es6$|.*\.es7$|.*\.(mjs)$/;
 
   class Autoload {
-
-    constructor() {
+    constructor () {
       this.versions = this.getVersion();
       this.timeout = 20000;
       this.displayError = true;
@@ -59,7 +58,7 @@ module.exports = function () {
 
       try {
         nodefony.Error = require(path.resolve(__dirname, "error.es6"));
-        //this.load(path.resolve(__dirname, "error.es6"));
+        // this.load(path.resolve(__dirname, "error.es6"));
         nodefony.Container = require(path.resolve(__dirname, "container.es6"));
         require(path.resolve(__dirname, "notificationsCenter.es6"));
         nodefony.PDU = require(path.resolve(__dirname, "syslog", "pdu.es6"));
@@ -75,7 +74,7 @@ module.exports = function () {
         nodefony.Watcher = require(path.resolve(__dirname, "watcher.es6"));
         nodefony.cli = require(path.resolve(__dirname, "cli.es6"));
 
-        //builders
+        // builders
         nodefony.Builder = require(path.resolve(__dirname, "builder.es6"));
         require(path.resolve(__dirname, "cli", "builder", "bundles", "bundle.js"));
         require(path.resolve(__dirname, "cli", "builder", "microService", "microService.js"));
@@ -90,7 +89,7 @@ module.exports = function () {
         context.nodefony.cliStart = require(path.resolve(__dirname, "cli", "start.js"));
         context.nodefony.appKernel = this.loadAppKernel(undefined, true);
 
-        //services
+        // services
       } catch (e) {
         throw e;
       }
@@ -98,11 +97,11 @@ module.exports = function () {
       this.setEnv();
     }
 
-    getVersion() {
+    getVersion () {
       return process.versions;
     }
 
-    fileExist(file) {
+    fileExist (file) {
       try {
         fs.statSync(file);
       } catch (e) {
@@ -110,11 +109,11 @@ module.exports = function () {
       }
     }
 
-    isElectron() {
+    isElectron () {
       return this.versions.electron || null;
     }
 
-    loadAppKernel() {
+    loadAppKernel () {
       try {
         return require(path.resolve("app", "appKernel.js"));
       } catch (e) {
@@ -122,11 +121,11 @@ module.exports = function () {
       }
     }
 
-    createContext(sandbox) {
+    createContext (sandbox) {
       return vm.createContext(sandbox);
     }
 
-    setEnv(environment) {
+    setEnv (environment) {
       this.environment = environment;
       switch (this.environment) {
       case "production":
@@ -153,18 +152,18 @@ module.exports = function () {
      * @param {String} file Path to load
      *
      */
-    load(file, force) {
+    load (file, force) {
       let filename = null;
       try {
         filename = Module._resolveFilename(file, module, false);
-        let cachedModule = Module._cache[filename];
+        const cachedModule = Module._cache[filename];
         if (cachedModule && !force) {
           return cachedModule.exports;
         }
         if (cachedModule && force) {
           delete Module._cache[filename];
         }
-        let myModule = new Module(filename, module);
+        const myModule = new Module(filename, module);
         Module._cache[filename] = myModule;
         myModule.load(filename);
         return myModule.exports;
@@ -172,8 +171,8 @@ module.exports = function () {
         if (Module._cache[filename]) {
           delete Module._cache[filename];
         }
-        //console.error(e);
-        /*if (this.kernel) {
+        // console.error(e);
+        /* if (this.kernel) {
           this.kernel.terminate(1);
         }*/
         throw e;
@@ -188,14 +187,14 @@ module.exports = function () {
      * @param {String} msgid informations for message. example(Name of function for debug)
      * @param {String} msg  message to add in log. example (I18N)
      */
-    log(pci, severity, msgid, msg) {
+    log (pci, severity, msgid, msg) {
       if (this.syslog) {
         if (!msgid) {
           msgid = "AUTOLOADER  ";
         }
         return this.syslog.log(pci, severity, msgid, msg);
       }
-      //console.log(pci);
+      // console.log(pci);
     }
 
     /**
@@ -204,10 +203,10 @@ module.exports = function () {
      * @param {String} path Path to directory to autoload
      *
      */
-    loadDirectory(path, exclude) {
+    loadDirectory (path, exclude) {
       let finder = null;
-      let settings = {
-        path: path,
+      const settings = {
+        path,
         onFinish: (error, res) => {
           if (error) {
             throw error;
@@ -233,9 +232,9 @@ module.exports = function () {
       throw new Error("AUTOLOADER finder not found  Load nodefony finder ");
     }
 
-    autoloadEach(ele) {
+    autoloadEach (ele) {
       if (!ele.isDirectory()) {
-        let res = regJs.exec(ele.path)
+        const res = regJs.exec(ele.path);
         if (res) {
           this.load.call(this, ele.path);
           this.log(ele.path, "DEBUG");
@@ -243,13 +242,12 @@ module.exports = function () {
       }
     }
 
-    setKernel(kernel) {
+    setKernel (kernel) {
       context.kernel = kernel;
       this.syslog = kernel.syslog;
     }
-
   }
 
   nodefony.autoloader = new Autoload();
   return nodefony;
-}();
+}());

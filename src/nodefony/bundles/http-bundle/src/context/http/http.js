@@ -1,16 +1,14 @@
-const mime = require('mime');
+const mime = require("mime");
 
-nodefony.register.call(nodefony.context, "http", function () {
-
+nodefony.register.call(nodefony.context, "http", () => {
   const Http = class httpContext extends nodefony.Context {
-
-    constructor(container, request, response, type) {
+    constructor (container, request, response, type) {
       super(container, request, response, type);
       this.uploadService = this.get("upload");
       this.requestSettings = this.kernelHttp.settings.request;
       this.queryStringParser = this.kernelHttp.settings.queryString;
       this.isElectron = this.kernel.isElectron;
-      this.protocol = (type === "HTTP2") ? "2.0" : "1.1";
+      this.protocol = type === "HTTP2" ? "2.0" : "1.1";
       this.pushAllowed = false;
       if (this.type === "HTTP2") {
         this.request = new nodefony.http2Request(request, this);
@@ -29,7 +27,7 @@ nodefony.register.call(nodefony.context, "http", function () {
           }
         } catch (e) {
           return this.kernelHttp.onError(this.container, e);
-          //this.fire("onError", this.container, e);
+          // this.fire("onError", this.container, e);
         }
       });
       this.method = this.request.getMethod();
@@ -44,7 +42,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       this.timeoutid = null;
       this.profiling = null;
       this.url = url.format(this.request.url);
-      this.scheme = this.request.url.protocol.replace(":","");
+      this.scheme = this.request.url.protocol.replace(":", "");
       if (this.request.url.port) {
         this.port = this.request.url.port;
       } else {
@@ -68,58 +66,59 @@ nodefony.register.call(nodefony.context, "http", function () {
           error = new nodefony.httpError("Request Timeout", 408, this.container);
         }
         return this.kernelHttp.onError(this.container, error);
-        //this.fire("onError", this.container, error);
+        // this.fire("onError", this.container, error);
       });
-      //case proxy
+      // case proxy
       this.proxy = null;
       if (request.headers["x-forwarded-for"]) {
         if (request.headers["x-forwarded-proto"]) {
           this.type = request.headers["x-forwarded-proto"].toUpperCase();
         }
         this.proxy = {
-          proxyServer: request.headers["x-forwarded-server"] || 'unknown',
+          proxyServer: request.headers["x-forwarded-server"] || "unknown",
           proxyProto: request.headers["x-forwarded-proto"],
-          proxyScheme:request.headers["x-forwarded-scheme"],
+          proxyScheme: request.headers["x-forwarded-scheme"],
           proxyPort: request.headers["x-forwarded-port"],
           proxyFor: request.headers["x-forwarded-for"],
           proxyHost: request.headers["x-forwarded-host"],
           proxyUri: request.headers["x-original-uri"],
           proxyRealIp: request.headers["x-real-ip"],
-          proxyVia: request.headers.via || 'unknown'
+          proxyVia: request.headers.via || "unknown"
         };
-        this.log("PROXY REQUEST x-forwarded VIA : " + this.proxy.proxyVia, "DEBUG");
+        this.log(`PROXY REQUEST x-forwarded VIA : ${this.proxy.proxyVia}`, "DEBUG");
       }
-      /*if (this.security) {
+
+      /* if (this.security) {
         this.crossDomain = this.isCrossDomain();
       }*/
     }
 
-    getRemoteAddress() {
+    getRemoteAddress () {
       return this.request.getRemoteAddress();
     }
 
-    getHost() {
+    getHost () {
       return this.request.getHost();
     }
 
-    getHostName() {
+    getHostName () {
       return this.request.getHostName();
     }
 
-    getUserAgent() {
+    getUserAgent () {
       return this.request.getUserAgent();
     }
 
-    getMethod() {
+    getMethod () {
       return this.request.getMethod();
     }
 
-    setCsrfToken(name, options) {
+    setCsrfToken (name, options) {
       this.csrf = this.csrfService.createCsrfToken(name, options, this);
       return this.csrf;
     }
 
-    handle(data) {
+    handle (data) {
       return new Promise((resolve, reject) => {
         try {
           if (this.isRedirect) {
@@ -137,11 +136,11 @@ nodefony.register.call(nodefony.context, "http", function () {
           if (!this.resolver) {
             this.resolver = this.router.resolve(this);
           }
-          //WARNING EVENT KERNEL
+          // WARNING EVENT KERNEL
           this.fire("onRequest", this, this.resolver);
           this.kernel.fire("onRequest", this, this.resolver);
           if (this.resolver.resolve) {
-            let ret = this.resolver.callController(data);
+            const ret = this.resolver.callController(data);
             // timeout response after  callController (to change timeout in action )
             if (this.timeoutid !== null) {
               this.timeoutExpired = false;
@@ -162,7 +161,7 @@ nodefony.register.call(nodefony.context, "http", function () {
             }
             return resolve(ret);
           }
-          let error = new Error("");
+          const error = new Error("");
           error.code = 404;
           return reject(error);
         } catch (e) {
@@ -171,7 +170,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       });
     }
 
-    clean() {
+    clean () {
       if (this.timeoutid !== null) {
         clearTimeout(this.timeoutid);
       }
@@ -189,7 +188,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       super.clean();
     }
 
-    send(data, type) {
+    send (data, type) {
       if (this.sended || this.finished) {
         return new Promise((resolve, reject) => {
           reject(new Error("Already sended"));
@@ -198,7 +197,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       return this.saveSession()
         .then(async (session) => {
           if (session) {
-            this.log("SAVE SESSION ID : " + session.id, "DEBUG");
+            this.log(`SAVE SESSION ID : ${session.id}`, "DEBUG");
           }
           await this.fireAsync("onSend", this.response, this);
           this.writeHead();
@@ -215,7 +214,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         });
     }
 
-    writeHead(statusCode, headers) {
+    writeHead (statusCode, headers) {
       // cookies
       if (this.response) {
         this.response.setCookies();
@@ -223,7 +222,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       }
     }
 
-    async write(data, encoding) {
+    async write (data, encoding) {
       if (this.finished || this.sended) {
         return;
       }
@@ -231,6 +230,7 @@ nodefony.register.call(nodefony.context, "http", function () {
         if (this.profiling) {
           await this.fireAsync("onSendMonitoring", this.response, this);
         }
+
         /*
          * WRITE RESPONSE
          */
@@ -243,11 +243,11 @@ nodefony.register.call(nodefony.context, "http", function () {
       return this;
     }
 
-    flush(data, encoding) {
+    flush (data, encoding) {
       return this.response.flush(data, encoding);
     }
 
-    async close() {
+    async close () {
       await this.fireAsync("onClose", this);
       // END REQUEST
       this.profiling = null;
@@ -255,15 +255,14 @@ nodefony.register.call(nodefony.context, "http", function () {
       return this.response.end();
     }
 
-    redirect(Url, status, headers) {
+    redirect (Url, status, headers) {
       if (typeof Url === "object") {
         return this.response.redirect(url.format(Url), status, headers);
-      } else {
-        return this.response.redirect(Url, status, headers);
       }
+      return this.response.redirect(Url, status, headers);
     }
 
-    redirectHttps(status, headers) {
+    redirectHttps (status, headers) {
       if (this.session) {
         this.session.setFlashBag("redirect", "HTTPS");
       }
@@ -282,12 +281,12 @@ nodefony.register.call(nodefony.context, "http", function () {
           host: ""
         };
       }
-      let urlChange = nodefony.extend({}, this.request.url, urlExtend);
-      let newUrl = url.format(urlChange);
+      const urlChange = nodefony.extend({}, this.request.url, urlExtend);
+      const newUrl = url.format(urlChange);
       return this.redirect(newUrl, status, headers);
     }
 
-    redirectHttp(status, headers) {
+    redirectHttp (status, headers) {
       if (this.session) {
         this.session.setFlashBag("redirect", "HTTP");
       }
@@ -306,16 +305,16 @@ nodefony.register.call(nodefony.context, "http", function () {
           host: ""
         };
       }
-      let urlChange = nodefony.extend({}, this.request.url, urlExtend);
-      let newUrl = url.format(urlChange);
+      const urlChange = nodefony.extend({}, this.request.url, urlExtend);
+      const newUrl = url.format(urlChange);
       return this.redirect(newUrl, status, headers);
     }
 
-    setContextJson(encoding) {
+    setContextJson (encoding) {
       if (!encoding) {
         encoding = "charset=utf-8";
       } else {
-        encoding = "charset=" + encoding;
+        encoding = `charset=${encoding}`;
       }
       this.isJson = true;
       const type = mime.getType("json");
@@ -326,14 +325,14 @@ nodefony.register.call(nodefony.context, "http", function () {
       }
     }
 
-    setContextHtml(encoding) {
+    setContextHtml (encoding) {
       if (!encoding) {
         encoding = "charset=utf-8";
       } else {
-        encoding = "charset=" + encoding;
+        encoding = `charset=${encoding}`;
       }
       this.isJson = false;
-      let type = mime.getType("html");
+      const type = mime.getType("html");
       if (this.method !== "websoket") {
         if (this.response) {
           this.response.setHeader("Content-Type", `${type}; ${encoding}`);
@@ -341,7 +340,7 @@ nodefony.register.call(nodefony.context, "http", function () {
       }
     }
 
-    setXjson(xjson) {
+    setXjson (xjson) {
       switch (nodefony.typeOf(xjson)) {
       case "object":
         this.response.setHeader("X-Json", JSON.stringify(xjson));
@@ -353,27 +352,24 @@ nodefony.register.call(nodefony.context, "http", function () {
         if (typeof xjson.message === "object") {
           this.response.setHeader("X-Json", JSON.stringify(xjson.message));
           return xjson.message;
-        } else {
-          this.response.setHeader("X-Json", xjson.message);
-          return {
-            error: xjson.message
-          };
         }
+        this.response.setHeader("X-Json", xjson.message);
+        return {
+          error: xjson.message
+        };
+
         break;
       }
     }
 
-    setDefaultContentType() {
+    setDefaultContentType () {
       if (this.isHtml) {
         this.response.setContentType("html", "utf-8");
-      } else {
-        if (this.request.accepts("json")) {
-          this.isJson = true;
-          this.response.setContentType("json", "utf-8");
-        }
+      } else if (this.request.accepts("json")) {
+        this.isJson = true;
+        this.response.setContentType("json", "utf-8");
       }
     }
-
   };
   return Http;
 });

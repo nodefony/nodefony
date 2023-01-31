@@ -1,6 +1,6 @@
-const Tokens = require('csrf');
+const Tokens = require("csrf");
 
-let defaultOptions = {
+const defaultOptions = {
   name: "csrf-token",
   ignoreMethods: ["GET", "HEAD", "OPTIONS"],
   cookie: false,
@@ -9,8 +9,7 @@ let defaultOptions = {
 };
 
 const Csrf = class Csrf {
-
-  constructor(name, options, context, service) {
+  constructor (name, options, context, service) {
     this.name = name || defaultOptions.name;
     this.settings = nodefony.extend({}, defaultOptions, options);
     this.service = service;
@@ -29,59 +28,59 @@ const Csrf = class Csrf {
     }
   }
 
-  log() {
+  log () {
     this.service.log.apply(this.service, arguments);
   }
 
-  getCookie() {
+  getCookie () {
     if (this.context.cookies[this.name]) {
       return this.context.cookies[this.name];
-    } else {
-      return this.setCookie();
     }
+    return this.setCookie();
   }
 
-  getRequestCookie(){
-    let cookie = nodefony.cookies.getRequestcookies(this.context);
-    if ( cookie   &&  cookie[this.name]){
-        return cookie[this.name];
+  getRequestCookie () {
+    const cookie = nodefony.cookies.getRequestcookies(this.context);
+    if (cookie && cookie[this.name]) {
+      return cookie[this.name];
     }
-    return null ;
+    return null;
   }
 
-  setCookie() {
+  setCookie () {
     if (this.settings.cookie) {
-      let token = this.setSecret(this.settings.secret);
+      const token = this.setSecret(this.settings.secret);
       if (this.settings.cookie.signed) {
         this.settings.cookie.secret = this.settings.secret;
       }
-      let cookie = new nodefony.cookies.cookie(
+      const cookie = new nodefony.cookies.cookie(
         this.name,
         token,
-        this.settings.cookie);
+        this.settings.cookie
+      );
       this.context.response.addCookie(cookie);
       return cookie;
     }
     return null;
   }
 
-  getHeader() {
+  getHeader () {
     if (this.context.query && this.context.query.csrf) {
       return this.context.query.csrf;
     }
-    let headers = this.context.request.headers;
+    const {headers} = this.context.request;
     if (headers) {
       switch (true) {
-      case (!!headers[this.name]):
+      case Boolean(headers[this.name]):
         return headers[this.name];
-      case (!!headers['csrf-token']):
-        return headers['csrf-token'];
-      case (!!headers['xsrf-token']):
-        return headers['xsrf-token'];
-      case (!!headers['x-csrf-token']):
-        return headers['x-csrf-token'];
-      case (!!headers['x-xsrf-token']):
-        return headers['x-xsrf-token'];
+      case Boolean(headers["csrf-token"]):
+        return headers["csrf-token"];
+      case Boolean(headers["xsrf-token"]):
+        return headers["xsrf-token"];
+      case Boolean(headers["x-csrf-token"]):
+        return headers["x-csrf-token"];
+      case Boolean(headers["x-xsrf-token"]):
+        return headers["x-xsrf-token"];
       default:
         return this.setHeader();
       }
@@ -89,50 +88,48 @@ const Csrf = class Csrf {
     return this.setHeader();
   }
 
-  setHeader() {
-    let token = this.setSecret(this.settings.secret);
+  setHeader () {
+    const token = this.setSecret(this.settings.secret);
     this.context.response.setHeader(this.name, token);
     return token;
   }
 
-  getSession() {
+  getSession () {
     this.context.once("onSessionStart", (session) => {
       if (session) {
-        let token = session.getMetaBag(this.name);
+        const token = session.getMetaBag(this.name);
         if (token) {
           this.session = token;
           return token;
-        } else {
-          return this.setSession(session);
         }
+        return this.setSession(session);
       }
     });
   }
 
-  setSession(session) {
-    let token = this.setSecret(this.settings.secret);
+  setSession (session) {
+    const token = this.setSecret(this.settings.secret);
     this.session = token;
     session.setMetaBag(this.name, token);
     return token;
   }
 
-  setSecret(secret) {
+  setSecret (secret) {
     if (secret) {
       return this.engine.create(secret);
     }
     throw new Error("No csrf secret in config");
   }
 
-  validate() {
+  validate () {
     try {
       if (this.settings.ignoreMethods.indexOf(this.context.method) >= 0) {
         return null;
       }
       if (this.settings.cookie) {
         let token = this.getRequestCookie();
-        if ( ! token ){
+        if (!token) {
           throw new nodefony.csrfError(`No crsf token ${this.name}`, 401);
-
         }
         if (this.settings.cookie.signed) {
           token = this.context.cookies[this.name].unsign(token, this.settings.secret);
@@ -143,26 +140,26 @@ const Csrf = class Csrf {
         return this.verify(token);
       }
       if (this.session) {
-        let token = this.session;
+        const token = this.session;
         return this.verify(token);
       }
       if (this.header) {
-        let token = this.header;
+        const token = this.header;
         return this.verify(token);
       }
-      throw new nodefony.csrfError(`No csrf method defined`, 500);
+      throw new nodefony.csrfError("No csrf method defined", 500);
     } catch (e) {
       throw e;
     }
   }
 
-  verify(token) {
+  verify (token) {
     try {
-      let res = this.engine.verify(this.settings.secret, token);
+      const res = this.engine.verify(this.settings.secret, token);
       if (!res) {
-        throw new nodefony.csrfError(`BAD CSRF Token ${this.name}`,401);
+        throw new nodefony.csrfError(`BAD CSRF Token ${this.name}`, 401);
       }
-      this.log(`VALID CSRF Token : ${this.name}`,"DEBUG");
+      this.log(`VALID CSRF Token : ${this.name}`, "DEBUG");
       return token;
     } catch (e) {
       throw e;
@@ -171,17 +168,16 @@ const Csrf = class Csrf {
 };
 
 module.exports = class csrf extends nodefony.Service {
-
-  constructor(container, httpKernel) {
+  constructor (container, httpKernel) {
     super("csrf", container);
     this.httpKernel = httpKernel;
   }
 
-  handle(context) {
+  handle (context) {
     return new Promise((resolve, reject) => {
       try {
         if (context.csrf) {
-          let token = context.csrf.validate(context);
+          const token = context.csrf.validate(context);
           return resolve(token);
         }
         return resolve(null);
@@ -191,8 +187,7 @@ module.exports = class csrf extends nodefony.Service {
     });
   }
 
-  createCsrfToken(name, options, context) {
+  createCsrfToken (name, options, context) {
     return new Csrf(name, options, context, this);
   }
-
 };

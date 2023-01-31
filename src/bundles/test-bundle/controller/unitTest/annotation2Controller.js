@@ -2,8 +2,7 @@
  *    @Route ("/test/annotate")
  */
 class annotation2Controller extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
   }
 
@@ -11,9 +10,9 @@ class annotation2Controller extends nodefony.controller {
    *   @Route ("/requirements", name="test-annotation-nohost", defaults={"id" = 5},requirements={"id" = "\d+"})
    *   @Method ({"GET","WEBSOCKET"})
    */
-  annotationAction(id) {
+  annotationAction (id) {
     return this.render("testBundle::index.html.twig", {
-      id: id
+      id
     });
   }
 
@@ -21,9 +20,9 @@ class annotation2Controller extends nodefony.controller {
    *    @Method ({ "POST", "PUT", "DELETE"})
    *    @Route ("/noname/{id}", name="", defaults={"id" = 5},requirements={"id" = "\d+"})
    */
-  annotation2Action(id) {
+  annotation2Action (id) {
     return this.render("testBundle::index.html.twig", {
-      id: id
+      id
     });
   }
 
@@ -35,9 +34,9 @@ class annotation2Controller extends nodefony.controller {
    *      requirements={"id" = "\d+"})
    *
    */
-  annotation3Action(id) {
+  annotation3Action (id) {
     return this.render("testBundle::index.html.twig", {
-      id: id
+      id
     });
   }
 }

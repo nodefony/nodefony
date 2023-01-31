@@ -1,4 +1,4 @@
-const cron = require('node-cron');
+const cron = require("node-cron");
 const defaultOptions = {
   scheduled: true,
   recoverMissedExecutions: false,
@@ -6,8 +6,7 @@ const defaultOptions = {
 };
 
 class Cron extends nodefony.Service {
-
-  constructor(container) {
+  constructor (container) {
     if (container) {
       super("CRON", container);
     } else {
@@ -18,11 +17,11 @@ class Cron extends nodefony.Service {
     this.cronTab = {};
   }
 
-  getTasks() {
-    return this.cron.getTasks()
+  getTasks () {
+    return this.cron.getTasks();
   }
 
-  getTask(name) {
+  getTask (name) {
     if (!name) {
       throw new Error(`Task : ${name} not exist in cron tab`);
     }
@@ -44,7 +43,7 @@ class Cron extends nodefony.Service {
    *    # * * * * * *
    *
    **/
-  createTask(name, param, options = defaultOptions, callback = null) {
+  createTask (name, param, options = defaultOptions, callback = null) {
     if (arguments.length !== 4) {
       throw new Error("Cron createTask bad parameters ");
     }
@@ -58,7 +57,7 @@ class Cron extends nodefony.Service {
       throw new Error(`Task name  : ${name} already exist in cron tab`);
     }
     try {
-      options.name = name ;
+      options.name = name;
       this.cronTab[name] = this.cron.schedule(param, callback, options);
       return this.cronTab[name];
     } catch (e) {
@@ -66,15 +65,15 @@ class Cron extends nodefony.Service {
     }
   }
 
-  startTask(name) {
+  startTask (name) {
     if (!name) {
       throw new Error("Cron startTask bad parameters name ");
     }
     if (name in this.cronTab) {
       try {
         const res = this.cronTab[name].start();
-        this.log(`Start Task : ${name} ! `,"INFO", "CRONTAB");
-        return res ;
+        this.log(`Start Task : ${name} ! `, "INFO", "CRONTAB");
+        return res;
       } catch (e) {
         throw e;
       }
@@ -82,7 +81,7 @@ class Cron extends nodefony.Service {
     throw new Error(`Cron startTask name: ${name} not found in cron tab !`);
   }
 
-  stopTask(name) {
+  stopTask (name) {
     if (!name) {
       throw new Error("Cron stopTask bad parameters name ");
     }
@@ -96,7 +95,7 @@ class Cron extends nodefony.Service {
     throw new Error(`Cron stopTask name: ${name} not found in cron tab !`);
   }
 
-  deleteTask(name) {
+  deleteTask (name) {
     if (!name) {
       throw new Error("Cron deleteTask bad parameters name ");
     }
@@ -110,7 +109,7 @@ class Cron extends nodefony.Service {
     throw new Error(`Cron deleteTask name: ${name} not found in cron tab !`);
   }
 
-  validate(param) {
+  validate (param) {
     try {
       return this.cron.validate(param);
     } catch (e) {
@@ -118,8 +117,7 @@ class Cron extends nodefony.Service {
       throw new Error(`Invalid Cron Expression : ${param}`);
     }
   }
-
 }
 
-nodefony.services.cron = Cron ;
+nodefony.services.cron = Cron;
 module.exports = Cron;

@@ -1,8 +1,7 @@
 module.exports = class websocketController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
-    this.context.createCookie("sboob", "dkkkkkkkkk")
+    this.context.createCookie("sboob", "dkkkkkkkkk");
   }
 
   /**
@@ -10,7 +9,7 @@ module.exports = class websocketController extends nodefony.controller {
    *  Routing
    *
    */
-  websocketAction(code) {
+  websocketAction (code) {
     switch (code) {
     case "404":
       return this.createNotFoundException();
@@ -26,18 +25,19 @@ module.exports = class websocketController extends nodefony.controller {
     }
   }
 
-  protocolAction() {
-    //console.log(this.context.request)
+  protocolAction () {
+    // console.log(this.context.request)
     return this.renderJson({
       protocol: this.context.acceptedProtocol,
       origin: this.context.originUrl
     });
   }
-  protocolSipAction() {
+
+  protocolSipAction () {
     return this.protocolAction();
   }
 
-  corsAction() {
+  corsAction () {
     return this.renderJson({
       crossDomain: this.context.isCrossDomain(),
       protocol: this.context.acceptedProtocol,
@@ -50,27 +50,27 @@ module.exports = class websocketController extends nodefony.controller {
    *    @Route ("/testws/query",
    *      name="route-wss-query")
    */
-  wsSecureAction(message){
+  wsSecureAction (message) {
     const api = new nodefony.api.Json({
       name: "Test-Api",
       version: this.bundle.version,
-      description: "Test Api Description",
+      description: "Test Api Description"
     }, this.context);
-    let user = this.getUser()
-    let session = this.session
-    //console.log(user, this.context.getCookies())
-    if (!message){
+    const user = this.getUser();
+    const {session} = this;
+    // console.log(user, this.context.getCookies())
+    if (!message) {
       return api.render({
-        handshake:"OK",
+        handshake: "OK",
         user,
-        idSession:session.id
-      })
+        idSession: session.id
+      });
     }
     return api.render({
       message,
       user,
-      idSession:session.id
-    })
+      idSession: session.id
+    });
   }
 
   /**
@@ -78,27 +78,27 @@ module.exports = class websocketController extends nodefony.controller {
    *      name="route-wss-cookie")
    *    @Method ({"WEBSOCKET"})
    */
-  wsSecureCookiesAction(message){
+  wsSecureCookiesAction (message) {
     const api = new nodefony.api.Json({
       name: "Test-Api",
       version: this.bundle.version,
-      description: "Test Api Description",
+      description: "Test Api Description"
     }, this.context);
-    let user = this.getUser()
-    let session = this.session
-    console.log(user)
-    if (!message){
+    const user = this.getUser();
+    const {session} = this;
+    console.log(user);
+    if (!message) {
       return api.render({
-        handshake:"OK",
+        handshake: "OK",
         user,
-        idSession:session.id
-      })
+        idSession: session.id
+      });
     }
     return api.render({
       message,
       user,
-      idSession:session.id
-    })
+      idSession: session.id
+    });
   }
 
   /**
@@ -106,36 +106,32 @@ module.exports = class websocketController extends nodefony.controller {
    *      name="route-wss-firewall-cookie")
    *    @Method ({"WEBSOCKET"})
    */
-   /*
+  /*
     var sock = new WebSocket("wss://localhost:5152/test/firewall/api/testws/cookie")
     sock.onmessage= function(msg){console.log(JSON.parse(msg.data))}
     sock.onerror= function(error){console.log(error.data)}
     sock.onclose= function(error){console.log(error.code, error.reason)}
   */
-  wsSecureFirewallCookiesAction(message){
+  wsSecureFirewallCookiesAction (message) {
     const api = new nodefony.api.Json({
       name: "Test-Api",
       version: this.bundle.version,
-      description: "Test Api Description",
+      description: "Test Api Description"
     }, this.context);
-    let user = this.getUser()
-    let session = this.session
-    console.log(user)
-    if (!message){
+    const user = this.getUser();
+    const {session} = this;
+    console.log(user);
+    if (!message) {
       return api.render({
-        handshake:"OK",
+        handshake: "OK",
         user,
-        idSession:session.id
-      })
+        idSession: session.id
+      });
     }
     return api.render({
       message,
       user,
-      idSession:session.id
-    })
+      idSession: session.id
+    });
   }
-
-
-
-
 };

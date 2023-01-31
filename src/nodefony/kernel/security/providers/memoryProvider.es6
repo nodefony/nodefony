@@ -1,29 +1,26 @@
 module.exports = nodefony.registerProvider("memoryProvider", () => {
-
   class memoryProvider extends nodefony.Provider {
-
-    constructor(security, config) {
+    constructor (security, config) {
       super("memoryProvider", security);
       this.config = config;
       this.users = {};
       if (this.config.users) {
-        for (let user in this.config.users) {
+        for (const user in this.config.users) {
           this.setUser(this.config.users[user]);
         }
       }
     }
 
-    loadUserByUsername(username) {
+    loadUserByUsername (username) {
       return new Promise((resolve, reject) => {
         if (username in this.users) {
           return resolve(this.users[username]);
-        } else {
-          return reject(new Error(`Provider : ${this.name} loadUserByUsername user ${username} not Found `));
         }
+        return reject(new Error(`Provider : ${this.name} loadUserByUsername user ${username} not Found `));
       });
     }
 
-    setUser(user) {
+    setUser (user) {
       if (user.username) {
         this.users[user.username] = new nodefony.User(
           user.username,
@@ -45,10 +42,9 @@ module.exports = nodefony.registerProvider("memoryProvider", () => {
       } else {
         throw new Error("Bad user format memory");
       }
-
     }
 
-    refreshUser(user) {
+    refreshUser (user) {
       if (user instanceof nodefony.User) {
         return this.loadUserByUsername(user.getUsername());
       }

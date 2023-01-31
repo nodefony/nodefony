@@ -1,5 +1,5 @@
-let translate = {};
-let langs = [];
+const translate = {};
+const langs = [];
 const reg = /^(..){1}_?(..)?$/;
 
 /*
@@ -9,10 +9,10 @@ const reg = /^(..){1}_?(..)?$/;
  *
  *
  */
-const pluginReader = function () {
+const pluginReader = (function () {
   // TODO
-  let getObjectTransXML = function () {};
-  let getObjectTransJSON = function (file, bundle, callback, parser) {
+  const getObjectTransXML = function () {};
+  const getObjectTransJSON = function (file, bundle, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -20,7 +20,7 @@ const pluginReader = function () {
       callback(JSON.parse(file));
     }
   };
-  let getObjectTransYml = function (file, bundle, callback, parser) {
+  const getObjectTransYml = function (file, bundle, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -34,28 +34,27 @@ const pluginReader = function () {
     yml: getObjectTransYml,
     xliff: null
   };
-}();
+}());
 
 const reader = function (service) {
-  let func = service.get("reader").loadPlugin("translating", pluginReader);
+  const func = service.get("reader").loadPlugin("translating", pluginReader);
   return function (result, bundle, locale, domain) {
     return func(result, bundle, service.nodeReader.bind(service, locale, domain));
   };
 };
 
 const Translation = class Translation extends nodefony.Service {
-
-  constructor(context, service) {
+  constructor (context, service) {
     super("translation", context.container, context.notificationsCenter);
     this.context = context;
-    this.service = service ;
+    this.service = service;
     this.setParameters("translate", translate);
     this.defaultDomain = service.defaultDomain;
     this.defaultLocale = service.defaultLocale;
     this.langs = langs;
   }
 
-  trans(value, domain = null, local = null) {
+  trans (value, domain = null, local = null) {
     let str = null;
     let mylocal = null;
     let myDomain = null;
@@ -69,16 +68,14 @@ const Translation = class Translation extends nodefony.Service {
         if (domain[1]) {
           local = domain[1];
         }
+      } else if (domain) {
+        myDomain = domain;
       } else {
-        if (domain) {
-          myDomain = domain;
-        } else {
-          myDomain = this.getTransDefaultDomain();
-        }
+        myDomain = this.getTransDefaultDomain();
       }
       mylocal = this.setLocal(local);
-      //console.log("translate." + mylocal + "." + myDomain + "." + value)
-      str = this.getParameters("translate." + mylocal + "." + myDomain + "." + value) || value;
+      // console.log("translate." + mylocal + "." + myDomain + "." + value)
+      str = this.getParameters(`translate.${mylocal}.${myDomain}.${value}`) || value;
     } catch (e) {
       this.log(e, "ERROR");
       return value;
@@ -86,40 +83,39 @@ const Translation = class Translation extends nodefony.Service {
     return str;
   }
 
-  getLangs() {
+  getLangs () {
     return this.langs;
   }
 
-  getLocale() {
+  getLocale () {
     return this.defaultLocale;
   }
 
-  setLocal(Lang) {
+  setLocal (Lang) {
     if (!Lang) {
       return this.defaultLocale;
     }
-    let res = reg.exec(Lang || this.defaultLocale);
+    const res = reg.exec(Lang || this.defaultLocale);
     if (res) {
       if (res[2]) {
         return res[0];
-      } else {
-        return res[1] + "_" + res[1];
       }
+      return `${res[1]}_${res[1]}`;
     }
     return this.defaultLocale;
   }
 
-  trans_default_domain(domain) {
+  trans_default_domain (domain) {
     if (domain) {
       this.defaultDomain = domain;
     }
   }
 
-  getTransDefaultDomain() {
+  getTransDefaultDomain () {
     return this.defaultDomain;
   }
 
-  getLang() {
+  getLang () {
     let Lang = null;
     if (this.context.request && this.context.request.queryGet && this.context.request.queryGet.language) {
       Lang = this.context.request.queryGet.language;
@@ -137,28 +133,25 @@ const Translation = class Translation extends nodefony.Service {
     this.defaultLocale = this.setLocal(Lang);
 
     if (this.context.session) {
-      if (! this.context.session.get("lang") ){
+      if (!this.context.session.get("lang")) {
         this.context.session.set("lang", this.defaultLocale);
       }
     }
     if (!this.service.getParameters(`translate.${this.defaultLocale}`)) {
       this.service.getFileLocale(this.defaultLocale);
-    } else {
-      if (!this.service.getParameters(`translate.${this.defaultLocale}.${this.defaultDomain}`)) {
-        this.service.getFileLocale(this.defaultLocale);
-      }
+    } else if (!this.service.getParameters(`translate.${this.defaultLocale}.${this.defaultDomain}`)) {
+      this.service.getFileLocale(this.defaultLocale);
     }
     return this.defaultLocale;
   }
 
-  handle() {
+  handle () {
     return this.getLang();
   }
 };
 
 module.exports = class translation extends nodefony.Service {
-
-  constructor(container) {
+  constructor (container) {
     super("I18N", container, container.get("notificationsCenter"));
     this.defaultLocale = this.getParameters("kernel.system.locale");
     this.setParameters("translate", translate);
@@ -167,22 +160,21 @@ module.exports = class translation extends nodefony.Service {
     this.langs = langs;
   }
 
-  boot() {
+  boot () {
     this.once("onBoot", async () => {
-      let dl = this.getParameters("bundles.app").App.locale;
+      const dl = this.getParameters("bundles.app").App.locale;
       if (dl) {
         this.defaultLocale = dl;
       }
       this.getFileLocale(dl);
-      this.log("default Local APPLICATION ==> " + this.defaultLocale, "DEBUG");
+      this.log(`default Local APPLICATION ==> ${this.defaultLocale}`, "DEBUG");
       this.getConfigLangs(this.getParameters("bundles.app.lang"));
     });
     translate[this.defaultLocale] = {};
-
   }
 
-  getConfigLangs(config) {
-    for (let ele in config) {
+  getConfigLangs (config) {
+    for (const ele in config) {
       langs.push({
         name: config[ele],
         value: ele
@@ -191,14 +183,14 @@ module.exports = class translation extends nodefony.Service {
     return langs;
   }
 
-  getLangs() {
+  getLangs () {
     return this.langs;
   }
 
-  nodeReader(locale, domain, value) {
+  nodeReader (locale, domain, value) {
     if (locale) {
       if (!translate[locale]) {
-        translate[locale] = {}; //nodefony.extend(true, {}, translate[this.defaultLocale]);
+        translate[locale] = {}; // nodefony.extend(true, {}, translate[this.defaultLocale]);
       }
     }
     if (domain) {
@@ -210,15 +202,18 @@ module.exports = class translation extends nodefony.Service {
       nodefony.extend(true, translate[locale], value);
     }
   }
-  createTranslation(context) {
+
+  createTranslation (context) {
     return new Translation(context, this);
   }
-  getFileLocale(locale) {
-    for (let bundle in this.kernel.bundles) {
+
+  getFileLocale (locale) {
+    for (const bundle in this.kernel.bundles) {
       this.kernel.bundles[bundle].registerI18n(locale);
     }
   }
-  getLocale() {
+
+  getLocale () {
     return this.defaultLocale;
   }
 };

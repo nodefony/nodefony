@@ -1,66 +1,66 @@
 module.exports = {
   Query: {
     //  provides all functions for each API endpoint
-    getOrm(obj, field, context, info) {
-      const orm = context.kernel.getOrm()
-      const Orm = context.kernel.getORM()
+    getOrm (obj, field, context, info) {
+      const orm = context.kernel.getOrm();
+      const Orm = context.kernel.getORM();
       return JSON.stringify({
         name: orm,
         debug: Orm.debug,
-        version:Orm.engine.version
+        version: Orm.engine.version
       });
     },
 
-    getConnectors(obj, field, context, info) {
-      const Orm = context.kernel.getORM()
+    getConnectors (obj, field, context, info) {
+      const Orm = context.kernel.getORM();
       return JSON.stringify(Orm.getConnectorsList());
     },
 
-    getConnector(obj, field, context, info) {
+    getConnector (obj, field, context, info) {
       const {
         name
-      } = field
-      const Orm = context.kernel.getORM()
-      let connectors = Orm.getConnectorsList()
+      } = field;
+      const Orm = context.kernel.getORM();
+      const connectors = Orm.getConnectorsList();
       if (name in connectors) {
-        let connector = connectors[name]
-        connector.entities = JSON.parse(this.getEntitiesByConnector(obj, field, context, info))
+        const connector = connectors[name];
+        connector.entities = JSON.parse(this.getEntitiesByConnector(obj, field, context, info));
         return JSON.stringify(connector);
       }
-      return JSON.stringify({})
+      return JSON.stringify({});
     },
 
-    getEntities(obj, field, context, info) {
-      const Orm = context.kernel.getORM()
+    getEntities (obj, field, context, info) {
+      const Orm = context.kernel.getORM();
       return JSON.stringify(Orm.getEntitiesList());
     },
 
-    getEntity(obj, field, context, info) {
+    getEntity (obj, field, context, info) {
       const {
         name
-      } = field
-      const Orm = context.kernel.getORM()
+      } = field;
+      const Orm = context.kernel.getORM();
       return JSON.stringify(Orm.getEntitiesList(null, name));
     },
 
-    getEntitiesByBundle(obj, field, context, info) {
+    getEntitiesByBundle (obj, field, context, info) {
       const {
         name
-      } = field
-      const Orm = context.kernel.getORM()
+      } = field;
+      const Orm = context.kernel.getORM();
       return JSON.stringify(Orm.getEntitiesList(name));
     },
 
-    getEntitiesByConnector(obj, field, context, info) {
+    getEntitiesByConnector (obj, field, context, info) {
       const {
         name
-      } = field
-      const Orm = context.kernel.getORM()
-      let res = []
-      const list = Orm.getEntitiesList()
-      for (let conn in list) {
+      } = field;
+      const Orm = context.kernel.getORM();
+      const res = [];
+      const list = Orm.getEntitiesList();
+      for (const conn in list) {
         if (list[conn].connectorName && list[conn].connectorName === name) {
-          res.push(list[conn])
+          res.push(list[conn]);
         }
       }
       return JSON.stringify(res);
@@ -68,4 +68,4 @@ module.exports = {
 
   }
 
-}
+};

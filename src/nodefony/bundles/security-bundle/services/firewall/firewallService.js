@@ -1,34 +1,33 @@
 let passport = null;
 let nodefonyPassport = null;
 try {
-  passport = require('passport');
-  //nodefonyPassport = require("@nodefony/passport-wrapper");
+  passport = require("passport");
+  // nodefonyPassport = require("@nodefony/passport-wrapper");
   nodefonyPassport = require(path.resolve(__dirname, "..", "..", "src", "passport", "passportFramework.js"));
 } catch (e) {
   this.log(e);
 }
 
-const pluginReader = function() {
-
-  let replaceKey = function(key) {
-    let tab = ['firewall', 'user', 'encoder'];
-    return (tab.indexOf(key) >= 0 ? key + 's' : key);
+const pluginReader = (function () {
+  const replaceKey = function (key) {
+    const tab = ["firewall", "user", "encoder"];
+    return tab.indexOf(key) >= 0 ? `${key}s` : key;
   };
 
-  let arrayToObject = function(tab) {
+  const arrayToObject = function (tab) {
     let obj = {};
     for (let i = 0; i < tab.length; i++) {
-      for (let key in tab[i]) {
-        if (tab[i].name && key !== 'name') {
+      for (const key in tab[i]) {
+        if (tab[i].name && key !== "name") {
           if (!obj[tab[i].name]) {
             obj[tab[i].name] = {};
             delete obj.name;
           }
-          obj[tab[i].name][key] = (tab[i][key] instanceof Array ? arrayToObject(tab[i][key]) : tab[i][key]);
-        } else if (key === 'rule') {
+          obj[tab[i].name][key] = tab[i][key] instanceof Array ? arrayToObject(tab[i][key]) : tab[i][key];
+        } else if (key === "rule") {
           obj = tab[i][key];
         } else {
-          let value = (tab[i][key] instanceof Array ? arrayToObject(tab[i][key]) : tab[i][key]);
+          const value = tab[i][key] instanceof Array ? arrayToObject(tab[i][key]) : tab[i][key];
           if (value && value.class && value.algorithm) {
             value[value.class] = value.algorithm;
             delete value.class;
@@ -37,22 +36,21 @@ const pluginReader = function() {
           obj[replaceKey(key)] = value;
         }
       }
-
     }
-    return (obj instanceof Object && Object.keys(obj).length === 0 ? null : obj);
+    return obj instanceof Object && Object.keys(obj).length === 0 ? null : obj;
   };
 
-  let importXmlConfig = function(xml, prefix, callback, parser) {
+  const importXmlConfig = function (xml, prefix, callback, parser) {
     if (parser) {
       xml = this.render(xml, parser.data, parser.options);
     }
     let config = {};
-    this.xmlParser.parseString(xml, function(err, node) {
-      for (let key in node) {
+    this.xmlParser.parseString(xml, (err, node) => {
+      for (const key in node) {
         switch (key) {
-          case 'config':
-            config = arrayToObject(node[key]);
-            break;
+        case "config":
+          config = arrayToObject(node[key]);
+          break;
         }
       }
     });
@@ -66,11 +64,11 @@ const pluginReader = function() {
     }
   };
 
-  let getObjectSecurityXML = function(file, callback, parser) {
-    importXmlConfig.call(this, file, '', callback, parser);
+  const getObjectSecurityXML = function (file, callback, parser) {
+    importXmlConfig.call(this, file, "", callback, parser);
   };
 
-  let getObjectSecurityJSON = function(file, callback, parser) {
+  const getObjectSecurityJSON = function (file, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -79,7 +77,7 @@ const pluginReader = function() {
     }
   };
 
-  let getObjectSecurityYml = function(file, callback, parser) {
+  const getObjectSecurityYml = function (file, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -94,7 +92,7 @@ const pluginReader = function() {
     yml: getObjectSecurityYml,
     annotation: null
   };
-}();
+}());
 
 
 /*
@@ -111,23 +109,22 @@ const optionStrategy = {
 };
 
 module.exports = class security extends nodefony.Service {
-
-  constructor(container, kernel, cors) {
+  constructor (container, kernel, cors) {
     super("FIREWALL", container, kernel.notificationsCenter);
-    //this.passport = passport.framework(nodefonyPassport(this));
-    //this.passport = passport ;
+    // this.passport = passport.framework(nodefonyPassport(this));
+    // this.passport = passport ;
     this.nodefonyPassport = nodefonyPassport;
     this.corsManager = cors;
-    this.reader = function(context) {
-      let func = context.get("reader").loadPlugin("security", pluginReader);
-      return function(result) {
+    this.reader = (function (context) {
+      const func = context.get("reader").loadPlugin("security", pluginReader);
+      return function (result) {
         try {
           return func(result, context.nodeReader.bind(context));
         } catch (e) {
           throw e;
         }
       };
-    }(this);
+    }(this));
     this.securedAreas = {};
     this.providerManager = new nodefony.providerManager(this);
     this.set("providerManager", this.providerManager);
@@ -139,32 +136,33 @@ module.exports = class security extends nodefony.Service {
       this.orm = this.get(this.kernel.settings.orm);
       this.settings = this.kernel.getBundle("security").settings.headers;
     });
-    /*this.once("onBoot", () => {
+
+    /* this.once("onBoot", () => {
       this.settings = this.kernel.getBundle("security").settings.headers;
     });*/
 
     this.bundleHttp = this.kernel.getBundles("http");
     this.bundleHttp.on("onServersReady", (type) => {
       switch (type) {
-        case "HTTPS":
-          this.httpsReady = this.get("httpsServer").ready;
-          break;
-        case "HTTP":
-          this.httpReady = this.get("httpServer").ready;
-          break;
-        case "HTTP2":
-          this.httpsReady = this.get("http2Server").ready;
-          break;
+      case "HTTPS":
+        this.httpsReady = this.get("httpsServer").ready;
+        break;
+      case "HTTP":
+        this.httpReady = this.get("httpServer").ready;
+        break;
+      case "HTTP2":
+        this.httpsReady = this.get("http2Server").ready;
+        break;
       }
     });
   }
 
-  newPassport() {
+  newPassport () {
     delete require.cache[require.resolve("passport")];
     return require("passport");
   }
 
-  handleSecurity(context, connection) {
+  handleSecurity (context, connection) {
     if (context.resolver && context.resolver.bypassFirewall) {
       return new Promise((resolve, reject) => {
         try {
@@ -177,74 +175,72 @@ module.exports = class security extends nodefony.Service {
     }
     this.fire("onSecurity", context);
     switch (context.type) {
-      case "HTTPS":
-      case "HTTP":
-      case "HTTP2":
-        context.response.setHeaders(this.settings[context.scheme]);
-        return new Promise((resolve, reject) => {
-          return this.handle(context)
-            .then((ctx) => {
-              switch (true) {
-                case ctx instanceof nodefony.Response:
-                case ctx instanceof nodefony.wsResponse:
-                case ctx instanceof nodefony.Context:
-                  try {
-                    return resolve(context.handle());
-                  } catch (e) {
-                    if (context.session) {
-                      //context.session.invalidate();
-                    }
-                    return reject(e);
-                  }
-                  break;
-                default:
-                  return resolve(ctx);
-              }
-            })
-            .catch(async (error) => {
-              if (context.translation) {
-                context.locale = context.translation.handle();
-              }
-              //context.fire("onError", context.container, error);
+    case "HTTPS":
+    case "HTTP":
+    case "HTTP2":
+      context.response.setHeaders(this.settings[context.scheme]);
+      return new Promise((resolve, reject) => this.handle(context)
+        .then((ctx) => {
+          switch (true) {
+          case ctx instanceof nodefony.Response:
+          case ctx instanceof nodefony.wsResponse:
+          case ctx instanceof nodefony.Context:
+            try {
+              return resolve(context.handle());
+            } catch (e) {
               if (context.session) {
-                if (context.response) {
-                  await context.session.invalidate();
-                }
+                // context.session.invalidate();
               }
-              return reject(error);
-            });
-        });
-      case "WEBSOCKET SECURE":
-      case "WEBSOCKET":
-        return this.handle(context, connection)
-          .then((ctx) => {
-            if (ctx) {
-              return ctx.handle();
+              return reject(e);
             }
-            return context;
-          })
-          .catch((error) => {
-            //context.fire("onError", context.container, error);
-            throw error;
-          });
+            break;
+          default:
+            return resolve(ctx);
+          }
+        })
+        .catch(async (error) => {
+          if (context.translation) {
+            context.locale = context.translation.handle();
+          }
+          // context.fire("onError", context.container, error);
+          if (context.session) {
+            if (context.response) {
+              await context.session.invalidate();
+            }
+          }
+          return reject(error);
+        }));
+    case "WEBSOCKET SECURE":
+    case "WEBSOCKET":
+      return this.handle(context, connection)
+        .then((ctx) => {
+          if (ctx) {
+            return ctx.handle();
+          }
+          return context;
+        })
+        .catch((error) => {
+          // context.fire("onError", context.container, error);
+          throw error;
+        });
     }
   }
 
-  isSecure(context) {
+  isSecure (context) {
     if (context.resolver && context.resolver.bypassFirewall) {
       return false;
     }
     context.accessControl = this.authorizationService.isControlledAccess(context);
-    context.isControlledAccess = (!!context.accessControl.length);
+    context.isControlledAccess = Boolean(context.accessControl.length);
     if (context.isControlledAccess) {
       this.log(`Front Controler isControlledAccess : ${context.isControlledAccess}`, "DEBUG");
     }
-    for (let area in this.securedAreas) {
+    for (const area in this.securedAreas) {
       if (this.securedAreas[area].match(context)) {
-        //FIXME PRIORITY
+        // FIXME PRIORITY
         context.security = this.securedAreas[area];
-        let state = context.security.stateLess ? "STATELESS" : "STATEFULL";
-        let msgid = `\x1b[36mSECURE AREA ${state}\x1b[0m`;
+        const state = context.security.stateLess ? "STATELESS" : "STATEFULL";
+        const msgid = `\x1b[36mSECURE AREA ${state}\x1b[0m`;
         context.security.log(`ENTER SECURE AREA : ${context.security.name}`, "DEBUG", msgid);
         return true;
       }
@@ -252,19 +248,19 @@ module.exports = class security extends nodefony.Service {
     return false;
   }
 
-  redirectHttps(context) {
+  redirectHttps (context) {
     // no cache
     context.redirectHttps(301);
     return context;
   }
 
-  redirectHttp(context) {
+  redirectHttp (context) {
     // no cache
     context.redirectHttp(301);
     return context;
   }
 
-  getFactory(name, area) {
+  getFactory (name, area) {
     let factory = null;
     if (area) {
       if (area in this.securedAreas) {
@@ -277,7 +273,7 @@ module.exports = class security extends nodefony.Service {
       }
       return factory;
     }
-    for (let area in this.securedAreas) {
+    for (const area in this.securedAreas) {
       if (this.securedAreas[area].nbFactories) {
         factory = this.securedAreas[area].getFactory(name);
       }
@@ -288,7 +284,7 @@ module.exports = class security extends nodefony.Service {
     return factory;
   }
 
-  getSessionToken(context, session) {
+  getSessionToken (context, session) {
     if (session) {
       context.metaSecurity = session.getMetaBag("security");
       if (context.metaSecurity) {
@@ -314,16 +310,15 @@ module.exports = class security extends nodefony.Service {
           context.user = token.user;
           context.token = token;
           return token;
-        } else {
-          this.deleteSessionToken(context, session);
-          return null;
         }
+        this.deleteSessionToken(context, session);
+        return null;
       }
     }
     return null;
   }
 
-  deleteSessionToken(context, session) {
+  deleteSessionToken (context, session) {
     if (session) {
       session.setMetaBag("security", "");
       context.token = null;
@@ -331,38 +326,36 @@ module.exports = class security extends nodefony.Service {
     }
   }
 
-  handleCrossDomain(context) {
+  handleCrossDomain (context) {
     let next = null;
     context.crossDomain = context.isCrossDomain();
     if (context.crossDomain) {
-      if (context.security /*&& this.kernel.domainCheck*/ ) {
+      if (context.security /* && this.kernel.domainCheck*/) {
         next = context.security.handleCrossDomain(context);
         switch (next) {
-          case 204:
-            return 204;
-          case 401:
-            let error = new Error("CROSS DOMAIN Unauthorized REQUEST REFERER : " + context.originUrl.href);
-            error.code = next;
-            throw error;
-          case 200:
-            this.log("\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : " + context.originUrl.href, "DEBUG");
-            return 200;
-        }
-      } else {
-        if (this.kernel.domainCheck) {
-          let error = new Error("CROSS DOMAIN Unauthorized REQUEST REFERER : " + context.originUrl.href);
-          error.code = 401;
+        case 204:
+          return 204;
+        case 401:
+          const error = new Error(`CROSS DOMAIN Unauthorized REQUEST REFERER : ${context.originUrl.href}`);
+          error.code = next;
           throw error;
-        } else {
+        case 200:
+          this.log(`\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : ${context.originUrl.href}`, "DEBUG");
           return 200;
         }
+      } else if (this.kernel.domainCheck) {
+        const error = new Error(`CROSS DOMAIN Unauthorized REQUEST REFERER : ${context.originUrl.href}`);
+        error.code = 401;
+        throw error;
+      } else {
+        return 200;
       }
     }
   }
 
-  startSession(context, state = "statefull") {
-    if(! context.sessionAutoStart){
-      if( context.security){
+  startSession (context, state = "statefull") {
+    if (!context.sessionAutoStart) {
+      if (context.security) {
         context.sessionAutoStart = context.security.sessionContext;
       }
     }
@@ -373,40 +366,39 @@ module.exports = class security extends nodefony.Service {
             .catch(async (error) => {
               await session.invalidate()
                 .then(() => {
-                  throw error
+                  throw error;
                 })
-                .catch(e => {
-                  throw error
-                })
+                .catch((e) => {
+                  throw error;
+                });
             });
         }
         if (state === "statefull") {
-          let token = this.getSessionToken(context, session);
+          const token = this.getSessionToken(context, session);
           if (token) {
             return context;
-          } else {
-            if (context.security) {
-              return this.handleStateLess(context)
-                .catch(async (error) => {
-                  await session.invalidate()
-                    .then(() => {
-                      throw error
-                    })
-                    .catch(e => {
-                      throw error
-                    })
-                });
-            }
-            return context;
           }
+          if (context.security) {
+            return this.handleStateLess(context)
+              .catch(async (error) => {
+                await session.invalidate()
+                  .then(() => {
+                    throw error;
+                  })
+                  .catch((e) => {
+                    throw error;
+                  });
+              });
+          }
+          return context;
         }
       })
-      .catch( (e) => {
-        throw e
-      })
+      .catch((e) => {
+        throw e;
+      });
   }
 
-  handle(context) {
+  handle (context) {
     return new Promise((resolve, reject) => {
       try {
         if (context.type === "HTTP" && this.httpsReady) {
@@ -415,22 +407,18 @@ module.exports = class security extends nodefony.Service {
           }
         }
         if (context.security && context.security.stateLess) {
-          if (context.sessionAutoStart /*|| context.hasSession()*/) {
+          if (context.sessionAutoStart /* || context.hasSession()*/) {
             return this.startSession(context, "stateless")
-              .then((ctx) => {
-                return resolve(ctx);
-              })
+              .then((ctx) => resolve(ctx))
               .catch((error) => {
                 if (!error.code) {
                   error.code = 401;
                 }
-                return reject(error)
-              })
+                return reject(error);
+              });
           }
           return this.handleStateLess(context)
-            .then((ctx) => {
-              return resolve(ctx);
-            })
+            .then((ctx) => resolve(ctx))
             .catch((error) => {
               if (!error.code) {
                 error.code = 401;
@@ -439,9 +427,7 @@ module.exports = class security extends nodefony.Service {
             });
         }
         return this.handleStateFull(context)
-          .then((ctx) => {
-            return resolve(ctx);
-          })
+          .then((ctx) => resolve(ctx))
           .catch((error) => {
             if (!error.code) {
               error.code = 401;
@@ -454,35 +440,33 @@ module.exports = class security extends nodefony.Service {
     });
   }
 
-  handleStateLess(context) {
+  handleStateLess (context) {
     return context.security.handle(context)
       .then((ctx) => {
-        if (ctx.isControlledAccess && (!ctx.checkLogin)) {
+        if (ctx.isControlledAccess && !ctx.checkLogin) {
           return this.authorizationService.handle(ctx);
-        } else {
-          return ctx;
         }
+        return ctx;
       })
-      .catch(e => {
+      .catch((e) => {
         throw e;
-      })
+      });
   }
 
-  handleStateFull(context) {
+  handleStateFull (context) {
     return this.startSession(context)
       .then((ctx) => {
-        if (ctx.isControlledAccess && (!ctx.checkLogin)) {
+        if (ctx.isControlledAccess && !ctx.checkLogin) {
           return this.authorizationService.handle(ctx);
-        } else {
-          return ctx;
         }
+        return ctx;
       })
-      .catch(e => {
+      .catch((e) => {
         throw e;
-      })
+      });
   }
 
-  logout(context) {
+  logout (context) {
     context.request.request.headers.authorization = "";
     context.response.setHeader("authorization", "");
     if (context.token && context.token.factory) {
@@ -492,7 +476,7 @@ module.exports = class security extends nodefony.Service {
         if (factory) {
           this.log(`Logout factory : ${factory.name} token : ${context.token.name} `, "DEBUG");
           return factory.logout(context)
-            .catch(e => {
+            .catch((e) => {
               throw e;
             });
         }
@@ -501,175 +485,171 @@ module.exports = class security extends nodefony.Service {
       if (factory) {
         this.log(`Logout factory : ${factory.name}`, "DEBUG");
         return factory.logout(context)
-          .catch(e => {
+          .catch((e) => {
             throw e;
           });
       }
     }
     if (context.security) {
       return context.security.logout(context)
-        .catch(e => {
+        .catch((e) => {
           throw e;
         });
     }
     if (context.session) {
       return context.session.destroy(true)
-        .then(() => {
-          return context;
-        }).catch(e => {
+        .then(() => context)
+        .catch((e) => {
           throw e;
         });
     }
-    return new Promise((resolve) => {
-      return resolve(context);
-    });
+    return new Promise((resolve) => resolve(context));
   }
 
-  setSessionStrategy(strategy) {
+  setSessionStrategy (strategy) {
     if (strategy in optionStrategy) {
-      this.log("Set Session Strategy  : " + strategy, "DEBUG");
+      this.log(`Set Session Strategy  : ${strategy}`, "DEBUG");
       return this.sessionStrategy = strategy;
     }
     throw new Error("sessionStrategy strategy not found");
   }
 
-  nodeReader(obj) {
+  nodeReader (obj) {
     obj = obj.security;
-    for (let ele in obj) {
+    for (const ele in obj) {
       switch (ele) {
-        case "firewalls":
-          for (let firewall in obj[ele]) {
-            let param = obj[ele][firewall];
-            let area = this.addSecuredArea(firewall);
-            if (!area) {
-              continue;
-            }
-            for (let config in param) {
-              switch (config) {
-                case "pattern":
-                  area.setPattern(param[config]);
-                  break;
-                case "crossDomain":
-                  area.setCors(param[config]);
-                  break;
-                case "form_login":
-                  if (param[config].login_path) {
-                    area.setFormLogin(param[config].login_path);
-                  }
-                  if (param[config].check_path) {
-                    area.setCheckLogin(param[config].check_path);
-                  }
-                  if (param[config].default_target_path) {
-                    area.setDefaultTarget(param[config].default_target_path);
-                  }
-                  if (param[config].always_use_default_target_path) {
-                    area.setAlwaysUseDefaultTarget(param[config].always_use_default_target_path);
-                  }
-                  break;
-                case "remember_me":
-                  //TODO
-                  break;
-                case "logout":
-                  //TODO
-                  break;
-                case "stateless":
-                  area.setStateLess(param[config]);
-                  break;
-                case "redirectHttps":
-                  area.setRedirectHttps(param[config]);
-                  break;
-                case "provider":
-                  area.setProviderName(param[config]);
-                  break;
-                case "context":
-                  if (param[config]) {
-                    this.once("onBoot", async () => {
-                      area.setContextSession(param[config]);
-                      this.sessionService.addContextSession(param[config]);
-                    });
-                  }
-                  break;
-                default:
-                  this.once("onBoot", async () => {
-                    if (config in nodefony.security.factories) {
-                      area.setFactory(config, param[config]);
-                    } else {
-                      //area.factoryName = config;
-                      this.log("FACTORY : " + config + " not found in nodefony namespace", "ERROR");
-                    }
-                  });
-              }
-            }
+      case "firewalls":
+        for (const firewall in obj[ele]) {
+          const param = obj[ele][firewall];
+          const area = this.addSecuredArea(firewall);
+          if (!area) {
+            continue;
           }
-          break;
-        case "session_fixation_strategy":
-          this.once("onBoot", async () => {
-            this.setSessionStrategy(obj[ele]);
-            this.sessionService.setSessionStrategy(this.sessionStrategy);
-          });
-          break;
-        case "access_control":
-          this.once("onBoot", async () => {
-            this.authorizationService.setAccessControl(obj[ele]);
-          });
-          break;
-        case "encoders":
-          this.once("onBoot", async () => {
-            this.orm.prependOnceListener("onOrmReady", () => {
-              for (let entity in obj[ele]) {
-                try {
-                  if (entity in this.orm.entities) {
-                    let myEntity = this.orm.entities[entity];
-                    if (obj[ele][entity].algorithm) {
-                      let algo = obj[ele][entity].algorithm;
-                      if (algo in nodefony.encoders) {
-                        delete obj[ele][entity].algorithm;
-                        myEntity.setEncoder(new nodefony.encoders[algo](obj[ele][entity]));
-                        continue;
-                      }
-                      throw new Error(`Encoder algorithm ${algo} not registered ! `);
-                    }
-                    throw new Error(`In configuration Entity ${entity} Encoder algorithm not defined ! `);
-                  }
-                } catch (e) {
-                  throw e;
+          for (const config in param) {
+            switch (config) {
+            case "pattern":
+              area.setPattern(param[config]);
+              break;
+            case "crossDomain":
+              area.setCors(param[config]);
+              break;
+            case "form_login":
+              if (param[config].login_path) {
+                area.setFormLogin(param[config].login_path);
+              }
+              if (param[config].check_path) {
+                area.setCheckLogin(param[config].check_path);
+              }
+              if (param[config].default_target_path) {
+                area.setDefaultTarget(param[config].default_target_path);
+              }
+              if (param[config].always_use_default_target_path) {
+                area.setAlwaysUseDefaultTarget(param[config].always_use_default_target_path);
+              }
+              break;
+            case "remember_me":
+              // TODO
+              break;
+            case "logout":
+              // TODO
+              break;
+            case "stateless":
+              area.setStateLess(param[config]);
+              break;
+            case "redirectHttps":
+              area.setRedirectHttps(param[config]);
+              break;
+            case "provider":
+              area.setProviderName(param[config]);
+              break;
+            case "context":
+              if (param[config]) {
+                this.once("onBoot", async () => {
+                  area.setContextSession(param[config]);
+                  this.sessionService.addContextSession(param[config]);
+                });
+              }
+              break;
+            default:
+              this.once("onBoot", async () => {
+                if (config in nodefony.security.factories) {
+                  area.setFactory(config, param[config]);
+                } else {
+                  // area.factoryName = config;
+                  this.log(`FACTORY : ${config} not found in nodefony namespace`, "ERROR");
                 }
-              }
-            });
-          });
-          break;
-        case "providers":
-          for (let name in obj[ele]) {
-            this.log("DECLARE FIREWALL PROVIDER NAME " + name, "DEBUG");
-            try {
-              this.providerManager.addConfiguration(name, obj[ele][name]);
-            } catch (e) {
-              this.log(e, "ERROR");
+              });
             }
           }
-          break;
+        }
+        break;
+      case "session_fixation_strategy":
+        this.once("onBoot", async () => {
+          this.setSessionStrategy(obj[ele]);
+          this.sessionService.setSessionStrategy(this.sessionStrategy);
+        });
+        break;
+      case "access_control":
+        this.once("onBoot", async () => {
+          this.authorizationService.setAccessControl(obj[ele]);
+        });
+        break;
+      case "encoders":
+        this.once("onBoot", async () => {
+          this.orm.prependOnceListener("onOrmReady", () => {
+            for (const entity in obj[ele]) {
+              try {
+                if (entity in this.orm.entities) {
+                  const myEntity = this.orm.entities[entity];
+                  if (obj[ele][entity].algorithm) {
+                    const algo = obj[ele][entity].algorithm;
+                    if (algo in nodefony.encoders) {
+                      delete obj[ele][entity].algorithm;
+                      myEntity.setEncoder(new nodefony.encoders[algo](obj[ele][entity]));
+                      continue;
+                    }
+                    throw new Error(`Encoder algorithm ${algo} not registered ! `);
+                  }
+                  throw new Error(`In configuration Entity ${entity} Encoder algorithm not defined ! `);
+                }
+              } catch (e) {
+                throw e;
+              }
+            }
+          });
+        });
+        break;
+      case "providers":
+        for (const name in obj[ele]) {
+          this.log(`DECLARE FIREWALL PROVIDER NAME ${name}`, "DEBUG");
+          try {
+            this.providerManager.addConfiguration(name, obj[ele][name]);
+          } catch (e) {
+            this.log(e, "ERROR");
+          }
+        }
+        break;
       }
     }
   }
 
-  addSecuredArea(name) {
+  addSecuredArea (name) {
     if (!this.securedAreas[name]) {
       this.securedAreas[name] = new nodefony.SecuredArea(name, this);
-      this.log("ADD security context : " + name, "DEBUG");
+      this.log(`ADD security context : ${name}`, "DEBUG");
       return this.securedAreas[name];
-    } else {
-      this.log("securedAreas :" + name + " already exist ", "WARNING");
     }
+    this.log(`securedAreas :${name} already exist `, "WARNING");
   }
 
-  getSecuredArea(name) {
+  getSecuredArea (name) {
     if (name in this.securedAreas) {
       return this.securedAreas[name];
     }
     return null;
   }
 
-  log(pci, severity, msgid, msg) {
+  log (pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = "\x1b[36mFIREWALL\x1b[0m";
     }

@@ -1,16 +1,15 @@
 const regBundleName = /^(\w+)-bundle[\.js]{0,3}$|^(\w+)[Bb]undle[\.js]{0,3}$/;
 
 class generateBundle extends nodefony.Builder {
-
-  constructor(cli, cmd, args) {
+  constructor (cli, cmd, args) {
     super(cli, cmd, args);
     this.name = null;
     this.location = null;
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
     if (this.cmd === "generate:bundles" || this.cmd === "create:bundles") {
       if (args && args[0]) {
-        //this.name = args[0];
-        //this.cli.response.name = args[0];
+        // this.name = args[0];
+        // this.cli.response.name = args[0];
         if (args[1]) {
           this.setLocation(args[1]);
           this.checkPath(args[0], args[1]);
@@ -47,39 +46,33 @@ class generateBundle extends nodefony.Builder {
     this.setEnv();
   }
 
-  generate(response) {
+  generate (response) {
     return super.generate(response)
-      .then(() => {
-        return this.buildFront(this.response, this.path)
-          .run(this.cli.interactive)
-          .then((bundle) => {
-            return this.install()
-              .then(() => {
-                return bundle.response;
-              })
-              .catch((e) => {
-                throw e;
-              });
-          })
+      .then(() => this.buildFront(this.response, this.path)
+        .run(this.cli.interactive)
+        .then((bundle) => this.install()
+          .then(() => bundle.response)
           .catch((e) => {
             throw e;
-          });
-      });
+          }))
+        .catch((e) => {
+          throw e;
+        }));
   }
 
-  async interaction() {
+  async interaction () {
     this.cli.reset();
     await this.cli.showAsciify("Generate Bundle");
-    let prompt = [{
-      type: 'input',
-      name: 'name',
+    const prompt = [{
+      type: "input",
+      name: "name",
       default: this.name || "",
-      message: 'Enter Bundle Name',
+      message: "Enter Bundle Name",
       validate: (value) => {
         if (value && value !== "nodefony") {
-          let res = this.checkExist(value);
+          const res = this.checkExist(value);
           if (res) {
-            return "Bundle already exist " + value;
+            return `Bundle already exist ${value}`;
           }
           this.name = value;
           return true;
@@ -87,23 +80,23 @@ class generateBundle extends nodefony.Builder {
         return `${value} Unauthorised Please enter a valid Bundle name`;
       }
     }, {
-      type: 'input',
-      name: 'location',
+      type: "input",
+      name: "location",
       default: this.location,
-      message: 'Enter Bundle Path',
+      message: "Enter Bundle Path",
       validate: (value) => {
         if (value) {
           this.checkPath(this.name, value);
           return true;
         }
-        return 'Please enter a valid Bundle Path';
+        return "Please enter a valid Bundle Path";
       }
     }, {
-      type: 'list',
-      name: 'front',
+      type: "list",
+      name: "front",
       default: 0,
       pageSize: 10,
-      //choices: ["Sandbox (without Front framwork)", "Vue.js", "React"],
+      // choices: ["Sandbox (without Front framwork)", "Vue.js", "React"],
       choices: [{
         name: "Sandbox (without Front framwork)"
       }, {
@@ -114,7 +107,7 @@ class generateBundle extends nodefony.Builder {
         name: "Api",
         disabled: true
       }],
-      message: 'Choose Bundle Type (Mapping Front Framework in Bundle) :',
+      message: "Choose Bundle Type (Mapping Front Framework in Bundle) :",
       filter: (value) => {
         let front = null;
         switch (value) {
@@ -125,10 +118,10 @@ class generateBundle extends nodefony.Builder {
           front = "vue";
           break;
         case "React":
-          front = 'react';
+          front = "react";
           break;
         case "Api":
-          front = 'api';
+          front = "api";
           break;
         default:
           front = value;
@@ -146,36 +139,38 @@ class generateBundle extends nodefony.Builder {
               if (myresponse.remove) {
                 return response;
               }
-              let error = new Error(`${this.path} Already exist`);
+              const error = new Error(`${this.path} Already exist`);
               error.code = 0;
               throw error;
-            }).catch((e) => {
+            })
+            .catch((e) => {
               throw e;
             });
         }
         return response;
-      }).catch(e => {
+      })
+      .catch((e) => {
         throw e;
       });
   }
 
-  getBundle(name) {
-    let bundle = this.checkExist(name);
+  getBundle (name) {
+    const bundle = this.checkExist(name);
     if (!bundle) {
-      throw new Error("bundle " + name + " don't exist ");
+      throw new Error(`bundle ${name} don't exist `);
     }
     this.setPath(null, bundle);
     return bundle;
   }
 
-  checkExist(name) {
+  checkExist (name) {
     if (this.cli.kernel) {
-      let bundle = this.cli.kernel.getBundle(name);
+      const bundle = this.cli.kernel.getBundle(name);
       if (bundle) {
         return bundle;
       }
       try {
-        let bundleName = this.cli.kernel.getBundleName(name);
+        const bundleName = this.cli.kernel.getBundleName(name);
         if (bundleName) {
           return this.cli.kernel.getBundle(bundleName);
         }
@@ -187,13 +182,13 @@ class generateBundle extends nodefony.Builder {
     return null;
   }
 
-  setPath(Path, bundle) {
+  setPath (Path, bundle) {
     if (bundle) {
       this.name = bundle.bundleName;
       this.shortName = bundle.name;
       this.location = bundle.location;
       this.bundlePath = bundle.path;
-      this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
+      this.bundleFile = path.resolve(this.bundlePath, `${this.shortName}Bundle.js`);
     } else {
       if (Path instanceof nodefony.fileClass) {
         this.location = Path.path;
@@ -204,7 +199,7 @@ class generateBundle extends nodefony.Builder {
         this.location = Path;
       }
       this.bundlePath = path.resolve(this.location, this.name);
-      this.bundleFile = path.resolve(this.bundlePath, this.shortName + "Bundle.js");
+      this.bundleFile = path.resolve(this.bundlePath, `${this.shortName}Bundle.js`);
     }
     nodefony.extend(this.response, {
       bundleName: this.name,
@@ -214,16 +209,16 @@ class generateBundle extends nodefony.Builder {
     });
   }
 
-  checkPath(name, Path) {
+  checkPath (name, Path) {
     if (!name) {
       if (!this.name) {
         throw new Error("No bundle name");
       }
       name = this.name;
     }
-    let bundle = this.checkExist(name);
+    const bundle = this.checkExist(name);
     if (bundle) {
-      throw new Error("Bundle already exist " + name);
+      throw new Error(`Bundle already exist ${name}`);
     }
     this.shortName = name;
     let res = regBundleName.exec(name);
@@ -231,12 +226,12 @@ class generateBundle extends nodefony.Builder {
       this.shortName = res[1];
       this.name = name;
     } else {
-      this.name = name + "-bundle";
+      this.name = `${name}-bundle`;
       res = regBundleName.exec(this.name);
       if (res) {
         this.shortName = res[1];
       } else {
-        throw new Error("Bad bundle name :" + this.name);
+        throw new Error(`Bad bundle name :${this.name}`);
       }
     }
     try {
@@ -247,7 +242,7 @@ class generateBundle extends nodefony.Builder {
     }
   }
 
-  createBuilder() {
+  createBuilder () {
     try {
       return {
         name: this.name,
@@ -259,7 +254,7 @@ class generateBundle extends nodefony.Builder {
     }
   }
 
-  install() {
+  install () {
     try {
       let json = null;
       let configPath = null;
@@ -291,11 +286,11 @@ class generateBundle extends nodefony.Builder {
         json.system.bundles[this.name] = `file:${this.bundlePath}`;
       }
       fs.writeFileSync(configPath, yaml.dump(json), {
-        encoding: 'utf8'
+        encoding: "utf8"
       });
 
       try {
-        let file = new nodefony.fileClass(this.bundleFile);
+        const file = new nodefony.fileClass(this.bundleFile);
         if (this.cli.kernel) {
           this.cli.kernel.loadBundle(file);
         }
@@ -311,23 +306,22 @@ class generateBundle extends nodefony.Builder {
     }
   }
 
-  static controller(cli) {
-    let controller = require(path.resolve(__dirname, "controller.js"));
+  static controller (cli) {
+    const controller = require(path.resolve(__dirname, "controller.js"));
     return new controller(cli);
   }
 
-  static service() {
+  static service () {
 
   }
 
-  static entity() {
+  static entity () {
 
   }
 
-  static command() {
+  static command () {
 
   }
-
 }
 
 nodefony.builders.bundle = generateBundle;

@@ -11,21 +11,22 @@
  *
  *        GENERATE BY nodefony-core BUILDER
  */
-const path = require("path")
-const serveStatic = require('serve-static');
+const path = require("path");
+const serveStatic = require("serve-static");
 
 const setCustomCacheControl = (res, Path) => {
-  if (serveStatic.mime.lookup(Path) === 'text/html') {
+  if (serveStatic.mime.lookup(Path) === "text/html") {
     // Custom Cache-Control for HTML files
-    res.setHeader('Cache-Control', 'public, max-age=0')
-    res.setHeader('content-type', 'text/html; charset=UTF-8')
-    //res.setHeader('Content-Security-Policy',`frame-src ${kernel.domain}`)
+    res.setHeader("Cache-Control", "public, max-age=0");
+    res.setHeader("content-type", "text/html; charset=UTF-8");
+    // res.setHeader('Content-Security-Policy',`frame-src ${kernel.domain}`)
   }
-}
+};
 
 module.exports = {
   type: "vue",
   locale: "en_en",
+
   /**
    *    WATCHERS
    *
@@ -45,6 +46,7 @@ module.exports = {
    *
    */
   watch: true,
+
   /**
    * DEV SERVER
    */
@@ -64,7 +66,7 @@ module.exports = {
   forceDebugBarProd: false,
   profiler: {
     active: true,
-    storage: 'orm'
+    storage: "orm"
   },
 
   swagger: require(path.resolve(__dirname, "..", "swagger", "config.js")),
@@ -76,7 +78,7 @@ module.exports = {
       vuepress: {
         path: path.resolve(__dirname, "..", "..", "vuepress", "public"),
         options: {
-          index: ['index.html'],
+          index: ["index.html"],
           maxAge: 0,
           setHeaders: setCustomCacheControl
         }

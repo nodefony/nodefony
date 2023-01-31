@@ -6,20 +6,20 @@
  *  @Route ("/api")
  */
 
-//schemas
+// schemas
 const NodefonyType = require(path.resolve(__dirname, "schemas", "nodefonyType.js"));
-let usersStaticType = null
-let usersStaticResolver = null
+let usersStaticType = null;
+let usersStaticResolver = null;
 if (kernel.ready) {
-  usersStaticType = kernel.getBundles("users").getController('graphql').types;
-  usersStaticResolver = kernel.getBundles("users").getController('graphql').resolvers;
+  usersStaticType = kernel.getBundles("users").getController("graphql").types;
+  usersStaticResolver = kernel.getBundles("users").getController("graphql").resolvers;
 } else {
   kernel.on("onReady", () => {
-    usersStaticType = kernel.getBundles("users").getController('graphql').types;
-    usersStaticResolver = kernel.getBundles("users").getController('graphql').resolvers;
-  })
+    usersStaticType = kernel.getBundles("users").getController("graphql").types;
+    usersStaticResolver = kernel.getBundles("users").getController("graphql").resolvers;
+  });
 }
-//resolvers
+// resolvers
 const Router = require(path.resolve(__dirname, "resolvers", "router.js"));
 const Sessions = require(path.resolve(__dirname, "resolvers", "sessions.js"));
 const Requests = require(path.resolve(__dirname, "resolvers", "requests.js"));
@@ -35,11 +35,10 @@ const Jwt = require(path.resolve(__dirname, "resolvers", "jwt.js"));
 const Webpack = require(path.resolve(__dirname, "resolvers", "webpack.js"));
 
 module.exports = class graphqlController extends nodefony.Controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
     try {
-      //this.startSession("graphql")
+      // this.startSession("graphql")
       // graphql api
       const schema = graphqlController.schema(this.context);
       this.api = new nodefony.api.Graphql({
@@ -47,8 +46,8 @@ module.exports = class graphqlController extends nodefony.Controller {
         version: this.bundle.version,
         description: "nodefony graphql Api",
         basePath: "/api/graphql",
-        schema: schema,
-        //rootValue: this
+        schema
+        // rootValue: this
       }, this.context);
     } catch (e) {
       this.log(e, "ERROR");
@@ -60,14 +59,13 @@ module.exports = class graphqlController extends nodefony.Controller {
    *    @Method ({"GET", "POST","OPTIONS"})
    *    @Route ( "/graphql",name="api-nodefony-graphql")
    */
-  graphqlAction() {
-    //console.log(this.getSession() ? this.getSession().contextSession : null)
+  graphqlAction () {
+    // console.log(this.getSession() ? this.getSession().contextSession : null)
     try {
       return this.api.query(this.query.query, this.query.variables, this.query.operationName)
-        .then((data) => {
-          return this.api.render(data);
-        }).catch((e) => {
-          this.api.logger(this.query.query, "WARNING")
+        .then((data) => this.api.render(data))
+        .catch((e) => {
+          this.api.logger(this.query.query, "WARNING");
           this.api.log(e, "ERROR");
           return this.api.renderError(e, 400);
         });
@@ -76,6 +74,7 @@ module.exports = class graphqlController extends nodefony.Controller {
       throw e;
     }
   }
+
   /**
    *    @Method ({"WEBSOCKET"})
    *    @Route (
@@ -84,7 +83,7 @@ module.exports = class graphqlController extends nodefony.Controller {
    *      requirements={"protocol" = "graphql-transport-ws"}
    *    )
    */
-  /*graphqlWsAction(message) {
+  /* graphqlWsAction(message) {
     if(message){
       console.log("pass message", message)
     }else{
@@ -94,7 +93,7 @@ module.exports = class graphqlController extends nodefony.Controller {
     }
   }*/
 
-  /*static provider(context) {
+  /* static provider(context) {
     const UsersProvider = usersStaticProvider(context);
     const prov = nodefony.extend(
       //Nodefony,
@@ -114,23 +113,23 @@ module.exports = class graphqlController extends nodefony.Controller {
     return prov
   }*/
 
-  static schema(context) {
+  static schema (context) {
     return nodefony.api.Graphql.makeExecutableSchema({
       typeDefs: graphqlController.types(context),
-      resolvers: graphqlController.resolvers(context),
-    })
+      resolvers: graphqlController.resolvers(context)
+    });
   }
 
-  static types(context) {
-    const types = [NodefonyType]
+  static types (context) {
+    const types = [NodefonyType];
     if (usersStaticType) {
       types.push(usersStaticType(context));
     }
-    return types
+    return types;
   }
 
-  static resolvers(context) {
-    const resolvers =  [
+  static resolvers (context) {
+    const resolvers = [
       Nodefony,
       Config,
       Bundle,
@@ -145,10 +144,9 @@ module.exports = class graphqlController extends nodefony.Controller {
       Jwt,
       Webpack
     ];
-    if( usersStaticResolver){
+    if (usersStaticResolver) {
       resolvers.push(usersStaticResolver(context));
     }
     return resolvers;
   }
-
-}
+};

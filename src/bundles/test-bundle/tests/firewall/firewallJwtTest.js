@@ -10,12 +10,12 @@
  *
  */
 
-//const http = require("http");
-//var https = require("https");
-//const WebSocketClient = require('websocket').client;
-const assert = require('assert');
-//var querystring = require("querystring");
-const request = require('request');
+// const http = require("http");
+// var https = require("https");
+// const WebSocketClient = require('websocket').client;
+const assert = require("assert");
+// var querystring = require("querystring");
+const request = require("request");
 
 /*
 test-api-area:
@@ -37,16 +37,15 @@ test-api-area:
 */
 
 
-describe("BUNDLE TEST", function () {
-
-  before(function () {
+describe("BUNDLE TEST", () => {
+  before(() => {
     // cookies container
-    let myjar = request.jar();
+    const myjar = request.jar();
     global.firewall = kernel.get("security");
     global.options = {
-      baseUrl: "http://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpPort,
+      baseUrl: `http://${kernel.settings.system.domain}:${kernel.settings.system.httpPort}`,
       url: "/test/firewall/api",
-      method: 'GET',
+      method: "GET",
       encoding: "utf8",
       jar: myjar,
       followRedirect: true,
@@ -55,9 +54,9 @@ describe("BUNDLE TEST", function () {
       }
     };
     global.optionsLocal = {
-      baseUrl: "http://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpPort,
+      baseUrl: `http://${kernel.settings.system.domain}:${kernel.settings.system.httpPort}`,
       url: "/test/firewall/local",
-      method: 'POST',
+      method: "POST",
       encoding: "utf8",
       headers: {
         Accept: "application/json"
@@ -72,10 +71,9 @@ describe("BUNDLE TEST", function () {
     };
   });
 
-  describe('AREA: test-api-area Factory: passport-jwt', () => {
-
+  describe("AREA: test-api-area Factory: passport-jwt", () => {
     it("Settings test-api-area", (done) => {
-      let apiArea = global.firewall.securedAreas["test-api-area"];
+      const apiArea = global.firewall.securedAreas["test-api-area"];
       assert(apiArea);
       assert.deepStrictEqual(apiArea.sessionContext, "default");
       assert.deepStrictEqual(apiArea.stateLess, true);
@@ -83,9 +81,9 @@ describe("BUNDLE TEST", function () {
       assert(apiArea.factories.length);
       assert.deepStrictEqual(apiArea.factories.length, 1);
       assert.deepStrictEqual(apiArea.factories[0].name, "jwt");
-      assert.deepStrictEqual(apiArea.stringPattern, '^/test/firewall/api');
+      assert.deepStrictEqual(apiArea.stringPattern, "^/test/firewall/api");
       try {
-        let res = apiArea.pattern.test("/test/firewall/api");
+        const res = apiArea.pattern.test("/test/firewall/api");
         assert.ok(res);
       } catch (e) {
         throw e;
@@ -94,7 +92,7 @@ describe("BUNDLE TEST", function () {
     });
 
     it("Enter AREA  follow redirect https", (done) => {
-      request(global.options, (error /*, response, body*/ ) => {
+      request(global.options, (error /* , response, body*/) => {
         if (error) {
           done();
           return;
@@ -105,22 +103,22 @@ describe("BUNDLE TEST", function () {
 
     it("Enter AREA  redirect https", (done) => {
       global.options.followRedirect = false;
-      request(global.options, (error, response /*, body*/ ) => {
+      request(global.options, (error, response /* , body*/) => {
         if (error) {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 301);
         assert.deepStrictEqual(response.statusMessage, "Moved Permanently");
-        assert.deepStrictEqual(response.headers.location, "https://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpsPort + global.options.url);
+        assert.deepStrictEqual(response.headers.location, `https://${kernel.settings.system.domain}:${kernel.settings.system.httpsPort}${global.options.url}`);
         done();
       });
     });
 
     it("Enter AREA json", (done) => {
-      let service = kernel.get("httpsServer");
-      let res = service.getCertificats();
+      const service = kernel.get("httpsServer");
+      const res = service.getCertificats();
       global.options.followRedirect = true;
-      global.options.baseUrl = "https://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpsPort;
+      global.options.baseUrl = `https://${kernel.settings.system.domain}:${kernel.settings.system.httpsPort}`;
       global.options.key = res.key;
       global.options.cert = res.cert;
       global.options.ca = res.ca;
@@ -129,12 +127,12 @@ describe("BUNDLE TEST", function () {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 401);
-        assert.deepStrictEqual(response.statusMessage, 'No auth token');
-        let json = JSON.parse(body);
+        assert.deepStrictEqual(response.statusMessage, "No auth token");
+        const json = JSON.parse(body);
         assert.equal(json.code, 401);
         assert.deepStrictEqual(json.message, "No auth token");
         assert.deepStrictEqual(json.url, global.options.baseUrl + global.options.url);
-        //assert(json.pdu);
+        // assert(json.pdu);
         done();
       });
     });
@@ -146,10 +144,10 @@ describe("BUNDLE TEST", function () {
         if (error) {
           throw error;
         }
-        //assert.deepStrictEqual(body, "");
+        // assert.deepStrictEqual(body, "");
         assert.deepStrictEqual(response.headers.location, "/test/firewall/jwt");
         assert.deepStrictEqual(response.statusCode, 301);
-        assert.deepStrictEqual(response.statusMessage, 'No auth token');
+        assert.deepStrictEqual(response.statusMessage, "No auth token");
         done();
       });
     });
@@ -160,10 +158,10 @@ describe("BUNDLE TEST", function () {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 200);
-        let json = JSON.parse(body);
+        const json = JSON.parse(body);
         assert(json.data);
         global.data = json.data;
-        let jwt = response.headers["set-cookie"][0];
+        const jwt = response.headers["set-cookie"][0];
         assert(jwt);
         assert(new RegExp("^jwt=.*$").test(jwt));
         done();
@@ -177,24 +175,24 @@ describe("BUNDLE TEST", function () {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.statusMessage, 'OK');
-        let json = JSON.parse(body);
+        assert.deepStrictEqual(response.statusMessage, "OK");
+        const json = JSON.parse(body);
         // Valid API
         assert.deepStrictEqual(json.foo, "bar");
         // Valid user
-        let user = json.user;
+        const {user} = json;
         assert.deepStrictEqual(user.username, "admin");
         assert.deepStrictEqual(nodefony.typeOf(user.roles), "array");
-        assert.deepStrictEqual(user.roles[0], 'ROLE_ADMIN');
-        assert.deepStrictEqual(user.lang, 'en_en');
+        assert.deepStrictEqual(user.roles[0], "ROLE_ADMIN");
+        assert.deepStrictEqual(user.lang, "en_en");
         assert.deepStrictEqual(user.enabled, true);
         assert.deepStrictEqual(user.accountNonExpired, true);
         assert.deepStrictEqual(user.credentialsNonExpired, true);
         assert.deepStrictEqual(user.accountNonLocked, true);
-        assert.deepStrictEqual(user.name, 'administrator');
-        assert.deepStrictEqual(user.surname, 'nodefony');
+        assert.deepStrictEqual(user.name, "administrator");
+        assert.deepStrictEqual(user.surname, "nodefony");
         // Valid token
-        let token = json.token;
+        const {token} = json;
         assert.deepStrictEqual(token.name, "jwt");
         assert.deepStrictEqual(token.authenticated, true);
         assert.deepStrictEqual(token.factory, "jwt");
@@ -209,6 +207,5 @@ describe("BUNDLE TEST", function () {
         done();
       });
     });
-
   });
 });

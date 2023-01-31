@@ -1,29 +1,28 @@
 /*
  *	PASSPORT BASIC  FACTORY
  */
-const BasicStrategy = require('passport-http').BasicStrategy;
+const {BasicStrategy} = require("passport-http");
 
 module.exports = nodefony.registerFactory("passport-basic", () => {
-
   class basicFactory extends nodefony.passeportFactory {
-
-    constructor(security, settings) {
+    constructor (security, settings) {
       super("basic", security, settings);
     }
 
-    getStrategy(options) {
+    getStrategy (options) {
       return new Promise((resolve, reject) => {
         try {
-          let strategy = new BasicStrategy(options, (username, password, done) => {
-            this.log("TRY AUTHENTICATION " + this.name + " : " + username, "DEBUG");
-            let mytoken = new nodefony.security.tokens.userPassword(username, password);
+          const strategy = new BasicStrategy(options, (username, password, done) => {
+            this.log(`TRY AUTHENTICATION ${this.name} : ${username}`, "DEBUG");
+            const mytoken = new nodefony.security.tokens.userPassword(username, password);
             this.authenticateToken(mytoken).then((token) => {
               done(null, token);
               return token;
-            }).catch((error) => {
-              done(error, null);
-              throw error;
-            });
+            })
+              .catch((error) => {
+                done(error, null);
+                throw error;
+              });
           });
           return resolve(strategy);
         } catch (e) {

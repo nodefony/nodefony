@@ -1,5 +1,5 @@
 class jsonTree extends nodefony.fileClass {
-  constructor(path, parent) {
+  constructor (path, parent) {
     super(path);
     this.parent = parent;
     if (this.parent !== null && this.parent.children) {
@@ -25,8 +25,7 @@ const findExist = function (tab, file) {
  *
  */
 class Result {
-
-  constructor(res) {
+  constructor (res) {
     if (res && nodefony.typeOf(res) === "array") {
       this.files = res;
     } else {
@@ -35,24 +34,24 @@ class Result {
     this.json = {};
   }
 
-  push(file) {
+  push (file) {
     this.files.push(file);
   }
 
-  length() {
+  length () {
     return this.files.length;
   }
 
-  slice(offset, limit) {
+  slice (offset, limit) {
     return new Result(Array.prototype.slice.call(this.files, offset, limit));
   }
 
-  sort(callback) {
+  sort (callback) {
     return new Result(Array.prototype.sort.call(this.files, callback));
   }
 
-  sortByName() {
-    let res = this.files.sort(function (a, b) {
+  sortByName () {
+    const res = this.files.sort((a, b) => {
       if (a.name.toString() > b.name.toString()) {
         return 1;
       }
@@ -67,8 +66,8 @@ class Result {
     return this;
   }
 
-  sortByType() {
-    let res = this.files.sort(function (a, b) {
+  sortByType () {
+    const res = this.files.sort((a, b) => {
       if (a.type.toString() > b.type.toString()) {
         return 1;
       }
@@ -83,7 +82,7 @@ class Result {
     return this;
   }
 
-  findByNode(nodeName, tab, Path) {
+  findByNode (nodeName, tab, Path) {
     let i = null;
     if (!Path) {
       Path = [];
@@ -113,8 +112,8 @@ class Result {
     return new Result(tab);
   }
 
-  getDirectories() {
-    let tab = [];
+  getDirectories () {
+    const tab = [];
     for (let i = 0; i < this.files.length; i++) {
       if (this.files[i].type === "Directory") {
         tab.push(this.files[i]);
@@ -123,16 +122,16 @@ class Result {
     return new Result(tab);
   }
 
-  getFiles() {
-    let tab = [];
+  getFiles () {
+    const tab = [];
     for (let i = 0; i < this.files.length; i++) {
       switch (this.files[i].type) {
       case "File":
         tab.push(this.files[i]);
         break;
       case "symbolicLink":
-        let path = fs.readlinkSync(this.files[i].path);
-        let file = this.files[i].dirName + "/" + path;
+        const path = fs.readlinkSync(this.files[i].path);
+        const file = `${this.files[i].dirName}/${path}`;
         if (fs.lstatSync(file).isFile()) {
           tab.push(this.files[i]);
         }
@@ -142,36 +141,32 @@ class Result {
     return new Result(tab);
   }
 
-  getFile(name, casse) {
+  getFile (name, casse) {
     let reg = null;
     for (let i = 0; i < this.files.length; i++) {
       switch (this.files[i].type) {
       case "File":
         if (casse) {
-          reg = new RegExp("^" + name + "$", "i");
+          reg = new RegExp(`^${name}$`, "i");
           if (reg.test(this.files[i].name)) {
             return this.files[i];
           }
-        } else {
-          if (this.files[i].name === name) {
-            return this.files[i];
-          }
+        } else if (this.files[i].name === name) {
+          return this.files[i];
         }
         break;
       case "symbolicLink":
         try {
-          let path = fs.readlinkSync(this.files[i].path);
-          let file = this.files[i].dirName + "/" + path;
+          const path = fs.readlinkSync(this.files[i].path);
+          const file = `${this.files[i].dirName}/${path}`;
           if (fs.lstatSync(file).isFile()) {
             if (casse) {
-              reg = new RegExp("^" + name + "$", "i");
+              reg = new RegExp(`^${name}$`, "i");
               if (reg.test(this.files[i].name)) {
                 return this.files[i];
               }
-            } else {
-              if (this.files[i].name === name) {
-                return this.files[i];
-              }
+            } else if (this.files[i].name === name) {
+              return this.files[i];
             }
           }
         } catch (e) {
@@ -183,14 +178,14 @@ class Result {
     return null;
   }
 
-  forEach(callback) {
+  forEach (callback) {
     return this.files.forEach(callback);
   }
 
-  match(reg) {
-    let tab = [];
+  match (reg) {
+    const tab = [];
     for (let i = 0; i < this.files.length; i++) {
-      let res = this.files[i].matchName(reg);
+      const res = this.files[i].matchName(reg);
       if (res) {
         tab.push(this.files[i]);
       }
@@ -208,12 +203,11 @@ const checkMatch = function (file, settings) {
   if (settings.match) {
     if (file.matchName(settings.match)) {
       return true;
-    } else {
-      if (file.matchType(settings.match)) {
-        return settings.match;
-      }
-      return false;
     }
+    if (file.matchType(settings.match)) {
+      return settings.match;
+    }
+    return false;
   }
   return true;
 };
@@ -252,17 +246,17 @@ const findStatic = function (file, result, depth, settings, parent) {
     }
 
     if (res && res.length) {
-      let ret = regSlash.exec(file.path);
+      const ret = regSlash.exec(file.path);
       let filePath = null;
       if (ret) {
-        filePath = ret[1] + "/";
+        filePath = `${ret[1]}/`;
       } else {
-        filePath = file.path + "/";
+        filePath = `${file.path}/`;
       }
       for (let i = 0; i < res.length; i++) {
         let match = true;
-        let File = filePath + res[i];
-        let info = new this.wrapper(File, parent);
+        const File = filePath + res[i];
+        const info = new this.wrapper(File, parent);
         if (!settings.seeHidden) {
           if (checkHidden.call(this, info, settings)) {
             if (parent && parent.children) {
@@ -284,11 +278,9 @@ const findStatic = function (file, result, depth, settings, parent) {
         }
         if (match) {
           result.push(info);
-          this.notificationsCenter.fire("on" + info.type, info, this);
-        } else {
-          if (parent && parent.children) {
-            parent.children.pop();
-          }
+          this.notificationsCenter.fire(`on${info.type}`, info, this);
+        } else if (parent && parent.children) {
+          parent.children.pop();
         }
         switch (info.type) {
         case "Directory":
@@ -299,7 +291,7 @@ const findStatic = function (file, result, depth, settings, parent) {
           break;
         case "symbolicLink":
           if (settings.followSymLink && depth - 1 !== 0) {
-            let obj = new this.wrapper(info.path, info);
+            const obj = new this.wrapper(info.path, info);
             if (obj.isDirectory()) {
               arguments.callee.call(this, obj, result, settings.depth, settings, parent);
             }
@@ -312,8 +304,8 @@ const findStatic = function (file, result, depth, settings, parent) {
   } catch (e) {
     this.notificationsCenter.fire("onError", e);
     this.errorParse.push(e);
-    //console.log(e);
-    //this.notificationsCenter.fire("onFinish",e,null);
+    // console.log(e);
+    // this.notificationsCenter.fire("onFinish",e,null);
     throw e;
   }
 };
@@ -324,8 +316,8 @@ const defaultSettings = {
   sync: true,
   recurse: true,
   depth: -1,
-  //onFinish: null,
-  //onFile: null,
+  // onFinish: null,
+  // onFile: null,
   seeHidden: false,
   match: null,
   exclude: null,
@@ -336,70 +328,69 @@ const defaultSettings = {
 
 const regSlash = /^(.*)\/$/g;
 class Finder {
-
-  constructor(settings) {
-      this.path = [];
-      this.errorParse = [];
-      this.settings = nodefony.extend({}, defaultSettings, settings);
-      if (this.settings.path) {
-        this.result = this.find();
+  constructor (settings) {
+    this.path = [];
+    this.errorParse = [];
+    this.settings = nodefony.extend({}, defaultSettings, settings);
+    if (this.settings.path) {
+      this.result = this.find();
+    } else {
+      this.tree = this.settings.json;
+      if (this.tree) {
+        this.wrapper = jsonTree;
       } else {
-        this.tree = this.settings.json;
-        if (this.tree) {
-          this.wrapper = jsonTree;
-        } else {
-          this.wrapper = nodefony.fileClass;
-        }
+        this.wrapper = nodefony.fileClass;
       }
     }
+  }
 
-    in (Path) {
-      this.typePath = nodefony.typeOf(Path);
-      switch (true) {
-      case this.typePath === "string":
-        try {
-          this.path.push(new this.wrapper(Path, null));
-          return this;
-        } catch (e) {
-          throw e;
-        }
-        break;
-      case this.typePath === "array":
-        for (let i = 0; i < Path.length; i++) {
-          try {
-            this.path.push(new this.wrapper(Path[i], null));
-          } catch (e) {
-            throw e;
-          }
-        }
+  in (Path) {
+    this.typePath = nodefony.typeOf(Path);
+    switch (true) {
+    case this.typePath === "string":
+      try {
+        this.path.push(new this.wrapper(Path, null));
         return this;
-      case Path instanceof nodefony.fileClass:
+      } catch (e) {
+        throw e;
+      }
+      break;
+    case this.typePath === "array":
+      for (let i = 0; i < Path.length; i++) {
         try {
-          this.path.push(new this.wrapper(Path.path, null));
-          return this;
+          this.path.push(new this.wrapper(Path[i], null));
         } catch (e) {
           throw e;
         }
-        break;
-        //default:
-        //  throw new Error(`Finder bad path type`);
       }
+      return this;
+    case Path instanceof nodefony.fileClass:
+      try {
+        this.path.push(new this.wrapper(Path.path, null));
+        return this;
+      } catch (e) {
+        throw e;
+      }
+      break;
+        // default:
+        //  throw new Error(`Finder bad path type`);
     }
+  }
 
-  files() {
+  files () {
     return this.find({
       match: "File"
     });
   }
 
-  directories() {
+  directories () {
     return this.find({
       match: "Directory"
     });
   }
 
-  find(settings) {
-    let result = new Result();
+  find (settings) {
+    const result = new Result();
     let extend = null;
     if (!settings) {
       extend = this.settings;

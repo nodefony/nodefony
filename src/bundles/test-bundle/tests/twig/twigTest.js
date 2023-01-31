@@ -10,55 +10,53 @@
  *
  */
 
-var http = require("http");
-//var https = require("https");
-var WebSocketClient = require('websocket').client;
-//var tunnel = require('tunnel');
+const http = require("http");
+// var https = require("https");
+const WebSocketClient = require("websocket").client;
+// var tunnel = require('tunnel');
 
-const assert = require('assert');
+const assert = require("assert");
 
-var querystring = require("querystring");
+const querystring = require("querystring");
 
 
-describe("BUNDLE TEST", function () {
-
-  before(function () {
+describe("BUNDLE TEST", () => {
+  before(() => {
     global.options = {
       hostname: kernel.settings.system.domain,
       port: kernel.settings.system.httpPort,
-      method: 'GET',
-      urlws: 'ws://' + kernel.settings.system.domain + ':' + kernel.settings.system.httpPort
+      method: "GET",
+      urlws: `ws://${kernel.settings.system.domain}:${kernel.settings.system.httpPort}`
     };
   });
 
-  describe('TWIG RENDER', function () {
-
-    it("render-get", function (done) {
-      global.options.path = '/test/unit/twig/render';
-      var request = http.request(global.options, function (res) {
+  describe("TWIG RENDER", () => {
+    it("render-get", (done) => {
+      global.options.path = "/test/unit/twig/render";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 408);
         done();
       });
       request.end();
     });
 
-    it("render", function (done) {
-      global.options.path = '/test/unit/twig/render';
-      global.options.method = 'POST';
-      var data = {
-        type: "render",
+    it("render", (done) => {
+      global.options.path = "/test/unit/twig/render";
+      global.options.method = "POST";
+      const data = {
+        type: "render"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
         assert.equal(res.statusMessage, "OK");
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret.response.data, data);
           done();
         });
@@ -66,23 +64,23 @@ describe("BUNDLE TEST", function () {
       request.write(post_data);
       request.end();
     });
-    it("renderSync", function (done) {
-      global.options.path = '/test/unit/twig/render';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderSync",
+    it("renderSync", (done) => {
+      global.options.path = "/test/unit/twig/render";
+      global.options.method = "POST";
+      const data = {
+        type: "renderSync"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
         assert.equal(res.statusMessage, "OK");
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret.response.data, data);
           done();
         });
@@ -90,23 +88,23 @@ describe("BUNDLE TEST", function () {
       request.write(post_data);
       request.end();
     });
-    it("renderAsync", function (done) {
-      global.options.path = '/test/unit/twig/render';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderAsync",
+    it("renderAsync", (done) => {
+      global.options.path = "/test/unit/twig/render";
+      global.options.method = "POST";
+      const data = {
+        type: "renderAsync"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
         assert.equal(res.statusMessage, "OK");
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret.response.data, data);
           done();
         });
@@ -114,23 +112,23 @@ describe("BUNDLE TEST", function () {
       request.write(post_data);
       request.end();
     });
-    it("renderJson", function (done) {
-      global.options.path = '/test/unit/twig/render';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderJson",
+    it("renderJson", (done) => {
+      global.options.path = "/test/unit/twig/render";
+      global.options.method = "POST";
+      const data = {
+        type: "renderJson"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
         assert.equal(res.statusMessage, "OK");
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret.response.data, data);
           done();
         });
@@ -138,23 +136,23 @@ describe("BUNDLE TEST", function () {
       request.write(post_data);
       request.end();
     });
-    it("renderJsonSync", function (done) {
-      global.options.path = '/test/unit/twig/render';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderJsonSync",
+    it("renderJsonSync", (done) => {
+      global.options.path = "/test/unit/twig/render";
+      global.options.method = "POST";
+      const data = {
+        type: "renderJsonSync"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
         assert.equal(res.statusMessage, "OK");
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret.response.data, data);
           done();
         });
@@ -162,23 +160,23 @@ describe("BUNDLE TEST", function () {
       request.write(post_data);
       request.end();
     });
-    it("renderJsonAsync", function (done) {
-      global.options.path = '/test/unit/twig/render';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderJsonAsync",
+    it("renderJsonAsync", (done) => {
+      global.options.path = "/test/unit/twig/render";
+      global.options.method = "POST";
+      const data = {
+        type: "renderJsonAsync"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
         assert.equal(res.statusMessage, "OK");
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret.response.data, data);
           done();
         });
@@ -186,46 +184,46 @@ describe("BUNDLE TEST", function () {
       request.write(post_data);
       request.end();
     });
-    it("renderJsonAsyncTimeOut", function (done) {
-      global.options.path = '/test/unit/twig/render';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderJsonAsyncTimeOut",
+    it("renderJsonAsyncTimeOut", (done) => {
+      global.options.path = "/test/unit/twig/render";
+      global.options.method = "POST";
+      const data = {
+        type: "renderJsonAsyncTimeOut"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 408);
-        res.setEncoding('utf8');
-        res.on('data', () => {
+        res.setEncoding("utf8");
+        res.on("data", () => {
           done();
         });
       });
       request.write(post_data);
       request.end();
     });
-    it("renderObject", function (done) {
-      global.options.path = '/test/unit/twig/render';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderOject",
+    it("renderObject", (done) => {
+      global.options.path = "/test/unit/twig/render";
+      global.options.method = "POST";
+      const data = {
+        type: "renderOject"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          if (kernel.platform === "win32"){
-            assert.deepStrictEqual(chunk, '"<h1>NODEFONY REQUEST :renderOject </h1>"\r\n');
-          }else{
-            assert.deepStrictEqual(chunk, '"<h1>NODEFONY REQUEST :renderOject </h1>"\n');
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          if (kernel.platform === "win32") {
+            assert.deepStrictEqual(chunk, "\"<h1>NODEFONY REQUEST :renderOject </h1>\"\r\n");
+          } else {
+            assert.deepStrictEqual(chunk, "\"<h1>NODEFONY REQUEST :renderOject </h1>\"\n");
           }
           done();
         });
@@ -236,30 +234,29 @@ describe("BUNDLE TEST", function () {
   });
 
 
-  describe('TWIG EXTEND', function () {
-
-    it("twig-extend-get", function (done) {
-      global.options.path = '/test/unit/twig/extend';
-      global.options.method = 'GET';
+  describe("TWIG EXTEND", () => {
+    it("twig-extend-get", (done) => {
+      global.options.path = "/test/unit/twig/extend";
+      global.options.method = "GET";
       global.options.headers = {};
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 500);
         done();
       });
       request.end();
     });
 
-    var resultJson = function (type, message) {
+    const resultJson = function (type, message) {
       if (message) {
         return {
           response: {
             code: 200,
             reason: {
-              type: type,
-              message: message
+              type,
+              message
             },
             data: {
-              type: type
+              type
             }
           }
         };
@@ -268,43 +265,43 @@ describe("BUNDLE TEST", function () {
         response: {
           code: 200,
           reason: {
-            type: type,
+            type,
             message: {
               response: {
                 code: 200,
                 reason: {
-                  type: type,
+                  type,
                   message: ""
                 },
                 data: {
-                  type: type
+                  type
                 }
               }
             }
           },
           data: {
-            type: type
+            type
           }
         }
       };
     };
 
-    it("render", function (done) {
-      global.options.path = '/test/unit/twig/extend';
-      global.options.method = 'POST';
-      var data = {
-        type: "render",
+    it("render", (done) => {
+      global.options.path = "/test/unit/twig/extend";
+      global.options.method = "POST";
+      const data = {
+        type: "render"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret, resultJson("render"));
           done();
         });
@@ -312,22 +309,22 @@ describe("BUNDLE TEST", function () {
       request.write(post_data);
       request.end();
     });
-    it("renderTorenderSync", function (done) {
-      global.options.path = '/test/unit/twig/extend';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderTorenderSync",
+    it("renderTorenderSync", (done) => {
+      global.options.path = "/test/unit/twig/extend";
+      global.options.method = "POST";
+      const data = {
+        type: "renderTorenderSync"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret, resultJson("renderSync"));
           done();
         });
@@ -336,22 +333,22 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("renderSync", function (done) {
-      global.options.path = '/test/unit/twig/extend';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderSync",
+    it("renderSync", (done) => {
+      global.options.path = "/test/unit/twig/extend";
+      global.options.method = "POST";
+      const data = {
+        type: "renderSync"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret, resultJson("renderSync"));
           done();
         });
@@ -359,22 +356,22 @@ describe("BUNDLE TEST", function () {
       request.write(post_data);
       request.end();
     });
-    it("renderSyncTorender", function (done) {
-      global.options.path = '/test/unit/twig/extend';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderSyncTorender",
+    it("renderSyncTorender", (done) => {
+      global.options.path = "/test/unit/twig/extend";
+      global.options.method = "POST";
+      const data = {
+        type: "renderSyncTorender"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret, resultJson("render"));
           done();
         });
@@ -383,22 +380,22 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("renderAsyncToSync", function (done) {
-      global.options.path = '/test/unit/twig/extend';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderAsyncToSync",
+    it("renderAsyncToSync", (done) => {
+      global.options.path = "/test/unit/twig/extend";
+      global.options.method = "POST";
+      const data = {
+        type: "renderAsyncToSync"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret, resultJson("renderSync"));
           done();
         });
@@ -407,22 +404,22 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("renderAsyncToRender", function (done) {
-      global.options.path = '/test/unit/twig/extend';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderAsyncToRender",
+    it("renderAsyncToRender", (done) => {
+      global.options.path = "/test/unit/twig/extend";
+      global.options.method = "POST";
+      const data = {
+        type: "renderAsyncToRender"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
           assert.deepStrictEqual(ret, resultJson("render"));
           done();
         });
@@ -454,23 +451,23 @@ describe("BUNDLE TEST", function () {
     //      request.end();
     //    });
 
-    it("renderToOject", function (done) {
-      global.options.path = '/test/unit/twig/extend';
-      global.options.method = 'POST';
-      var data = {
-        type: "renderToOject",
+    it("renderToOject", (done) => {
+      global.options.path = "/test/unit/twig/extend";
+      global.options.method = "POST";
+      const data = {
+        type: "renderToOject"
       };
-      var post_data = querystring.stringify(data);
+      const post_data = querystring.stringify(data);
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      var request = http.request(global.options, function (res) {
-        //assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-          var ret = JSON.parse(chunk);
-          //console.log(ret)
+      const request = http.request(global.options, (res) => {
+        // assert.equal(res.statusCode, 200);
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
+          const ret = JSON.parse(chunk);
+          // console.log(ret)
           assert.deepStrictEqual(ret, resultJson("renderOject", "<h1>NODEFONY REQUEST :renderOject </h1>"));
           done();
         });
@@ -480,19 +477,18 @@ describe("BUNDLE TEST", function () {
     });
   });
 
-  describe('TWIG WEBSOCKET', function () {
-
-    it("WEBSOCKET", function (done) {
-      var url = global.options.urlws;
-      var options = nodefony.extend({}, global.options, {
-        url: url + "/test/unit/twig/websocket"
+  describe("TWIG WEBSOCKET", () => {
+    it("WEBSOCKET", (done) => {
+      const url = global.options.urlws;
+      const options = nodefony.extend({}, global.options, {
+        url: `${url}/test/unit/twig/websocket`
       });
-      var client = new WebSocketClient();
+      const client = new WebSocketClient();
       client.connect(options.url, null, url, null, {});
-      client.on('connect', function (connection) {
+      client.on("connect", function (connection) {
         assert(connection.connected);
         connection.on("message", (message) => {
-          var res = JSON.parse(message.utf8Data);
+          const res = JSON.parse(message.utf8Data);
           switch (res.type) {
           case "START":
             assert.deepStrictEqual(res.message, "CONNECTED");
@@ -515,13 +511,13 @@ describe("BUNDLE TEST", function () {
             break;
           }
         });
-        connection.on('close', (reasonCode, description) => {
+        connection.on("close", (reasonCode, description) => {
           assert.deepStrictEqual(reasonCode, 1000);
           assert.deepStrictEqual(description, "Normal connection closure");
           done();
         });
       });
-      client.on('connectFailed', function () {
+      client.on("connectFailed", () => {
         throw new Error("websoket client error");
       });
     });

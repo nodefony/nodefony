@@ -1,18 +1,18 @@
 import {
-  USER_REQUEST,
   USER_ERROR,
-  USER_SUCCESS,
   USER_LOADING,
-  USER_PROFILE
-} from '../actions/user';
+  USER_PROFILE,
+  USER_REQUEST,
+  USER_SUCCESS
+} from "../actions/user";
 
 import {
   AUTH_LOGOUT
-} from '../actions/auth';
+} from "../actions/auth";
 
 import {
   Api as baseApi
-} from 'nodefony-client';
+} from "nodefony-client";
 const Api = new baseApi("users", {
   baseUrl: "/api/users",
   storage: {
@@ -28,24 +28,24 @@ countries.registerLocale(fr);
 const reg = /^(..){1}_?(..)?$/;
 
 const state = {
-  status: '',
+  status: "",
   error: null,
   user: null
 };
 
 const getters = {
-  getProfile: state => state.user,
-  getProfileUsername(state) {
+  getProfile: (state) => state.user,
+  getProfileUsername (state) {
     if (state.user) {
       return state.user.username;
     }
   },
-  getRoles(state) {
+  getRoles (state) {
     if (state.user) {
       return state.user.roles;
     }
     return [];
-    //throw new Error('User profile not defined !')
+    // throw new Error('User profile not defined !')
   },
   hasRole: (state) => (role) => {
     if (state.user) {
@@ -57,61 +57,61 @@ const getters = {
     }
     return false;
   },
-  isProfileLoaded: state => state.status === 'success',
-  getTrigramme(state) {
+  isProfileLoaded: (state) => state.status === "success",
+  getTrigramme (state) {
     if (state.user) {
-      let size = state.user.surname.length;
-      let trg = `${state.user.name.substr(0, 1)}${state.user.surname.substr(0, 1)}${state.user.surname.substr(size-1,1)}`;
+      const size = state.user.surname.length;
+      const trg = `${state.user.name.substr(0, 1)}${state.user.surname.substr(0, 1)}${state.user.surname.substr(size - 1, 1)}`;
       return trg.toLowerCase();
     }
     return "";
   },
-  getInitials() {
+  getInitials () {
     if (state.user) {
-      let trg = `${state.user.name.substr(0, 1)}${state.user.surname.substr(0, 1)}`;
+      const trg = `${state.user.name.substr(0, 1)}${state.user.surname.substr(0, 1)}`;
       return trg.toLowerCase();
     }
   },
-  getProfileName(state) {
+  getProfileName (state) {
     if (state.user) {
       return state.user.name;
     }
     return "";
   },
-  getProfileSurname(state) {
+  getProfileSurname (state) {
     if (state.user) {
       return state.user.surname;
     }
     return "";
   },
-  getFullName(state){
+  getFullName (state) {
     if (state.user) {
       return `${state.user.name} ${state.user.surname}`;
     }
     return "";
   },
-  getLocale(){
+  getLocale () {
     // lang/Pays
     if (state.user) {
-      let res = reg.exec(state.user.lang);
-      if (res){
-        let lang = res[1];
-        let country = res[2].toUpperCase();
-        try{
-          let locale = countries.getName(country, lang, {select: "all"});
+      const res = reg.exec(state.user.lang);
+      if (res) {
+        const lang = res[1];
+        const country = res[2].toUpperCase();
+        try {
+          const locale = countries.getName(country, lang, {select: "all"});
           locale.push(countries.alpha3ToAlpha2(locale[2]));
           locale.push(lang);
           return locale;
-        }catch(e){
+        } catch (e) {
           return [lang];
         }
       }
     }
-    try{
-      let locale = countries.getName("US", "en", {select: "all"});
+    try {
+      const locale = countries.getName("US", "en", {select: "all"});
       locale.push(countries.alpha3ToAlpha2(locale[2]));
       return locale;
-    }catch(e){
+    } catch (e) {
       return ["en"];
     }
   }
@@ -125,46 +125,44 @@ const actions = {
   }, url) => {
     commit(USER_LOADING);
     return Api.http(url)
-      .then(resp => {
+      .then((resp) => {
         commit(USER_SUCCESS, resp);
         commit(USER_PROFILE, resp.result);
         return resp;
       })
-      .catch(e => {
+      .catch((e) => {
         Api.clearToken();
         commit(USER_ERROR, e);
         throw e;
       });
   },
-  getAllUsers({
+  getAllUsers ({
     commit,
     state
-  }){
+  }) {
     return Api.http("/api/users")
-    .then(resp => {
-      return resp;
-    })
-    .catch(e => {
-      throw e;
-    });
+      .then((resp) => resp)
+      .catch((e) => {
+        throw e;
+      });
   }
 };
 
 const mutations = {
   [USER_LOADING]: (state) => {
-    state.status = 'loading';
+    state.status = "loading";
   },
   [USER_SUCCESS]: (state, resp) => {
-    state.status = 'success';
+    state.status = "success";
     // Vue.set(state, 'profile', resp.result)
   },
   [USER_ERROR]: (state, error) => {
-    state.status = 'error';
+    state.status = "error";
     state.error = error;
     state.user = null;
   },
   [AUTH_LOGOUT]: (state) => {
-    state.status = '';
+    state.status = "";
     state.user = null;
   },
   [USER_PROFILE]: (state, user) => {

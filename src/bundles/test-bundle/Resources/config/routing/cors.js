@@ -1,6 +1,6 @@
 module.exports = {
 
-  //CORS
+  // CORS
   "test-cors-settings": {
     pattern: "/test/unit/cors/http/{area}",
     defaults: {

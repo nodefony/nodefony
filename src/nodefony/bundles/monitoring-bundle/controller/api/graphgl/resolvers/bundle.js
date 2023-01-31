@@ -2,7 +2,7 @@ module.exports = {
 
   Query: {
     //  provides all functions for each API endpoint
-    async getBundle(obj, field, context, info) {
+    async getBundle (obj, field, context, info) {
       const {
         name
       } = field;
@@ -21,7 +21,7 @@ module.exports = {
       }
     },
 
-    async getBundlePackage(obj, field, context, info) {
+    async getBundlePackage (obj, field, context, info) {
       const {
         name
       } = field;
@@ -40,7 +40,7 @@ module.exports = {
       }
     },
 
-    async getBundles(obj, field, context, info) {
+    async getBundles (obj, field, context, info) {
       const {
         registred
       } = field;

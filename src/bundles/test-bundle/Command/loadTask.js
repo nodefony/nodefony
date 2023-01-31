@@ -1,12 +1,12 @@
-const WebSocketClient = require('websocket').client;
-const assert = require('assert');
+const WebSocketClient = require("websocket").client;
+const assert = require("assert");
 
 const request = function (url, options) {
   return new Promise((resolve, reject) => {
     const client = new WebSocketClient();
-    this.result.requests += 1 ;
+    this.result.requests += 1;
     client.connect(url, null, null, null, options);
-    client.on('connect', (connection) => {
+    client.on("connect", (connection) => {
       this.result.connect += 1;
       setTimeout(() => {
         connection.close(1000);
@@ -16,22 +16,21 @@ const request = function (url, options) {
         this.log(message, "INFO");
         assert(message);
       });
-      connection.on('close', (reasonCode, description) => {
+      connection.on("close", (reasonCode, description) => {
         this.log(description, "INFO", `CLOSE WEBSOKET : ${reasonCode}`);
-        if ( ! this.result[reasonCode] ){
+        if (!this.result[reasonCode]) {
           this.result[reasonCode] = 0;
         }
-        this.result[reasonCode] += 1 ;
+        this.result[reasonCode] += 1;
 
         return resolve(reasonCode);
       });
-      connection.on('error', (error) => {
+      connection.on("error", (error) => {
         this.result.errors += 1;
         this.log(error, "ERROR");
       });
-
     });
-    client.on('connectFailed', (error) => {
+    client.on("connectFailed", (error) => {
       this.log(error, "ERROR");
       return reject(error);
     });
@@ -40,24 +39,24 @@ const request = function (url, options) {
 
 const requestConcurence = function (url, options, concurence) {
   return new Promise((resolve, reject) => {
-    let i  = 0;
-    let j  = 0;
+    let i = 0;
+    let j = 0;
     for (;;) {
       request.call(this, url, options)
-        .then( ( ) =>{
-          console.log("then : ", j , concurence);
-          if ( j === (concurence - 1) ){
+        .then(() => {
+          console.log("then : ", j, concurence);
+          if (j === concurence - 1) {
             return resolve(concurence);
           }
           j++;
         })
         .catch((error) => {
           this.log(error, "ERROR");
-          console.log("then : ", j , concurence);
+          console.log("then : ", j, concurence);
           j++;
         });
-      if (i === (concurence - 1)) {
-        break ;
+      if (i === concurence - 1) {
+        break;
       }
       i++;
     }
@@ -65,56 +64,56 @@ const requestConcurence = function (url, options, concurence) {
 };
 
 class loadTask extends nodefony.Task {
-
-  constructor(name, command) {
+  constructor (name, command) {
     super(name, command);
     this.bundle = command.bundle;
     this.config = {
       hostname: this.kernel.settings.system.domain,
       port: this.kernel.settings.system.httpPort,
-      method: 'GET',
-      urlws: 'wss://' + this.kernel.settings.system.domain + ':' + this.kernel.settings.system.httpsPort
+      method: "GET",
+      urlws: `wss://${this.kernel.settings.system.domain}:${this.kernel.settings.system.httpsPort}`
     };
     this.cert = this.get("httpsServer").getCertificats();
     this.result = {
-      requests:0,
+      requests: 0,
       connect: 0,
       errors: 0
     };
   }
 
-  showHelp() {
-    this.setHelp("test:load:websoket [nb]",
+  showHelp () {
+    this.setHelp(
+      "test:load:websoket [nb]",
       "Websocket load test  nodefony test:load:websoket 100"
     );
     super.showHelp();
   }
 
-  websoket(number, concurence) {
+  websoket (number, concurence) {
     return new Promise(async (resolve, reject) => {
-      let url = `${this.config.urlws}/websoket`;
-      let options = nodefony.extend({}, this.config, {
+      const url = `${this.config.urlws}/websoket`;
+      const options = nodefony.extend({}, this.config, {
         key: this.cert.key,
         cert: this.cert.cert,
         ca: this.cert.ca
       });
-      let nb = parseInt( number, 10) || 100;
-      let conc = parseInt( concurence, 10) || 10;
+      const nb = parseInt(number, 10) || 100;
+      const conc = parseInt(concurence, 10) || 10;
       let i = 0;
       this.log({
-        requests : nb,
+        requests: nb,
         concurence: conc
       }, "INFO");
       try {
         for (;;) {
           try {
-            let res = await requestConcurence.call(this, url, options, conc);
+            const res = await requestConcurence.call(this, url, options, conc);
             this.log({
-              res: res,
-              i: i,
-              nb: nb
+              res,
+              i,
+              nb
             });
-            if (i  >= nb - res ) {
+            if (i >= nb - res) {
               console.log(this.result);
               return resolve(i);
             }
@@ -127,11 +126,8 @@ class loadTask extends nodefony.Task {
       } catch (e) {
         this.log(error, "ERROR");
       }
-
     });
-
   }
-
 }
 
 module.exports = loadTask;

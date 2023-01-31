@@ -1,7 +1,6 @@
 # vault-bundles
 
 
-
 # Docker
 
 ## Running Vault for Development

@@ -1,8 +1,6 @@
-module.exports = nodefony.register("requestError", function () {
-
+module.exports = nodefony.register("requestError", () => {
   class requestError extends nodefony.httpError {
-
-    constructor(message, response, container) {
+    constructor (message, response, container) {
       if (response) {
         super(message, response.statusCode, container);
       } else {
@@ -14,8 +12,8 @@ module.exports = nodefony.register("requestError", function () {
       }
     }
 
-    parserResponse() {
-      let json = this.response.toJSON();
+    parserResponse () {
+      const json = this.response.toJSON();
       if (json) {
         this.requestUrl = json.request.uri.href;
         this.code = json.statusCode;
@@ -24,7 +22,7 @@ module.exports = nodefony.register("requestError", function () {
       this.parseMessage(json.body);
     }
 
-    toString() {
+    toString () {
       if (this.container) {
         return `${clc.red(this.message)}
       ${clc.blue("Name :")} ${this.name}
@@ -38,8 +36,8 @@ module.exports = nodefony.register("requestError", function () {
         ${clc.red("Message :")} ${this.message}
         ${clc.red("Response :")} ${this.jsonResponse}
       ${clc.green("Stack :")} ${this.stack}`;
-      } else {
-        return `${clc.red(this.message)}
+      }
+      return `${clc.red(this.message)}
       ${clc.blue("Name :")} ${this.name}
       ${clc.blue("Type :")} ${this.errorType}
       ${clc.blue("clientRequest :")} ${this.requestUrl}
@@ -47,7 +45,6 @@ module.exports = nodefony.register("requestError", function () {
         ${clc.red("Message :")} ${this.message}
         ${clc.red("Response :")} ${this.jsonResponse}
       ${clc.green("Stack :")} ${this.stack}`;
-      }
     }
   }
 

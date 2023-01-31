@@ -9,140 +9,134 @@
  *  kernel :   instance of kernel who launch the test
  *
  */
-const assert = require('assert');
+const assert = require("assert");
 
 describe("NODEFONY EXTEND", () => {
-
-  describe('CONTRUSTROR ', () => {
-
-    it("LIB LOADED", function(done) {
+  describe("CONTRUSTROR ", () => {
+    it("LIB LOADED", (done) => {
       assert.equal(typeof nodefony.extend, "function");
       done();
     });
     it("Simple empty", (done) => {
-      let res = nodefony.extend()
-      assert(nodefony.isEmptyObject(res))
+      const res = nodefony.extend();
+      assert(nodefony.isEmptyObject(res));
       done();
     });
-  })
+  });
 
-  describe('Simple Object', () => {
+  describe("Simple Object", () => {
     it("Simple Object", (done) => {
-      let myobj = {
+      const myobj = {
         foo: "bar"
-      }
-      let res = nodefony.extend({})
-      assert(res === nodefony)
-      res = nodefony.extend(true)
-      assert(nodefony.isEmptyObject(res))
+      };
+      let res = nodefony.extend({});
+      assert(res === nodefony);
+      res = nodefony.extend(true);
+      assert(nodefony.isEmptyObject(res));
       res = nodefony.extend(myobj, {
         bar: "foo"
-      })
-      assert(res === myobj)
-      let obj = {}
+      });
+      assert(res === myobj);
+      let obj = {};
       res = nodefony.extend(obj, myobj, {
         bar: "foo"
-      })
-      assert(res === obj)
-      assert.equal(res.foo, "bar")
-      assert.equal(res.bar, "foo")
+      });
+      assert(res === obj);
+      assert.equal(res.foo, "bar");
+      assert.equal(res.bar, "foo");
       res = nodefony.extend(myobj, {
         foo: "bar1"
-      })
-      assert(res === myobj)
-      assert.equal(res.foo, "bar1")
-      obj = {}
+      });
+      assert(res === myobj);
+      assert.equal(res.foo, "bar1");
+      obj = {};
       res = nodefony.extend(obj, myobj, {
         foo: "bar2"
-      })
-      assert.equal(myobj.foo, "bar1")
-      assert.equal(obj.foo, "bar2")
-      assert.equal(obj.bar, "foo")
+      });
+      assert.equal(myobj.foo, "bar1");
+      assert.equal(obj.foo, "bar2");
+      assert.equal(obj.bar, "foo");
       done();
     });
 
-    it('Deep Object', (done) => {
-      let myobj = {
+    it("Deep Object", (done) => {
+      const myobj = {
         foo: {
           bar: {
             ele: 1,
-            obj:1
+            obj: 1
           }
         }
-      }
+      };
       res = nodefony.extend(myobj, {
         bar: "foo"
-      })
-      assert(myobj.bar, "foo")
-      let obj = {}
+      });
+      assert(myobj.bar, "foo");
+      let obj = {};
       res = nodefony.extend(obj, myobj, {
         bar: "foo1"
-      })
-      assert(res, obj)
-      assert.equal(res.foo , myobj.foo)
-      assert.equal(res.bar , "foo1")
-      assert.equal(myobj.bar , "foo")
-      assert.equal(res.foo.bar.ele , 1)
-      obj = {}
+      });
+      assert(res, obj);
+      assert.equal(res.foo, myobj.foo);
+      assert.equal(res.bar, "foo1");
+      assert.equal(myobj.bar, "foo");
+      assert.equal(res.foo.bar.ele, 1);
+      obj = {};
       res = nodefony.extend(obj, myobj, {
-        foo:{
-          bar:{
-            ele:2
+        foo: {
+          bar: {
+            ele: 2
           }
         }
-      })
-      assert.equal(res.bar , "foo")
-      assert.equal(res.foo.bar.ele , 2)
-      assert.equal(res.foo.bar.obj , undefined)
-      obj = {}
+      });
+      assert.equal(res.bar, "foo");
+      assert.equal(res.foo.bar.ele, 2);
+      assert.equal(res.foo.bar.obj, undefined);
+      obj = {};
       res = nodefony.extend(true, obj, myobj, {
-        foo:{
-          bar:{
-            ele:3
+        foo: {
+          bar: {
+            ele: 3
           }
         }
-      })
-      assert.equal(res.bar , "foo")
-      assert.equal(res.foo.bar.ele , 3)
-      assert.equal(res.foo.bar.obj , 1)
-      obj = {}
+      });
+      assert.equal(res.bar, "foo");
+      assert.equal(res.foo.bar.ele, 3);
+      assert.equal(res.foo.bar.obj, 1);
+      obj = {};
       res = nodefony.extend(true, obj, myobj, {
         bar: "foo"
-      })
-      assert(res, obj)
-      assert.notEqual(res.foo ,myobj.foo)
+      });
+      assert(res, obj);
+      assert.notEqual(res.foo, myobj.foo);
       done();
-    })
-  })
+    });
+  });
 
-  describe('Extend with Array', () => {
-
-    it('Simple', (done) => {
-      const myArray =[1, 2, 3]
-      let res = nodefony.extend(myArray)
-      assert.equal(res, nodefony)
-      let myobj = {
+  describe("Extend with Array", () => {
+    it("Simple", (done) => {
+      const myArray = [1, 2, 3];
+      let res = nodefony.extend(myArray);
+      assert.equal(res, nodefony);
+      const myobj = {
         tab: myArray,
         foo: "bar"
-      }
-      res = nodefony.extend({}, myobj)
-      assert.equal(res.tab , myArray)
-      res = nodefony.extend(true, {}, myobj)
-      assert.notEqual(res.tab , myArray)
+      };
+      res = nodefony.extend({}, myobj);
+      assert.equal(res.tab, myArray);
+      res = nodefony.extend(true, {}, myobj);
+      assert.notEqual(res.tab, myArray);
 
-      const tab = [4,5,6]
-      res = nodefony.extend( {}, myobj, {
-        tab:tab
-      })
-      assert.equal(res.tab , tab)
-      res = nodefony.extend( true, {}, myobj, {
-        tab:tab
-      })
-      assert.notEqual(res.tab , tab)
-      done()
-    })
-
-  })
-
-
-})
+      const tab = [4, 5, 6];
+      res = nodefony.extend({}, myobj, {
+        tab
+      });
+      assert.equal(res.tab, tab);
+      res = nodefony.extend(true, {}, myobj, {
+        tab
+      });
+      assert.notEqual(res.tab, tab);
+      done();
+    });
+  });
+});

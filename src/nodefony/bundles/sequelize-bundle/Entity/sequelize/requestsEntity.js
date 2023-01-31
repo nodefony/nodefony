@@ -12,8 +12,7 @@ const {
 } = nodefony.Sequelize;
 
 module.exports = class requests extends nodefony.Entity {
-
-  constructor(bundle) {
+  constructor (bundle) {
     /*
      *   @param bundle instance
      *   @param Entity name
@@ -21,7 +20,8 @@ module.exports = class requests extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "requests", "sequelize", "nodefony");
-    /*this.orm.on("onOrmReady", ( orm ) => {
+
+    /* this.orm.on("onOrmReady", ( orm ) => {
         let user = this.orm.getEntity("user");
         if (user) {
           user.hasMany(this.model, {
@@ -47,7 +47,7 @@ module.exports = class requests extends nodefony.Entity {
       });*/
   }
 
-  getSchema() {
+  getSchema () {
     return {
       id: {
         type: DataTypes.INTEGER,
@@ -87,10 +87,9 @@ module.exports = class requests extends nodefony.Entity {
     };
   }
 
-  registerModel(db) {
+  registerModel (db) {
     class MyModel extends Model {
-
-      static associate(models) {
+      static associate (models) {
         // define association here
         if (models.user) {
           models.user.hasMany(models.requests, {
@@ -98,23 +97,22 @@ module.exports = class requests extends nodefony.Entity {
               allowNull: true,
               name: "username"
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
-          })
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE"
+          });
           models.requests.belongsTo(models.user, {
             foreignKey: {
               allowNull: true,
               name: "username"
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE"
           });
         } else {
           this.log("ENTITY ASSOCIATION user NOT AVAILABLE", "WARNING");
-          //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
+          // throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
         }
       }
-
     }
 
     MyModel.init(this.getSchema(), {
@@ -124,5 +122,4 @@ module.exports = class requests extends nodefony.Entity {
     });
     return MyModel;
   }
-
 };

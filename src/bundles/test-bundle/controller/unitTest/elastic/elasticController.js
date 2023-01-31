@@ -2,19 +2,18 @@
  *    @Route ("/test/elastic")
  */
 module.exports = class elasticController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
     this.elastic = this.get("elastic");
     this.setJsonContext();
   }
 
-  async getClient() {
-    let conn = await this.elastic.getConnection("main");
+  async getClient () {
+    const conn = await this.elastic.getConnection("main");
     return conn.client;
   }
 
-  async createIndex(index, id) {
+  async createIndex (index, id) {
     if (!index) {
       index = "nodefony";
     }
@@ -22,13 +21,13 @@ module.exports = class elasticController extends nodefony.controller {
     const {
       body
     } = await client.indices.exists({
-      index: index
+      index
     });
     let res = null;
     if (!body) {
       res = await client.index({
-        index: index,
-        id: id,
+        index,
+        id,
         body: {
           version: this.kernel.version,
           package: this.kernel.package
@@ -38,12 +37,12 @@ module.exports = class elasticController extends nodefony.controller {
       this.log(`Index : ${index} Already exist !!! `);
     }
     await client.indices.refresh({
-      index: index
+      index
     });
     return res;
   }
 
-  async ping() {
+  async ping () {
     return await this.client.ping();
   }
 
@@ -52,14 +51,14 @@ module.exports = class elasticController extends nodefony.controller {
    *    @Route ("/index/{id}" , name="test-elastic-search", defaults={"id" = 1},requirements={"id" = "\d+")
    *
    */
-  async indexAction(id) {
+  async indexAction (id) {
     const client = await this.getClient();
     await this.createIndex("nodefony", id);
     let get = null;
     try {
       get = await client.get({
-        index: 'nodefony',
-        id: id
+        index: "nodefony",
+        id
       });
       return this.renderJson(get)
         .catch((e) => {
@@ -77,6 +76,5 @@ module.exports = class elasticController extends nodefony.controller {
           throw e;
         });
     }
-
   }
 };

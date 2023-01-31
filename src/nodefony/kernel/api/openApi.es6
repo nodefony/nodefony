@@ -1,12 +1,11 @@
 const JsonApi = require(path.resolve(__dirname, "jsonApi.es6"));
 class openApi extends JsonApi {
-
-  constructor(config, context = null) {
+  constructor (config, context = null) {
     super(config, context);
   }
 
   // schema api management
-  setSchema(config = {}, entity = null) {
+  setSchema (config = {}, entity = null) {
     if (config.openapi) {
       this.schema = new nodefony.openApiSchema(this, config, entity);
       return this.schema;
@@ -14,13 +13,13 @@ class openApi extends JsonApi {
     throw new nodefony.Error("schema api not supported ");
   }
 
-  getSchema(config = {}, entity = null) {
+  getSchema (config = {}, entity = null) {
     try {
       if (config) {
         this.setSchema(config, entity);
       }
       if (this.schema) {
-        let conf = this.schema.getConfig();
+        const conf = this.schema.getConfig();
         if (conf.components && conf.components.schemas) {
           conf.components.schemas[this.name] = this.getOpenApiSchema();
         }
@@ -32,9 +31,9 @@ class openApi extends JsonApi {
     }
   }
 
-  renderSchema(config = {}, entity = null, code = 200) {
+  renderSchema (config = {}, entity = null, code = 200) {
     try {
-      let conf = this.getSchema(config, entity);
+      const conf = this.getSchema(config, entity);
       if (this.context) {
         const controller = this.context.get("controller");
         return controller.renderJson(conf, code);
@@ -45,7 +44,7 @@ class openApi extends JsonApi {
     }
   }
 
-  getOpenApiSchema() {
+  getOpenApiSchema () {
     return {
       type: "object",
       properties: {
@@ -111,7 +110,7 @@ class openApi extends JsonApi {
         },
         code: {
           type: "integer",
-          format: "int32",
+          format: "int32"
         }
       },
       example: `
@@ -134,7 +133,6 @@ class openApi extends JsonApi {
       `
     };
   }
-
 }
 
 nodefony.api.OpenApi = openApi;

@@ -1,28 +1,28 @@
 <template lang="html">
   <v-toolbar color="#233056"
-	           theme="dark"
-	           extended
-	           flat>
-		<v-app-bar-title>
-			Activities
-			<v-badge color="info"
-			         v-if="nbToken"
-			         :content="nbToken"
-			         inline>
-			</v-badge>
-		</v-app-bar-title>
-		<v-card-subtitle>tokens</v-card-subtitle>
-		<!--template v-slot:prepend>
+             theme="dark"
+             extended
+             flat>
+    <v-app-bar-title>
+      Activities
+      <v-badge color="info"
+               v-if="nbToken"
+               :content="nbToken"
+               inline>
+      </v-badge>
+    </v-app-bar-title>
+    <v-card-subtitle>tokens</v-card-subtitle>
+    <!--template v-slot:prepend>
 			<v-icon size="50"
 			        color="#43853d"
 			        rounded="0">mdi-router</v-icon>
 		</template-->
-		<template v-slot:append>
-			<v-icon size="50"
-			        color="#43853d"
-			        rounded="0">mdi-security</v-icon>
-		</template>
-	</v-toolbar>
+    <template v-slot:append>
+      <v-icon size="50"
+              color="#43853d"
+              rounded="0">mdi-security</v-icon>
+    </template>
+  </v-toolbar>
   <v-table density="compact">
     <thead>
       <tr>
@@ -60,22 +60,22 @@
 
 <script>
 export default {
-	name: "n-users-activity",
-	inject: ['nodefony'],
-	props: {
-		activity: {
-			type: Object
-		}
-	},
-	computed: {
-		nbToken() {
-			if (this.activity) {
-				return this.activity.length
-			}
-			return 0
-		}
-	}
-}
+  name: "n-users-activity",
+  inject: ["nodefony"],
+  props: {
+    activity: {
+      type: Object
+    }
+  },
+  computed: {
+    nbToken () {
+      if (this.activity) {
+        return this.activity.length;
+      }
+      return 0;
+    }
+  }
+};
 </script>
 
 <style lang="css" scoped>

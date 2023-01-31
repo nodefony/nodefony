@@ -1,10 +1,10 @@
 import {
-  ref,
-  reactive,
-  onMounted,
+  nextTick,
   onBeforeMount,
-  nextTick
-} from 'vue'
+  onMounted,
+  reactive,
+  ref
+} from "vue";
 
 import mermaidEngine from "mermaid";
 
@@ -12,92 +12,87 @@ const defaultConfig = {
   theme: "default",
   startOnLoad: false,
   securityLevel: "loose"
-  //securityLevel: "strict"
-}
+  // securityLevel: "strict"
+};
 
 const generateAttribute = (name, attr, propertie, required) => {
-  const type = propertie.type ? propertie.type.toLowerCase() : 'vitual'
-  return `  ${required?'+':'-'} ${type}  ${name}
-  `
-}
+  const type = propertie.type ? propertie.type.toLowerCase() : "vitual";
+  return `  ${required ? "+" : "-"} ${type}  ${name}
+  `;
+};
 
-const parseAttributes = (name, properties={}, attrs={}, require = []) => {
+const parseAttributes = (name, properties = {}, attrs = {}, require = []) => {
   let dia = `class ${name}{
   `;
   if (attrs) {
-    for (let attr in attrs) {
+    for (const attr in attrs) {
       if (attrs[attr].type) {
-        let required = require.includes(attr)
-        dia += generateAttribute(attr, attrs[attr], properties[attr], required)
+        const required = require.includes(attr);
+        dia += generateAttribute(attr, attrs[attr], properties[attr], required);
       }
     }
   }
-  return dia+='}'
-}
+  return dia += "}";
+};
 
 
-const generateRelation = (name, entity)=>{
-  //console.log(name, entity)
-  return `${name} <|-- ${entity}
-  `
-}
-
-const parseRealations = (name, properties={}) => {
-  //relations
-  let realtions = ``;
-  let entities = []
-  for (let prop in properties) {
+const generateRelation = (name, entity) =>
+  // console.log(name, entity)
+  `${name} <|-- ${entity}
+  `;
+const parseRealations = (name, properties = {}) => {
+  // relations
+  let realtions = "";
+  const entities = [];
+  for (const prop in properties) {
     if (properties[prop].$ref) {
-      const entity = properties[prop].$ref.replace(/#\/components\/schemas\//,"")
-      entities.push(entity)
-      realtions+=generateRelation(name, entity)
+      const entity = properties[prop].$ref.replace(/#\/components\/schemas\//, "");
+      entities.push(entity);
+      realtions += generateRelation(name, entity);
     }
   }
-  return realtions
-}
+  return realtions;
+};
 
-function mermaid() {
-
+function mermaid () {
   onMounted(() => {
     nextTick(() => {
-      //return mermaidEngine.init()
-    })
-  })
+      // return mermaidEngine.init()
+    });
+  });
 
-  onBeforeMount(() => {
-    return mermaidEngine.initialize(defaultConfig);
-  })
+  onBeforeMount(() => mermaidEngine.initialize(defaultConfig));
 
   const parseEntitySchema = function (name, schema, attributes) {
     return `classDiagram
     ${parseAttributes(name, schema.properties, attributes, schema.required)}
     ${parseRealations(name, schema.properties)}
-`
-  }
+`;
+  };
   const parseConnectorSchema = function (name, entities) {
-    let dia =`classDiagram
-`
-    entities.map((entity)=>{
+    let dia = `classDiagram
+`;
+    entities.map((entity) => {
       dia += `  ${parseRealations(entity.name, entity.schema.properties)}
-`
-    })
-    entities.map((entity)=>{
+`;
+    });
+    entities.map((entity) => {
       dia += `  ${parseAttributes(entity.name, entity.schema.properties, entity.attributes, entity.schema.required)}
-`
-    })
+`;
+    });
 
-    return dia
-  }
+    return dia;
+  };
 
   const init = function () {
-    return mermaidEngine.init()
-  }
+    return mermaidEngine.init();
+  };
 
   return {
     parseEntitySchema,
     parseConnectorSchema,
     init
-  }
+  };
 }
 
-export default mermaid
+export default mermaid;

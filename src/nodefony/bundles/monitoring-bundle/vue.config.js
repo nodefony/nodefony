@@ -1,28 +1,28 @@
 // vue.config.js
 const {
   defineConfig
-} = require('@vue/cli-service')
-const webpack = require('webpack');
-const path = require('path');
+} = require("@vue/cli-service");
+const webpack = require("webpack");
+const path = require("path");
 const Package = require(path.resolve("package.json"));
 const vueDir = path.dirname(require.resolve("vue"));
 const packageVue = require(path.resolve(vueDir, "package.json"));
 const outputDir = path.resolve("Resources", "public");
-const indexPath = path.resolve("Resources", "views", 'index.html.twig');
+const indexPath = path.resolve("Resources", "views", "index.html.twig");
 const publicPath = "/monitoring-bundle";
-const template = path.resolve('public', 'index.html');
+const template = path.resolve("public", "index.html");
 const {
   CleanWebpackPlugin
-} = require('clean-webpack-plugin');
-//const title = Package.name;
-const title = `Nodefony`;
-const htmlPlugin = require('html-webpack-plugin');
+} = require("clean-webpack-plugin");
+// const title = Package.name;
+const title = "Nodefony";
+const htmlPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const GoogleFontsPlugin = require("@beyonk/google-fonts-webpack-plugin")
+const GoogleFontsPlugin = require("@beyonk/google-fonts-webpack-plugin");
 const bundleConfig = kernel.getBundle("monitoring").settings;
 let dev = true;
-let debug = false
-let watch = false
+let debug = false;
+let watch = false;
 
 try {
   if (kernel.environment !== "dev") {
@@ -35,7 +35,7 @@ try {
 
 const vuetifyDir = path.dirname(require.resolve("vuetify"));
 const packageVuetify = require(path.resolve(vuetifyDir, "..", "package.json"));
-//const nodeModule = path.resolve(process.cwd(), "node_modules");
+// const nodeModule = path.resolve(process.cwd(), "node_modules");
 
 process.env.VUE_APP_VERSION = Package.version;
 process.env.VUE_APP_VUE_VERSION = packageVue.version;
@@ -50,30 +50,30 @@ try {
 
 module.exports = defineConfig({
   lintOnSave: false,
-  publicPath: publicPath,
-  outputDir: outputDir,
-  indexPath: indexPath,
+  publicPath,
+  outputDir,
+  indexPath,
   assetsDir: "assets",
 
-  chainWebpack: config => {
+  chainWebpack: (config) => {
     config
-      .plugin('html')
-      .tap(args => {
+      .plugin("html")
+      .tap((args) => {
         args[0].title = title;
         args[0].template = template;
-        args[0].chunks = ['app'];
+        args[0].chunks = ["app"];
         return args;
       });
   },
 
   configureWebpack: {
-    //context:process.cwd(),
+    // context:process.cwd(),
     cache: true,
     infrastructureLogging: {
-      //appendOnly: true,
-      //level: 'verbose',
-      //debug: true,
-      //colors: true,
+      // appendOnly: true,
+      // level: 'verbose',
+      // debug: true,
+      // colors: true,
     },
     watchOptions: {
       aggregateTimeout: 1000,
@@ -89,60 +89,61 @@ module.exports = defineConfig({
       runtimeChunk: true,
       removeAvailableModules: false,
       removeEmptyChunks: false,
-      splitChunks: false,
-      //emitOnErrors: true,
+      splitChunks: false
+      // emitOnErrors: true,
     },
     devtool: process.env.NODE_ENV === "development" ? "eval-cheap-module-source-map" : false,
     entry: {
       swagger: ["/Resources/swagger/swagger.js"],
       graphiql: ["/Resources/graphiql/graphiql.jsx"],
-      analyser: ["/Resources/analyser/analyser.js"],
+      analyser: ["/Resources/analyser/analyser.js"]
     },
     module: {
       parser: {
         javascript: {
-          exportsPresence: false,
-        },
+          exportsPresence: false
+        }
       },
       rules: [{
         // BABEL TRANSCODE
         test: /\.(jsx)$/,
         exclude: new RegExp("node_modules"),
         use: [{
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            //presets: ['@babel/preset-env', '@babel/preset-react']
+            // presets: ['@babel/preset-env', '@babel/preset-react']
             presets: [
-              ['@babel/preset-env', {
+              ["@babel/preset-env", {
                 modules: false
               }],
-              '@babel/preset-react',
-            ],
+              "@babel/preset-react"
+            ]
           }
         }]
       }]
     },
     output: {
-      hotUpdateChunkFilename: 'hot/[id].[fullhash].hot-update.js',
-      hotUpdateMainFilename: 'hot/[runtime].[fullhash].hot-update.json'
+      hotUpdateChunkFilename: "hot/[id].[fullhash].hot-update.js",
+      hotUpdateMainFilename: "hot/[runtime].[fullhash].hot-update.json"
     },
     resolve: {
       alias: {
         "@bundles": path.join(__dirname, ".."),
         "@app": path.join(__dirname, "..", "..", "..", "app"),
-        "vue": path.resolve(`./node_modules/vue`),
-        "vue-router": path.resolve(`./node_modules/vue-router`),
-        "bundle-analyser": path.resolve(`./node_modules/webpack-bundle-analyzer/public/viewer.js`)
+        "vue": path.resolve("./node_modules/vue"),
+        "vue-router": path.resolve("./node_modules/vue-router"),
+        "bundle-analyser": path.resolve("./node_modules/webpack-bundle-analyzer/public/viewer.js")
       },
-      extensions: ['.js', '.json', '.jsx', '.css', '.mjs'],
+      extensions: [".js", ".json", ".jsx", ".css", ".mjs"],
       fallback: {
         "path": false,
         "assert": false
-      },
-      //modules: [nodeModule]
+      }
+      // modules: [nodeModule]
     },
     plugins: [
-      /*new webpack.ProgressPlugin({
+
+      /* new webpack.ProgressPlugin({
         entries: true,
         activeModules:true,
         handler(percentage, message, ...args) {
@@ -159,12 +160,13 @@ module.exports = defineConfig({
         filename: "./assets/css/[name].css"
       }),
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        'process.env.NODE_DEBUG': JSON.stringify(debug),
-        'process.env.SWAGGER': JSON.stringify(bundleConfig.swagger),
-        'process.env.GRAPHIQL': JSON.stringify(bundleConfig.graphigl)
+        "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+        "process.env.NODE_DEBUG": JSON.stringify(debug),
+        "process.env.SWAGGER": JSON.stringify(bundleConfig.swagger),
+        "process.env.GRAPHIQL": JSON.stringify(bundleConfig.graphigl)
       }),
-      /*new GoogleFontsPlugin({
+
+      /* new GoogleFontsPlugin({
         fonts: [{
           family: "Gochi Hand"
         }],
@@ -185,7 +187,7 @@ module.exports = defineConfig({
         filename: path.resolve("Resources", "views", "base.html.twig"),
         template: path.resolve("Resources", "templates", "base.html.twig"),
         title: bundleConfig.name,
-        //favicon: dev ? "./Resources/public/images/app-logo.png" : false,
+        // favicon: dev ? "./Resources/public/images/app-logo.png" : false,
         cache: dev,
         minify: {
           collapseWhitespace: true,
@@ -197,14 +199,14 @@ module.exports = defineConfig({
           useShortDoctype: true
         },
         xhtml: true,
-        chunks: ['swagger'],
+        chunks: ["swagger"],
         templateParameters: bundleConfig
       }),
       new htmlPlugin({
         filename: path.resolve("Resources", "views", "base.graphiql.html.twig"),
         template: path.resolve("Resources", "templates", "base.html.twig"),
         title: bundleConfig.name,
-        //favicon: dev ? "./Resources/public/images/app-logo.png" : false,
+        // favicon: dev ? "./Resources/public/images/app-logo.png" : false,
         cache: dev,
         inject: "body",
         minify: {
@@ -217,14 +219,14 @@ module.exports = defineConfig({
           useShortDoctype: true
         },
         xhtml: true,
-        chunks: ['graphiql'],
+        chunks: ["graphiql"],
         templateParameters: bundleConfig
       }),
       new htmlPlugin({
         filename: path.resolve("Resources", "views", "analyser.html.twig"),
         template: path.resolve("Resources", "templates", "base.html.twig"),
         title: bundleConfig.name,
-        //favicon: dev ? "./Resources/public/images/app-logo.png" : false,
+        // favicon: dev ? "./Resources/public/images/app-logo.png" : false,
         cache: dev,
         inject: "body",
         minify: {
@@ -237,21 +239,21 @@ module.exports = defineConfig({
           useShortDoctype: true
         },
         xhtml: true,
-        chunks: ['analyser'],
+        chunks: ["analyser"],
         templateParameters: bundleConfig
       })
     ]
   },
-  //transpileDependencies: true,
+  // transpileDependencies: true,
   transpileDependencies: [
     "vuetify"
   ],
 
   pluginOptions: {
     i18n: {
-      locale: 'en',
-      fallbackLocale: 'en',
-      localeDir: 'locales',
+      locale: "en",
+      fallbackLocale: "en",
+      localeDir: "locales",
       enableLegacy: false,
       runtimeOnly: false,
       compositionOnly: false,
@@ -259,16 +261,16 @@ module.exports = defineConfig({
     }
   },
   pwa: {
-    name: 'nodefony-monitoring',
-    //manifestPath:"",
+    name: "nodefony-monitoring",
+    // manifestPath:"",
     manifestOptions: {
       start_url: "./nodefony",
       id: "./monitoring-bundle",
       scope: "./nodefony"
     },
     workboxOptions: {
-      chunks: ['app', "swagger", "graphiql"],
+      chunks: ["app", "swagger", "graphiql"],
       maximumFileSizeToCacheInBytes: 9000000
     }
   }
-})
+});

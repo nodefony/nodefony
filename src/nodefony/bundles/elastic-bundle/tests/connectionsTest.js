@@ -1,4 +1,4 @@
-const assert = require('assert');
+const assert = require("assert");
 
 const request = require("request");
 const http = require("http");
@@ -6,26 +6,26 @@ const http = require("http");
 describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
   beforeEach(async () => {
     global.elastic = kernel.get("elastic");
-    let conn = await global.elastic.getConnection("main");
+    const conn = await global.elastic.getConnection("main");
     global.client = conn.client;
-
   });
-  /*beforeEach(async () => {
+
+  /* beforeEach(async () => {
     const { Client } = require('@elastic/elasticsearch');
     global.client  = new Client({ node: 'http://localhost:9200' });
   });*/
-  describe('CONFIGURATIONS ', () => {
+  describe("CONFIGURATIONS ", () => {
 
-    /*it("KERNEL", function(done){
+    /* it("KERNEL", function(done){
     	console.log( kernel.settings.system.version );
     	done();
     });*/
 
   });
 
-  describe('Connection', () => {
+  describe("Connection", () => {
     it("HEALF-SERVICE", async () => {
-      let res = await global.client.cluster.health();
+      const res = await global.client.cluster.health();
       assert.deepStrictEqual(res.statusCode, 200);
     });
 
@@ -35,7 +35,7 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
     });
   });
 
-  describe('create Index', () => {
+  describe("create Index", () => {
     it("INDEX-CREATE", async () => {
       const {
         body
@@ -45,34 +45,34 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
       if (!body) {
         // Let's start by indexing some data
         await global.client.index({
-          index: 'game-of-thrones',
+          index: "game-of-thrones",
           // type: '_doc', // uncomment this line if you are using {es} ≤ 6
           body: {
-            character: 'Ned Stark',
-            quote: 'Winter is coming.'
+            character: "Ned Stark",
+            quote: "Winter is coming."
           }
         });
 
         await global.client.index({
-          index: 'game-of-thrones',
+          index: "game-of-thrones",
           // type: '_doc', // uncomment this line if you are using {es} ≤ 6
           body: {
-            character: 'Daenerys Targaryen',
-            quote: 'I am the blood of the dragon.'
+            character: "Daenerys Targaryen",
+            quote: "I am the blood of the dragon."
           }
         });
 
         await global.client.index({
-          index: 'game-of-thrones',
+          index: "game-of-thrones",
           // type: '_doc', // uncomment this line if you are using {es} ≤ 6
           body: {
-            character: 'Tyrion Lannister',
-            quote: 'A mind needs books like a sword needs a whetstone.'
+            character: "Tyrion Lannister",
+            quote: "A mind needs books like a sword needs a whetstone."
           }
         });
       }
       await global.client.indices.refresh({
-        index: 'game-of-thrones'
+        index: "game-of-thrones"
       });
     });
 
@@ -81,12 +81,12 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
       const {
         body
       } = await global.client.search({
-        index: 'game-of-thrones',
+        index: "game-of-thrones",
         // type: '_doc', // uncomment this line if you are using Elasticsearch ≤ 6
         body: {
           query: {
             match: {
-              quote: 'winter'
+              quote: "winter"
             }
           }
         }
@@ -98,21 +98,21 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
     });
   });
 
-  describe('request index', () => {
+  describe("request index", () => {
     beforeEach(async () => {
       global.options = {
         hostname: kernel.settings.system.domain,
         port: kernel.settings.system.httpPort,
-        method: 'GET'
+        method: "GET"
       };
     });
 
     it("INDEX-REQUEST", (done) => {
-      global.options.path = '/test/elastic/index';
+      global.options.path = "/test/elastic/index";
       const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 200);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
           const res = JSON.parse(chunk);
           assert.deepStrictEqual(res.body.found, true);
           assert.deepStrictEqual(res.body._id, "1");
@@ -124,21 +124,19 @@ describe("NODEFONY BUNDLE ELASTICSEARCH", () => {
     });
 
     it("INDEX-REQUEST-NOT-FOUND", (done) => {
-      global.options.path = '/test/elastic/index/2';
+      global.options.path = "/test/elastic/index/2";
       const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 404);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
+        res.setEncoding("utf8");
+        res.on("data", (chunk) => {
           const res = JSON.parse(chunk);
           assert.deepStrictEqual(res.meta.body.found, false);
           assert.deepStrictEqual(res.meta.body._id, "2");
-          //assert.deepStrictEqual(res.body._source.package.name, "nodefony-core");
+          // assert.deepStrictEqual(res.body._source.package.name, "nodefony-core");
           done();
         });
       });
       request.end();
     });
-
   });
-
 });

@@ -1,10 +1,11 @@
-//const Sequelize = require("sequelize");
-//const Model = Sequelize.Model;
+// const Sequelize = require("sequelize");
+// const Model = Sequelize.Model;
 const {
   Sequelize,
   DataTypes,
   Model
 } = nodefony.Sequelize;
+
 /*
  *
  *
@@ -13,8 +14,7 @@ const {
  *
  */
 module.exports = class jwt extends nodefony.Entity {
-
-  constructor(bundle) {
+  constructor (bundle) {
     /*
      *   @param bundle instance
      *   @param Entity name
@@ -24,7 +24,7 @@ module.exports = class jwt extends nodefony.Entity {
     super(bundle, "jwt", "sequelize", "nodefony");
   }
 
-  getSchema() {
+  getSchema () {
     return {
       id: {
         type: DataTypes.INTEGER,
@@ -33,12 +33,12 @@ module.exports = class jwt extends nodefony.Entity {
       },
       refreshToken: {
         type: DataTypes.TEXT,
-        //primaryKey: true,
-        //unique: true,
+        // primaryKey: true,
+        // unique: true,
         allowNull: false
       },
       token: {
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT
       },
       active: {
         type: DataTypes.BOOLEAN,
@@ -47,34 +47,33 @@ module.exports = class jwt extends nodefony.Entity {
     };
   }
 
-  registerModel(db) {
+  registerModel (db) {
     class MyModel extends Model {
-
-      static associate(models) {
+      static associate (models) {
         if (models.user) {
           models.user.hasMany(models.jwt, {
             foreignKey: {
               allowNull: true,
               name: "username"
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
-          })
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE"
+          });
           models.jwt.belongsTo(models.user, {
             foreignKey: {
               allowNull: true,
               name: "username"
             },
-            onDelete: 'CASCADE',
-            onUpdate: 'CASCADE'
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE"
           });
         } else {
           this.log("ENTITY ASSOCIATION user NOT AVAILABLE", "WARNING");
-          //throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
+          // throw new Error("ENTITY ASSOCIATION user NOT AVAILABLE");
         }
       }
 
-      static getRefreshToken(token) {
+      static getRefreshToken (token) {
         const request = {
           where: {
             refreshToken: token
@@ -83,42 +82,44 @@ module.exports = class jwt extends nodefony.Entity {
         return this.findOne(request);
       }
 
-      static async setRefreshToken(username, token, refreshToken, active = true) {
+      static async setRefreshToken (username, token, refreshToken, active = true) {
         const transaction = await db.transaction.call(db);
         return this.create({
-            username: username,
-            refreshToken: refreshToken,
-            token: token,
-            active: active
-          }, {
-            transaction
-          })
+          username,
+          refreshToken,
+          token,
+          active
+        }, {
+          transaction
+        })
           .then((mytoken) => {
             transaction.commit();
             return mytoken;
-          }).catch(e => {
+          })
+          .catch((e) => {
             transaction.rollback();
             throw e;
           });
       }
 
-      static async updateRefreshToken(username, token, refreshToken) {
+      static async updateRefreshToken (username, token, refreshToken) {
         let transaction = null;
         try {
           transaction = await db.transaction.call(db);
           return this.update({
-              token: token
-            }, {
-              where: {
-                username: username,
-                refreshToken: refreshToken
-              },
-              transaction
-            })
+            token
+          }, {
+            where: {
+              username,
+              refreshToken
+            },
+            transaction
+          })
             .then((mytoken) => {
               transaction.commit();
               return mytoken;
-            }).catch(e => {
+            })
+            .catch((e) => {
               transaction.rollback();
               throw e;
             });
@@ -130,24 +131,25 @@ module.exports = class jwt extends nodefony.Entity {
         }
       }
 
-      static async deleteRefreshToken(refreshToken) {
+      static async deleteRefreshToken (refreshToken) {
         let transaction = null;
-        let opt = {
+        const opt = {
           where: {}
         };
         opt.where.refreshToken = refreshToken;
         try {
           transaction = await db.transaction.call(db);
           return this.destroy(opt, {
-              transaction
-            })
+            transaction
+          })
             .then((mytoken) => {
               transaction.commit();
               if (mytoken) {
                 return true;
               }
               return false;
-            }).catch(e => {
+            })
+            .catch((e) => {
               transaction.rollback();
               throw e;
             });
@@ -159,9 +161,9 @@ module.exports = class jwt extends nodefony.Entity {
         }
       }
 
-      static async truncate(username) {
+      static async truncate (username) {
         let transaction = null;
-        let opt = {
+        const opt = {
           where: {}
         };
         if (username) {
@@ -172,12 +174,13 @@ module.exports = class jwt extends nodefony.Entity {
         try {
           transaction = await db.transaction.call(db);
           return this.destroy(opt, {
-              transaction
-            })
+            transaction
+          })
             .then((mytoken) => {
               transaction.commit();
               return mytoken;
-            }).catch(e => {
+            })
+            .catch((e) => {
               transaction.rollback();
               throw e;
             });
@@ -197,8 +200,8 @@ module.exports = class jwt extends nodefony.Entity {
     return MyModel;
   }
 
-  logger(pci /*, sequelize*/ ) {
-    const msgid = "Entity " + this.name;
+  logger (pci /* , sequelize*/) {
+    const msgid = `Entity ${this.name}`;
     return super.logger(pci, "DEBUG", msgid);
   }
 };

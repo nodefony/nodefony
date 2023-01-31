@@ -13,34 +13,27 @@
  */
 
 
+const assert = require("assert");
 
-
-const assert = require('assert');
-
-describe("NODEFONY KERNEL", function(){
-
-  describe('LIBRARY', function(){
-
-
-    beforeEach(function(){
+describe("NODEFONY KERNEL", () => {
+  describe("LIBRARY", () => {
+    beforeEach(() => {
     });
 
-    before(function(){
+    before(() => {
 
     });
 
-    it("NAMESPACE LOADED", function(done){
+    it("NAMESPACE LOADED", (done) => {
       // check nodefony namespace
-      assert.equal( typeof nodefony, "object" );
+      assert.equal(typeof nodefony, "object");
       done();
     });
 
-    it("INSTANCE KERNEL LOADED", function(done){
+    it("INSTANCE KERNEL LOADED", (done) => {
       // check instance kernel
-      assert.equal( kernel instanceof nodefony.kernel, true);
+      assert.equal(kernel instanceof nodefony.kernel, true);
       done();
     });
-
-
   });
 });

@@ -1,17 +1,18 @@
- class sequelizeBundle extends nodefony.Bundle {
-   constructor(name, kernel, container) {
-     super(name, kernel, container);
-     // load bundle library
-     this.autoLoader.loadDirectory(this.path + "/src/session");
-     /*
+class sequelizeBundle extends nodefony.Bundle {
+  constructor (name, kernel, container) {
+    super(name, kernel, container);
+    // load bundle library
+    this.autoLoader.loadDirectory(`${this.path}/src/session`);
+
+    /*
       *	If you want kernel wait sequelizeBundle event <<onReady>>
       *
       *      this.waitBundleReady = true ;
       */
-     this.waitBundleReady = true;
-   }
+    this.waitBundleReady = true;
+  }
 
-   /*boot(){
+  /* boot(){
      return new Promise((resolve, reject)=>{
        try{
          let orm = this.get("sequelize");
@@ -25,6 +26,6 @@
        }
      });
    }*/
- }
+}
 
- module.exports = sequelizeBundle;
+module.exports = sequelizeBundle;

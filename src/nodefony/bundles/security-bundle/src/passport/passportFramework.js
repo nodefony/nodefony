@@ -1,29 +1,28 @@
 /*
  * Module dependencies.
  */
-const http = require('http');
+const http = require("http");
 
 /*
  *  Expose constructors.
  */
-module.exports = function(Firewall) {
-
+module.exports = function (Firewall) {
   class passportNodefony {
-    constructor(firewall) {
+    constructor (firewall) {
       this.firewall = firewall;
       this.failures = [];
       this.callback = null;
       this.strategy = null;
     }
 
-    initialize(passport, options) {
-      return function initialize(context, next) {
+    initialize (passport, options) {
+      return function initialize (context, next) {
         console.log(arguments);
       };
     }
 
-    authenticate(passport, name, options, callback) {
-      if (typeof options === 'function') {
+    authenticate (passport, name, options, callback) {
+      if (typeof options === "function") {
         callback = options;
         options = {};
       }
@@ -53,15 +52,10 @@ module.exports = function(Firewall) {
         if (this.callback) {
           if (!multi) {
             return this.callback(null, false, this.failures[0].challenge, this.failures[0].status);
-          } else {
-            let challenges = this.failures.map(function(f) {
-              return f.challenge;
-            });
-            let statuses = this.failures.map(function(f) {
-              return f.status;
-            });
-            return this.callback(null, false, challenges, statuses);
           }
+          const challenges = this.failures.map((f) => f.challenge);
+          const statuses = this.failures.map((f) => f.status);
+          return this.callback(null, false, challenges, statuses);
         }
 
         if (this.options.failureFlash) {
@@ -75,20 +69,19 @@ module.exports = function(Firewall) {
         }
 
         if (this.options.failWithError) {}
-
       };
     }
 
-    setStrategy(name, context, options, next) {
+    setStrategy (name, context, options, next) {
       // Get the strategy, which will be used as prototype from which to create
       // a new instance.  Action functions will then be bound to the strategy
       // within the context of the HTTP request/response pair.
-      let prototype = this.passport._strategy(name);
+      const prototype = this.passport._strategy(name);
       if (!prototype) {
         if (this.callback) {
-          return this.callback(new Error('Unknown authentication strategy "' + name + '"'));
+          return this.callback(new Error(`Unknown authentication strategy "${name}"`));
         }
-        return next(new Error('Unknown authentication strategy "' + name + '"'));
+        return next(new Error(`Unknown authentication strategy "${name}"`));
       }
 
       this.strategy = Object.create(prototype);
@@ -126,7 +119,7 @@ module.exports = function(Firewall) {
        */
       this.strategy.fail = (challenge, status) => {
         let message = null;
-        if (typeof challenge === 'number') {
+        if (typeof challenge === "number") {
           status = challenge;
           challenge = undefined;
         }
@@ -142,28 +135,27 @@ module.exports = function(Firewall) {
           context.response.setHeader("WWW-Authenticate", challenge);
           if (this.callback) {
             return this.callback({
-              status: status,
-              message: message
+              status,
+              message
             }, null);
           }
           return next({
-            status: status,
-            message: message
-          }, null);
-        } else {
-          if (!status) {
-            status = 401;
-          }
-          if (typeof challenge === "object") {
-            if (challenge.message) {
-              message = challenge.message;
-            }
-          }
-          return next({
-            status: status,
-            message: message
+            status,
+            message
           }, null);
         }
+        if (!status) {
+          status = 401;
+        }
+        if (typeof challenge === "object") {
+          if (challenge.message) {
+            message = challenge.message;
+          }
+        }
+        return next({
+          status,
+          message
+        }, null);
       };
 
       /**
@@ -214,28 +206,28 @@ module.exports = function(Firewall) {
         return next(err, null);
       };
 
-      this.firewall.log("STRATEGY AUTHENTICATE  passport-" + name, "DEBUG");
-      if( context.request && context.request.request){
+      this.firewall.log(`STRATEGY AUTHENTICATE  passport-${name}`, "DEBUG");
+      if (context.request && context.request.request) {
         context.request.request.query = context.request.query;
         this.strategy.authenticate(context.request.request, this.options);
-      }else{
+      } else {
         this.strategy.authenticate(context.request, this.options);
       }
     }
   }
 
-  return function(_firewall) {
+  return (function (_firewall) {
     const inst = new passportNodefony(_firewall);
     return {
-      authenticate: function(passport, name, options, callback) {
+      authenticate (passport, name, options, callback) {
         return inst.authenticate(passport, name, options, callback);
       },
-      initialize: function() {
+      initialize () {
         console.log("initialize");
       },
-      authorize: function() {
+      authorize () {
         console.log("authorize");
       }
     };
-  }(Firewall);
+  }(Firewall));
 };

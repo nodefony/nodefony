@@ -1,6 +1,6 @@
 module.exports = class myClass {
-  constructor(mail) {
+  constructor (mail) {
     this.mail = mail;
-    //throw new Error("mqflkmsdlf")
+    // throw new Error("mqflkmsdlf")
   }
 };

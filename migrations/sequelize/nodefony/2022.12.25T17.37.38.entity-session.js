@@ -1,35 +1,35 @@
-'use strict';
+"use strict";
 const {
   Sequelize,
   DataTypes,
   Model
-} = require('sequelize');
+} = require("sequelize");
 
 class Migrate extends nodefony.Service {
-  constructor(kernel) {
+  constructor (kernel) {
     super("Migrate", kernel.container);
-    this.entityName = "sessions"
+    this.entityName = "sessions";
   }
 
-  async up({
+  async up ({
     name,
     context: queryInterface
   }) {
-    let descriptions = null
+    let descriptions = null;
     try {
-      descriptions = await queryInterface.describeTable(this.entityName)
+      descriptions = await queryInterface.describeTable(this.entityName);
     } catch (e) {
-      this.log(`Migrate file : ${name}`)
+      this.log(`Migrate file : ${name}`);
     }
-    const exist = await queryInterface.tableExists(this.entityName)
+    const exist = await queryInterface.tableExists(this.entityName);
     if (exist) {
       this.log(`Entity ${this.entityName} already exist`);
-      return descriptions
+      return descriptions;
     }
-    let transaction = null
+    let transaction = null;
     try {
       transaction = await queryInterface.sequelize.transaction();
-      let res = await queryInterface.createTable(this.entityName, {
+      const res = await queryInterface.createTable(this.entityName, {
         session_id: {
           type: DataTypes.STRING(126),
           primaryKey: true
@@ -45,7 +45,7 @@ class Migrate extends nodefony.Service {
           type: DataTypes.JSON
         },
         metaBag: {
-          type: DataTypes.JSON,
+          type: DataTypes.JSON
         },
         createdAt: {
           allowNull: false,
@@ -58,38 +58,38 @@ class Migrate extends nodefony.Service {
         username: {
           type: DataTypes.STRING(126),
           references: {
-            model: 'user',
-            key: 'username'
+            model: "user",
+            key: "username"
           },
           onUpdate: "CASCADE",
-          onDelete: "CASCADE",
-        },
+          onDelete: "CASCADE"
+        }
       }, {
         transaction
       });
       return await transaction.commit();
     } catch (e) {
       if (transaction && !transaction.finished) {
-        this.log(e, "ERROR")
+        this.log(e, "ERROR");
         this.log(`Rollback transaction on table ${this.entityName}`);
         await transaction.rollback();
       }
-      this.log("Rollback Transaction already finished", "WARNING")
-      throw e
+      this.log("Rollback Transaction already finished", "WARNING");
+      throw e;
     }
   }
 
-  async down({
+  async down ({
     name,
     context: queryInterface,
     context: sequelize
   }) {
     try {
-      const descriptions = await queryInterface.describeTable(this.entityName)
+      const descriptions = await queryInterface.describeTable(this.entityName);
       return await queryInterface.dropTable(this.entityName);
     } catch (e) {
-      this.log(`Entity ${this.entityName} not exist`, "WARNING")
-      throw e
+      this.log(`Entity ${this.entityName} not exist`, "WARNING");
+      throw e;
     }
   }
 }

@@ -1,17 +1,17 @@
 module.exports = class monitoringBundle extends nodefony.Bundle {
-  constructor(name, kernel, container) {
+  constructor (name, kernel, container) {
     super(name, kernel, container);
 
     this.infoKernel = {};
     this.kernel.once("onPreBoot", async (kernel) => {
       this.infoKernel.events = {};
-      this.eventPreboot()
+      this.eventPreboot();
     });
   }
 
-  async eventPreboot() {
-    this.log("Monitoring Event onPreBoot","DEBUG")
-    for (let event in kernel.notificationsCenter._events) {
+  async eventPreboot () {
+    this.log("Monitoring Event onPreBoot", "DEBUG");
+    for (const event in kernel.notificationsCenter._events) {
       switch (event) {
       case "onPreBoot":
         this.infoKernel.events[event] = {
@@ -33,5 +33,4 @@ module.exports = class monitoringBundle extends nodefony.Bundle {
       }
     }
   }
-
 };

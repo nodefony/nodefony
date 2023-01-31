@@ -1,11 +1,11 @@
 module.exports = class bundlesTask extends nodefony.Task {
-
-  constructor(name, command) {
+  constructor (name, command) {
     super(name, command);
   }
 
-  showHelp() {
-    /*this.setHelp("nodefony:bundles:listDependencies",
+  showHelp () {
+
+    /* this.setHelp("nodefony:bundles:listDependencies",
       "List Nodefony dependencies"
     );
     this.setHelp("nodefony:bundles:install [environment]",
@@ -13,22 +13,20 @@ module.exports = class bundlesTask extends nodefony.Task {
     );*/
   }
 
-  /*async dependencies() {
+  /* async dependencies() {
     return await this.cli.listPackage(this.kernel.rootDir);
   }*/
 
-  async install(...args) {
+  async install (...args) {
     try {
       for (let i = 0; i < args.length; i++) {
         if (args[i] instanceof nodefony.fileClass || args[i] instanceof nodefony.Bundle) {
           if (this.kernel.isCore) {
-            //mypromise.push(this.cli.installPackage(args[i], this.kernel.environment));
+            // mypromise.push(this.cli.installPackage(args[i], this.kernel.environment));
             await this.cli.installPackage(args[i], this.kernel.environment);
-          } else {
-            if (!this.kernel.isBundleCore(args[i].name)) {
-              //mypromise.push(this.cli.installPackage(args[i], this.kernel.environment));
-              await this.cli.installPackage(args[i], this.kernel.environment);
-            }
+          } else if (!this.kernel.isBundleCore(args[i].name)) {
+            // mypromise.push(this.cli.installPackage(args[i], this.kernel.environment));
+            await this.cli.installPackage(args[i], this.kernel.environment);
           }
         }
       }
@@ -39,26 +37,23 @@ module.exports = class bundlesTask extends nodefony.Task {
     this.log("Install success");
   }
 
-  async outdated(...args) {
+  async outdated (...args) {
     for (let i = 0; i < args.length; i++) {
       if (args[i] instanceof nodefony.fileClass || args[i] instanceof nodefony.Bundle) {
         if (this.kernel.isCore) {
           await this.cli.outdatedPackage(args[i]);
-        } else {
-          if (!this.kernel.isBundleCore(args[i].name)) {
-            await this.cli.outdatedPackage(args[i]);
-          }
+        } else if (!this.kernel.isBundleCore(args[i].name)) {
+          await this.cli.outdatedPackage(args[i]);
         }
       }
     }
   }
 
-  async rebuild(...args) {
+  async rebuild (...args) {
     for (let i = 0; i < args.length; i++) {
       if (args[i] instanceof nodefony.fileClass || args[i] instanceof nodefony.Bundle) {
         await this.cli.rebuildPackage(args[i]);
       }
     }
   }
-
 };

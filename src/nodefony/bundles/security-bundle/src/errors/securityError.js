@@ -1,5 +1,5 @@
 class securityError extends nodefony.httpError {
-  constructor(message, code, secure, context) {
+  constructor (message, code, secure, context) {
     if (context) {
       super(message, code, context.container);
     } else {
@@ -11,7 +11,7 @@ class securityError extends nodefony.httpError {
     }
   }
 
-  logger(data) {
+  logger (data) {
     if (this.secure) {
       if (data) {
         if (this.secure.logger) {
@@ -25,11 +25,11 @@ class securityError extends nodefony.httpError {
     return super.logger(data);
   }
 
-  parserSecure() {
+  parserSecure () {
     this.securedArea = this.secure.name;
   }
 
-  toString() {
+  toString () {
     switch (this.errorType) {
     case "securityError":
       if (kernel && kernel.environment === "prod") {

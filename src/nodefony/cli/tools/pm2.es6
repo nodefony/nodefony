@@ -1,30 +1,29 @@
 module.exports = class pm2Builder extends nodefony.Builder {
-
-  constructor(cli) {
+  constructor (cli) {
     super(cli);
     this.choices = [];
     if (nodefony.isTrunk) {
-      this.choices.push(`List PM2 Production Projects`);
-      this.choices.push(`Log PM2 Production Project`);
-      this.choices.push(`Stop PM2 Production Project`);
-      this.choices.push(`Restart PM2 Production Project`);
-      this.choices.push(`Delete PM2 Production Project`);
-      this.choices.push(`Save PM2`);
-      this.choices.push(`Startup PM2`);
-      this.choices.push(`Unstartup PM2`);
-      this.choices.push(`Install PM2 Logrotate`);
-      this.choices.push(`Kill PM2 Deamon`);
+      this.choices.push("List PM2 Production Projects");
+      this.choices.push("Log PM2 Production Project");
+      this.choices.push("Stop PM2 Production Project");
+      this.choices.push("Restart PM2 Production Project");
+      this.choices.push("Delete PM2 Production Project");
+      this.choices.push("Save PM2");
+      this.choices.push("Startup PM2");
+      this.choices.push("Unstartup PM2");
+      this.choices.push("Install PM2 Logrotate");
+      this.choices.push("Kill PM2 Deamon");
     } else {
-      this.choices.push(`List PM2 Production Projects`);
-      this.choices.push(`Log  PM2 Production Projects`);
-      //this.choices.push(`Install PM2 Logrotate`);
-      this.choices.push(`Kill PM2 Deamon`);
+      this.choices.push("List PM2 Production Projects");
+      this.choices.push("Log  PM2 Production Projects");
+      // this.choices.push(`Install PM2 Logrotate`);
+      this.choices.push("Kill PM2 Deamon");
     }
     this.choices.push(this.cli.getSeparator());
     this.choices.push("Quit");
   }
 
-  log(pci, severity, msgid, msg) {
+  log (pci, severity, msgid, msg) {
     try {
       if (!msgid) {
         msgid = "PM2";
@@ -35,53 +34,53 @@ module.exports = class pm2Builder extends nodefony.Builder {
     }
   }
 
-  interaction() {
+  interaction () {
     return this.cli.prompt([{
-        type: 'list',
-        name: 'command',
-        message: ' Nodefony CLI : ',
-        default: 0,
-        pageSize: this.choices.length,
-        choices: this.choices,
-        filter: (val) => {
-          switch (val) {
-          case "List PM2 Production Projects":
-            return "list";
-          case "Stop PM2 Production Project":
-            return "stop";
-          case "Restart PM2 Production Project":
-            return "restart";
-          case "Delete PM2 Production Project":
-            return "delete";
-          case "Log PM2 Production Projects":
-          case "Log PM2 Production Project":
-            return "logs";
-          case "Save PM2":
-            return "pm2-save";
-          case "Startup PM2":
-            return "pm2-startup";
-          case "Unstartup PM2":
-            return "pm2-unstartup";
-          case "Install PM2 Logrotate":
-            return "pm2-logrotate";
-          case "Kill PM2 Deamon":
-            return "kill";
-          case "Quit":
-            return "quit";
-          default:
-            console.log("\n");
-            this.log(`command not found : ${val}`, "ERROR");
-            this.cli.terminate(1);
-          }
+      type: "list",
+      name: "command",
+      message: " Nodefony CLI : ",
+      default: 0,
+      pageSize: this.choices.length,
+      choices: this.choices,
+      filter: (val) => {
+        switch (val) {
+        case "List PM2 Production Projects":
+          return "list";
+        case "Stop PM2 Production Project":
+          return "stop";
+        case "Restart PM2 Production Project":
+          return "restart";
+        case "Delete PM2 Production Project":
+          return "delete";
+        case "Log PM2 Production Projects":
+        case "Log PM2 Production Project":
+          return "logs";
+        case "Save PM2":
+          return "pm2-save";
+        case "Startup PM2":
+          return "pm2-startup";
+        case "Unstartup PM2":
+          return "pm2-unstartup";
+        case "Install PM2 Logrotate":
+          return "pm2-logrotate";
+        case "Kill PM2 Deamon":
+          return "kill";
+        case "Quit":
+          return "quit";
+        default:
+          console.log("\n");
+          this.log(`command not found : ${val}`, "ERROR");
+          this.cli.terminate(1);
         }
-      }])
+      }
+    }])
       .then((response) => {
         this.start(response);
         return response;
       });
   }
 
-  start(response) {
+  start (response) {
     switch (response.command) {
     case "stop":
       return this.cli.setCommand("stop");
@@ -110,5 +109,4 @@ module.exports = class pm2Builder extends nodefony.Builder {
       return this.cli.setCommand("", "-h");
     }
   }
-
 };

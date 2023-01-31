@@ -1,6 +1,5 @@
 module.exports = class appController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
     // start session
     this.startSession();
@@ -13,7 +12,7 @@ module.exports = class appController extends nodefony.controller {
    *    @Route ("/",
    *      name="home")
    **/
-  indexAction() {
+  indexAction () {
     return this.redirectToRoute("app");
   }
 
@@ -22,7 +21,7 @@ module.exports = class appController extends nodefony.controller {
    *    @Route ("/app",
    *      name="app")
    **/
-  appAction() {
+  appAction () {
     return this.render("app::index.html.twig", {
       user: this.getUser(),
       description: this.kernel.package.description
@@ -32,9 +31,9 @@ module.exports = class appController extends nodefony.controller {
   /**
    *
    */
-  headerAction() {
+  headerAction () {
     let urlDoc = null;
-    let doc = this.kernel.getBundles("documentation") ;
+    const doc = this.kernel.getBundles("documentation");
     if (doc) {
       urlDoc = this.generateUrl("index-documentation");
     }
@@ -42,19 +41,18 @@ module.exports = class appController extends nodefony.controller {
       langs: this.get("translation").getLangs(),
       locale: this.getLocale(),
       version: nodefony.version,
-      urlDoc: urlDoc
+      urlDoc
     });
   }
 
   /**
    *
    */
-  footerAction() {
-    let version = this.kernel.settings.version;
+  footerAction () {
+    const {version} = this.kernel.settings;
     return this.render("app::footer.html.twig", {
-      version: version,
+      version,
       year: new Date().getFullYear()
     });
   }
-
 };

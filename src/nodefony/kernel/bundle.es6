@@ -1,6 +1,6 @@
 const Module = require("module");
 
-const colorLogEvent = clc.cyan.bgBlue(`EVENT BUNDLE`);
+const colorLogEvent = clc.cyan.bgBlue("EVENT BUNDLE");
 const regFixtures = /^(\w+)Fixtures.js$/;
 const regController = /^(\w+)Controller\.[m]?js$/;
 const regClassController = /^(\w+)Controller$/;
@@ -11,9 +11,9 @@ const regI18nFile = /^(.*)\.(.._..)\.(.*)$/;
 const regConfigFile = /^(.*)\..*$/;
 const regRoutingFile = /^(routing)\..*$/;
 const regWebpackCongig = /^(webpack)\.(dev\.|prod\.)?config\.js$/;
-const semver = require("semver")
+const semver = require("semver");
 
-const checkIngnoreFile = function(string, basename) {
+const checkIngnoreFile = function (string, basename) {
   let file = null;
   try {
     file = new nodefony.fileClass(string);
@@ -33,70 +33,74 @@ const checkIngnoreFile = function(string, basename) {
 };
 
 const moduleFindDependencies = class moduleFindDependencies {
-  constructor(Path, type, bundle) {
+  constructor (Path, type, bundle) {
     this.container = {};
     this.bundle = bundle;
     this.childs = [];
     this.type = type;
     switch (type) {
-      case "controller":
-        this.path = this.bundle.controllersPath;
-        this.reg = regController;
-        this.loader = this.bundle.loadController;
-        break;
-      case "routing":
-        this.path = this.bundle.configPath;
-        this.reg = regRoutingFile;
-        this.loader = this.bundle.reloadRouting;
-        break;
-      case "service":
-        this.path = this.bundle.servicesPath;
-        this.reg = regService;
-        this.loader = this.bundle.reloadService;
-        break;
-      default:
-        throw new Error("moduleFindDependencies type not valid : " + type);
+    case "controller":
+      this.path = this.bundle.controllersPath;
+      this.reg = regController;
+      this.loader = this.bundle.loadController;
+      break;
+    case "routing":
+      this.path = this.bundle.configPath;
+      this.reg = regRoutingFile;
+      this.loader = this.bundle.reloadRouting;
+      break;
+    case "service":
+      this.path = this.bundle.servicesPath;
+      this.reg = regService;
+      this.loader = this.bundle.reloadService;
+      break;
+    default:
+      throw new Error(`moduleFindDependencies type not valid : ${type}`);
     }
     this.cache = Module._cache;
     if (Path) {
       this.findRequire(Path);
     }
   }
-  set(ele, val) {
+
+  set (ele, val) {
     return this.container[ele] = val;
   }
-  get(ele) {
+
+  get (ele) {
     return this.container[ele];
   }
-  setChild(path) {
+
+  setChild (path) {
     this.childs.push(path);
   }
-  length() {
+
+  length () {
     return Object.keys(this.container).length;
   }
-  findRequire(Path, check) {
+
+  findRequire (Path, check) {
     if (check === undefined) {
       check = true;
     }
-    for (let module in this.cache) {
+    for (const module in this.cache) {
       if (this.cache[module].filename.indexOf(this.path) >= 0) {
-        let basename = path.basename(this.cache[module].filename);
+        const basename = path.basename(this.cache[module].filename);
         if (check && this.cache[module].filename.indexOf(Path) >= 0) {
           if (path.basename(Path) === basename) {
             this.setChild(this.cache[module].filename);
           }
         }
         if (this.cache[module].children.length) {
-          for (let child in this.cache[module].children) {
+          for (const child in this.cache[module].children) {
             if (this.cache[module].children[child].filename.indexOf(Path) >= 0) {
-              let res = this.reg.exec(basename);
+              const res = this.reg.exec(basename);
               if (res) {
                 this.set(res[1], this.cache[module].filename);
                 return this;
-              } else {
-                this.setChild(this.cache[module].filename);
-                return this.findRequire(this.cache[module].filename, false);
               }
+              this.setChild(this.cache[module].filename);
+              return this.findRequire(this.cache[module].filename, false);
             }
           }
         }
@@ -104,26 +108,27 @@ const moduleFindDependencies = class moduleFindDependencies {
     }
     return this;
   }
-  reload() {
+
+  reload () {
     if (this.length()) {
       for (let i = 0; i < this.childs.length; i++) {
-        this.bundle.log("Reload " + this.type + " Dependency : " + this.childs[i]);
+        this.bundle.log(`Reload ${this.type} Dependency : ${this.childs[i]}`);
         this.bundle.loadFile(this.childs[i], true);
       }
-      for (let control in this.container) {
+      for (const control in this.container) {
         this.loader.call(this.bundle, control, this.container[control], true);
       }
     }
   }
 };
 
-const defaultWatcher = function(reg /*, settings*/ ) {
+const defaultWatcher = function (reg /* , settings*/) {
   return {
     ignoreInitial: true,
     ignored: [
       (string) => {
-        let basename = path.basename(string);
-        let file = checkIngnoreFile(string, basename);
+        const basename = path.basename(string);
+        const file = checkIngnoreFile(string, basename);
         if (file === true) {
           return true;
         }
@@ -147,27 +152,28 @@ const defaultOptions = {
     captureRejections: true
   }
 };
+
 /*
  *  BUNDLE CLASS
  */
 class Bundle extends nodefony.Service {
-  constructor(name, kernel, container) {
+  constructor (name, kernel, container) {
     super(name, container, null, nodefony.extend(true, {}, defaultOptions));
-    this.log("\x1b[36m REGISTER BUNDLE : " + this.name + "   \x1b[0m", "DEBUG", this.kernel.cli.clc.magenta("KERNEL"));
+    this.log(`\x1b[36m REGISTER BUNDLE : ${this.name}   \x1b[0m`, "DEBUG", this.kernel.cli.clc.magenta("KERNEL"));
     this.bundleName = path.basename(this.path);
     this.location = path.dirname(this.path);
     this.publicPath = path.resolve(this.path, "Resources", "public");
     this.environment = this.kernel.environment;
     this.waitBundleReady = false;
-    this.setParameters("bundles." + this.name, this.getParameters("bundles." + this.name) || {});
-    this.production = (this.kernel.environment === "prod") ? true : false;
+    this.setParameters(`bundles.${this.name}`, this.getParameters(`bundles.${this.name}`) || {});
+    this.production = this.kernel.environment === "prod";
     this.package = require(path.resolve(this.path, "package.json"));
-    this.ckeckSemver(this.package.version)
+    this.ckeckSemver(this.package.version);
     this.version = this.package.version;
     this.packageName = this.package.name;
     this.isCore = this.kernel.isBundleCore(this.name);
-    this.ready = false
-    this.booted = false
+    this.ready = false;
+    this.booted = false;
 
     // services
     this.injectionService = this.get("injection");
@@ -183,13 +189,13 @@ class Bundle extends nodefony.Service {
     // config
     this.regConfigFile = regConfigFile;
     this.configPath = path.resolve(this.path, "Resources", "config");
-    //views
+    // views
     this.views = {};
     this.views["."] = {};
     this.watcherView = null;
     // views
     this.serviceTemplate = this.get("templating");
-    this.regTemplateExt = new RegExp("^(.+)\." + this.serviceTemplate.extention + "$");
+    this.regTemplateExt = new RegExp(`^(.+)\.${this.serviceTemplate.extention}$`);
     this.viewsPath = path.resolve(this.path, "Resources", "views");
 
     // controllers
@@ -230,8 +236,8 @@ class Bundle extends nodefony.Service {
       try {
         this.router = this.get("router");
         this.sockjs = this.get("sockjs");
-        //this.orm = this.get("orm");
-        //console.log("PASSS",this.orm)
+        // this.orm = this.get("orm");
+        // console.log("PASSS",this.orm)
         this.webpackService = this.get("webpack");
         this.translation = this.get("translation");
         // Register internationalisation
@@ -255,43 +261,44 @@ class Bundle extends nodefony.Service {
 
     this.kernel.once("onPostReady", async () => {
       switch (this.kernel.environment) {
-        case 'production':
-        case 'prod':
-        case 'preprod':
-        case 'preproduction':
-          this.clean();
-          break;
+      case "production":
+      case "prod":
+      case "preprod":
+      case "preproduction":
+        this.clean();
+        break;
       }
     });
     // BUNDLE EVENTS
-    this.register()
+    this.register();
   }
 
-  ckeckSemver(version) {
+  ckeckSemver (version) {
     try {
-      let res = semver.valid(version);
+      const res = semver.valid(version);
       if (!res) {
         this.log(`Bad Bundle Semantic Versioning  : ${version} Check  http://semver.org `, "WARNING");
       }
-      return res
+      return res;
     } catch (e) {
       this.log(e, "ERROR");
-      throw e
+      throw e;
     }
   }
 
-  async register() {
+  async register () {
     return await this.emitAsync("onRegister", this);
   }
 
-  static excludeDir() {
+  static excludeDir () {
     return /^public$|^node_modules$|^clones$|^\.git|assets$|tmp$|doc$|build$|css$|scss$|public$/;
   }
-  static exclude() {
+
+  static exclude () {
     return /yarn.lock$|package-lock.json$|pnpm-lock.yaml|yarn-error.log$|package.json$/;
   }
 
-  async initialize() {
+  async initialize () {
     // Register services before boot
     return await this.registerServices()
       .then(async (results) => {
@@ -303,7 +310,7 @@ class Bundle extends nodefony.Service {
           dir = this.resourcesFiles;
         }
         // config
-        let conf = dir.find("config")[0];
+        const conf = dir.find("config")[0];
         if (conf) {
           this.kernel.readConfig.call(this, null, conf.children, (result) => {
             this.parseConfig(result);
@@ -311,29 +318,29 @@ class Bundle extends nodefony.Service {
         } else {
           throw new Error("Bundle must have config directory");
         }
-        //EVENT BOOT BUNDLE
+        // EVENT BOOT BUNDLE
         await this.emitAsync("onInitialize", this);
         return results;
       });
   }
 
-  async find() {
+  async find () {
     return this.findResult = await this.finder
       .in(this.path)
       .then((result) => {
-        //this.log(result[0].children.length ,'WARNING', `FINDER ${this.name}`);
+        // this.log(result[0].children.length ,'WARNING', `FINDER ${this.name}`);
         this.resourcesFiles = result[0].children.find("Resources");
         return result[0].children;
       })
-      .catch(e => {
+      .catch((e) => {
         this.log(e, "ERROR");
       });
   }
 
-  boot() {
+  boot () {
     return new Promise(async (resolve, reject) => {
       try {
-        //EVENT BOOT BUNDLE
+        // EVENT BOOT BUNDLE
         await this.emitAsync("onBoot", this);
         // finder controller
         await this.findControllerFiles();
@@ -354,17 +361,15 @@ class Bundle extends nodefony.Service {
       this.booted = true;
       if (this.waitBundleReady === false) {
         await this.emitAsync("onReady", this);
-        this.ready = true
-      } else {
-        if (this.ready) {
-          await this.emitAsync("onReady", this);
-        }
+        this.ready = true;
+      } else if (this.ready) {
+        await this.emitAsync("onReady", this);
       }
       return resolve(this);
     });
   }
 
-  clean() {
+  clean () {
     this.log(`CLEAN MEMORY BUNDLE :  ${this.name}`);
     this.findResult = null;
     delete this.findResult;
@@ -376,8 +381,8 @@ class Bundle extends nodefony.Service {
     delete this.watching;
     this.viewFiles = null;
     delete this.viewFiles;
-    //this.i18nFiles = null;
-    //delete this.i18nFiles;
+    // this.i18nFiles = null;
+    // delete this.i18nFiles;
     this.controllerFiles = null;
     delete this.controllerFiles;
     this.commandFiles = null;
@@ -388,16 +393,16 @@ class Bundle extends nodefony.Service {
     delete this.fixtureFiles;
     this.entityFiles = null;
     delete this.entityFiles;
-    this.lastWebpackStats = null
+    this.lastWebpackStats = null;
     delete this.lastWebpackStats;
   }
 
-  emitAsync() {
+  emitAsync () {
     this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
     return super.emitAsync.apply(this, arguments);
   }
 
-  initWebpack() {
+  initWebpack () {
     try {
       return this.findWebPackConfig()
         .then((compiler) => {
@@ -425,14 +430,12 @@ class Bundle extends nodefony.Service {
     }
   }
 
-  compileWebpack() {
+  compileWebpack () {
     return new Promise((resolve, reject) => {
       if (this.webpackCompiler) {
         try {
-          return this.webpackService.runCompiler(this.webpackCompiler, this.name + "_" + this.webpackCompiler.name, this.name, this.webpackCompiler.name)
-            .catch(e => {
-              return reject(e);
-            });
+          return this.webpackService.runCompiler(this.webpackCompiler, `${this.name}_${this.webpackCompiler.name}`, this.name, this.webpackCompiler.name)
+            .catch((e) => reject(e));
         } catch (e) {
           return reject(e);
         }
@@ -441,85 +444,87 @@ class Bundle extends nodefony.Service {
     });
   }
 
-  findWebPackConfig() {
+  findWebPackConfig () {
     return new Promise((resolve, reject) => {
       let res = null;
       let file = null;
       switch (this.settings.type) {
-        case "angular":
-          try {
-            res = this.findResult.find("webpack.config.js")[0];
-            if (!res) {
-              return reject(new Error("Angular bundle no webpack config file : webpack.config.js "));
-            }
-            return resolve(this.loadWebpackConfig(res));
-          } catch (e) {
-            shell.cd(this.kernel.rootDir);
-            throw e;
+      case "angular":
+        try {
+          res = this.findResult.find("webpack.config.js")[0];
+          if (!res) {
+            return reject(new Error("Angular bundle no webpack config file : webpack.config.js "));
           }
-          break;
-        case "react":
-          file = null;
-          try {
-            file = path.resolve(this.path, "config", "webpack.config.js");
-            /*switch (process.env.NODE_ENV) {
+          return resolve(this.loadWebpackConfig(res));
+        } catch (e) {
+          shell.cd(this.kernel.rootDir);
+          throw e;
+        }
+        break;
+      case "react":
+        file = null;
+        try {
+          file = path.resolve(this.path, "config", "webpack.config.js");
+
+          /* switch (process.env.NODE_ENV) {
               case "development":
               case "production":
                 break;
             }*/
-            res = new nodefony.fileClass(file);
-            process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
-            return resolve(this.loadWebpackConfig(res));
-          } catch (e) {
-            shell.cd(this.kernel.rootDir);
-            return reject(e);
+          res = new nodefony.fileClass(file);
+          process.env.PUBLIC_URL = path.resolve("/", this.bundleName, "dist");
+          return resolve(this.loadWebpackConfig(res));
+        } catch (e) {
+          shell.cd(this.kernel.rootDir);
+          return reject(e);
+        }
+        break;
+      case "vue":
+        try {
+          file = path.resolve(this.path, "node_modules", "@vue", "cli-service", "webpack.config.js");
+          new nodefony.fileClass(file);
+        } catch (e) {
+          const cliService = require.resolve("@vue/cli-service");
+          file = path.resolve(path.dirname(cliService), "..", "webpack.config.js");
+        }
+        // console.log(file , require.resolve("@vue/cli-service"))
+        try {
+          this.webpackConfigFile = new nodefony.fileClass(file);
+          process.env.VUE_CLI_CONTEXT = this.path;
+          return resolve(this.loadWebpackConfig(this.webpackConfigFile));
+        } catch (e) {
+          shell.cd(this.kernel.rootDir);
+          return reject(e);
+        }
+        break;
+      default:
+        try {
+          this.webpackConfigFile = this.findResult.find("webpack.config.js")[0];
+          if (!this.webpackConfigFile) {
+            return resolve(false);
           }
-          break;
-        case "vue":
-          try {
-            file = path.resolve(this.path, "node_modules", "@vue", "cli-service", "webpack.config.js");
-            new nodefony.fileClass(file);
-          } catch (e) {
-            let cliService = require.resolve("@vue/cli-service");
-            file = path.resolve(path.dirname(cliService), "..", "webpack.config.js");
-          }
-          //console.log(file , require.resolve("@vue/cli-service"))
-          try {
-            this.webpackConfigFile = new nodefony.fileClass(file);
-            process.env.VUE_CLI_CONTEXT = this.path;
-            return resolve(this.loadWebpackConfig(this.webpackConfigFile));
-          } catch (e) {
-            shell.cd(this.kernel.rootDir);
-            return reject(e);
-          }
-          break;
-        default:
-          try {
-            this.webpackConfigFile = this.findResult.find("webpack.config.js")[0];
-            if (!this.webpackConfigFile) {
-              return resolve(false);
-            }
-            return resolve(this.loadWebpackConfig(this.webpackConfigFile));
-          } catch (e) {
-            shell.cd(this.kernel.rootDir);
-            return reject(e);
-          }
+          return resolve(this.loadWebpackConfig(this.webpackConfigFile));
+        } catch (e) {
+          shell.cd(this.kernel.rootDir);
+          return reject(e);
+        }
       }
     });
   }
 
-  loadWebpackConfig(conf) {
+  loadWebpackConfig (conf) {
     return this.webpackService.loadConfig(conf, this)
       .then((compiler) => {
         shell.cd(this.kernel.rootDir);
         return compiler;
-      }).catch(e => {
+      })
+      .catch((e) => {
         shell.cd(this.kernel.rootDir);
         throw e;
       });
   }
 
-  initWatchers() {
+  initWatchers () {
     if (!this.settings.watch) {
       return;
     }
@@ -528,29 +533,29 @@ class Bundle extends nodefony.Service {
     let i18n = false;
     let config = false;
     let services = false;
-    //let entities = false;
-    let regJs = new RegExp(".*\.js$|.*\.es6$|.*\.es7$|.*\.mjs$");
+    // let entities = false;
+    const regJs = new RegExp(".*\.js$|.*\.es6$|.*\.es7$|.*\.mjs$");
     try {
       switch (typeof this.settings.watch) {
-        case "object":
-          controllers = this.settings.watch.controllers || false;
-          views = this.settings.watch.views || false;
-          i18n = this.settings.watch.translations || false;
-          config = this.settings.watch.config || false;
-          services = this.settings.watch.services || false;
-          this.webpackWatch = this.settings.watch.webpack || false;
-          break;
-        case "boolean":
-          controllers = this.settings.watch || false;
-          views = this.settings.watch || false;
-          i18n = this.settings.watch || false;
-          config = this.settings.watch || false;
-          services = this.settings.watch || false;
-          this.webpackWatch = this.settings.watch || false;
-          break;
-        default:
-          this.log("BAD CONFIG WATCHER  ", "WARNING");
-          return;
+      case "object":
+        controllers = this.settings.watch.controllers || false;
+        views = this.settings.watch.views || false;
+        i18n = this.settings.watch.translations || false;
+        config = this.settings.watch.config || false;
+        services = this.settings.watch.services || false;
+        this.webpackWatch = this.settings.watch.webpack || false;
+        break;
+      case "boolean":
+        controllers = this.settings.watch || false;
+        views = this.settings.watch || false;
+        i18n = this.settings.watch || false;
+        config = this.settings.watch || false;
+        services = this.settings.watch || false;
+        this.webpackWatch = this.settings.watch || false;
+        break;
+      default:
+        this.log("BAD CONFIG WATCHER  ", "WARNING");
+        return;
       }
       // controllers
       if (controllers) {
@@ -558,7 +563,7 @@ class Bundle extends nodefony.Service {
         this.watcherController.setSockjsServer(this.sockjs);
         this.watcherController.listenWatcherController();
         this.kernel.on("onTerminate", () => {
-          this.log("Watching Ended : " + this.watcherController.path, "INFO");
+          this.log(`Watching Ended : ${this.watcherController.path}`, "INFO");
           this.watcherController.close();
         });
       }
@@ -568,7 +573,7 @@ class Bundle extends nodefony.Service {
         this.watcherView.listenWatcherView();
         this.watcherView.setSockjsServer(this.sockjs);
         this.kernel.on("onTerminate", () => {
-          this.log("Watching Ended : " + this.watcherView.path, "INFO");
+          this.log(`Watching Ended : ${this.watcherView.path}`, "INFO");
           this.watcherView.close();
         });
       }
@@ -578,7 +583,7 @@ class Bundle extends nodefony.Service {
         this.watcherI18n.listenWatcherI18n();
         this.watcherI18n.setSockjsServer(this.sockjs);
         this.kernel.on("onTerminate", () => {
-          this.log("Watching Ended : " + this.watcherI18n.path, "INFO");
+          this.log(`Watching Ended : ${this.watcherI18n.path}`, "INFO");
           this.watcherI18n.close();
         });
       }
@@ -588,35 +593,34 @@ class Bundle extends nodefony.Service {
         this.watcherConfig.listenWatcherConfig();
         this.watcherConfig.setSockjsServer(this.sockjs);
         this.kernel.on("onTerminate", () => {
-          this.log("Watching Ended : " + this.watcherConfig.path, "INFO");
+          this.log(`Watching Ended : ${this.watcherConfig.path}`, "INFO");
           this.watcherConfig.close();
         });
       }
-      //services
+      // services
       if (services) {
         this.watcherService = new nodefony.kernelWatcher(this.servicesPath, defaultWatcher.call(this, regJs), this);
         this.watcherService.listenWatcherServices();
         this.watcherService.setSockjsServer(this.sockjs);
         this.kernel.on("onTerminate", () => {
-          this.log("Watching Ended : " + this.watcherService.path, "INFO");
+          this.log(`Watching Ended : ${this.watcherService.path}`, "INFO");
           this.watcherService.close();
         });
       }
-      //entities
-
+      // entities
     } catch (e) {
       throw e;
     }
   }
 
-  reloadRouting(name, Path) {
+  reloadRouting (name, Path) {
     try {
       if (name === null) {
-        let find = new moduleFindDependencies(Path, "routing", this);
+        const find = new moduleFindDependencies(Path, "routing", this);
         find.reload();
       } else {
-        let fileClass = new nodefony.fileClass(Path);
-        this.log("Reload Routing : " + Path);
+        const fileClass = new nodefony.fileClass(Path);
+        this.log(`Reload Routing : ${Path}`);
         if (this.router) {
           this.router.reader(fileClass.path, this.name);
         }
@@ -626,59 +630,59 @@ class Bundle extends nodefony.Service {
     }
   }
 
-  parseConfig(result) {
+  parseConfig (result) {
     if (result) {
       let config = null;
-      for (let ele in result) {
+      for (const ele in result) {
         let ext = null;
         switch (true) {
-          case this.kernel.regBundleName.test(ele):
-            let myname = this.kernel.regBundleName.exec(ele);
-            let name = myname[1] || myname[2];
-            config = this.getParameters("bundles." + name);
-            if (config) {
-              ext = nodefony.extend(true, {}, config, result[ele]);
-              this.log("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name, "DEBUG");
-            } else {
-              ext = result[ele];
-              this.log("\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : " + name + " BUT BUNDLE " + name + " NOT YET REGISTERED ", "WARNING");
-            }
-            if (this.kernel.bundles[name]) {
-              this.kernel.bundles[name].settings = ext;
-              this.setParameters("bundles." + name, this.kernel.bundles[name].settings);
-            } else {
-              this.setParameters("bundles." + name, ext || {});
-            }
-            break;
-          case /^locale$/.test(ele):
-            if (result[ele]) {
-              this.locale = result[ele];
-            }
-            break;
+        case this.kernel.regBundleName.test(ele):
+          const myname = this.kernel.regBundleName.exec(ele);
+          const name = myname[1] || myname[2];
+          config = this.getParameters(`bundles.${name}`);
+          if (config) {
+            ext = nodefony.extend(true, {}, config, result[ele]);
+            this.log(`\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : ${name}`, "DEBUG");
+          } else {
+            ext = result[ele];
+            this.log(`\x1b[32m OVERRIDING\x1b[0m  CONFIG bundle  : ${name} BUT BUNDLE ${name} NOT YET REGISTERED `, "WARNING");
+          }
+          if (this.kernel.bundles[name]) {
+            this.kernel.bundles[name].settings = ext;
+            this.setParameters(`bundles.${name}`, this.kernel.bundles[name].settings);
+          } else {
+            this.setParameters(`bundles.${name}`, ext || {});
+          }
+          break;
+        case (/^locale$/).test(ele):
+          if (result[ele]) {
+            this.locale = result[ele];
+          }
+          break;
         }
       }
-      config = this.getParameters("bundles." + this.name);
+      config = this.getParameters(`bundles.${this.name}`);
       if (config && Object.keys(config).length) {
-        this.log("\x1b[32m BUNDLE IS ALREADY OVERRIDING BY AN OTHERONE  INVERT\x1b[0m  CONFIG  " + util.inspect(config), "WARNING");
+        this.log(`\x1b[32m BUNDLE IS ALREADY OVERRIDING BY AN OTHERONE  INVERT\x1b[0m  CONFIG  ${util.inspect(config)}`, "WARNING");
         this.settings = nodefony.extend(true, {}, result, config);
-        this.setParameters("bundles." + this.name, this.settings);
+        this.setParameters(`bundles.${this.name}`, this.settings);
       } else {
         this.settings = result;
-        this.setParameters("bundles." + this.name, this.settings);
+        this.setParameters(`bundles.${this.name}`, this.settings);
       }
       this.settings.version = this.version;
-      //console.log(this.settings)
+      // console.log(this.settings)
     }
   }
 
-  log(pci, severity, msgid, msg) {
+  log (pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = `bundle-${this.name}`;
     }
     return super.log(pci, severity, msgid, msg);
   }
 
-  loadFile(Path, force) {
+  loadFile (Path, force) {
     try {
       return this.autoLoader.load(Path, force);
     } catch (e) {
@@ -687,19 +691,19 @@ class Bundle extends nodefony.Service {
     }
   }
 
-  getName() {
+  getName () {
     return this.name;
   }
 
-  getController(name) {
+  getController (name) {
     return this.controllers[name];
   }
 
-  async registerServices() {
-    let service = await this.findResult.find("services")
+  async registerServices () {
+    const service = await this.findResult.find("services")
       .find(regService);
     if (!service.length) {
-      this.log("Bundle " + this.name + " No Services Found", "DEBUG");
+      this.log(`Bundle ${this.name} No Services Found`, "DEBUG");
     }
     service.forEach((ele) => {
       try {
@@ -711,9 +715,9 @@ class Bundle extends nodefony.Service {
     return service;
   }
 
-  loadService(ele, force) {
+  loadService (ele, force) {
     try {
-      let Class = this.loadFile(ele.path, force);
+      const Class = this.loadFile(ele.path, force);
       if (typeof Class === "function") {
         Class.prototype.bundle = this;
         if (force) {
@@ -722,30 +726,29 @@ class Bundle extends nodefony.Service {
           }
         }
         nodefony.services[Class.name] = Class;
-        this.log("Register Service : " + Class.name, "DEBUG");
+        this.log(`Register Service : ${Class.name}`, "DEBUG");
         return Class;
-      } else {
-        throw new Error("Bundle Register Service : " + ele.path + "  error Service bad format " + typeof Class);
       }
+      throw new Error(`Bundle Register Service : ${ele.path}  error Service bad format ${typeof Class}`);
     } catch (e) {
       throw e;
     }
   }
 
-  async reloadService(name, Path, force) {
+  async reloadService (name, Path, force) {
     try {
-      let File = new nodefony.fileClass(Path);
+      const File = new nodefony.fileClass(Path);
       await this.reloadWatcherService(File, Path, force);
     } catch (e) {
       throw e;
     }
   }
 
-  async reloadWatcherService(File, Path, force) {
+  async reloadWatcherService (File, Path, force) {
     try {
       if (File) {
-        let Class = this.loadService(File, force);
-        let injector = this.injectionService.getInjector(Class.name);
+        const Class = this.loadService(File, force);
+        const injector = this.injectionService.getInjector(Class.name);
         if (injector) {
           injector.getServiceClass({
             class: Class
@@ -753,47 +756,45 @@ class Bundle extends nodefony.Service {
           injector.getServiceName();
           await injector.restartService();
         } else {
-          let error = new Error(Class.name + " Service is not found or not register reboot server or check config file ");
+          const error = new Error(`${Class.name} Service is not found or not register reboot server or check config file `);
           throw error;
         }
-      } else {
-        if (File === null) {
-          let find = new moduleFindDependencies(Path, "service", this);
-          find.reload();
-        }
+      } else if (File === null) {
+        const find = new moduleFindDependencies(Path, "service", this);
+        find.reload();
       }
     } catch (e) {
       throw e;
     }
   }
 
-  async findControllerFiles() {
+  async findControllerFiles () {
     this.controllerFiles = await this.findResult.find("controller").find(this.regController);
     if (!this.controllerFiles.length) {
-      this.log("Bundle " + this.name + " controller directory not found", "DEBUG");
+      this.log(`Bundle ${this.name} controller directory not found`, "DEBUG");
     }
     return this.controllerFiles;
   }
 
-  async registerControllers(result) {
+  async registerControllers (result) {
     if (result) {
       this.controllerFiles = result;
     }
     if (this.controllerFiles.length) {
       this.controllerFiles.forEach((ele) => {
-        let res = this.regController.exec(ele.name);
+        const res = this.regController.exec(ele.name);
         if (res) {
-          let name = res[1];
+          const name = res[1];
           this.loadController(name, ele.path, false);
         }
       });
     }
   }
 
-  reloadWatcherControleur(name, Path) {
+  reloadWatcherControleur (name, Path) {
     try {
       if (name === null) {
-        let find = new moduleFindDependencies(Path, "controller", this);
+        const find = new moduleFindDependencies(Path, "controller", this);
         find.reload();
       } else {
         this.loadController(name, Path, true);
@@ -803,7 +804,7 @@ class Bundle extends nodefony.Service {
     }
   }
 
-  loadController(name, Path, force) {
+  loadController (name, Path, force) {
     if (this.controllers[name]) {
       delete this.controllers[name];
       this.controllers[name] = null;
@@ -811,12 +812,12 @@ class Bundle extends nodefony.Service {
     let Class = null;
     try {
       Class = this.loadFile(Path, force);
-      let res = regClassController.exec(Class.name);
+      const res = regClassController.exec(Class.name);
       if (res) {
         name = res[1];
       } else {
-        this.log("Controller Bad Class name :" + Class.name + " file : " + Path, "ERROR");
-        this.log("Controller take the file name  !!! " + name, "WARNING");
+        this.log(`Controller Bad Class name :${Class.name} file : ${Path}`, "ERROR");
+        this.log(`Controller take the file name  !!! ${name}`, "WARNING");
       }
       if (typeof Class === "function") {
         Class.prototype.name = name;
@@ -828,12 +829,12 @@ class Bundle extends nodefony.Service {
         if (force) {
           severity = "INFO";
         }
-        this.log("Load " + name + " Controller : '" + Path + "'", severity);
-        if (this.router && true /*Class.prototype.annotation*/ ) {
+        this.log(`Load ${name} Controller : '${Path}'`, severity);
+        if (this.router && true /* Class.prototype.annotation*/) {
           this.router.reader(Path, this.name);
         }
       } else {
-        throw new Error("Bundle " + this.name + " Load Controller : " + Path + " Controller bad format module.exports must return a class  ");
+        throw new Error(`Bundle ${this.name} Load Controller : ${Path} Controller bad format module.exports must return a class  `);
       }
     } catch (e) {
       throw e;
@@ -841,15 +842,15 @@ class Bundle extends nodefony.Service {
     return Class;
   }
 
-  async findViewFiles() {
+  async findViewFiles () {
     this.viewFiles = await this.resourcesFiles.find("views");
     if (!this.viewFiles.length) {
-      this.log("Bundle " + this.name + " No views Found", "DEBUG");
+      this.log(`Bundle ${this.name} No views Found`, "DEBUG");
     }
     return this.viewFiles;
   }
 
-  async compileTemplate(file, basename, name) {
+  async compileTemplate (file, basename, name) {
     return new Promise(async (resolve, reject) => {
       if (this.views[basename] && this.views[basename][name] && this.views[basename][name].template) {
         this.views[basename][name].template = null;
@@ -858,7 +859,6 @@ class Bundle extends nodefony.Service {
       let template = null;
       try {
         template = await this.serviceTemplate.compile(file);
-
       } catch (e) {
         return reject(e);
       }
@@ -868,16 +868,15 @@ class Bundle extends nodefony.Service {
       }
       return resolve(null);
     });
-
   }
 
-  setView(file) {
+  setView (file) {
     let basename = path.basename(file.dirName);
     let res = null;
     let name = null;
     if (basename !== "views") {
       let dir = new nodefony.fileClass(file.dirName);
-      let tab = [dir.name];
+      const tab = [dir.name];
       while (path.basename(dir.dirName) !== "views") {
         dir = new nodefony.fileClass(dir.dirName);
         tab.push(dir.name);
@@ -899,16 +898,16 @@ class Bundle extends nodefony.Service {
         delete this.views[basename][name];
       }
       return this.views[basename][name] = {
-        name: name,
-        basename: basename,
-        file: file,
+        name,
+        basename,
+        file,
         template: null
       };
     }
     return null;
   }
 
-  async recompileTemplate(file, force) {
+  async recompileTemplate (file, force) {
     return new Promise(async (resolve, reject) => {
       let bundle = this;
       // OVERRIDE VIEWS BUNDLE in APP DIRECTORY
@@ -917,26 +916,24 @@ class Bundle extends nodefony.Service {
         if (this.kernel.platform === "win32") {
           let prefix = path.resolve(this.viewsPath);
           prefix = prefix.replace(/\\/g, "\\\\");
-          pattern = prefix + "\\\\(\\w+)-bundle\\\\views\\\\(.+\\.twig)";
+          pattern = `${prefix}\\\\(\\w+)-bundle\\\\views\\\\(.+\\.twig)`;
         } else {
           pattern = path.resolve(this.viewsPath, "(\\w+)-bundle", "views", "(.+\\.twig)");
         }
-        let reg = new RegExp("^" + pattern + "$");
-        let res = reg.exec(file.path);
+        const reg = new RegExp(`^${pattern}$`);
+        const res = reg.exec(file.path);
         if (res && res[1]) {
           bundle = this.kernel.getBundle(res[1]);
           this.log(`\x1b[32m APP OVERRIDING VIEWS\x1b[0m  Bundle : ${bundle.name}  File : ${file.name}`, "DEBUG");
         }
       }
       try {
-        let ele = bundle.setView(file);
+        const ele = bundle.setView(file);
         if (ele) {
           if (force) {
             await bundle.compileTemplate(ele.file, ele.basename, ele.name);
-          } else {
-            if (this.kernel.type !== "CONSOLE") {
-              await bundle.compileTemplate(ele.file, ele.basename, ele.name);
-            }
+          } else if (this.kernel.type !== "CONSOLE") {
+            await bundle.compileTemplate(ele.file, ele.basename, ele.name);
           }
         } else {
           this.log(` DROP VIEW TEMPLATE : ${file.path}`, "DEBUG");
@@ -946,10 +943,9 @@ class Bundle extends nodefony.Service {
         return reject(e);
       }
     });
-
   }
 
-  async registerViews(result) {
+  async registerViews (result) {
     return new Promise(async (resolve, reject) => {
       let views = null;
       if (result) {
@@ -959,20 +955,21 @@ class Bundle extends nodefony.Service {
       }
       for await (const file of views.getFiles()) {
         try {
-          let ele = await this.recompileTemplate(file, true);
+          const ele = await this.recompileTemplate(file, true);
           if (ele) {
             if (ele.basename === ".") {
-              this.log("Register Template   : '" + this.name + "Bundle:" + "" + ":" + ele.name + "'", "DEBUG");
+              this.log(`${String(`Register Template   : '${this.name}Bundle:`)}:${ele.name}'`, "DEBUG");
             } else {
-              this.log("Register Template   : '" + this.name + "Bundle:" + ele.basename + ":" + ele.name + "'", "DEBUG");
+              this.log(`Register Template   : '${this.name}Bundle:${ele.basename}:${ele.name}'`, "DEBUG");
             }
           }
         } catch (e) {
           return reject(e);
-          //throw e;
+          // throw e;
         }
       }
-      /*views.getFiles().forEach(async (file) => {
+
+      /* views.getFiles().forEach(async (file) => {
         try {
           let ele = await this.recompileTemplate(file, true);
           if (ele) {
@@ -991,41 +988,41 @@ class Bundle extends nodefony.Service {
     });
   }
 
-  getView(viewDirectory, viewName) {
+  getView (viewDirectory, viewName) {
     if (this.views[viewDirectory]) {
-      let res = this.regTemplateExt.exec(viewName);
+      const res = this.regTemplateExt.exec(viewName);
       if (res) {
-        let name = res[1];
+        const name = res[1];
         if (this.views[viewDirectory][name]) {
           return this.views[viewDirectory][name].file;
         }
-        throw new Error("Bundle " + this.name + " directory : " + viewDirectory + " GET view file Name : " + viewName + " Not Found");
+        throw new Error(`Bundle ${this.name} directory : ${viewDirectory} GET view file Name : ${viewName} Not Found`);
       } else {
-        throw new Error("Bundle " + this.name + " directory : " + viewDirectory + " GET view file Name : " + viewName + " Not Found");
+        throw new Error(`Bundle ${this.name} directory : ${viewDirectory} GET view file Name : ${viewName} Not Found`);
       }
     } else {
-      throw new Error("Bundle " + this.name + " GET view directory : " + viewDirectory + " Not Found");
+      throw new Error(`Bundle ${this.name} GET view directory : ${viewDirectory} Not Found`);
     }
   }
 
-  getTemplate(viewDirectory, viewName) {
+  getTemplate (viewDirectory, viewName) {
     if (this.views[viewDirectory]) {
-      let res = this.regTemplateExt.exec(viewName);
+      const res = this.regTemplateExt.exec(viewName);
       if (res) {
-        let name = res[1];
+        const name = res[1];
         if (this.views[viewDirectory][name]) {
           return this.views[viewDirectory][name].template;
         }
-        throw new Error("Bundle " + this.name + " directory : " + viewDirectory + " GET view file Name : " + viewName + " Not Found");
+        throw new Error(`Bundle ${this.name} directory : ${viewDirectory} GET view file Name : ${viewName} Not Found`);
       } else {
-        throw new Error("Bundle " + this.name + " directory : " + viewDirectory + " GET view file Name : " + viewName + " Not Found");
+        throw new Error(`Bundle ${this.name} directory : ${viewDirectory} GET view file Name : ${viewName} Not Found`);
       }
     } else {
-      throw new Error("Bundle " + this.name + " GET view directory : " + viewDirectory + " Not Found");
+      throw new Error(`Bundle ${this.name} GET view directory : ${viewDirectory} Not Found`);
     }
   }
 
-  async findI18nFiles(result) {
+  async findI18nFiles (result) {
     let trans = null;
     if (result) {
       trans = await result.find("translations");
@@ -1033,26 +1030,25 @@ class Bundle extends nodefony.Service {
       trans = await this.resourcesFiles.find("translations");
     }
     if (!trans.length || !trans[0]) {
-      this.log("Bundle " + this.name + " No Translation Found", "DEBUG");
+      this.log(`Bundle ${this.name} No Translation Found`, "DEBUG");
       return trans;
     }
     return trans[0].children;
   }
 
-  getfilesByLocal(locale, dir) {
-    let reg = new RegExp("^(.*)\.(" + locale + ")\.(.*)$");
+  getfilesByLocal (locale, dir) {
+    const reg = new RegExp(`^(.*)\.(${locale})\.(.*)$`);
     return dir.find(reg);
   }
 
-  async registerI18n(locale, result) {
-
+  async registerI18n (locale, result) {
     let dir = null;
     if (result) {
       dir = await this.findI18nFiles(result);
     } else {
       dir = this.i18nFiles;
     }
-    //console.trace(dir)
+    // console.trace(dir)
     if (!dir || !dir.length) {
       return;
     }
@@ -1062,7 +1058,7 @@ class Bundle extends nodefony.Service {
     } else {
       files = this.getfilesByLocal(this.translation.defaultLocale, dir);
       if (!files.length) {
-        let bundleLocal = this.getParameters("bundles." + this.name + ".locale");
+        const bundleLocal = this.getParameters(`bundles.${this.name}.locale`);
         files = this.getfilesByLocal(bundleLocal || this.translation.defaultLocale, dir);
         if (bundleLocal && !files.length) {
           this.log(`Translation File Locale : ${bundleLocal} not found`, "DEBUG");
@@ -1070,14 +1066,14 @@ class Bundle extends nodefony.Service {
       }
     }
     files.getFiles().forEach((file) => {
-      let domain = file.match[1];
-      let Locale = file.match[2];
-      this.log(`Read I18n file : ${file.path}`, 'DEBUG');
+      const domain = file.match[1];
+      const Locale = file.match[2];
+      this.log(`Read I18n file : ${file.path}`, "DEBUG");
       this.translation.reader(file.path, this.name, Locale, domain);
     });
   }
 
-  async registerCommand(store) {
+  async registerCommand (store) {
     this.commandFiles = await this.findResult.find("Command")
       .find(regCommand);
     if (!this.commandFiles.length) {
@@ -1086,31 +1082,31 @@ class Bundle extends nodefony.Service {
     }
     let command = null;
     this.commandFiles.getFiles().forEach((file) => {
-      let res = regCommand.exec(file.name);
+      const res = regCommand.exec(file.name);
       if (res) {
         try {
           command = this.loadFile(file.path);
           command.prototype.bundle = this;
           store.push(command);
         } catch (e) {
-          throw new Error(e + "   FILE COMMAND : " + file.path);
+          throw new Error(`${e}   FILE COMMAND : ${file.path}`);
         }
         if (!command) {
-          throw new Error("Command : " + file + " BAD FORMAT");
+          throw new Error(`Command : ${file} BAD FORMAT`);
         }
-        let name = command.name || res[1];
+        const name = command.name || res[1];
         if (!name) {
-          throw new Error("Command : " + name + "BAD FORMAT NANE ");
+          throw new Error(`Command : ${name}BAD FORMAT NANE `);
         }
       }
     });
   }
 
-  async getPublicDirectory() {
+  async getPublicDirectory () {
     try {
       return await new nodefony.Finder2({
-          excludeDir: /^docs$|^tests|^node_modules|^assets$/
-        })
+        excludeDir: /^docs$|^tests|^node_modules|^assets$/
+      })
         .in(path.resolve(this.path, "Resources", "public"));
     } catch (e) {
       return null;
@@ -1118,7 +1114,7 @@ class Bundle extends nodefony.Service {
     return null;
   }
 
-  async registerEntities() {
+  async registerEntities () {
     this.entityFiles = await this.findResult.find("Entity")
       .find(this.kernel.getOrm())
       .find(regEntity);
@@ -1127,72 +1123,72 @@ class Bundle extends nodefony.Service {
       return this.entityFiles;
     }
     this.entityFiles.forEach((file) => {
-      let res = regEntity.exec(file.name);
+      const res = regEntity.exec(file.name);
       let Class = null;
       if (res) {
         try {
           Class = this.loadFile(file.path);
         } catch (e) {
-          this.log("LOAD ENTITY  " + file.path, "ERROR");
+          this.log(`LOAD ENTITY  ${file.path}`, "ERROR");
           throw e;
         }
         try {
           this.entities[Class.name] = new Class(this);
-          this.log("LOAD ENTITY  " + Class.name + " : " + file.name, "DEBUG");
+          this.log(`LOAD ENTITY  ${Class.name} : ${file.name}`, "DEBUG");
         } catch (e) {
           this.log(e, "WARNING");
         }
       } else {
-        this.log("Drop Entity file " + file.name, "WARNING");
+        this.log(`Drop Entity file ${file.name}`, "WARNING");
       }
     });
   }
 
-  getEntity(name) {
+  getEntity (name) {
     if (this.entities[name]) {
       return this.entities[name];
     }
     return null;
   }
 
-  getEntities() {
+  getEntities () {
     if (this.entities) {
       return this.entities;
     }
     return null;
   }
 
-  async registerFixtures() {
+  async registerFixtures () {
     this.fixtureFiles = await this.findResult.find("Fixtures")
       .find(regFixtures);
     if (!this.fixtureFiles.length) {
-      this.log("Bundle " + this.name + " No Fixutures Found", "DEBUG");
+      this.log(`Bundle ${this.name} No Fixutures Found`, "DEBUG");
       return this.entityFiles;
     }
     this.fixtureFiles.forEach((file) => {
-      let res = regFixtures.exec(file.name);
+      const res = regFixtures.exec(file.name);
       if (res) {
-        let name = res[1];
-        let Class = this.loadFile(file.path);
+        const name = res[1];
+        const Class = this.loadFile(file.path);
         if (typeof Class === "function") {
           Class.prototype.bundle = this;
           this.fixtures[name] = Class;
-          this.log("LOAD FIXTURE : " + file.name, "DEBUG");
+          this.log(`LOAD FIXTURE : ${file.name}`, "DEBUG");
         } else {
-          this.log("Register FIXTURE : " + name + "  error FIXTURE bad format");
+          this.log(`Register FIXTURE : ${name}  error FIXTURE bad format`);
         }
       }
     });
   }
 
-  getFixture(name) {
+  getFixture (name) {
     if (this.fixtures[name]) {
       return this.fixtures[name];
     }
     return null;
   }
 
-  getFixtures() {
+  getFixtures () {
     if (this.fixtures) {
       return this.fixtures;
     }

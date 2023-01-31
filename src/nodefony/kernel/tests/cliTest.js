@@ -9,13 +9,12 @@
  *	kernel :   instance of kernel who launch the test
  *
  */
-const assert = require('assert');
+const assert = require("assert");
 
 describe("NODEFONY CLI", () => {
-
   beforeEach(() => {});
 
-  describe('SIMPLE', () => {
+  describe("SIMPLE", () => {
     it("CREATE", (done) => {
       const project = new nodefony.cli("project", {
         version: nodefony.version,
@@ -24,12 +23,12 @@ describe("NODEFONY CLI", () => {
       });
       assert.strictEqual(project.name, "project");
       assert.strictEqual(project.commander.version(), nodefony.version);
-      let options = {
-        processName: 'nodefony',
+      const options = {
+        processName: "nodefony",
         autostart: true,
         asciify: true,
         clear: true,
-        prompt: 'default',
+        prompt: "default",
         commander: true,
         color: clc.red.bold,
         signals: true,
@@ -42,7 +41,7 @@ describe("NODEFONY CLI", () => {
       };
       assert.deepStrictEqual(options, project.options);
 
-      let banner = `          Version : ${clc.blueBright.bold(nodefony.version)}   Platform : ${clc.green(process.platform)}   Process : ${clc.green("project")}   Pid : ${project.pid}`;
+      const banner = `          Version : ${clc.blueBright.bold(nodefony.version)}   Platform : ${clc.green(process.platform)}   Process : ${clc.green("project")}   Pid : ${project.pid}`;
       let res = null;
       project.start()
         .then((cli) => {
@@ -52,12 +51,9 @@ describe("NODEFONY CLI", () => {
           assert.strictEqual(res, 0);
           done();
         })
-        .catch(e => {
+        .catch((e) => {
           throw e;
         });
     });
-
   });
-
-
 });

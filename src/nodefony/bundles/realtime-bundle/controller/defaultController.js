@@ -1,6 +1,5 @@
 module.exports = class defaultController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
     this.realtime = this.get("realTime");
   }
@@ -9,7 +8,7 @@ module.exports = class defaultController extends nodefony.controller {
    *    @Route ("/nodefony/socket",
    *      name="socket",requirements={"protocol" = "bayeux"})
    */
-  indexAction(message) {
+  indexAction (message) {
     switch (this.method) {
     case "GET":
       return this.getResponse("PING");

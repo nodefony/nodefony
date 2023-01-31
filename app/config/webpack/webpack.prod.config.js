@@ -1,26 +1,26 @@
-//const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+// const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 const {
   InjectManifest,
   GenerateSW
-} = require('workbox-webpack-plugin');
-const SitemapPlugin = require('sitemap-webpack-plugin').default;
+} = require("workbox-webpack-plugin");
+const SitemapPlugin = require("sitemap-webpack-plugin").default;
 
 // Example of object paths
 // Object paths must have a `path` attribute -- others are optional,
 // and fall back to global config (if any)
 const paths = [
   {
-    path: '/app',
-    lastmod: '2021-01-04',
+    path: "/app",
+    lastmod: "2021-01-04",
     priority: 0.8,
-    changefreq: 'monthly'
+    changefreq: "monthly"
   },
   {
-    path: '/users',
-    lastmod: '2021-02-05',
+    path: "/users",
+    lastmod: "2021-02-05",
     priority: 0.5,
-    changefreq: 'yearly'
+    changefreq: "yearly"
   }
 ];
 
@@ -41,7 +41,8 @@ module.exports = {
     ]
   },
   plugins: [
-    /*new InjectManifest({
+
+    /* new InjectManifest({
       //mode: "production",
       swSrc: path.resolve("Resources", "workers", "service-worker.js"),
       swDest: path.resolve("Resources", "public", "assets", "service-worker.js"),
@@ -63,19 +64,19 @@ module.exports = {
       // and not allow any straggling "old" SWs to hang around
       clientsClaim: true,
       skipWaiting: true,
-      directoryIndex: 'app',
+      directoryIndex: "app",
       runtimeCaching: [{
         urlPattern: /./,
-        handler: 'StaleWhileRevalidate'
+        handler: "StaleWhileRevalidate"
       }]
     }),
     new SitemapPlugin({
-      base: 'https://nodefony-core.net',
+      base: "https://nodefony-core.net",
       paths,
       options: {
-        filename: 'sitemap.xml',
+        filename: "sitemap.xml",
         lastmod: true,
-        changefreq: 'monthly',
+        changefreq: "monthly",
         priority: 0.4
       }
     })

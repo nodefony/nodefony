@@ -1,9 +1,7 @@
-module.exports = nodefony.register("SecuredArea", function () {
-
+module.exports = nodefony.register("SecuredArea", () => {
   // context security
   class securedArea extends nodefony.Service {
-
-    constructor(name, firewall) {
+    constructor (name, firewall) {
       super(name, firewall.container, firewall.notificationsCenter);
       this.firewall = firewall;
       this.router = this.get("router");
@@ -26,37 +24,33 @@ module.exports = nodefony.register("SecuredArea", function () {
           if (this.providerName) {
             if (this.providerName in this.firewall.providerManager.providers) {
               this.provider = this.firewall.providerManager.getProvider(this.providerName);
-            } else {
-              if (this.anonymous) {
-                this.providerName = "anonymous";
-                this.provider = this.firewall.providerManager.getProvider("anonymous");
-              } else {
-                throw new Error(`Provider : ${this.providerName} not found in firewall ${this.name}`);
-              }
-            }
-          } else {
-            if (this.anonymous) {
+            } else if (this.anonymous) {
               this.providerName = "anonymous";
               this.provider = this.firewall.providerManager.getProvider("anonymous");
             } else {
-              //this.providerName = null; //"nodefony";
-              //this.provider = this.firewall.providerManager.getProvider("nodefony");
+              throw new Error(`Provider : ${this.providerName} not found in firewall ${this.name}`);
             }
+          } else if (this.anonymous) {
+            this.providerName = "anonymous";
+            this.provider = this.firewall.providerManager.getProvider("anonymous");
+          } else {
+            // this.providerName = null; //"nodefony";
+            // this.provider = this.firewall.providerManager.getProvider("nodefony");
           }
         } catch (e) {
-          this.log(this.name + "  " + e, "ERROR");
+          this.log(`${this.name}  ${e}`, "ERROR");
         }
       });
     }
 
-    log(pci, severity, msgid, msg) {
+    log (pci, severity, msgid, msg) {
       if (!msgid) {
-        msgid = "\x1b[36mSECURE AREA \x1b[31m" + this.name + " \x1b[0m";
+        msgid = `\x1b[36mSECURE AREA \x1b[31m${this.name} \x1b[0m`;
       }
       return super.log(pci, severity, msgid, msg);
     }
 
-    handleCrossDomain(context) {
+    handleCrossDomain (context) {
       let redirect = false;
       if (context.security.redirect_Https &&
         context.protocol === "https" &&
@@ -66,22 +60,21 @@ module.exports = nodefony.register("SecuredArea", function () {
       if (context.crossDomain) {
         if (this.cors) {
           return this.cors.match(context, redirect);
-        } else {
-          if (redirect) {
-            return null;
-          }
-          if( context.originUrl.href === "*"){
-            return 200;
-          }
-          return 401;
         }
+        if (redirect) {
+          return null;
+        }
+        if (context.originUrl.href === "*") {
+          return 200;
+        }
+        return 401;
       }
     }
 
-    handleError(context, e) {
+    handleError (context, e) {
       let securityError = null;
       switch (true) {
-      case (e instanceof nodefony.securityError):
+      case e instanceof nodefony.securityError:
         securityError = e;
         break;
       default:
@@ -91,7 +84,7 @@ module.exports = nodefony.register("SecuredArea", function () {
         securityError.code = 401;
       }
       if (this.kernel.debug) {
-        //this.log(securityError, "ERROR");
+        // this.log(securityError, "ERROR");
       }
       switch (context.type) {
       case "HTTP":
@@ -104,12 +97,12 @@ module.exports = nodefony.register("SecuredArea", function () {
         }
         if (this.formLogin) {
           if (context.session) {
-            let area = context.session.getMetaBag("area");
+            const area = context.session.getMetaBag("area");
             if (area && area !== this.name) {
               context.session.clearFlashBag("default_target_path");
             }
             context.session.setMetaBag("area", this.name);
-            let target_path = context.session.getFlashBag("default_target_path");
+            const target_path = context.session.getFlashBag("default_target_path");
             if (!target_path && context.method === "GET") {
               context.session.setFlashBag("default_target_path", context.request.url.pathname);
             }
@@ -118,7 +111,7 @@ module.exports = nodefony.register("SecuredArea", function () {
             }
           }
 
-          /*if (context.session &&
+          /* if (context.session &&
             (context.request.url.pathname !== this.formLogin) &&
             (context.request.url.pathname !== this.checkLogin)
           ) {
@@ -144,7 +137,7 @@ module.exports = nodefony.register("SecuredArea", function () {
             if (context.isJson) {
               return securityError;
             }
-            //return this.redirect(context, this.formLogin);
+            // return this.redirect(context, this.formLogin);
             context.resolver = this.overrideURL(context, this.formLogin);
             return context;
           } catch (e) {
@@ -163,15 +156,13 @@ module.exports = nodefony.register("SecuredArea", function () {
       }
     }
 
-    handleFactories(context, index = 1) {
+    handleFactories (context, index = 1) {
       return new Promise((resolve, reject) => {
         if (this.nbFactories) {
           try {
             this.log(`Try Authentication Factory ${this.factories[index - 1].name}`, "DEBUG");
             return this.factories[index - 1].handle(context)
-              .then((token) => {
-                return resolve(token);
-              })
+              .then((token) => resolve(token))
               .catch((e) => {
                 this.factories[index - 1].log(e, "DEBUG");
                 if (index === this.nbFactories) {
@@ -188,108 +179,105 @@ module.exports = nodefony.register("SecuredArea", function () {
       });
     }
 
-    handle(context) {
-      return new Promise((resolve, reject) => {
-        return this.handleFactories(context)
-          .then((token) => {
-            let target = this.defaultTarget;
-            try {
-              if (token) {
-                context.user = token.user;
-                context.token = token;
-              } else {
-                if (context.session) {
-                  context.session.setMetaBag("security", {
-                    firewall: this.name,
-                    token: null
-                  });
-                  if (context.user && context.user.lang) {
-                    context.session.set("lang", context.user.lang);
-                  } else {
-                    if( ! context.session.get("lang") ){
-                      context.session.set("lang", context.translation.defaultLocale);
-                    }
-                  }
-                }
-                return resolve(context);
-              }
+    handle (context) {
+      return new Promise((resolve, reject) => this.handleFactories(context)
+        .then((token) => {
+          let target = this.defaultTarget;
+          try {
+            if (token) {
+              context.user = token.user;
+              context.token = token;
+            } else {
               if (context.session) {
-                //context.session.migrate();
                 context.session.setMetaBag("security", {
                   firewall: this.name,
-                  token: token ? token.serialize() : null
+                  token: null
                 });
                 if (context.user && context.user.lang) {
                   context.session.set("lang", context.user.lang);
-                } else {
+                } else if (!context.session.get("lang")) {
                   context.session.set("lang", context.translation.defaultLocale);
                 }
-                if (!this.alwaysUseDefaultTarget) {
-                  target = context.session.getFlashBag("default_target_path") || this.defaultTarget;
-                } else {
-                  target = this.defaultTarget;
-                }
-                context.session.clearFlashBag("default_target_path");
               }
-            } catch (e) {
-              let res = this.handleError(context, e);
-              if (res instanceof Error) {
-                return reject(res);
-              }
-              return resolve(res);
-            }
-            if (this.checkLogin) {
-              try {
-                delete context.resolver;
-                context.checkLogin = true;
-                context.resolver = this.overrideURL(context, this.checkLogin, target);
-                //context.resolver = this.router.resolveName(context, this.checkLogin);
-                return resolve(context);
-              } catch (e) {
-                throw e;
-              }
-            }
-            if (!target) {
               return resolve(context);
             }
-            if (context.isJson) {
-              context.resolver = this.overrideURL(context, target);
-              return resolve(context);
-            } else {
-              return resolve(this.redirect(context, target));
+            if (context.session) {
+              // context.session.migrate();
+              context.session.setMetaBag("security", {
+                firewall: this.name,
+                token: token ? token.serialize() : null
+              });
+              if (context.user && context.user.lang) {
+                context.session.set("lang", context.user.lang);
+              } else {
+                context.session.set("lang", context.translation.defaultLocale);
+              }
+              if (!this.alwaysUseDefaultTarget) {
+                target = context.session.getFlashBag("default_target_path") || this.defaultTarget;
+              } else {
+                target = this.defaultTarget;
+              }
+              context.session.clearFlashBag("default_target_path");
             }
-            return resolve(context);
-          })
-          .catch((error) => {
-            if (!error) {
-              error = new Error("");
-            }
-            let res = this.handleError(context, error);
+          } catch (e) {
+            const res = this.handleError(context, e);
             if (res instanceof Error) {
               return reject(res);
             }
             return resolve(res);
-          });
-      });
+          }
+          if (this.checkLogin) {
+            try {
+              delete context.resolver;
+              context.checkLogin = true;
+              context.resolver = this.overrideURL(context, this.checkLogin, target);
+              // context.resolver = this.router.resolveName(context, this.checkLogin);
+              return resolve(context);
+            } catch (e) {
+              throw e;
+            }
+          }
+          if (!target) {
+            return resolve(context);
+          }
+          if (context.isJson) {
+            context.resolver = this.overrideURL(context, target);
+            return resolve(context);
+          }
+          return resolve(this.redirect(context, target));
+
+          return resolve(context);
+        })
+        .catch((error) => {
+          if (!error) {
+            error = new Error("");
+          }
+          const res = this.handleError(context, error);
+          if (res instanceof Error) {
+            return reject(res);
+          }
+          return resolve(res);
+        }));
     }
 
-    logout(context) {
+    logout (context) {
       return new Promise(async (resolve, reject) => {
-        let res = [];
-        this.log("Logout factories","DEBUG");
-        for await (let factorie of this.factories) {
-          this.log(`Logout factory : ${factorie}`,"DEBUG")
+        const res = [];
+        this.log("Logout factories", "DEBUG");
+        for await (const factorie of this.factories) {
+          this.log(`Logout factory : ${factorie}`, "DEBUG");
           res.push(await factorie.logout(context));
         }
         if (context.session) {
-          this.log(`Invalidate session Security : ${context.session.id}`,"DEBUG")
+          this.log(`Invalidate session Security : ${context.session.id}`, "DEBUG");
           return context.session.invalidate()
             .then(() => {
               if (this.formLogin) {
                 return resolve(this.redirect(context, this.formLogin));
               }
               return resolve(context);
-            }).catch(e => {
+            })
+            .catch((e) => {
               this.log(e, "ERROR");
               return reject(e);
             });
@@ -299,7 +287,7 @@ module.exports = nodefony.register("SecuredArea", function () {
     }
 
     // Factory
-    setFactory(auth, options) {
+    setFactory (auth, options) {
       if (auth) {
         if (auth in nodefony.security.factories) {
           let index = null;
@@ -311,20 +299,17 @@ module.exports = nodefony.register("SecuredArea", function () {
             index = 0;
           }
           this.nbFactories++;
-          this.log("FACTORY " + auth + " registered ", "DEBUG");
+          this.log(`FACTORY ${auth} registered `, "DEBUG");
           return this.factories[index];
-        } else {
-          this.log("FACTORY :" + auth + "NOT registered ", "ERROR");
-          throw new Error("FACTORY :" + auth + "NOT registered ");
         }
+        this.log(`FACTORY :${auth}NOT registered `, "ERROR");
+        throw new Error(`FACTORY :${auth}NOT registered `);
       }
     }
 
-    getFactory(name) {
+    getFactory (name) {
       if (name) {
-        let index = this.factories.findIndex((factory) => {
-          return factory.name === name;
-        });
+        const index = this.factories.findIndex((factory) => factory.name === name);
         if (index >= 0) {
           return this.factories[index];
         }
@@ -333,70 +318,70 @@ module.exports = nodefony.register("SecuredArea", function () {
       return null;
     }
 
-    setProvider(provider) {
+    setProvider (provider) {
       if (provider) {
         this.provider = provider;
         this.providerName = provider.name;
       }
     }
 
-    setProviderName(name) {
+    setProviderName (name) {
       this.providerName = name;
     }
 
-    getProvider() {
+    getProvider () {
       return this.provider;
     }
 
-    setStateLess(state) {
+    setStateLess (state) {
       if (state === null) {
         return this.stateLess = true;
       }
       return this.stateLess = state || false;
     }
 
-    overrideURL(context, myUrl, target = null) {
-      try{
+    overrideURL (context, myUrl, target = null) {
+      try {
         if (myUrl) {
           context.request.url = url.parse(url.resolve(context.request.url, myUrl));
         }
-        let resolver = this.router.resolve(context);
+        const resolver = this.router.resolve(context);
         if (target) {
           resolver.variables.push(target);
         }
         return resolver;
-      }catch(e){
-        if (e instanceof nodefony.Resolver ){
-          if ( e.exception){
-            throw e.exception ;
+      } catch (e) {
+        if (e instanceof nodefony.Resolver) {
+          if (e.exception) {
+            throw e.exception;
           }
         }
-        throw e ;
+        throw e;
       }
     }
 
-    redirectHttps(context) {
+    redirectHttps (context) {
       // no cache
       context.redirectHttps(301);
       return context;
     }
 
-    redirect(context, url) {
+    redirect (context, url) {
       if (url) {
         // no cache
         return context.redirect(url, 302, true);
-        //return context;
+        // return context;
       }
       return context.redirect(context.request.url, 302, true);
-      //return context;
+      // return context;
     }
 
-    match(context) {
-      let url = context.request.url ? context.request.url.pathname : (context.request.resourceURL ? context.request.resourceURL.pathname : null);
+    match (context) {
+      const url = context.request.url ? context.request.url.pathname : context.request.resourceURL ? context.request.resourceURL.pathname : null;
       return this.pattern.exec(url);
     }
 
-    setPattern(pattern) {
+    setPattern (pattern) {
       if (pattern instanceof RegExp) {
         this.pattern = pattern;
         this.stringPattern = pattern.toString();
@@ -407,32 +392,32 @@ module.exports = nodefony.register("SecuredArea", function () {
       return this.pattern;
     }
 
-    setCors(crossSettings) {
+    setCors (crossSettings) {
       this.cors = this.firewall.corsManager.createCors(crossSettings);
       return this.cors;
     }
 
-    setFormLogin(route) {
+    setFormLogin (route) {
       this.formLogin = route;
     }
 
-    setCheckLogin(route) {
+    setCheckLogin (route) {
       this.checkLogin = route;
     }
 
-    setDefaultTarget(route) {
+    setDefaultTarget (route) {
       this.defaultTarget = route;
     }
 
-    setAlwaysUseDefaultTarget(data) {
+    setAlwaysUseDefaultTarget (data) {
       this.alwaysUseDefaultTarget = data;
     }
 
-    setContextSession(context) {
+    setContextSession (context) {
       this.sessionContext = context;
     }
 
-    setRedirectHttps(value) {
+    setRedirectHttps (value) {
       this.redirect_Https = value || false;
     }
   }

@@ -1,6 +1,5 @@
 module.exports = class generateBuilder extends nodefony.Builder {
-
-  constructor(cli) {
+  constructor (cli) {
     super(cli);
     this.choices = [];
     if (nodefony.isTrunk) {
@@ -20,7 +19,7 @@ module.exports = class generateBuilder extends nodefony.Builder {
     this.choices.push("Quit");
   }
 
-  log(pci, severity, msgid, msg) {
+  log (pci, severity, msgid, msg) {
     try {
       if (!msgid) {
         msgid = "GENERATER";
@@ -31,50 +30,50 @@ module.exports = class generateBuilder extends nodefony.Builder {
     }
   }
 
-  interaction() {
+  interaction () {
     return this.cli.prompt([{
-        type: 'list',
-        name: 'command',
-        message: ' Nodefony CLI : ',
-        default: 0,
-        pageSize: this.choices.length,
-        choices: this.choices,
-        filter: (val) => {
-          switch (val) {
-          case "Generate New Nodefony Project":
-            return "project";
-          case "Generate Openssl Certificates":
-            return "certificates";
-          case "Generate New Bundle":
-            return "bundle";
-          case "Generate New Controller":
-            return "controller";
-          case "Generate New Service":
-            return "service";
-          case "Generate New Entity":
-            return "entity";
-          case "Generate Haproxy Configuration":
-            return "haproxy";
-          case "Generate Nginx Configuration":
-            return "nginx";
-          case "Generate letsEncrypt Webroot Configuration":
-            return "letsencrypt";
-          case "Quit":
-            return "quit";
-          default:
-            console.log("\n");
-            this.log(`command not found : ${val}`, "INFO");
-            this.cli.terminate(1);
-          }
+      type: "list",
+      name: "command",
+      message: " Nodefony CLI : ",
+      default: 0,
+      pageSize: this.choices.length,
+      choices: this.choices,
+      filter: (val) => {
+        switch (val) {
+        case "Generate New Nodefony Project":
+          return "project";
+        case "Generate Openssl Certificates":
+          return "certificates";
+        case "Generate New Bundle":
+          return "bundle";
+        case "Generate New Controller":
+          return "controller";
+        case "Generate New Service":
+          return "service";
+        case "Generate New Entity":
+          return "entity";
+        case "Generate Haproxy Configuration":
+          return "haproxy";
+        case "Generate Nginx Configuration":
+          return "nginx";
+        case "Generate letsEncrypt Webroot Configuration":
+          return "letsencrypt";
+        case "Quit":
+          return "quit";
+        default:
+          console.log("\n");
+          this.log(`command not found : ${val}`, "INFO");
+          this.cli.terminate(1);
         }
-      }])
+      }
+    }])
       .then((response) => {
         this.start(response);
         return response;
       });
   }
 
-  start(response) {
+  start (response) {
     switch (response.command) {
     case "project":
       return this.cli.createProject(response.command, this.cli.args, true);

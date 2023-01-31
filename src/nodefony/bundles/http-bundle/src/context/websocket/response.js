@@ -1,12 +1,10 @@
-const WebSocketServer = require('websocket');
+const WebSocketServer = require("websocket");
 const http = require("http");
-nodefony.register("wsResponse", function () {
-
-  const CLOSE_DESCRIPTIONS = WebSocketServer.connection.CLOSE_DESCRIPTIONS;
+nodefony.register("wsResponse", () => {
+  const {CLOSE_DESCRIPTIONS} = WebSocketServer.connection;
 
   const Response = class Response {
-
-    constructor(connection, container) {
+    constructor (connection, container) {
       this.container = container;
       if (connection) {
         this.setConnection(connection);
@@ -17,16 +15,16 @@ nodefony.register("wsResponse", function () {
       }
       this.body = "";
       this.statusCode = 1000;
-      //cookies
+      // cookies
       this.cookies = {};
-      this.encoding = this.setEncoding('utf8');
+      this.encoding = this.setEncoding("utf8");
       // struct headers
       this.headers = {};
-      this.cookiesToSet = []
+      this.cookiesToSet = [];
       this.type = "utf8";
     }
 
-    setConnection(connection) {
+    setConnection (connection) {
       this.connection = connection;
       this.statusMessage = this.connection.state;
       this.config = this.connection.config;
@@ -34,15 +32,15 @@ nodefony.register("wsResponse", function () {
       return connection;
     }
 
-    log(pci, severity, msgid, msg) {
-      let syslog = this.container.get("syslog");
+    log (pci, severity, msgid, msg) {
+      const syslog = this.container.get("syslog");
       if (!msgid) {
         msgid = "WEBSOCKET RESPONSE";
       }
       return syslog.log(pci, severity, msgid, msg);
     }
 
-    setBody(ele) {
+    setBody (ele) {
       switch (nodefony.typeOf(ele)) {
       case "object":
       case "array":
@@ -54,11 +52,11 @@ nodefony.register("wsResponse", function () {
       return this.body;
     }
 
-    getLength(ele) {
+    getLength (ele) {
       return Buffer.byteLength(ele);
     }
 
-    send(data, type) {
+    send (data, type) {
       if (data) {
         switch (type) {
         case "utf8":
@@ -70,18 +68,16 @@ nodefony.register("wsResponse", function () {
         default:
           this.connection.send(data);
         }
-      } else {
-        if (this.body) {
-          if (!type) {
-            type = this.encoding;
-          }
-          return this.send(this.body);
+      } else if (this.body) {
+        if (!type) {
+          type = this.encoding;
         }
+        return this.send(this.body);
       }
       this.body = "";
     }
 
-    broadcast(data, type){
+    broadcast (data, type) {
       if (data) {
         switch (type) {
         case "utf8":
@@ -93,31 +89,19 @@ nodefony.register("wsResponse", function () {
         default:
           this.connection.broadcast(data);
         }
-      } else {
-        if (this.body) {
-          if (!type) {
-            type = this.encoding;
-          }
-          return this.broadcast(this.body);
+      } else if (this.body) {
+        if (!type) {
+          type = this.encoding;
         }
+        return this.broadcast(this.body);
       }
       this.body = "";
     }
 
-    close(reasonCode, description) {
+    close (reasonCode, description) {
       if (this.connection.state === "open") {
         try {
-          return this.connection.close((reasonCode || this.statusCode), (description || "closed"));
-        } catch (e) {
-          throw e;
-        }
-      }
-      throw new Error("Connection already closed");
-    }
-    drop(reasonCode, description) {
-      if (this.connection.state === "open") {
-        try {
-          return this.connection.close((reasonCode || this.statusCode), (description || this.statusMessage));
+          return this.connection.close(reasonCode || this.statusCode, description || "closed");
         } catch (e) {
           throw e;
         }
@@ -125,16 +109,27 @@ nodefony.register("wsResponse", function () {
       throw new Error("Connection already closed");
     }
 
-    clean() {
+    drop (reasonCode, description) {
+      if (this.connection.state === "open") {
+        try {
+          return this.connection.close(reasonCode || this.statusCode, description || this.statusMessage);
+        } catch (e) {
+          throw e;
+        }
+      }
+      throw new Error("Connection already closed");
+    }
+
+    clean () {
       delete this.connection;
       delete this.body;
     }
 
-    setEncoding(encoding) {
+    setEncoding (encoding) {
       return this.encoding = encoding;
     }
 
-    setStatusCode(status, message) {
+    setStatusCode (status, message) {
       if (status && typeof status !== "number") {
         status = parseInt(status, 10);
         if (isNaN(status)) {
@@ -159,21 +154,22 @@ nodefony.register("wsResponse", function () {
       };
     }
 
-    getStatus() {
+    getStatus () {
       return {
         code: this.getStatusCode(),
         message: this.getStatusMessage()
       };
     }
-    getStatusCode() {
+
+    getStatusCode () {
       return this.statusCode;
     }
 
-    getStatusMessage() {
+    getStatusMessage () {
       return this.statusMessage;
     }
 
-    addCookie(cookie) {
+    addCookie (cookie) {
       if (cookie instanceof nodefony.cookies.cookie) {
         this.cookies[cookie.name] = cookie;
       } else {
@@ -181,27 +177,27 @@ nodefony.register("wsResponse", function () {
       }
     }
 
-    setCookies() {
-      for (var cook in this.cookies) {
+    setCookies () {
+      for (const cook in this.cookies) {
         this.setCookie(this.cookies[cook]);
       }
     }
 
-    setCookie(cookie) {
-      let serialize = cookie.serializeWebSocket();
-      this.log("ADD COOKIE ==> " + serialize, "DEBUG");
-      this.cookiesToSet.push(serialize)
-      //this.setHeader('Set-Cookie', cookie.serialize());
+    setCookie (cookie) {
+      const serialize = cookie.serializeWebSocket();
+      this.log(`ADD COOKIE ==> ${serialize}`, "DEBUG");
+      this.cookiesToSet.push(serialize);
+      // this.setHeader('Set-Cookie', cookie.serialize());
     }
 
-    //ADD INPLICIT HEADER
-    setHeader( /*name, value*/ ) {
-      //this.response.setHeader(name, value);
+    // ADD INPLICIT HEADER
+    setHeader (/* name, value*/) {
+      // this.response.setHeader(name, value);
       return true;
     }
 
-    setHeaders( /*obj*/ ) {
-      //nodefony.extend(this.headers, obj);
+    setHeaders (/* obj*/) {
+      // nodefony.extend(this.headers, obj);
       return true;
     }
   };

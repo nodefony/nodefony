@@ -1,13 +1,12 @@
-import { createClient } from 'graphql-ws';
+import {createClient} from "graphql-ws";
 // Apollo Client Web v3.5.10 has a GraphQLWsLink class which implements
 // graphql-ws directly. For older versions, see the next code block
 // to define your own GraphQLWsLink.
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import {GraphQLWsLink} from "@apollo/client/link/subscriptions";
 
-const use = function(url){
+const use = function (url) {
 
-
-  /*return  createClient({
+  /* return  createClient({
       url: url,
       on: {
         connected: (socket) => (
@@ -22,17 +21,15 @@ const use = function(url){
       }
     });*/
 
-  return new GraphQLWsLink(
-    createClient({
-      url: url,
-      connectionParams: () => {
-        const session =  null//getSession();
-        return {
-          Authorization: `Bearer 1234`,
-        };
-      },
-    }),
-  );
-}
+  return new GraphQLWsLink(createClient({
+    url,
+    connectionParams: () => {
+      const session = null;// getSession();
+      return {
+        Authorization: "Bearer 1234"
+      };
+    }
+  }));
+};
 
-export default use
+export default use;

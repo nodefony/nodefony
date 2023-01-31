@@ -1,66 +1,65 @@
-//const loadTask = require(path.resolve(__dirname, "loadTask.js"));
+// const loadTask = require(path.resolve(__dirname, "loadTask.js"));
 class cronCommand extends nodefony.Command {
-  constructor(cli, bundle) {
+  constructor (cli, bundle) {
     super("cron", cli, bundle);
-    this.cronService = this.get("cron")
+    this.cronService = this.get("cron");
   }
 
-  showHelp() {
-    this.setHelp("cron:test",
+  showHelp () {
+    this.setHelp(
+      "cron:test",
       "cron tab test"
     );
-    this.setHelp("cron:script",
+    this.setHelp(
+      "cron:script",
       "cron tab test"
     );
     super.showHelp();
   }
 
-  test() {
-    let {
+  test () {
+    const {
       resolve,
       promise
-    } = this.cli.idle()
+    } = this.cli.idle();
 
     const task = this.cronService.createTask("mytask", "*/10 * * * * *", {
-      scheduled: true,
-    }, () => {
-      return "executed"
-    })
+      scheduled: true
+    }, () => "executed");
 
-    task.on("task-done", (ret)=>{
-      console.log("done",ret)
-    })
+    task.on("task-done", (ret) => {
+      console.log("done", ret);
+    });
 
     setTimeout(() => {
       task.stop();
-      return resolve()
-    }, 35000)
-    return promise
+      return resolve();
+    }, 35000);
+    return promise;
   }
 
-  script(){
-    let {
+  script () {
+    const {
       resolve,
       promise
-    } = this.cli.idle()
+    } = this.cli.idle();
 
-    let script = path.resolve(__dirname, "..","bin","test.js")
-    console.log(script)
+    const script = path.resolve(__dirname, "..", "bin", "test.js");
+    console.log(script);
     const task = this.cronService.createTask("myScript", "*/10 * * * * *", {
-      scheduled: true,
-    }, script)
+      scheduled: true
+    }, script);
 
-    task.on("task-done", (ret)=>{
-      console.log("done",ret)
-    })
+    task.on("task-done", (ret) => {
+      console.log("done", ret);
+    });
 
     setTimeout(() => {
       task.stop();
-      return resolve()
-    }, 35000)
+      return resolve();
+    }, 35000);
 
-    return promise
+    return promise;
   }
-
 }
 module.exports = cronCommand;

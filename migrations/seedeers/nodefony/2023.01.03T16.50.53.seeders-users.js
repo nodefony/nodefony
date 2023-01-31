@@ -1,11 +1,11 @@
 const {
-  //Sequelize,
-  //DataTypes,
-  //Model,
+  // Sequelize,
+  // DataTypes,
+  // Model,
   Op
 } = nodefony.Sequelize;
 
-const path = require('node:path');
+const path = require("node:path");
 
 const users = [{
   username: "anonymous",
@@ -95,34 +95,35 @@ const users = [{
 }];
 
 class Seedeers extends nodefony.Service {
-  constructor(kernel) {
+  constructor (kernel) {
     super(path.basename(__filename), kernel.container);
-    this.orm = this.kernel.getORM()
-    this.entity = this.orm.getNodefonyEntity("user")
+    this.orm = this.kernel.getORM();
+    this.entity = this.orm.getNodefonyEntity("user");
   }
 
-  async up({
+  async up ({
     name,
     context: queryInterface,
     context: sequelize
   }) {
-    let transaction = null
+    let transaction = null;
     return await queryInterface.describeTable("user")
       .then(async (tableDefinition) => {
-        const date = new Date()
-        for (let user of users) {
-          user.createdAt = date
-          user.updatedAt = date
-          user.roles = JSON.stringify(user.roles)
+        const date = new Date();
+        for (const user of users) {
+          user.createdAt = date;
+          user.updatedAt = date;
+          user.roles = JSON.stringify(user.roles);
           this.entity.validPassword(user.password);
           const hash = await this.entity.encode(user.password)
-            .catch(err => {
+            .catch((err) => {
               this.logger(err, "ERROR");
               throw err;
             });
-          user.password = hash
+          user.password = hash;
         }
-        /*const datas = users.map(async (user) => {
+
+        /* const datas = users.map(async (user) => {
           user.createdAt = date
           user.updatedAt = date
           user.roles = JSON.stringify(user.roles)
@@ -137,53 +138,48 @@ class Seedeers extends nodefony.Service {
         })*/
         transaction = await queryInterface.sequelize.transaction();
         return await queryInterface.bulkInsert("user", users, {
-            transaction
-          })
+          transaction
+        })
           .then(async (nb) => {
             await transaction.commit();
-            this.log(`Add ${nb} seeds`)
-            return users
+            this.log(`Add ${nb} seeds`);
+            return users;
           })
           .catch(async (e) => {
             if (transaction && !transaction.finished) {
               await transaction.rollback();
             }
-            throw e
-          })
+            throw e;
+          });
       })
       .catch(async (e) => {
         if (transaction && !transaction.finished) {
           await transaction.rollback();
         }
-        throw e
-      })
+        throw e;
+      });
   }
 
-  async down({
+  async down ({
     context: queryInterface
   }) {
-
     return await queryInterface.describeTable("user")
       .then(async (tableDefinition) => {
-        const datas = users.map((user) => {
-          return user.username
-        })
-        this.log(datas, "INFO", "DELETE SEEDS")
+        const datas = users.map((user) => user.username);
+        this.log(datas, "INFO", "DELETE SEEDS");
         return await queryInterface.bulkDelete("user", {
-            username: {
-              [Op.in]: datas
-            }
-          })
-          .then((res) => {
-            return res
-          })
-          .catch(e => {
-            throw e
-          })
+          username: {
+            [Op.in]: datas
+          }
+        })
+          .then((res) => res)
+          .catch((e) => {
+            throw e;
+          });
       })
-      .catch(e => {
-        throw e
-      })
+      .catch((e) => {
+        throw e;
+      });
   }
 }
 

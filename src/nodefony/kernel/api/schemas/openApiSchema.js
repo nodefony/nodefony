@@ -1,7 +1,7 @@
-const spdx = require('spdx');
+const spdx = require("spdx");
 
 class openApiSchema extends nodefony.Service {
-  constructor(api, config, entity) {
+  constructor (api, config, entity) {
     const container = api ? api.container : kernel.container;
     super("openApiSchema", container, false);
     this.api = api;
@@ -15,7 +15,7 @@ class openApiSchema extends nodefony.Service {
       components: {
         schemas: {
           NodefonyError: this.getErrorSchema(),
-          Pdu: this.getPduSchema(),
+          Pdu: this.getPduSchema()
         },
         responses: this.getResponseSchema()
       },
@@ -27,31 +27,31 @@ class openApiSchema extends nodefony.Service {
     }
   }
 
-  loadConfig(config, entity) {
+  loadConfig (config, entity) {
     this.setConfig(entity);
     return nodefony.extend(true, this.obj, config);
   }
 
-  getConfig() {
+  getConfig () {
     return this.obj;
   }
 
-  setConfig(entity = this.entity) {
+  setConfig (entity = this.entity) {
     this.obj.info = this.getInfo();
     this.obj.servers = this.getServers();
     if (entity) {
       switch (this.ormName) {
-        case "mongoose":
-          this.setSchema(entity.collection.collectionName, entity);
-          break;
-        default:
-          this.setSchema(entity.name, entity);
+      case "mongoose":
+        this.setSchema(entity.collection.collectionName, entity);
+        break;
+      default:
+        this.setSchema(entity.name, entity);
       }
     }
     return this.obj;
   }
 
-  getInfo() {
+  getInfo () {
     return {
       title: this.api.name,
       version: this.api.version,
@@ -66,9 +66,9 @@ class openApiSchema extends nodefony.Service {
     };
   }
 
-  getServers() {
-    let tab = []
-    let base = {
+  getServers () {
+    const tab = [];
+    const base = {
       "description": this.kernel.description,
       "variables": {
         "port": {
@@ -82,12 +82,12 @@ class openApiSchema extends nodefony.Service {
           "default": this.api.basePath || ""
         }
       }
-    }
-    if (this.kernel.domain === '0.0.0.0') {
+    };
+    if (this.kernel.domain === "0.0.0.0") {
       tab.push({
-        "url": `https://localhost:{port}`,
+        "url": "https://localhost:{port}",
         ...base
-      })
+      });
     }
     tab.push({
       "url": `https://${this.kernel.domain}:{port}`,
@@ -96,8 +96,8 @@ class openApiSchema extends nodefony.Service {
     return tab;
   }
 
-  getLicence(licence = "", url = "") {
-    const bundle = this.api.bundle;
+  getLicence (licence = "", url = "") {
+    const {bundle} = this.api;
     if (bundle) {
       if (bundle.package && bundle.package.license) {
         try {
@@ -114,7 +114,7 @@ class openApiSchema extends nodefony.Service {
           this.log(e, "WARNING");
           spdx.licenses.every((element) => {
             this.log(element, "WARNING");
-            return typeof element === 'string';
+            return typeof element === "string";
           });
           this.log("licence not valid  ", "WARNING");
           this.log("Show licence param in package.json and use spdx to valid : https://github.com/kemitchell/spdx.js ");
@@ -125,7 +125,7 @@ class openApiSchema extends nodefony.Service {
     if (licence) {
       return {
         name: licence,
-        url: url
+        url
       };
     }
     return {
@@ -133,7 +133,7 @@ class openApiSchema extends nodefony.Service {
     };
   }
 
-  setSchema(name, entity = this.entity) {
+  setSchema (name, entity = this.entity) {
     try {
       if (name) {
         this.obj.components.schemas[name] = {};
@@ -142,20 +142,18 @@ class openApiSchema extends nodefony.Service {
         this.obj.components.schemas[name] = this.orm.getOpenApiSchema(entity);
         for (let ele in this.obj.components.schemas[name].properties) {
           if (this.obj.components.schemas[ele]) {
-            continue
+            continue;
           }
-          let attr = this.obj.components.schemas[name].properties[ele]
-          if (attr.items && attr.items['$ref']) {
-            let entityRef = this.orm.getEntity(ele)
+          const attr = this.obj.components.schemas[name].properties[ele];
+          if (attr.items && attr.items.$ref) {
+            let entityRef = this.orm.getEntity(ele);
             if (entityRef) {
-              this.obj.components.schemas[ele] = this.orm.getOpenApiSchema(entityRef)
-            } else {
-              if (ele.endsWith("s")) {
-                ele = ele.slice(0, -1)
-                entityRef = this.orm.getEntity(ele)
-                if (entityRef) {
-                  this.obj.components.schemas[ele] = this.orm.getOpenApiSchema(entityRef)
-                }
+              this.obj.components.schemas[ele] = this.orm.getOpenApiSchema(entityRef);
+            } else if (ele.endsWith("s")) {
+              ele = ele.slice(0, -1);
+              entityRef = this.orm.getEntity(ele);
+              if (entityRef) {
+                this.obj.components.schemas[ele] = this.orm.getOpenApiSchema(entityRef);
               }
             }
           }
@@ -168,9 +166,9 @@ class openApiSchema extends nodefony.Service {
   }
 
 
-  getResponseSchema() {
+  getResponseSchema () {
     return {
-      '400': {
+      "400": {
         description: "Bad Request",
         content: {
           "application/json": {
@@ -180,7 +178,7 @@ class openApiSchema extends nodefony.Service {
           }
         }
       },
-      '401': {
+      "401": {
         description: "Unauthorized",
         content: {
           "application/json": {
@@ -190,7 +188,7 @@ class openApiSchema extends nodefony.Service {
           }
         }
       },
-      '403': {
+      "403": {
         description: "Forbidden",
         content: {
           "application/json": {
@@ -200,7 +198,7 @@ class openApiSchema extends nodefony.Service {
           }
         }
       },
-      '404': {
+      "404": {
         description: "Not Found",
         content: {
           "application/json": {
@@ -210,7 +208,7 @@ class openApiSchema extends nodefony.Service {
           }
         }
       },
-      '405': {
+      "405": {
         description: "Method Not Allowed",
         content: {
           "application/json": {
@@ -220,7 +218,7 @@ class openApiSchema extends nodefony.Service {
           }
         }
       },
-      '406': {
+      "406": {
         description: "Not Acceptable",
         content: {
           "application/json": {
@@ -230,7 +228,7 @@ class openApiSchema extends nodefony.Service {
           }
         }
       },
-      '412': {
+      "412": {
         description: "Precondition Failed",
         content: {
           "application/json": {
@@ -240,7 +238,7 @@ class openApiSchema extends nodefony.Service {
           }
         }
       },
-      '415': {
+      "415": {
         description: "Unsupported Media Type",
         content: {
           "application/json": {
@@ -250,7 +248,7 @@ class openApiSchema extends nodefony.Service {
           }
         }
       },
-      '500': {
+      "500": {
         description: "Internal Server Error",
         content: {
           "application/json": {
@@ -260,7 +258,7 @@ class openApiSchema extends nodefony.Service {
           }
         }
       },
-      '501': {
+      "501": {
         description: "Not Implemented",
         content: {
           "application/json": {
@@ -283,7 +281,7 @@ class openApiSchema extends nodefony.Service {
     };
   }
 
-  getErrorSchema() {
+  getErrorSchema () {
     return {
       type: "object",
       properties: {
@@ -292,7 +290,7 @@ class openApiSchema extends nodefony.Service {
         },
         code: {
           type: "integer",
-          format: "int32",
+          format: "int32"
         },
         url: {
           type: "string"
@@ -302,7 +300,7 @@ class openApiSchema extends nodefony.Service {
         },
         pdu: {
           "$ref": "#/components/schemas/Pdu"
-        },
+        }
       },
       example: `
 {
@@ -334,7 +332,7 @@ class openApiSchema extends nodefony.Service {
     };
   }
 
-  getPduSchema() {
+  getPduSchema () {
     return {
       type: "object",
       properties: {

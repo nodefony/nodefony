@@ -1,6 +1,5 @@
 class bundlesTask extends nodefony.Task {
-
-  constructor(name, command) {
+  constructor (name, command) {
     super(name, command);
     nodefony.extend(this.cli.response, {
       config: this.getParameters("bundles.app"),
@@ -8,44 +7,46 @@ class bundlesTask extends nodefony.Task {
     });
   }
 
-  showHelp() {
-    this.setHelp("generate:bundles:nodefony name [path]",
+  showHelp () {
+    this.setHelp(
+      "generate:bundles:nodefony name [path]",
       "Generate a nodefony Bundle  Example : nodefony generate:bundles:nodefony name ./src/bundles"
     );
-    this.setHelp("generate:bundles:vue name [path]",
+    this.setHelp(
+      "generate:bundles:vue name [path]",
       "Generate a Vue.js Bundle  Example : nodefony generate:bundles:vue name ./src/bundles"
     );
-    this.setHelp("generate:bundles:react name [path]",
+    this.setHelp(
+      "generate:bundles:react name [path]",
       "Generate a React Bundle Example : nodefony generate:bundles:react name ./src/bundles"
     );
   }
 
-  nodefony() {
+  nodefony () {
     return this.generate();
   }
 
-  vue() {
+  vue () {
     this.cli.response.front = "vue";
     return this.generate();
   }
 
-  react() {
+  react () {
     this.cli.response.front = "react";
     return this.generate();
   }
 
-  generate() {
+  generate () {
     return new nodefony.builders.bundle(this.cli, this.cli.cmd, this.cli.args)
       .run(this.cli.interactive)
-      .then((obj) => {
-        return obj.builder.install()
-          .then(() => {
-            this.cli.terminate(0);
-          }).catch((e) => {
-            this.log(e, "ERROR");
-            this.cli.terminate(0);
-          });
-      });
+      .then((obj) => obj.builder.install()
+        .then(() => {
+          this.cli.terminate(0);
+        })
+        .catch((e) => {
+          this.log(e, "ERROR");
+          this.cli.terminate(0);
+        }));
   }
 }
 

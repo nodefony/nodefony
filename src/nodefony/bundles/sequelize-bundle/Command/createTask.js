@@ -1,19 +1,17 @@
-const mysql = require('mysql2/promise');
-const pgtools = require('pgtools');
+const mysql = require("mysql2/promise");
+const pgtools = require("pgtools");
 
 const createMysql = function (settings) {
   return mysql.createConnection({
     host: settings.options.host || "127.0.0.1",
     port: settings.options.port || "3306",
     user: settings.username || "root",
-    password: settings.password || "root",
-  }).then(connection => {
-    return connection.query(`CREATE DATABASE IF NOT EXISTS ${settings.dbname};`)
-      .then((result) => {
-        this.log(`Database : ${settings.dbname} create or successfully checked`,"INFO", "mysql");
-        return result;
-      });
-  });
+    password: settings.password || "root"
+  }).then((connection) => connection.query(`CREATE DATABASE IF NOT EXISTS ${settings.dbname};`)
+    .then((result) => {
+      this.log(`Database : ${settings.dbname} create or successfully checked`, "INFO", "mysql");
+      return result;
+    }));
 };
 
 const createPostgres = function (settings) {
@@ -32,7 +30,7 @@ const createPostgres = function (settings) {
         }
         return reject(err);
       }
-      this.log(`Database : ${settings.dbname}  successfull created`, "INFO","postgres");
+      this.log(`Database : ${settings.dbname}  successfull created`, "INFO", "postgres");
       return resolve(res);
     });
   });
@@ -56,22 +54,22 @@ const deletePostgresDb = function (settings) {
 };
 
 class createTask extends nodefony.Task {
-
-  constructor(name, command) {
+  constructor (name, command) {
     super(name, command);
     this.ormService = this.get("sequelize");
   }
 
-  showHelp() {
-    this.setHelp("sequelize:create:database [force]",
+  showHelp () {
+    this.setHelp(
+      "sequelize:create:database [force]",
       "Create database. [force] to delete database if exist  example : nodefony sequelize:create:database "
     );
   }
 
-  async database() {
+  async database () {
     try {
-      for (let connector in this.ormService.settings.connectors) {
-        let conn = this.ormService.settings.connectors[connector];
+      for (const connector in this.ormService.settings.connectors) {
+        const conn = this.ormService.settings.connectors[connector];
         switch (conn.driver) {
         case "mysql":
           await createMysql.call(this, conn);

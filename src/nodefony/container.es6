@@ -1,4 +1,4 @@
-const shortId = require('shortid');
+const shortId = require("shortid");
 
 
 const ISDefined = function (ele) {
@@ -23,12 +23,10 @@ const parseParameterString = function (str, value) {
       ns = Array.prototype.shift.call(str);
       if (!this[ns]) {
         this[ns] = value;
+      } else if (ISDefined(value)) {
+        this[ns] = value;
       } else {
-        if (ISDefined(value)) {
-          this[ns] = value;
-        } else {
-          return this[ns];
-        }
+        return this[ns];
       }
       return value;
     default:
@@ -40,7 +38,7 @@ const parseParameterString = function (str, value) {
     }
     break;
   default:
-    return this; //nodefony.extend(true, this, this.prototype);
+    return this; // nodefony.extend(true, this, this.prototype);
   }
 };
 
@@ -50,28 +48,27 @@ const parseParameterString = function (str, value) {
  *
  */
 class Container {
-
-  constructor(services, parameters) {
-    this.protoService = function protoService() {};
-    this.protoParameters = function protoParameters() {};
+  constructor (services, parameters) {
+    this.protoService = function protoService () {};
+    this.protoParameters = function protoParameters () {};
     this.id = generateId();
     this.scope = {};
     this.services = new this.protoService();
     if (services && typeof services === "object") {
-      for (let service in services) {
+      for (const service in services) {
         this.set(service, services[service]);
       }
     }
     this.parameters = new this.protoParameters();
     if (parameters && typeof parameters === "object") {
-      for (let parameter in parameters) {
+      for (const parameter in parameters) {
         this.setParameters(parameter, parameters[parameter]);
       }
     }
   }
 
-  log(pci, severity, msgid, msg) {
-    let syslog = this.get("syslog");
+  log (pci, severity, msgid, msg) {
+    const syslog = this.get("syslog");
     if (!syslog) {
       console.log(pci);
       return;
@@ -82,29 +79,29 @@ class Container {
     return syslog.log(pci, severity, msgid, msg);
   }
 
-  set(name, object) {
+  set (name, object) {
     if (name) {
       return this.protoService.prototype[name] = object;
     }
     throw new Error("Container bad argument name");
   }
 
-  get(name) {
+  get (name) {
     if (name in this.services) {
       return this.services[name];
     }
     return null;
   }
 
-  remove(name) {
+  remove (name) {
     if (this.get(name)) {
       delete this.services[name];
       if (this.protoService.prototype[name]) {
         delete this.protoService.prototype[name];
       }
-      for (let scope in this.scope) {
-        let subScopes = this.scope[scope];
-        for (let subScope in subScopes) {
+      for (const scope in this.scope) {
+        const subScopes = this.scope[scope];
+        for (const subScope in subScopes) {
           subScopes[subScope].remove(name);
         }
       }
@@ -113,78 +110,77 @@ class Container {
     return false;
   }
 
-  has(name) {
+  has (name) {
     return this.services[name];
   }
 
-  addScope(name) {
+  addScope (name) {
     if (!this.scope[name]) {
       return this.scope[name] = {};
     }
     return this.scope[name];
   }
 
-  enterScope(name) {
-    let sc = new Scope(name, this);
+  enterScope (name) {
+    const sc = new Scope(name, this);
     this.scope[name][sc.id] = sc;
     return sc;
   }
 
-  enterScopeExtended(name) {
-    let sc = new ExtendedScope(name, this);
+  enterScopeExtended (name) {
+    const sc = new ExtendedScope(name, this);
     this.scope[name][sc.id] = sc;
     return sc;
   }
 
-  leaveScope(scope) {
+  leaveScope (scope) {
     if (this.scope[scope.name]) {
       let sc = this.scope[scope.name][scope.id];
       if (sc) {
         sc.clean();
-        //console.log("pass leaveScope "+ scope.id)
+        // console.log("pass leaveScope "+ scope.id)
         delete this.scope[scope.name][scope.id];
         sc = null;
       }
-      //console.log(this.scope)
+      // console.log(this.scope)
     }
   }
 
-  removeScope(name) {
+  removeScope (name) {
     if (this.scope[name]) {
-      for (let scope in this.scope[name]) {
+      for (const scope in this.scope[name]) {
         this.leaveScope(this.scope[name][scope]);
       }
       delete this.scope[name];
     }
   }
 
-  setParameters(name, str) {
+  setParameters (name, str) {
     if (typeof name !== "string") {
       this.log(new Error("setParameters : container parameter name must be a string"));
       return false;
     }
     if (str === undefined) {
-      this.log(new Error("setParameters : " + name + " container parameter value must be define"));
+      this.log(new Error(`setParameters : ${name} container parameter value must be define`));
       return false;
     }
     if (parseParameterString.call(this.protoParameters.prototype, name, str) === str) {
       return str;
-    } else {
-      this.log(new Error("container parameter " + name + " parse error"));
-      return false;
     }
+    this.log(new Error(`container parameter ${name} parse error`));
+    return false;
   }
 
-  getParameters(name) {
-    /*if (typeof name !== "string") {
+  getParameters (name) {
+    /* if (typeof name !== "string") {
       this.log(new Error("container parameter name must be a string"));
       return false;
     }*/
-    //return parseParameterString.call(this.protoParameters.prototype, name, null);
+    // return parseParameterString.call(this.protoParameters.prototype, name, null);
     return parseParameterString.call(this.parameters, name, null);
   }
 
-  clean() {
+  clean () {
     this.services = null;
     delete this.services;
     this.parameters = null;
@@ -199,34 +195,32 @@ class Container {
  */
 
 class Scope extends Container {
-
-  constructor(name, parent) {
+  constructor (name, parent) {
     super();
     this.name = name;
     this.parent = parent;
     this.services = new parent.protoService();
     this.parameters = new parent.protoParameters();
     this.scope = parent.scope;
-    //this.id = generateId();
+    // this.id = generateId();
   }
 
-  set(name, obj) {
+  set (name, obj) {
     this.services[name] = obj;
     return super.set(name, obj);
   }
 
-  clean() {
+  clean () {
     this.parent = null;
     return super.clean();
   }
 
-  setParameters(name, str) {
+  setParameters (name, str) {
     if (parseParameterString.call(this.parameters, name, str) === str) {
       return super.setParameters(name, str);
-    } else {
-      this.log(new Error("container parameter " + name + " parse error"));
-      return false;
     }
+    this.log(new Error(`container parameter ${name} parse error`));
+    return false;
   }
 }
 
@@ -236,15 +230,14 @@ class Scope extends Container {
  *
  */
 class ExtendedScope extends Container {
-
-  constructor(name, parent) {
+  constructor (name, parent) {
     super();
     this.name = name;
     this.parent = parent;
     this.services = new parent.protoService();
     this.parameters = new parent.protoParameters();
     this.scope = parent.scope;
-    //this.id = generateId();
+    // this.id = generateId();
 
     this.protoService = function () {};
     this.protoService.prototype = nodefony.extend({}, this.parent.protoService.prototype);
@@ -253,7 +246,7 @@ class ExtendedScope extends Container {
     this.protoParameters.prototype = nodefony.extend({}, this.parent.protoParameters.prototype);
   }
 
-  clean() {
+  clean () {
     this.services = null;
     delete this.services;
     this.parameters = null;
@@ -262,18 +255,17 @@ class ExtendedScope extends Container {
     this.protoParameters = null;
   }
 
-  set(name, obj) {
+  set (name, obj) {
     this.services[name] = obj;
     return super.set(name, obj);
   }
 
-  setParameters(name, str) {
+  setParameters (name, str) {
     if (parseParameterString.call(this.parameters, name, str) === str) {
       return super.setParameters(name, str);
-    } else {
-      this.log(new Error("container parameter " + name + " parse error"));
-      return false;
     }
+    this.log(new Error(`container parameter ${name} parse error`));
+    return false;
   }
 }
 

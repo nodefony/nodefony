@@ -1,8 +1,9 @@
-const elasticsearch = require('@elastic/elasticsearch');
+const elasticsearch = require("@elastic/elasticsearch");
 const {
   Client
-} = require('@elastic/elasticsearch');
-/*const {
+} = require("@elastic/elasticsearch");
+
+/* const {
   ConnectionPool,
   Connection
 } = require('@elastic/elasticsearch');
@@ -20,19 +21,19 @@ class MyConnection extends Connection {
   }
 }*/
 
-//const { events } = require('@elastic/elasticsearch')
-//console.log(events)
-//const { errors } = require('@elastic/elasticsearch');
-//console.log(errors);
+// const { events } = require('@elastic/elasticsearch')
+// console.log(events)
+// const { errors } = require('@elastic/elasticsearch');
+// console.log(errors);
 
 class elesticConnection extends nodefony.Service {
-  constructor(name, options = {}, service = null) {
+  constructor (name, options = {}, service = null) {
     super(name, service.container, service.container.notificationsCenter, options);
     this.service = service;
     this.client = null;
   }
 
-  log(pci, severity, msgid, msg) {
+  log (pci, severity, msgid, msg) {
     if (!msgid) {
       if (msg) {
         msgid = `\x1b[36mELASTICSEARCH CLIENT ${this.name}  ${msg} \x1b[0m`;
@@ -43,18 +44,18 @@ class elesticConnection extends nodefony.Service {
     return super.log(pci, severity, msgid, msg);
   }
 
-  create(options = {}) {
+  create (options = {}) {
     return new Promise((resolve, reject) => {
       try {
         this.settings = nodefony.extend({}, this.settings, options);
         this.client = new Client(this.settings);
         if (this.settings.log) {
-          //this.settings.log = logger;
-          //this.settings.log.prototype.logger = this.log.bind(this);
-          //this.settings.ConnectionPool = MyConnectionPool;
-          //this.settings.Connection = MyConnection;
+          // this.settings.log = logger;
+          // this.settings.log.prototype.logger = this.log.bind(this);
+          // this.settings.ConnectionPool = MyConnectionPool;
+          // this.settings.Connection = MyConnection;
           if (this.settings.log.request) {
-            this.client.on('request', (err, result) => {
+            this.client.on("request", (err, result) => {
               if (err) {
                 this.log(err, "ERROR");
                 this.log(err.meta, "ERROR");
@@ -64,7 +65,7 @@ class elesticConnection extends nodefony.Service {
             });
           }
           if (this.settings.log.response) {
-            this.client.on('response', (err, result) => {
+            this.client.on("response", (err, result) => {
               if (err) {
                 this.log(err, "ERROR");
                 return;
@@ -73,16 +74,16 @@ class elesticConnection extends nodefony.Service {
             });
           }
           if (this.settings.log.sniff) {
-            this.client.on('sniff', (err, result) => {
+            this.client.on("sniff", (err, result) => {
               if (err) {
                 this.log(err, "ERROR");
                 return;
               }
-              this.log(`${JSON.stringify(result.meta.sniff,null, '\t')}`, "DEBUG", null, "SNIFF");
+              this.log(`${JSON.stringify(result.meta.sniff, null, "\t")}`, "DEBUG", null, "SNIFF");
             });
           }
           if (this.settings.log.resurrect) {
-            this.client.on('resurrect', (err, result) => {
+            this.client.on("resurrect", (err, result) => {
               if (err) {
                 this.log(err, "ERROR");
                 return;
@@ -100,14 +101,13 @@ class elesticConnection extends nodefony.Service {
 }
 
 class Elastic extends nodefony.services.Connections {
-
-  constructor(container) {
+  constructor (container) {
     super("elastic", container, elasticsearch, elesticConnection);
   }
 
-  setOptions(connection) {
+  setOptions (connection) {
     if (connection) {
-      let myOpt = {};
+      const myOpt = {};
       switch (nodefony.typeOf(connection.nodes)) {
       case "array":
         nodefony.extend(myOpt, this.globalOptions, connection);
@@ -127,34 +127,33 @@ class Elastic extends nodefony.services.Connections {
     }
   }
 
-  getConnection(name) {
+  getConnection (name) {
     return new Promise((resolve, reject) => {
       if (name in this.connections) {
         return resolve(super.getConnection(name));
-      } else {
-        this.on("connection", (connection) => {
-          if (connection) {
-            return resolve(connection);
-          }
-          return reject(new Error("No connection : " + name));
-        });
       }
+      this.on("connection", (connection) => {
+        if (connection) {
+          return resolve(connection);
+        }
+        return reject(new Error(`No connection : ${name}`));
+      });
     });
   }
 
-  async readConfig() {
+  async readConfig () {
     this.settings = this.bundle.settings.elasticsearch;
     this.globalOptions = this.settings.globalOptions;
-    //this.globalHostsOptions = this.settings.globalHostsOptions;
-    for (let connection in this.settings.connections) {
+    // this.globalHostsOptions = this.settings.globalHostsOptions;
+    for (const connection in this.settings.connections) {
       try {
-        let options = this.setOptions(this.settings.connections[connection]);
-        let conn = await this.createConnection(connection, options);
-        this.log(`Ping Elastic connection`, "INFO");
-        let ping = await conn.client.ping();
-        this.log(ping, "DEBUG", );
-        this.log(`Info Elastic connection`, "INFO");
-        let info = await conn.client.info();
+        const options = this.setOptions(this.settings.connections[connection]);
+        const conn = await this.createConnection(connection, options);
+        this.log("Ping Elastic connection", "INFO");
+        const ping = await conn.client.ping();
+        this.log(ping, "DEBUG");
+        this.log("Info Elastic connection", "INFO");
+        const info = await conn.client.info();
         this.log(info, "DEBUG");
       } catch (e) {
         this.log(e, "ERROR");
@@ -164,17 +163,17 @@ class Elastic extends nodefony.services.Connections {
     this.displayTable(this.connections, "INFO");
   }
 
-  async displayTable(connections, severity = "DEBUG") {
-    let options = {
+  async displayTable (connections, severity = "DEBUG") {
+    const options = {
       head: [
         `${this.name.toUpperCase()} CONNECTIONS NAME`,
         "HOST"
       ]
     };
     try {
-      let table = this.kernel.cli.displayTable(null, options);
-      let data = [];
-      for (let connection in connections) {
+      const table = this.kernel.cli.displayTable(null, options);
+      const data = [];
+      for (const connection in connections) {
         data.push(connection || "");
         data.push(connections[connection].client.name || "");
       }
@@ -185,8 +184,8 @@ class Elastic extends nodefony.services.Connections {
     }
   }
 
-  readCertificates(ssl) {
-    let certif = nodefony.extend({}, ssl);
+  readCertificates (ssl) {
+    const certif = nodefony.extend({}, ssl);
     try {
       let keyPath = null;
       if (ssl.key) {

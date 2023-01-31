@@ -1,6 +1,5 @@
 class userEntityProvider extends nodefony.Provider {
-
-  constructor(name, manager, config) {
+  constructor (name, manager, config) {
     super(name, manager);
     this.entityName = config.name || "user";
     this.userProperty = config.property || "username";
@@ -14,16 +13,16 @@ class userEntityProvider extends nodefony.Provider {
     });
   }
 
-  getEntity(name) {
+  getEntity (name) {
     if (name) {
       return this.orm.getEntity(name);
     }
     return this.orm.getEntity(this.entityName);
   }
 
-  async encodePassword(raw, salt) {
+  async encodePassword (raw, salt) {
     try {
-      let ret = this.entity.hasEncoder();
+      const ret = this.entity.hasEncoder();
       if (ret) {
         return await this.encoder.encodePassword(raw, salt);
       }
@@ -33,11 +32,11 @@ class userEntityProvider extends nodefony.Provider {
     }
   }
 
-  async isPasswordValid(raw, encoded) {
+  async isPasswordValid (raw, encoded) {
     try {
-      let ret = this.entity.hasEncoder();
+      const ret = this.entity.hasEncoder();
       if (ret) {
-        this.log(`Check Password Valid `, "DEBUG", `ENCODER ${this.encoder.name}`);
+        this.log("Check Password Valid ", "DEBUG", `ENCODER ${this.encoder.name}`);
         return await this.encoder.isPasswordValid(raw, encoded);
       }
       return await super.isPasswordValid(raw, encoded);

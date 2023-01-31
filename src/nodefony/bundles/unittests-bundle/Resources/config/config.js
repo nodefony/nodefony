@@ -1,5 +1,6 @@
 module.exports = {
   locale: "en_en",
+
   /**
    *    WATCHERS
    *
@@ -18,14 +19,14 @@ module.exports = {
    *      }
    *
    */
-  watch:          false,
+  watch: false,
 
-  mocha:{
-    nodefony:{
-      console:{
-        ui:       'bdd',
-        reporter: 'list',        //spec | list
-        timeout:  20000
+  mocha: {
+    nodefony: {
+      console: {
+        ui: "bdd",
+        reporter: "list", // spec | list
+        timeout: 20000
       }
     }
   }

@@ -1,11 +1,10 @@
-const events = require('events');
+const events = require("events");
 const regListenOn = /^on(.*)$/;
 const defaultNbListeners = 20;
-const _ = require('lodash');
+const _ = require("lodash");
 
 class Events extends events.EventEmitter {
-
-  constructor(settings, context, options = {}) {
+  constructor (settings, context, options = {}) {
     super(options);
     if (options.nbListeners) {
       this.setMaxListeners(options.nbListeners || defaultNbListeners);
@@ -14,28 +13,32 @@ class Events extends events.EventEmitter {
       this.settingsToListen(settings, context);
     }
   }
+
+
   /**
    *
    *  @method listen
    *
    */
-  listen(context, eventName, callback) {
-    let event = arguments[1];
-    let ContextClosure = this;
-    if (typeof(callback) === 'function' || callback instanceof Function) {
+  listen (context, eventName, callback) {
+    const event = arguments[1];
+    const ContextClosure = this;
+    if (typeof callback === "function" || callback instanceof Function) {
       this.addListener(eventName, callback.bind(context));
     }
-    return function() {
+    return function () {
       Array.prototype.unshift.call(arguments, event);
       return ContextClosure.fire.apply(ContextClosure, arguments);
     };
   }
+
+
   /**
    *
    *  @method fire
    *
    */
-  fire(...args) {
+  fire (...args) {
     try {
       return super.emit(...args);
     } catch (e) {
@@ -43,13 +46,13 @@ class Events extends events.EventEmitter {
     }
   }
 
-  async emitAsync(type, ...args) {
+  async emitAsync (type, ...args) {
     const handler = _.get(this._events, type);
     if (_.isEmpty(handler) && !_.isFunction(handler)) {
       return false;
     }
-    let tab = [];
-    if (typeof handler === 'function') {
+    const tab = [];
+    if (typeof handler === "function") {
       tab.push(await Reflect.apply(handler, this, args));
     } else {
       let size = handler.length;
@@ -62,24 +65,27 @@ class Events extends events.EventEmitter {
           size--;
         }
       }
-      /*for await (const func of handler) {
+
+      /* for await (const func of handler) {
         tab.push(await Reflect.apply(func, this, args));
       }*/
     }
     return tab;
   }
 
-  async fireAsync(...args) {
+  async fireAsync (...args) {
     return this.emitAsync(...args);
   }
+
+
   /**
    *
    *  @method settingsToListen
    *
    */
-  settingsToListen(localSettings, context) {
-    for (let i in localSettings) {
-      let res = regListenOn.exec(i);
+  settingsToListen (localSettings, context) {
+    for (const i in localSettings) {
+      const res = regListenOn.exec(i);
       if (!res) {
         continue;
       }
@@ -90,12 +96,14 @@ class Events extends events.EventEmitter {
       this.on(res[0], localSettings[i]);
     }
   }
+
+
   /**
    *
    *  @method unListen
    *
    */
-  unListen(...args) {
+  unListen (...args) {
     return this.removeListener(...args);
   }
 }
@@ -103,7 +111,7 @@ class Events extends events.EventEmitter {
 nodefony.Events = Events;
 nodefony.notificationsCenter = {
   notification: Events,
-  create: function(settings, context, nbListener) {
+  create (settings, context, nbListener) {
     return new Events(settings, context, nbListener);
   }
 };

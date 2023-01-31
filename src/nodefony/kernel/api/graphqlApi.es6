@@ -1,12 +1,11 @@
 const JsonApi = require(path.resolve(__dirname, "jsonApi.es6"));
-nodefony.graphql = require('graphql');
+nodefony.graphql = require("graphql");
 nodefony["graphql-tools"] = {};
 nodefony["graphql-tools"].schema = require("@graphql-tools/schema");
-nodefony["graphql-tools"].merge = require('@graphql-tools/merge');
+nodefony["graphql-tools"].merge = require("@graphql-tools/merge");
 
 class graphqlApi extends JsonApi {
-
-  constructor(config = {}, context = null) {
+  constructor (config = {}, context = null) {
     let schema = null;
     let rootValue = null;
     let contextValue = null;
@@ -36,23 +35,23 @@ class graphqlApi extends JsonApi {
     }
   }
 
-  static mergeSchemas(options) {
+  static mergeSchemas (options) {
     return nodefony["graphql-tools"].schema.mergeSchemas(options);
   }
 
-  static mergeTypeDefs(options) {
+  static mergeTypeDefs (options) {
     return nodefony["graphql-tools"].merge.mergeTypeDefs(options);
   }
 
-  static mergeResolvers(tab) {
+  static mergeResolvers (tab) {
     return nodefony["graphql-tools"].merge.mergeResolvers(tab);
   }
 
-  static makeExecutableSchema(options) {
+  static makeExecutableSchema (options) {
     return nodefony["graphql-tools"].schema.makeExecutableSchema(options);
   }
 
-  async query(query, variables = null, operationName = null, fieldResolver = null, typeResolver = null) {
+  async query (query, variables = null, operationName = null, fieldResolver = null, typeResolver = null) {
     const controller = this.get("controller");
     this.json.operationName = operationName;
     try {
@@ -62,11 +61,11 @@ class graphqlApi extends JsonApi {
         rootValue: this.rootValue || controller,
         contextValue: this.contextValue || controller,
         variableValues: variables,
-        operationName: operationName,
-        fieldResolver: fieldResolver,
-        typeResolver: typeResolver
+        operationName,
+        fieldResolver,
+        typeResolver
       };
-      let res = await nodefony.graphql.graphql(conf);
+      const res = await nodefony.graphql.graphql(conf);
       if (res.errors && res.errors.length) {
         throw res.errors;
       }
@@ -76,31 +75,32 @@ class graphqlApi extends JsonApi {
     }
   }
 
-  buildSchema(schema) {
+  buildSchema (schema) {
     this.schema = nodefony.graphql.buildSchema(schema);
     return this.schema;
   }
 
-  printSchema() {
+  printSchema () {
     if (this.schema) {
-      return nodefony.graphql.printSchema(this.schema)
+      return nodefony.graphql.printSchema(this.schema);
     }
-    return ''
+    return "";
   }
 
-  setSchema(schema) {
+  setSchema (schema) {
     this.schema = schema;
     return this.schema;
   }
-  setRootValue(rootValue) {
+
+  setRootValue (rootValue) {
     this.rootValue = rootValue;
     return this.rootValue;
   }
-  setContextValue(contextValue) {
+
+  setContextValue (contextValue) {
     this.contextValue = contextValue;
     return this.contextValue;
   }
-
 }
 
 nodefony.api.Graphql = graphqlApi;

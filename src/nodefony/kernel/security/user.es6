@@ -1,6 +1,5 @@
 class User {
-
-  constructor(
+  constructor (
     username,
     password,
     roles = [],
@@ -16,8 +15,8 @@ class User {
     url = "",
     image = ""
   ) {
-    if ('' === username || null === username || undefined === username) {
-      throw new Error('The username cannot be empty.');
+    if (username === "" || username === null || undefined === username) {
+      throw new Error("The username cannot be empty.");
     }
     this.username = username;
     this.password = password;
@@ -35,12 +34,12 @@ class User {
     this.image = image;
   }
 
-  getRoles() {
+  getRoles () {
     return this.roles;
   }
 
-  hasRole(name){
-    for (let role in this.roles) {
+  hasRole (name) {
+    for (const role in this.roles) {
       if (this.roles[role] === name) {
         return true;
       }
@@ -48,39 +47,39 @@ class User {
     return false;
   }
 
-  isGranted(role){
+  isGranted (role) {
     return this.hasRole(role);
   }
 
-  getPassword() {
+  getPassword () {
     return this.password;
   }
 
-  getUsername() {
+  getUsername () {
     return this.username;
   }
 
-  displayName() {
-    return this.name + " " + this.surname;
+  displayName () {
+    return `${this.name} ${this.surname}`;
   }
 
-  isAccountNonExpired() {
+  isAccountNonExpired () {
     return this.accountNonExpired;
   }
 
-  isAccountNonLocked() {
+  isAccountNonLocked () {
     return this.accountNonLocked;
   }
 
-  isCredentialsNonExpired() {
+  isCredentialsNonExpired () {
     return this.credentialsNonExpired;
   }
 
-  isEnabled() {
+  isEnabled () {
     return this.enabled;
   }
 
-  serialize() {
+  serialize () {
     return {
       username: this.username,
       name: this.name,
@@ -93,9 +92,10 @@ class User {
       accountNonLocked: this.accountNonLocked
     };
   }
-  unserialize(user) {
+
+  unserialize (user) {
     if (user) {
-      for (let ele in user) {
+      for (const ele in user) {
         this[ele] = user[ele];
       }
     }

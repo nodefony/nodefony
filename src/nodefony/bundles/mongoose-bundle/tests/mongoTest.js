@@ -11,19 +11,17 @@
  *
  *
  */
-const assert = require('assert');
-//const http = require("http");
+const assert = require("assert");
+// const http = require("http");
 
-describe("BUNDLE mongo", function () {
+describe("BUNDLE mongo", () => {
+  describe("CORE", () => {
+    beforeEach(() => {});
 
-  describe('CORE', function () {
-
-    beforeEach(function () {});
-
-    before(function () {});
+    before(() => {});
 
     // EXAMPLE  NODEFONY
-    it("NAMESPACE LOADED", function (done) {
+    it("NAMESPACE LOADED", (done) => {
       // check nodefony namespace
       assert.equal(typeof nodefony, "object");
       // check instance kernel
@@ -31,5 +29,4 @@ describe("BUNDLE mongo", function () {
       done();
     });
   });
-
 });

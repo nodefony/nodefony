@@ -36,7 +36,7 @@ module.exports = {
     class: nodefony.services.sockjs,
     arguments: ["@httpKernel", "@httpServer", "@httpsServer"]
   },
-  fetch:{
+  fetch: {
     class: nodefony.services.fetch,
     arguments: ["@container"]
   }

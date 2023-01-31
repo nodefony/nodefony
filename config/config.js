@@ -22,7 +22,7 @@
  */
 const path = require("path");
 
-let certificats = {
+const certificats = {
   options: {
     rejectUnauthorized: true
   }
@@ -35,18 +35,18 @@ let unitTest = true;
 let domainCheck = false;
 
 switch (kernel.appEnvironment) {
-  case "production":
-  case "development":
-  default:
-    certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
-    certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
-    certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
-    CDN = null;
-    statics = true;
-    documentation = true;
-    monitoring = true;
-    unitTest = true;
-    domainCheck = true;
+case "production":
+case "development":
+default:
+  certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
+  certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
+  certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
+  CDN = null;
+  statics = true;
+  documentation = true;
+  monitoring = true;
+  unitTest = true;
+  domainCheck = true;
 }
 
 module.exports = {
@@ -58,32 +58,35 @@ module.exports = {
     ],
     httpPort: 5151,
     httpsPort: 5152,
-    domainCheck: domainCheck,
+    domainCheck,
     locale: "en_en",
+
     /**
      * BUNDLES CORE
      */
     security: true,
     realtime: true,
-    monitoring: monitoring,
+    monitoring,
     mail: true,
-    documentation: documentation,
-    unitTest: unitTest,
+    documentation,
+    unitTest,
     redis: false,
     mongo: false,
     elastic: false,
+
     /**
      * SERVERS
      */
     servers: {
-      statics: statics,
+      statics,
       protocol: "2.0", //  2.0 || 1.1
       http: true,
       https: true,
       ws: true,
       wss: true,
-      certificats: certificats
+      certificats
     },
+
     /**
      * DEV SERVER
      */
@@ -95,6 +98,7 @@ module.exports = {
       protocol: "https",
       websocket: true
     },
+
     /**
      *  BUNDLES LOCAL REGISTRATION
      *
@@ -105,12 +109,13 @@ module.exports = {
      */
     bundles: {
       "test-bundle": path.resolve("src", "bundles", "test-bundle"),
-      "users-bundle": path.resolve("src", "nodefony", "cli", "builder", "bundles", "users-bundle"),
-      //"demo-bundle": "file:src/bundles/demo-bundle",
-      //"webAssembly-bundle": "file:src/bundles/webAssembly-bundle",
-      //"ia-bundle": "file:src/bundles/ia-bundle",
-      //"vault-bundle": "file:src/bundles/vault-bundle"
+      "users-bundle": path.resolve("src", "nodefony", "cli", "builder", "bundles", "users-bundle")
+      // "demo-bundle": "file:src/bundles/demo-bundle",
+      // "webAssembly-bundle": "file:src/bundles/webAssembly-bundle",
+      // "ia-bundle": "file:src/bundles/ia-bundle",
+      // "vault-bundle": "file:src/bundles/vault-bundle"
     },
+
     /**
      * SYSLOG NODEFONY
      */
@@ -119,6 +124,7 @@ module.exports = {
       debug: "*" // ["WEBPACK","ROUTER","bundle-sequelize"]
     }
   },
+
   /**
    *       ASSETS CDN
    *
@@ -144,7 +150,7 @@ module.exports = {
    *         ]
    *      },
    */
-  CDN: CDN,
+  CDN,
 
   /**
    *  ENGINE TEMPLATE

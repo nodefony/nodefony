@@ -1,8 +1,8 @@
-const cpu = require('os').cpus().length;
+const cpu = require("os").cpus().length;
 const path = require("path");
 
 const package = require(path.resolve("package.json"));
-const name = package.name;
+const {name} = package;
 const script = process.argv[1] || "nodefony";
 
 // options - An object with the following options (additional descriptions of these options are here):
@@ -36,19 +36,19 @@ const script = process.argv[1] || "nodefony";
 
 module.exports = {
   apps: [{
-    name: name,
-    script: script,
+    name,
+    script,
     args: "pm2",
-    //node_args           : "--expose-gc",
+    // node_args           : "--expose-gc",
     watch: false,
     execMode: "cluster",
-    instances: cpu, //5, //cpu,
+    instances: cpu, // 5, //cpu,
     maxMemoryRestart: "1024M",
     autorestart: true,
-    restartDelay:2000,
+    restartDelay: 2000,
     maxRestarts: 5,
-    minUptime:60*1000,
-    //log_file            : "./tmp/nodefony.log",
+    minUptime: 60 * 1000,
+    // log_file            : "./tmp/nodefony.log",
     output: path.resolve("tmp", `${name}.log`),
     error: path.resolve("tmp", `${name}.log`),
     mergeLogs: true,

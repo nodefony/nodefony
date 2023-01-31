@@ -7,17 +7,15 @@
  *  @Route ("/vault")
  */
 module.exports = class defaultController extends nodefony.Controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
   }
 
-/**
+  /**
  *    @Route ("",
  *      name="route-vault-bundle-vault")
  */
-  indexAction() {
-    return this.renderJson({})
+  indexAction () {
+    return this.renderJson({});
   }
-
-}
+};

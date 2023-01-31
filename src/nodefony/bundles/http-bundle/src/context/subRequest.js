@@ -1,8 +1,6 @@
 module.exports = nodefony.register("subRequest", () => {
-
   class subRequest extends nodefony.Context {
-
-    constructor(context, pattern, data) {
+    constructor (context, pattern, data) {
       super(context.container, null, null, context.type);
       this.parent = context;
       this.pattern = pattern;
@@ -51,14 +49,13 @@ module.exports = nodefony.register("subRequest", () => {
       this.proxy = context.proxy;
       this.token = context.token;
       this.user = context.user;
-
     }
 
-    getMethod() {
+    getMethod () {
       return this.parent.getMethod();
     }
 
-    createResponse(response) {
+    createResponse (response) {
       switch (this.type) {
       case "HTTP2":
         return new nodefony.http2Response(response, this.container);
@@ -67,23 +64,23 @@ module.exports = nodefony.register("subRequest", () => {
       }
     }
 
-    setCsrfToken(name, options) {
+    setCsrfToken (name, options) {
       this.csrf = this.csrfService.createCsrfToken(name, options, this);
       return this.csrf;
     }
 
-    clean() {
-      //this.parent.container.leaveScope(this.container);
+    clean () {
+      // this.parent.container.leaveScope(this.container);
     }
 
-    log(pci, severity, msgid, msg) {
+    log (pci, severity, msgid, msg) {
       if (!msgid) {
-        msgid = this.type + " SUB REQUEST";
+        msgid = `${this.type} SUB REQUEST`;
       }
       return super.log(pci, severity, msgid, msg);
     }
 
-    handle(data) {
+    handle (data) {
       if (data) {
         this.resolver.setVariables(data);
       }
@@ -92,8 +89,8 @@ module.exports = nodefony.register("subRequest", () => {
           this.fire("onSubRequest", this);
           this.result = this.resolver.action.apply(this.controllerInst, this.resolver.variables);
         }
-        let res = this.resolver.returnController(this);
-        //console.log(res)
+        const res = this.resolver.returnController(this);
+        // console.log(res)
         return res;
       } catch (e) {
         this.log(e, "ERROR");
@@ -101,14 +98,13 @@ module.exports = nodefony.register("subRequest", () => {
       }
     }
 
-    send(data) {
+    send (data) {
       if (data) {
         return data.toString();
       }
-      //console.trace("send subRequest : ", this.pattern, " : ", this.response.body.toString().length)
+      // console.trace("send subRequest : ", this.pattern, " : ", this.response.body.toString().length)
       return this.response.body.toString();
     }
-
   }
   return subRequest;
 });

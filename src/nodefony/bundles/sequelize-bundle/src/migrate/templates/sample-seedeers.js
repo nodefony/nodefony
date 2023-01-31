@@ -2,18 +2,19 @@ const {
   Sequelize,
   DataTypes,
   Model
-} = require('sequelize');
+} = require("sequelize");
 
-const path = require('node:path');
+const path = require("node:path");
 
 class Seedeers extends nodefony.Service {
-  constructor(kernel) {
+  constructor (kernel) {
     super(path.basename(__filename), kernel.container);
   }
 
-  async up({
+  async up ({
     context: queryInterface
   }) {
+
     /**
      * Add seed commands here.
      *
@@ -27,9 +28,10 @@ class Seedeers extends nodefony.Service {
 
   }
 
-  async down({
+  async down ({
     context: queryInterface
   }) {
+
     /**
      * Add commands to revert seed here.
      *

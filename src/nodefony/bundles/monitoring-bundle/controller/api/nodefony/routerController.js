@@ -7,8 +7,7 @@
  */
 
 module.exports = class routerController extends nodefony.Controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
     // start session
     this.startSession();
@@ -18,7 +17,7 @@ module.exports = class routerController extends nodefony.Controller {
       name: "nodefony-router-api",
       version: this.bundle.version,
       description: "nodefony router Api",
-      basePath: "/nodefony/api/router",
+      basePath: "/nodefony/api/router"
     }, this.context);
   }
 
@@ -26,12 +25,11 @@ module.exports = class routerController extends nodefony.Controller {
    *    @Method ({"GET"})
    *    @Route ( "/list",name="api-nodefony-router-list")
    */
-  listAction() {
+  listAction () {
     try {
       return this.api.render(this.get("router").routes);
     } catch (e) {
       throw e;
     }
   }
-
-}
+};

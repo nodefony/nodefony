@@ -1,65 +1,65 @@
 <template>
-<v-app id="nodefony">
-	<app-navigation v-if="profile" />
+  <v-app id="nodefony">
+    <app-navigation v-if="profile" />
 
-	<app-bar @profile="onProfile"
-	         @error="onError" />
+    <app-bar @profile="onProfile"
+             @error="onError" />
 
-	<v-main ref="main">
-		<router-view v-if="profile"
-		             :key="$route.fullPath">
-		</router-view>
-	</v-main>
-</v-app>
+    <v-main ref="main">
+      <router-view v-if="profile"
+                   :key="$route.fullPath">
+      </router-view>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
 // @ is an alias to /src
 import {
-	//mapGetters,
-	//mapActions,
-	//mapMutations
-} from 'vuex';
-import Navigation from '/src/views/layouts/Navigation.vue'
-import Bar from '/src/views/layouts/Bar.vue'
+// mapGetters,
+// mapActions,
+// mapMutations
+} from "vuex";
+import Navigation from "/src/views/layouts/Navigation.vue";
+import Bar from "/src/views/layouts/Bar.vue";
 export default {
-	name: 'App',
-	components: {
-		"app-navigation": Navigation,
-		"app-bar": Bar
-	},
-	data() {
-		return {
-			profile: false
-		}
-	},
-	mounted() {},
-	beforeMount() {},
-	methods: {
-		onProfile() {
-			this.profile = true
-		},
-		onError() {
-			this.profile = true
-		}
-	}
-}
+  name: "App",
+  components: {
+    "app-navigation": Navigation,
+    "app-bar": Bar
+  },
+  data () {
+    return {
+      profile: false
+    };
+  },
+  mounted () {},
+  beforeMount () {},
+  methods: {
+    onProfile () {
+      this.profile = true;
+    },
+    onError () {
+      this.profile = true;
+    }
+  }
+};
 </script>
 
 <script setup>
 import {
-	getCurrentInstance,
-	inject,
-	ref,
-	unref
-} from 'vue'
-const nodefony = inject('nodefony')
-const main = ref(null)
+  getCurrentInstance,
+  inject,
+  ref,
+  unref
+} from "vue";
+const nodefony = inject("nodefony");
+const main = ref(null);
 try {
-	nodefony.application = getCurrentInstance()
-	nodefony.main = unref(main)
+  nodefony.application = getCurrentInstance();
+  nodefony.main = unref(main);
 } catch (e) {
-	console.error(e)
+  console.error(e);
 }
 </script>
 

@@ -1,5 +1,5 @@
 const {
-  //Transaction,
+  // Transaction,
   Sequelize
 } = nodefony.Sequelize;
 
@@ -7,21 +7,21 @@ module.exports = {
   locale: "en_en",
   debug: true,
   strategy: "migrate", // sync || migrate || none  when nodefony build  or  nodefony install
-  //watch: true,
+  // watch: true,
   connectors: {
     nodefony: {
-      driver: 'sqlite',
+      driver: "sqlite",
       dbname: path.resolve("app", "Resources", "databases", "nodefony.db"),
       options: {
         dialect: "sqlite",
-        //isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+        // isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
         retry: {
           match: [
-            //Sequelize.ConnectionError,
-            //Sequelize.ConnectionTimedOutError,
-            //Sequelize.TimeoutError,
+            // Sequelize.ConnectionError,
+            // Sequelize.ConnectionTimedOutError,
+            // Sequelize.TimeoutError,
             /Deadlock/i,
-            'SQLITE_BUSY'
+            "SQLITE_BUSY"
           ],
           max: 5
         },
@@ -37,7 +37,7 @@ module.exports = {
     storage: "sequelize", // sequelize || memory || json
     path: path.resolve(kernel.path, "migrations", "sequelize"),
     seedeersPath: path.resolve(kernel.path, "migrations", "seedeers"),
-    storageSeedeers:"json",
+    storageSeedeers: "json",
     options: {}
   }
 };

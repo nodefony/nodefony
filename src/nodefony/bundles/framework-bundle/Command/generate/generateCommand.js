@@ -7,28 +7,26 @@ const haproxyTask = require(path.resolve(__dirname, "haproxyTask.js"));
 const letsencryptTask = require(path.resolve(__dirname, "letsencryptTask.js"));
 
 class generateCommand extends nodefony.Command {
-
-  constructor(cli, bundle) {
+  constructor (cli, bundle) {
     super("generate", cli, bundle);
     this.setTask("bundles", bundlesTask);
     this.setTask("controller", controllerTask);
     this.setTask("service", serviceTask);
-    //this.setTask("entity", entityTask);
+    // this.setTask("entity", entityTask);
     this.setTask("nginx", nginxTask);
     this.setTask("haproxy", haproxyTask);
     this.setTask("letsencrypt", letsencryptTask);
   }
 
-  bundles() {
-    let task = this.getTask("bundles");
+  bundles () {
+    const task = this.getTask("bundles");
     return task.nodefony();
   }
 
-  controller() {
-    let task = this.getTask("controller");
+  controller () {
+    const task = this.getTask("controller");
     return task.run(arguments);
   }
-
 }
 
 module.exports = generateCommand;

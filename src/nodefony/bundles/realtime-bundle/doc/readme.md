@@ -1,22 +1,22 @@
 # **NODEFONY FRAMEWORK**
 
-## Realtime Bundle 
+## Realtime Bundle
 __Table of content__
 
 - [Architecture](#architecture)
 - [Protocol](#protocol)
-- [Configuration](#configuration) 
-- [Client Usage](#client) 
+- [Configuration](#configuration)
+- [Client Usage](#client)
 
 ## <a name="architecture"></a> Realtime Architecture
 
 [![nodefony](https://raw.githubusercontent.com/nodefony/nodefony/master/src/nodefony/doc/Alpha/RealTime/realtime.png)](https://github.com/nodefony/nodefony) [![nodefony](https://raw.githubusercontent.com/nodefony/nodefony/master/src/nodefony/doc/Alpha/RealTime/browserRealTime.png)](https://github.com/nodefony/nodefony)
 
 ## <a name="protocol"></a> Realtime Protocol
- 
+
 The Realtime Service based on the [Bayeux](https://docs.cometd.org/current/reference/#_bayeux) protocol
 
-#### Example Flow service RANDOM :  JSON_RPC over BAYEUX over Websocket 
+#### Example Flow service RANDOM :  JSON_RPC over BAYEUX over Websocket
 ```json
 {"channel":"/meta/connect","clientId":"Ey3uru0N","connectionType":"WEBSOCKET"}
 
@@ -24,11 +24,11 @@ The Realtime Service based on the [Bayeux](https://docs.cometd.org/current/refer
 {"version":"1.0","channel":"/service/random","data":"READY","clientId":"Ey3uru0N"}
 {"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":68,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}
 {"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":86,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}
-{"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":26,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}	
-{"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":28,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}	
-{"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":53,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}	
-{"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":31,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}	
-{"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":28,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}	
+{"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":26,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}
+{"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":28,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}
+{"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":53,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}
+{"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":31,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}
+{"version":"1.0","channel":"/service/random","data":"{\"jsonrpc\":\"2.0\",\"result\":28,\"error\":null,\"id\":null}","clientId":"Ey3uru0N"}
 
 ```
 
@@ -40,7 +40,7 @@ For now the Realtime service works with TCP sockets it will in the future operat
 
 ```bash
 #
-#  NODEFONY FRAMEWORK 
+#  NODEFONY FRAMEWORK
 #
 #       REALTIME BUNDLE CONFIG
 #
@@ -55,7 +55,7 @@ For now the Realtime service works with TCP sockets it will in the future operat
       type:                     tcp
       port:                     1315
       domain:                   nodefony.com
-      
+
     dmsg:
       type:                     tcp
       port:                     1316
@@ -81,9 +81,9 @@ For now the Realtime service works with TCP sockets it will in the future operat
 
 	<script>
 
-		var server = "/realtime"		
+		var server = "/realtime"
 		var realtime = new stage.realtime(server ,{
-			// fire when 401 http code :  need authenticate !! 
+			// fire when 401 http code :  need authenticate !!
 			onUnauthorized:function(authenticate, realtime){
 			},
 			// fire when authetification success or not need authenticate
@@ -101,10 +101,10 @@ For now the Realtime service works with TCP sockets it will in the future operat
 			// fire when message service event
 			onMessage:function(service, message){
 				if (service === "random"){
-					log("SUCCESS", message);	
+					log("SUCCESS", message);
 				}
 			},
-			// fire when socket connection ready 
+			// fire when socket connection ready
 			onHandshake:function(socket){
 				log("SUCCESS", "HANSHAKE OK");
 			},
@@ -120,15 +120,15 @@ For now the Realtime service works with TCP sockets it will in the future operat
 			onClose:function(){
 				log("WARNING", "onCLose");
 			},
-			// fire when service subcribed 
+			// fire when service subcribed
 			onSubscribe:function(service, message, realtime){
 				log("INFO", "SUBSCRIBE service : " + service);
 			},
-			// fire when service unsubcribed 
+			// fire when service unsubcribed
 			onUnsubscribe:function(service, message){
 				log("INFO", "UNSUBSCRIBE service : " + service);
 			}
-		});	
+		});
 
 		realtime.start();
 	</script>

@@ -1,13 +1,12 @@
-const cookieLib = require('cookie');
-const MS = require('ms');
+const cookieLib = require("cookie");
+const MS = require("ms");
 
-nodefony.register("cookies", function() {
-
+nodefony.register("cookies", () => {
   const encode = encodeURIComponent;
   const decode = decodeURIComponent;
 
   const cookieDefaultSettings = {
-    maxAge: 0, //24*60*60,
+    maxAge: 0, // 24*60*60,
     path: "/",
     domain: null,
     secure: false,
@@ -17,67 +16,67 @@ nodefony.register("cookies", function() {
     secret: "!nodefony.secret!"
   };
 
-  const parse = function(strToParse) {
+  const parse = function (strToParse) {
     return cookieLib.parse(strToParse);
   };
 
 
-  const getRequestcookies = function(context) {
+  const getRequestcookies = function (context) {
     let cookies = null;
     switch (context.type) {
-      case "HTTP":
-      case "HTTPS":
-      case "HTTP2":
-        if (context.request.request && context.request.request.headers.cookie) {
-          cookies = context.request.request.headers.cookie;
-        }
-        break;
-      case "WEBSOCKET":
-      case "WEBSOCKET SECURE":
-        if (context.request.cookies) {
-          cookies = context.request.cookies;
-        }
-        break;
+    case "HTTP":
+    case "HTTPS":
+    case "HTTP2":
+      if (context.request.request && context.request.request.headers.cookie) {
+        cookies = context.request.request.headers.cookie;
+      }
+      break;
+    case "WEBSOCKET":
+    case "WEBSOCKET SECURE":
+      if (context.request.cookies) {
+        cookies = context.request.cookies;
+      }
+      break;
     }
     return parse(cookies);
   };
 
-  const cookiesParser = function(context) {
+  const cookiesParser = function (context) {
     let cookies = null;
     let co = null;
     switch (context.type) {
-      case "HTTP":
-      case "HTTPS":
-      case "HTTP2":
-        if (context.request.request && context.request.request.headers.cookie) {
-          cookies = context.request.request.headers.cookie;
+    case "HTTP":
+    case "HTTPS":
+    case "HTTP2":
+      if (context.request.request && context.request.request.headers.cookie) {
+        cookies = context.request.request.headers.cookie;
+      }
+      if (cookies) {
+        const obj = parse(cookies);
+        for (const cookie in obj) {
+          co = new Cookie(cookie, obj[cookie]);
+          context.addCookie(co);
         }
-        if (cookies) {
-          let obj = parse(cookies);
-          for (let cookie in obj) {
-            co = new Cookie(cookie, obj[cookie]);
-            context.addCookie(co);
-          }
-          context.request.request.cookies = context.cookies;
+        context.request.request.cookies = context.cookies;
+      }
+      break;
+    case "WEBSOCKET":
+    case "WEBSOCKET SECURE":
+      if (context.request.cookies) {
+        cookies = context.request.cookies;
+      }
+      if (cookies) {
+        for (let i = 0; i < cookies.length; i++) {
+          co = new Cookie(cookies[i].name, cookies[i].value);
+          context.addCookie(co);
         }
-        break;
-      case "WEBSOCKET":
-      case "WEBSOCKET SECURE":
-        if (context.request.cookies) {
-          cookies = context.request.cookies;
-        }
-        if (cookies) {
-          for (let i = 0; i < cookies.length; i++) {
-            co = new Cookie(cookies[i].name, cookies[i].value);
-            context.addCookie(co);
-          }
-        }
-        break;
+      }
+      break;
     }
   };
 
   const Cookie = class Cookie {
-    constructor(name, value, settings) {
+    constructor (name, value, settings) {
       if (typeof name === "object") {
         this.settings = name.settings;
         this.name = name.name;
@@ -111,12 +110,12 @@ nodefony.register("cookies", function() {
       }
     }
 
-    clearCookie() {
+    clearCookie () {
       this.setExpires(1);
       this.path = "/";
     }
 
-    setValue(value) {
+    setValue (value) {
       if (value) {
         value = decode(value);
       }
@@ -128,27 +127,27 @@ nodefony.register("cookies", function() {
       return this.value;
     }
 
-    setSecure(val) {
+    setSecure (val) {
       return val;
     }
 
-    setDomain() {
+    setDomain () {
       return this.settings.domain;
     }
 
-    setHttpOnly(val) {
+    setHttpOnly (val) {
       return val;
     }
 
-    setPath(val) {
+    setPath (val) {
       return val;
     }
 
-    setSameSite(val) {
+    setSameSite (val) {
       return val;
     }
 
-    setExpires(date) {
+    setExpires (date) {
       if (date) {
         try {
           if (date instanceof Date) {
@@ -160,11 +159,11 @@ nodefony.register("cookies", function() {
           this.expires = null;
         }
       } else {
-        let maxage = this.getMaxAge();
+        const maxage = this.getMaxAge();
         if (maxage === 0) {
           this.expires = null;
         } else {
-          let res = new Date().getTime() + (maxage * 1000);
+          const res = new Date().getTime() + maxage * 1000;
           this.expires = new Date(res);
         }
         return this.expires;
@@ -173,35 +172,35 @@ nodefony.register("cookies", function() {
       return this.expires;
     }
 
-    setOriginalMaxAge(ms) {
+    setOriginalMaxAge (ms) {
       let res = null;
       switch (typeof ms) {
-        case "number":
-          return ms;
-        case "string":
-          try {
-            res = MS(ms) / 1000;
-          } catch (e) {
-            res = ms;
-          }
-          return parseInt(res, 10);
-        default:
-          throw new Error("cookie class error maxage bad type " + typeof ms);
+      case "number":
+        return ms;
+      case "string":
+        try {
+          res = MS(ms) / 1000;
+        } catch (e) {
+          res = ms;
+        }
+        return parseInt(res, 10);
+      default:
+        throw new Error(`cookie class error maxage bad type ${typeof ms}`);
       }
     }
 
-    setPriority(val){
+    setPriority (val) {
       return val;
     }
 
-    getMaxAge() {
+    getMaxAge () {
       if (this.expires && this.expires instanceof Date) {
-        let ms = (this.expires.getTime() - new Date().getTime());
-        let s = (ms / 1000);
+        const ms = this.expires.getTime() - new Date().getTime();
+        const s = ms / 1000;
         if (s > 0) {
           this.maxAge = s; // en seconde
         } else {
-          throw new Error("Espires / Max-Age : " + s + " Error Espires");
+          throw new Error(`Espires / Max-Age : ${s} Error Espires`);
         }
       } else {
         this.maxAge = this.originalMaxAge;
@@ -209,30 +208,30 @@ nodefony.register("cookies", function() {
       return this.maxAge;
     }
 
-    toString() {
-      return this.name + "=" + encode(this.value);
+    toString () {
+      return `${this.name}=${encode(this.value)}`;
     }
 
-    sign(val, secret) {
-      if ('string' !== typeof val) {
-        throw new TypeError('cookie required');
+    sign (val, secret) {
+      if (typeof val !== "string") {
+        throw new TypeError("cookie required");
       }
-      if ('string' !== typeof secret) {
-        throw new TypeError('secret required');
+      if (typeof secret !== "string") {
+        throw new TypeError("secret required");
       }
       return crypto
-        .createHmac('sha256', val + '.' + secret)
+        .createHmac("sha256", `${val}.${secret}`)
         .update(val)
-        .digest('base64')
-        .replace(/\=+$/, '');
+        .digest("base64")
+        .replace(/\=+$/, "");
     }
 
-    unsign(val, secret) {
-      if (val && 'string' !== typeof val) {
-        throw new Error('unsign cookie value bad type !! ');
+    unsign (val, secret) {
+      if (val && typeof val !== "string") {
+        throw new Error("unsign cookie value bad type !! ");
       }
-      if (secret && 'string' !== typeof secret) {
-        throw new Error('unsign cookie secret bad type');
+      if (secret && typeof secret !== "string") {
+        throw new Error("unsign cookie secret bad type");
       }
       if (!val) {
         val = this.value;
@@ -243,73 +242,72 @@ nodefony.register("cookies", function() {
       return this.sign(val, secret) === val ? val : false;
     }
 
-    serialize() {
-      let tab = [];
+    serialize () {
+      const tab = [];
       tab.push(this.toString());
       if (this.maxAge) {
-        tab.push('Max-Age=' + this.maxAge);
+        tab.push(`Max-Age=${this.maxAge}`);
       }
       if (this.domain) {
-        tab.push('Domain=' + this.domain);
+        tab.push(`Domain=${this.domain}`);
       }
       if (this.path) {
-        tab.push('Path=' + this.path);
+        tab.push(`Path=${this.path}`);
       }
       if (this.sameSite) {
-        tab.push('SameSite=' + this.sameSite);
+        tab.push(`SameSite=${this.sameSite}`);
       }
       if (this.expires) {
-        tab.push('Expires=' + this.expires.toUTCString());
+        tab.push(`Expires=${this.expires.toUTCString()}`);
       }
       if (this.httpOnly) {
-        tab.push('HttpOnly');
+        tab.push("HttpOnly");
       }
       if (this.secure) {
-        tab.push('Secure');
+        tab.push("Secure");
       }
       if (this.priority) {
-        tab.push('Priority=' + this.priority);
+        tab.push(`Priority=${this.priority}`);
       }
-      return tab.join('; ');
+      return tab.join("; ");
     }
 
-    serializeWebSocket(){
-      let obj= {};
-      obj.name = this.name
-      obj.value = this.value
+    serializeWebSocket () {
+      const obj = {};
+      obj.name = this.name;
+      obj.value = this.value;
       if (this.maxAge) {
-        obj['maxage'] = this.maxAge
+        obj.maxage = this.maxAge;
       }
       if (this.domain) {
-        obj['domain'] = this.domain
+        obj.domain = this.domain;
       }
       if (this.path) {
-        obj['path'] = this.path
+        obj.path = this.path;
       }
       if (this.sameSite) {
-        obj['samesite'] = this.sameSite
+        obj.samesite = this.sameSite;
       }
       if (this.expires) {
-        obj['expires'] = this.expires.toUTCString()
+        obj.expires = this.expires.toUTCString();
       }
       if (this.httpOnly) {
-        obj['httponly'] = true
+        obj.httponly = true;
       }
       if (this.secure) {
-        obj['secure'] = true
+        obj.secure = true;
       }
       if (this.priority) {
-        obj['priority'] = this.priority
+        obj.priority = this.priority;
       }
       return obj;
     }
-
   };
 
   return {
     cookie: Cookie,
-    cookiesParser: cookiesParser,
+    cookiesParser,
     parser: parse,
-    getRequestcookies: getRequestcookies
+    getRequestcookies
   };
 });

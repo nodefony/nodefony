@@ -1,5 +1,5 @@
 class csrfError extends nodefony.httpError {
-  constructor(message, code, context) {
+  constructor (message, code, context) {
     if (context) {
       super(message, code, context.container);
     } else {
@@ -7,7 +7,7 @@ class csrfError extends nodefony.httpError {
     }
   }
 
-  toString() {
+  toString () {
     switch (this.errorType) {
     case "csrfError":
       return `${clc.red(this.message)}

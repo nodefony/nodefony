@@ -1,15 +1,15 @@
-let defaultSetting = {
+const defaultSetting = {
   parserXml: {
-    //explicitCharkey: true,
+    // explicitCharkey: true,
     explicitArray: true,
     explicitRoot: false,
     mergeAttrs: true
   },
   readFile: {
-    encoding: 'utf8'
+    encoding: "utf8"
   },
   twig: {
-    'twig options': {
+    "twig options": {
       async: false,
       cache: true
     },
@@ -19,16 +19,16 @@ let defaultSetting = {
 };
 
 const load = function (name, pathFile) {
-  let mypath = pathFile;
-  let ext = path.extname(pathFile);
-  let basename = path.basename(pathFile);
-  let plug = this.plugins[name];
+  const mypath = pathFile;
+  const ext = path.extname(pathFile);
+  const basename = path.basename(pathFile);
+  const plug = this.plugins[name];
   if (!plug) {
-    this.log("DROP FILE : " + mypath + " NO PLUGIN FIND : " + name, "WARNING");
+    this.log(`DROP FILE : ${mypath} NO PLUGIN FIND : ${name}`, "WARNING");
     return null;
   }
-  let myName = Array.prototype.shift.call(arguments);
-  let file = Array.prototype.shift.call(arguments);
+  const myName = Array.prototype.shift.call(arguments);
+  const file = Array.prototype.shift.call(arguments);
   let txt = null;
   try {
     switch (ext) {
@@ -37,9 +37,9 @@ const load = function (name, pathFile) {
       Array.prototype.unshift.call(arguments, txt);
       if (plug.xml) {
         return plug.xml.apply(this, arguments);
-      } else {
-        return this.pluginConfig.xml.apply(this, arguments);
       }
+      return this.pluginConfig.xml.apply(this, arguments);
+
       break;
     case ".json":
       txt = this.readFileSync(file);
@@ -51,9 +51,9 @@ const load = function (name, pathFile) {
       Array.prototype.unshift.call(arguments, txt);
       if (plug.yml) {
         return plug.yml.apply(this, arguments);
-      } else {
-        return this.pluginConfig.yml.apply(this, arguments);
       }
+      return this.pluginConfig.yml.apply(this, arguments);
+
       break;
     case ".js":
     case ".es6":
@@ -64,20 +64,19 @@ const load = function (name, pathFile) {
       case new RegExp("^(.+)Controller.js$").test(basename):
         if (plug.annotations) {
           return plug.annotations.apply(this, arguments);
-        } else {
-          return this.pluginConfig.annotations.apply(this, arguments);
         }
+        return this.pluginConfig.annotations.apply(this, arguments);
+
         break;
       default:
         if (plug.javascript) {
           return plug.javascript.apply(this, arguments);
-        } else {
-          return this.pluginConfig.javascript.apply(this, arguments);
         }
+        return this.pluginConfig.javascript.apply(this, arguments);
       }
       break;
     default:
-      this.log("DROP FILE : " + mypath + " PLUGIN " + myName + " NO EXTENTION FIND : " + ext, "WARNING");
+      this.log(`DROP FILE : ${mypath} PLUGIN ${myName} NO EXTENTION FIND : ${ext}`, "WARNING");
     }
   } catch (e) {
     throw e;
@@ -97,8 +96,7 @@ const load = function (name, pathFile) {
  *
  */
 class Reader extends nodefony.Service {
-
-  constructor(container, localSettings) {
+  constructor (container, localSettings) {
     super("READER", container);
     this.settings = nodefony.extend(true, {}, defaultSetting, localSettings);
     this.plugins = {};
@@ -110,18 +108,18 @@ class Reader extends nodefony.Service {
     this.annotations = new nodefony.Annotations(container, this.notificationsCenter);
   }
 
-  pluginConfig() {
+  pluginConfig () {
     const json = function (file, bundle, callback, parser) {
       if (parser) {
         file = this.render(file, parser.data, parser.options);
       }
       try {
-        let json = JSON.parse(file);
+        const json = JSON.parse(file);
         if (callback) {
           callback(json);
         }
       } catch (e) {
-        throw (e);
+        throw e;
       }
     };
     const yml = function (file, bundle, callback, parser) {
@@ -129,12 +127,12 @@ class Reader extends nodefony.Service {
         file = this.render(file, parser.data, parser.options);
       }
       try {
-        let json = yaml.load(file);
+        const json = yaml.load(file);
         if (callback) {
           callback(json);
         }
       } catch (e) {
-        throw (e);
+        throw e;
       }
     };
     const xml = function (file, bundle, callback, parser) {
@@ -143,7 +141,7 @@ class Reader extends nodefony.Service {
       }
       this.xmlParser.parseString(file, (error, node) => {
         if (error) {
-          throw (error);
+          throw error;
         }
         if (callback) {
           callback(this.xmlToJson(node));
@@ -166,19 +164,19 @@ class Reader extends nodefony.Service {
     };
 
     const annotations = function (file) {
-      throw new Error("Annotation is not defined for this file " + file);
+      throw new Error(`Annotation is not defined for this file ${file}`);
     };
 
     return {
-      xml: xml,
-      json: json,
-      yml: yml,
-      javascript: javascript,
-      annotations: annotations
+      xml,
+      json,
+      yml,
+      javascript,
+      annotations
     };
   }
 
-  readFile(file, localSettings) {
+  readFile (file, localSettings) {
     if (!file) {
       throw new Error("READE no file path in readFile");
     }
@@ -197,7 +195,7 @@ class Reader extends nodefony.Service {
     });
   }
 
-  readFileSync(file, localSettings) {
+  readFileSync (file, localSettings) {
     try {
       return fs.readFileSync(file, nodefony.extend({}, this.settings.readFile, localSettings));
     } catch (e) {
@@ -210,7 +208,7 @@ class Reader extends nodefony.Service {
    *  @method render
    *
    */
-  render(str, data) {
+  render (str, data) {
     return this.engine.twig({
       data: str
     }).render(data);
@@ -220,9 +218,9 @@ class Reader extends nodefony.Service {
    *  @method loadPlugin
    *
    */
-  loadPlugin(name, plugin) {
+  loadPlugin (name, plugin) {
     this.plugins[name] = plugin;
-    let context = this;
+    const context = this;
     return function () {
       Array.prototype.unshift.call(arguments, name);
       return load.apply(context, arguments);
@@ -233,16 +231,16 @@ class Reader extends nodefony.Service {
    *  @method xmlToJson
    *
    */
-  xmlToJson(node) {
-    let json = {};
+  xmlToJson (node) {
+    const json = {};
     if (node instanceof Array) {
       for (let key = 0; key < node.length; key++) {
-        var param = null;
+        let param = null;
         if (node[key] instanceof Object) {
           if (node[key].id) {
             json[node[key].id] = {};
             for (param in node[key]) {
-              if (param !== 'id') {
+              if (param !== "id") {
                 if (node[key][param] instanceof Array) {
                   json[node[key].id][param] = node[key][param];
                   for (let elm = 0; elm < json[node[key].id][param].length; elm++) {
@@ -261,7 +259,7 @@ class Reader extends nodefony.Service {
             json[node[key].key] = node[key]._;
           } else if (node[key].key && !node[key]._) {
             for (param in node[key]) {
-              if (param !== 'key') {
+              if (param !== "key") {
                 json[node[key].key] = {};
                 json[node[key].key][param] = this.xmlToJson(node[key][param]);
               }
@@ -275,13 +273,13 @@ class Reader extends nodefony.Service {
       }
       return json;
     } else if (node instanceof Object) {
-      for (let mykey in node) {
+      for (const mykey in node) {
         json[mykey] = this.xmlToJson(node[mykey]);
       }
       return json;
-    } else {
-      return node;
     }
+    return node;
+
     return json;
   }
 }

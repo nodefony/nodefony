@@ -4,6 +4,7 @@
 module.exports = {
 
   security: {
+
     /**
      *  FIREWALL strategy
      *  when change security context (usefull with multi firewalls areas)
@@ -18,8 +19,9 @@ module.exports = {
     access_control: [{
       path: /^\/nodefony/,
       roles: ["ROLE_MONITORING"],
-      requires_channel: "https",
-      /*allow_if: {
+      requires_channel: "https"
+
+      /* allow_if: {
         roles: ["ROLE_ADMIN"]
       }*/
     }],

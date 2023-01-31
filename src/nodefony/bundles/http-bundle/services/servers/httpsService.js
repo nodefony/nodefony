@@ -1,14 +1,14 @@
 let http2 = null;
-const https = require('https');
+const https = require("https");
 try {
-  http2 = require('http2');
+  http2 = require("http2");
 } catch (e) {
   http2 = null;
 }
 
 let quic = null;
 try {
-  quic = require('net').createQuicSocket;
+  quic = require("net").createQuicSocket;
 } catch (e) {
   quic = null;
 }
@@ -20,8 +20,7 @@ const protocol = {
 };
 
 module.exports = class httpsServer extends nodefony.Service {
-
-  constructor(httpKernel) {
+  constructor (httpKernel) {
     super("HTTPS", httpKernel.container, httpKernel.notificationsCenter);
     this.httpKernel = httpKernel;
     this.port = this.httpKernel.kernel.httpsPort;
@@ -37,15 +36,16 @@ module.exports = class httpsServer extends nodefony.Service {
     this.once("onBoot", async () => {
       this.bundle.on("onServersReady", (type) => {
         if (type === this.type) {
-          let addr = this.server.address();
+          const addr = this.server.address();
           this.domain = addr.address;
           this.kernel.hostname = addr.address;
           this.port = addr.port;
           this.kernel.httpsPort = addr.port;
-          this.kernel.hostHttps = this.kernel.hostname + ":" + addr.port;
+          this.kernel.hostHttps = `${this.kernel.hostname}:${addr.port}`;
           this.family = addr.family;
-          this.log("Listening on DOMAIN : https://" + this.domain + ":" + this.port, "INFO");
-          /*dns.lookup(this.domain, (err, addresses, family) => {
+          this.log(`Listening on DOMAIN : https://${this.domain}:${this.port}`, "INFO");
+
+          /* dns.lookup(this.domain, (err, addresses, family) => {
             if (err) {
               throw err;
             }
@@ -57,11 +57,11 @@ module.exports = class httpsServer extends nodefony.Service {
     });
   }
 
-  getCertificats() {
+  getCertificats () {
     this.settings = this.getParameters("bundles.http").https || null;
     this.settings.certificats = nodefony.extend(true, {}, this.settings.certificats, this.kernel.settings.system.servers.certificats);
-    let bundleOptions = this.getParameters("bundles.http").https.certificats || null;
-    let opt = nodefony.extend(true, {
+    const bundleOptions = this.getParameters("bundles.http").https.certificats || null;
+    const opt = nodefony.extend(true, {
       keyPath: this.kernel.checkPath(this.settings.certificats.key),
       certPath: this.kernel.checkPath(this.settings.certificats.cert),
       caPath: this.kernel.checkPath(this.settings.certificats.ca),
@@ -84,14 +84,14 @@ module.exports = class httpsServer extends nodefony.Service {
     return opt;
   }
 
-  createServer() {
+  createServer () {
     if (this.kernel.settings.system.servers.protocol in protocol) {
       this.protocol = this.kernel.settings.system.servers.protocol;
     } else {
       if (this.kernel.settings.system.servers.protocol) {
-        this.log(this.kernel.settings.system.servers.protocol + " not implemented ", 'WARNING');
+        this.log(`${this.kernel.settings.system.servers.protocol} not implemented `, "WARNING");
       } else {
-        this.log("BAD config servers https protocol not defined !! check framework config", 'WARNING');
+        this.log("BAD config servers https protocol not defined !! check framework config", "WARNING");
       }
       this.protocol = "1.1";
     }
@@ -100,19 +100,19 @@ module.exports = class httpsServer extends nodefony.Service {
     }
     try {
       this.options = this.getCertificats();
-      for (let ele in this.options) {
+      for (const ele in this.options) {
         switch (ele) {
         case "keyPath":
-          this.log(" READ CERTIFICATE KEY : " + this.options[ele], "DEBUG");
+          this.log(` READ CERTIFICATE KEY : ${this.options[ele]}`, "DEBUG");
           break;
         case "certPath":
-          this.log(" READ CERTIFICATE CERT : " + this.options[ele], "DEBUG");
+          this.log(` READ CERTIFICATE CERT : ${this.options[ele]}`, "DEBUG");
           break;
         case "caPath":
           if (this.options[ele]) {
-            this.log(" READ CERTIFICATE CA : " + this.options[ele], "DEBUG");
+            this.log(` READ CERTIFICATE CA : ${this.options[ele]}`, "DEBUG");
           } else {
-            this.log(" NO CERTIFICATE CA : " + this.options[ele], "WARNING");
+            this.log(` NO CERTIFICATE CA : ${this.options[ele]}`, "WARNING");
           }
           break;
         }
@@ -130,7 +130,7 @@ module.exports = class httpsServer extends nodefony.Service {
       case "2.0":
         this.options.allowHTTP1 = true;
         this.settings2 = this.getParameters("bundles.http").http2 || {};
-        let buf = http2.getPackedSettings(this.settings2);
+        const buf = http2.getPackedSettings(this.settings2);
         this.defaultSetting2 = nodefony.extend({}, http2.getDefaultSettings(), http2.getUnpackedSettings(buf) || {});
         this.server = http2.createSecureServer(this.options);
         this.bundle.fire("onCreateServer", this.type, this);
@@ -148,18 +148,18 @@ module.exports = class httpsServer extends nodefony.Service {
       throw e;
     }
 
-    this.server.on('request', (request, response) => {
+    this.server.on("request", (request, response) => {
       const {
         socket: {
           alpnProtocol
         }
-      } = request.httpVersion === '2.0' ?
-        request.stream.session : request;
+      } = request.httpVersion === "2.0"
+        ? request.stream.session
+        : request;
       if (alpnProtocol === "h2") {
         return this.httpKernel.onHttpRequest(request, response, "HTTP2");
-      } else {
-        return this.httpKernel.onHttpRequest(request, response, this.type);
       }
+      return this.httpKernel.onHttpRequest(request, response, this.type);
     });
 
     if (this.settings.timeout) {
@@ -170,7 +170,7 @@ module.exports = class httpsServer extends nodefony.Service {
       this.server.maxHeadersCount = this.settings.maxHeadersCount;
     }
 
-    /*this.server.on('stream', (stream, hearder) => {
+    /* this.server.on('stream', (stream, hearder) => {
       //console.log("pass stream ")
     });*/
 
@@ -181,21 +181,19 @@ module.exports = class httpsServer extends nodefony.Service {
     });
 
     this.server.on("error", (error) => {
-      let myError = new nodefony.Error(error);
-      const txtError = typeof error.code=== 'string'? error.code : error.errno ;
+      const myError = new nodefony.Error(error);
+      const txtError = typeof error.code === "string" ? error.code : error.errno;
       switch (txtError) {
       case "ENOTFOUND":
-        this.log("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
+        this.log(`CHECK DOMAIN IN /etc/hosts or config unable to connect to : ${this.domain}`, "ERROR");
         this.log(myError, "CRITIC");
         break;
       case "EADDRINUSE":
-        this.log("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
+        this.log(`Domain : ${this.domain} Port : ${this.port} ==> ALREADY USE `, "ERROR");
         this.log(myError, "CRITIC");
         this.server.close();
-        setTimeout(() => {
-          return this.kernel.terminate(1)
-        }, 1000);
-        throw error
+        setTimeout(() => this.kernel.terminate(1), 1000);
+        throw error;
         break;
       default:
         this.log(myError, "CRITIC");
@@ -206,27 +204,25 @@ module.exports = class httpsServer extends nodefony.Service {
       this.fire("onClientError", e, socket);
     });
 
-    this.once("onTerminate", () => {
-      return new Promise((resolve, reject)=>{
-        if (this.server) {
-          if(this.protocol  === "2.0"){
-            this.server.close(() => {
-              this.log(this.type + " SHUTDOWN Server HTTP2 is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
-              //return resolve(true)
-            });
-            return resolve(true)
-          }else{
-            this.server.closeAllConnections()
-            this.server.close(() => {
-              this.log(this.type + " SHUTDOWN Server HTTPS is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
-              return resolve(true)
-            });
-          }
-          return ;
+    this.once("onTerminate", () => new Promise((resolve, reject) => {
+      if (this.server) {
+        if (this.protocol === "2.0") {
+          this.server.close(() => {
+            this.log(`${this.type} SHUTDOWN Server HTTP2 is listening on DOMAIN : ${this.domain}    PORT : ${this.port}`, "INFO");
+            // return resolve(true)
+          });
+          return resolve(true);
         }
-        return resolve(true)
-      })
-    });
+        this.server.closeAllConnections();
+        this.server.close(() => {
+          this.log(`${this.type} SHUTDOWN Server HTTPS is listening on DOMAIN : ${this.domain}    PORT : ${this.port}`, "INFO");
+          return resolve(true);
+        });
+
+        return;
+      }
+      return resolve(true);
+    }));
     return this.server;
   }
 };

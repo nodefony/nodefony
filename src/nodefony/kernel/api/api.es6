@@ -1,6 +1,5 @@
 class Api extends nodefony.Service {
-
-  constructor(config, context = null) {
+  constructor (config, context = null) {
     const container = context ? context.container : kernel.container;
     super(config.name, container, false, config);
     this.name = null;
@@ -16,27 +15,27 @@ class Api extends nodefony.Service {
     }
   }
 
-  parseArgs(config, context) {
+  parseArgs (config, context) {
     this.name = config.name;
     this.version = config.version;
     this.description = config.description;
     this.context = context;
     this.basePath = config.basePath;
-    //throw new Error(`Constructor Api bad arguments  : ${arguments}`);
+    // throw new Error(`Constructor Api bad arguments  : ${arguments}`);
   }
 
   /**
    *  @method logger
    */
-  logger(pci, severity, msgid, msg) {
+  logger (pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = clc.magenta(`API ${this.name} `);
     }
     return super.logger(pci, severity, msgid, msg);
   }
 
-  getNodefonyInfo(service) {
-    let obj = {
+  getNodefonyInfo (service) {
+    const obj = {
       debug: this.debug
     };
     switch (true) {
@@ -56,7 +55,6 @@ class Api extends nodefony.Service {
     }
     return obj;
   }
-
 }
 
 nodefony.Api = Api;

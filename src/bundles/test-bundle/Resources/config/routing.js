@@ -4,12 +4,12 @@
  *        GENERATED
  *         ROUTING
  */
-let route = require("./routing/routes.js");
-let cors = require("./routing/cors.js");
-let firewall = require("./routing/firewall.js");
-let twig = require("./routing/twig.js");
-let rest = require("./routing/rest.js");
-let sessions = require("./routing/sessions.js");
+const route = require("./routing/routes.js");
+const cors = require("./routing/cors.js");
+const firewall = require("./routing/firewall.js");
+const twig = require("./routing/twig.js");
+const rest = require("./routing/rest.js");
+const sessions = require("./routing/sessions.js");
 
 module.exports = nodefony.extend(sessions, rest, twig, firewall, cors, route, {
 

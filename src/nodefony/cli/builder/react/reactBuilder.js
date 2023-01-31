@@ -1,6 +1,6 @@
 class React extends nodefony.builders.sandbox {
-  constructor(cli, cmd, args, options) {
-    super(cli, cmd, args, nodefony.extend(true, {},options,{
+  constructor (cli, cmd, args, options) {
+    super(cli, cmd, args, nodefony.extend(true, {}, options, {
       addons: {
         webpack: false,
         bootstrap: false
@@ -10,49 +10,42 @@ class React extends nodefony.builders.sandbox {
     this.cliReact = this.getCli();
   }
 
-  run() {
+  run () {
     return super.run(false);
   }
 
-  generate(response, force) {
+  generate (response, force) {
     return this.buiReact()
-      .then((dir) => {
-        return this.ejectReact(dir, this.cli.response)
-          .then(() => {
-            return super.generate(response, force)
-              .then(() => {
-                return this.response;
-              });
-          })
-          .catch((e) => {
-            throw e;
-          });
-      });
+      .then((dir) => this.ejectReact(dir, this.cli.response)
+        .then(() => super.generate(response, force)
+          .then(() => this.response))
+        .catch((e) => {
+          throw e;
+        }));
   }
 
-  builderProject() {
+  builderProject () {
     try {
       return {
         name: "app",
         type: "directory",
         childs: [{
-            name: "appKernel.js",
-            type: "file",
-            skeleton: path.resolve(this.globalSkeleton, "app", "appKernel.js"),
-            params: this.response
-          },
-          this.generateController(),
-          this.generateConfig(false, true),
-          this.generateRessources()
-        ]
+          name: "appKernel.js",
+          type: "file",
+          skeleton: path.resolve(this.globalSkeleton, "app", "appKernel.js"),
+          params: this.response
+        },
+        this.generateController(),
+        this.generateConfig(false, true),
+        this.generateRessources()]
       };
     } catch (e) {
       throw e;
     }
   }
 
-  builderBundle() {
-    let bundle = [];
+  builderBundle () {
+    const bundle = [];
     bundle.push({
       name: `${this.response.name}Bundle.js`,
       type: "file",
@@ -72,7 +65,7 @@ class React extends nodefony.builders.sandbox {
     return bundle;
   }
 
-  buiReact() {
+  buiReact () {
     let name = null;
     let location = null;
     switch (this.cli.response.command) {
@@ -86,9 +79,9 @@ class React extends nodefony.builders.sandbox {
       break;
     }
     return new Promise((resolve, reject) => {
-      //console.log(this.bundleName)
-      let args = [name];
-      this.log("install React cli : create-react-app " + args.join(" "));
+      // console.log(this.bundleName)
+      const args = [name];
+      this.log(`install React cli : create-react-app ${args.join(" ")}`);
       let cmd = null;
       try {
         cmd = this.cli.spawn(this.cliReact, args, {
@@ -96,8 +89,8 @@ class React extends nodefony.builders.sandbox {
           stdio: "inherit"
         }, (code) => {
           if (code === 1) {
-            //.cleanTmp();
-            return reject(new Error("install React cli  create-react-app new error : " + code));
+            // .cleanTmp();
+            return reject(new Error(`install React cli  create-react-app new error : ${code}`));
           }
           if (this.cli.response.command === "project") {
             return resolve(path.resolve(this.location, name));
@@ -106,18 +99,18 @@ class React extends nodefony.builders.sandbox {
         });
       } catch (e) {
         this.log(e, "ERROR");
-        //this.cleanTmp();
+        // this.cleanTmp();
         return reject(e);
       }
     });
   }
 
-  async ejectReact(dir) {
+  async ejectReact (dir) {
     await this.stach(dir);
     let err = null;
     return new Promise(async (resolve, reject) => {
-      let args = ['run', 'eject'];
-      this.log(" eject  webpack config React : " + args.join(" "));
+      const args = ["run", "eject"];
+      this.log(` eject  webpack config React : ${args.join(" ")}`);
       try {
         return this.cli.packageManager(args, dir)
           .then(async () => {
@@ -125,12 +118,12 @@ class React extends nodefony.builders.sandbox {
             return resolve(path.resolve(this.location));
           })
           .catch(async (error) => {
-            //this.cleanTmp();
+            // this.cleanTmp();
             await this.stachPop();
-            return reject(new Error("React eject error : " + error));
+            return reject(new Error(`React eject error : ${error}`));
           });
       } catch (e) {
-        //this.cleanTmp();
+        // this.cleanTmp();
         err = e;
       }
       if (err) {
@@ -139,57 +132,59 @@ class React extends nodefony.builders.sandbox {
         return reject(err);
       }
     });
-
   }
 
-  async stach() {
+  async stach () {
     let gitP, cwd, gitS, gitC;
     try {
       cwd = path.resolve(this.response.path);
-      gitP = require('simple-git');
+      gitP = require("simple-git");
       gitS = gitP(cwd);
       gitC = gitP(this.location);
     } catch (e) {
       throw e;
     }
-    let res = await gitC.checkIsRepo();
-    if (! res){
+    const res = await gitC.checkIsRepo();
+    if (!res) {
       return Promise.resolve(this.location);
     }
     await gitC.add(path.resolve(this.location, "*"))
-    .then(() => {
-      this.log("git add ");
-      return cwd;
-    }).catch((err) => {
+      .then(() => {
+        this.log("git add ");
+        return cwd;
+      })
+      .catch((err) => {
         this.log(err, "ERROR");
-    });
+      });
     await gitC.commit(`create bundle ${this.response.bundleName}`)
-    .then(() => {
-      this.log("git commit");
-      return cwd;
-    }).catch((err) => {
+      .then(() => {
+        this.log("git commit");
+        return cwd;
+      })
+      .catch((err) => {
         this.log(err, "ERROR");
-    });
+      });
     return gitS.stash(["-u"])
       .then(() => {
         this.log("git stash");
         return cwd;
-      }).catch((err) => {
-          this.log(err, "ERROR");
+      })
+      .catch((err) => {
+        this.log(err, "ERROR");
       });
   }
 
-  async stachPop() {
+  async stachPop () {
     let gitP, cwd, git;
     try {
       cwd = path.resolve(this.response.path);
-      gitP = require('simple-git');
+      gitP = require("simple-git");
       git = gitP(cwd);
     } catch (e) {
       throw e;
     }
-    let res = await git.checkIsRepo();
-    if (! res){
+    const res = await git.checkIsRepo();
+    if (!res) {
       return Promise.resolve(this.location);
     }
     return git.stash(["pop"])
@@ -198,11 +193,11 @@ class React extends nodefony.builders.sandbox {
         return cwd;
       })
       .catch((err) => {
-          this.log(err, "ERROR");
+        this.log(err, "ERROR");
       });
   }
 
-  getCli() {
+  getCli () {
     let cliPath = null;
     try {
       cliPath = path.resolve(__dirname, "..", "..", "..", "node_modules", ".bin", "create-react-app");
@@ -224,7 +219,6 @@ class React extends nodefony.builders.sandbox {
     }
     return cliPath;
   }
-
 }
 nodefony.builders.react = React;
 module.exports = React;

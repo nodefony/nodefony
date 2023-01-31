@@ -1,7 +1,7 @@
 const red = clc.red.bold;
 const cyan = clc.cyan.bold;
 const blue = clc.blueBright.bold;
-const green = clc.green;
+const {green} = clc;
 const yellow = clc.yellow.bold;
 
 const formatDebug = function (debug) {
@@ -34,7 +34,7 @@ const formatDebug = function (debug) {
   default:
     return false;
   }
-}
+};
 
 const conditionOptions = function (environment, debug = undefined) {
   debug = formatDebug(debug);
@@ -43,21 +43,21 @@ const conditionOptions = function (environment, debug = undefined) {
     obj = {
       severity: {
         operator: "<=",
-        data: (debug === false) ? 6 : 7
+        data: debug === false ? 6 : 7
       }
     };
   } else {
     obj = {
       severity: {
         operator: "<=",
-        data: (debug) ? 7 : 6
+        data: debug ? 7 : 6
       }
     };
   }
   if (typeof debug === "object") {
     obj.msgid = {
       data: debug
-    }
+    };
   }
   return obj;
 };
@@ -89,33 +89,33 @@ const defaultSettings = {
 const sysLogSeverity = nodefony.PDU.sysLogSeverity();
 
 const operators = {
-  "<": function (ele1, ele2) {
+  "<" (ele1, ele2) {
     return ele1 < ele2;
   },
-  ">": function (ele1, ele2) {
+  ">" (ele1, ele2) {
     return ele1 > ele2;
   },
-  "<=": function (ele1, ele2) {
+  "<=" (ele1, ele2) {
     return ele1 <= ele2;
   },
-  ">=": function (ele1, ele2) {
+  ">=" (ele1, ele2) {
     return ele1 >= ele2;
   },
-  "==": function (ele1, ele2) {
+  "==" (ele1, ele2) {
     return ele1 === ele2;
   },
-  "!=": function (ele1, ele2) {
+  "!=" (ele1, ele2) {
     return ele1 !== ele2;
   },
-  "RegExp": function (ele1, ele2) {
-    return (ele2.test(ele1));
+  "RegExp" (ele1, ele2) {
+    return ele2.test(ele1);
   }
 };
 
 const conditionsObj = {
   severity: (pdu, condition) => {
-    for (let sev in condition.data) {
-      let res = operators[condition.operator](pdu.severity, condition.data[sev]);
+    for (const sev in condition.data) {
+      const res = operators[condition.operator](pdu.severity, condition.data[sev]);
       if (res) {
         return true;
       }
@@ -123,23 +123,21 @@ const conditionsObj = {
     return false;
   },
   msgid: (pdu, condition) => {
-    for (let sev in condition.data) {
-      let res = operators[condition.operator](pdu.msgid, sev);
+    for (const sev in condition.data) {
+      const res = operators[condition.operator](pdu.msgid, sev);
       if (res) {
         return true;
       }
     }
     return false;
   },
-  date: (pdu, condition) => {
-    return operators[condition.operator](pdu.timeStamp, condition.data);
-  }
+  date: (pdu, condition) => operators[condition.operator](pdu.timeStamp, condition.data)
 };
 
 const logicCondition = {
   "&&": (myConditions, pdu) => {
     let res = null;
-    for (let ele in myConditions) {
+    for (const ele in myConditions) {
       res = conditionsObj[ele](pdu, myConditions[ele]);
       if (!res) {
         break;
@@ -149,7 +147,7 @@ const logicCondition = {
   },
   "||": (myConditions, pdu) => {
     let res = null;
-    for (let ele in myConditions) {
+    for (const ele in myConditions) {
       res = conditionsObj[ele](pdu, myConditions[ele]);
       if (res) {
         break;
@@ -172,8 +170,8 @@ const checkFormatSeverity = (ele) => {
     res = [ele];
     break;
   default:
-    console.trace(ele)
-    let error = `checkFormatSeverity bad format type : ${nodefony.typeOf(ele)}`;
+    console.trace(ele);
+    const error = `checkFormatSeverity bad format type : ${nodefony.typeOf(ele)}`;
     throw new Error(error);
   }
   return res;
@@ -189,7 +187,7 @@ const checkFormatDate = function (ele) {
     res = new Date(ele);
     break;
   default:
-    throw new Error("checkFormatDate bad format " + nodefony.typeOf(ele) + " : " + ele);
+    throw new Error(`checkFormatDate bad format ${nodefony.typeOf(ele)} : ${ele}`);
   }
   return res;
 };
@@ -210,13 +208,13 @@ const checkFormatMsgId = function (ele) {
     res = ele;
     break;
   default:
-    throw new Error("checkFormatMsgId bad format " + nodefony.typeOf(ele) + " : " + ele);
+    throw new Error(`checkFormatMsgId bad format ${nodefony.typeOf(ele)} : ${ele}`);
   }
   return res;
 };
 
 const severityToString = function (severity) {
-  let myint = parseInt(severity, 10);
+  const myint = parseInt(severity, 10);
   let ele = null;
   if (!isNaN(myint)) {
     ele = sysLogSeverity[myint];
@@ -240,7 +238,7 @@ const wrapperCondition = function (conditions, callback) {
       myFuncCondition = logicCondition[this.settings.checkConditions];
     }
     Conditions = sanitizeConditions(conditions);
-    //console.log("Sanitize : ", conditions)
+    // console.log("Sanitize : ", conditions)
     switch (nodefony.typeOf(callback)) {
     case "function":
       return (pdu) => {
@@ -250,7 +248,7 @@ const wrapperCondition = function (conditions, callback) {
         }
       };
     case "array":
-      let tab = [];
+      const tab = [];
       for (let i = 0; i < callback.length; i++) {
         const res = myFuncCondition(Conditions, callback[i]);
         if (res) {
@@ -271,15 +269,15 @@ const sanitizeConditions = function (settingsCondition) {
   if (nodefony.typeOf(settingsCondition) !== "object") {
     return false;
   }
-  for (let ele in settingsCondition) {
+  for (const ele in settingsCondition) {
     if (!(ele in conditionsObj)) {
       return false;
     }
-    let condi = settingsCondition[ele];
-    //console.log("condi ready : ",condi)
+    const condi = settingsCondition[ele];
+    // console.log("condi ready : ",condi)
 
     if (condi.operator && !(condi.operator in operators)) {
-      throw new Error("Contitions bad operator : " + condi.operator);
+      throw new Error(`Contitions bad operator : ${condi.operator}`);
     }
     if (condi.data) {
       switch (ele) {
@@ -288,11 +286,11 @@ const sanitizeConditions = function (settingsCondition) {
           condi.operator = "==";
         }
         res = checkFormatSeverity(condi.data);
-        //console.log(`checkFormatSeverity : `, condi.data, "==>" , res)
+        // console.log(`checkFormatSeverity : `, condi.data, "==>" , res)
         if (res !== false) {
           condi.data = {};
           for (let i = 0; i < res.length; i++) {
-            let mySeverity = severityToString(res[i]);
+            const mySeverity = severityToString(res[i]);
             if (mySeverity) {
               condi.data[mySeverity] = sysLogSeverity[mySeverity];
             } else {
@@ -309,7 +307,7 @@ const sanitizeConditions = function (settingsCondition) {
         }
         res = checkFormatMsgId(condi.data);
         if (res !== false) {
-          let format = nodefony.typeOf(res);
+          const format = nodefony.typeOf(res);
           if (format === "array") {
             condi.data = {};
             for (let i = 0; i < res.length; i++) {
@@ -338,7 +336,7 @@ const sanitizeConditions = function (settingsCondition) {
     }
   }
   return settingsCondition;
-  //console.log(settingsCondition);
+  // console.log(settingsCondition);
 };
 
 const createPDU = function (payload, severity, moduleName, msgid, msg) {
@@ -348,10 +346,7 @@ const createPDU = function (payload, severity, moduleName, msgid, msg) {
   } else {
     myseverity = severity;
   }
-  return new nodefony.PDU(payload, myseverity,
-    moduleName,
-    msgid,
-    msg);
+  return new nodefony.PDU(payload, myseverity, moduleName, msgid, msg);
 };
 
 /**
@@ -364,10 +359,9 @@ const createPDU = function (payload, severity, moduleName, msgid, msg) {
  *    @return syslog
  */
 class Syslog extends nodefony.Events {
-
-  constructor(settings) {
-
+  constructor (settings) {
     super(settings);
+
     /**
      * extended settings
      * @property settings
@@ -375,24 +369,28 @@ class Syslog extends nodefony.Events {
      * @see defaultSettings
      */
     this.settings = nodefony.extend({}, defaultSettings, settings);
+
     /**
      * ring buffer structure container instances of PDU
      * @property ringStack
      * @type Array
      */
     this.ringStack = [];
+
     /**
      * Ratelimit  Management log printed
      * @property burstPrinted
      * @type Number
      */
     this.burstPrinted = 0;
+
     /**
      * Ratelimit  Management log dropped
      * @property missed
      * @type Number
      */
     this.missed = 0;
+
     /**
      * Management log invalid
      * @property invalid
@@ -406,6 +404,7 @@ class Syslog extends nodefony.Events {
      * @type Number
      */
     this.valid = 0;
+
     /**
      * Ratelimit  Management begin of burst
      * @property start
@@ -416,25 +415,27 @@ class Syslog extends nodefony.Events {
     this.fire = this.settings.async ? super.fireAsync : super.fire;
   }
 
-  static formatDebug(debug) {
-    return formatDebug(debug)
+  static formatDebug (debug) {
+    return formatDebug(debug);
   }
 
-  init(environment = nodefony.environment, debug = nodefony.debug, options = null) {
-    return this.listenWithConditions(options || conditionOptions(environment, debug),
-      (pdu) => {
-        return Syslog.normalizeLog(pdu);
-      });
+  init (environment = nodefony.environment, debug = nodefony.debug, options = null) {
+    return this.listenWithConditions(
+      options || conditionOptions(environment, debug),
+      (pdu) => Syslog.normalizeLog(pdu)
+    );
   }
 
-  clean() {
+  clean () {
     return this.reset();
   }
 
-  reset() {
+  reset () {
     this.ringStack.length = 0;
     this.removeAllListeners();
   }
+
+
   /**
    * Clear stack of logs
    *
@@ -443,15 +444,15 @@ class Syslog extends nodefony.Events {
    *
    *
    */
-  clearLogStack() {
+  clearLogStack () {
     this.ringStack.length = 0;
   }
 
-  pushStack(pdu) {
+  pushStack (pdu) {
     if (this.ringStack.length === this.settings.maxStack) {
       this.ringStack.shift();
     }
-    let index = this.ringStack.push(pdu);
+    const index = this.ringStack.push(pdu);
     this.valid++;
     return index;
   }
@@ -464,10 +465,10 @@ class Syslog extends nodefony.Events {
    * @param {String} msgid informations for message. example(Name of function for debug)
    * @param {String} msg  message to add in log. example (I18N)
    */
-  log(payload, severity, msgid, msg) {
+  log (payload, severity, msgid, msg) {
     let pdu = null;
     if (this.settings.rateLimit) {
-      let now = new Date().getTime();
+      const now = new Date().getTime();
       this.start = this.start || now;
       if (now > this.start + this.settings.rateLimit) {
         this.burstPrinted = 0;
@@ -496,24 +497,23 @@ class Syslog extends nodefony.Events {
       this.missed++;
       pdu.status = "DROPPED";
       return pdu;
-    } else {
-      try {
-        if (payload instanceof nodefony.PDU) {
-          pdu = payload;
-        } else {
-          pdu = createPDU.call(this, payload, severity, this.settings.moduleName, msgid || this.settings.msgid, msg);
-        }
-      } catch (e) {
-        console.error(e);
-        this.invalid++;
-        pdu.status = "INVALID";
-        return pdu;
+    }
+    try {
+      if (payload instanceof nodefony.PDU) {
+        pdu = payload;
+      } else {
+        pdu = createPDU.call(this, payload, severity, this.settings.moduleName, msgid || this.settings.msgid, msg);
       }
-      this.pushStack(pdu);
-      pdu.status = "ACCEPTED";
-      this.fire("onLog", pdu);
+    } catch (e) {
+      console.error(e);
+      this.invalid++;
+      pdu.status = "INVALID";
       return pdu;
     }
+    this.pushStack(pdu);
+    pdu.status = "ACCEPTED";
+    this.fire("onLog", pdu);
+    return pdu;
   }
 
   /**
@@ -524,7 +524,7 @@ class Syslog extends nodefony.Events {
    * @return {array} new array between start end
    * @return {PDU} pdu
    */
-  getLogStack(start, end, contition) {
+  getLogStack (start, end, contition) {
     let stack = null;
     if (contition) {
       stack = this.getLogs(contition);
@@ -549,7 +549,7 @@ class Syslog extends nodefony.Events {
    * @param {Object} conditions .
    * @return {array} new array with matches conditions
    */
-  getLogs(conditions = null, stack = null) {
+  getLogs (conditions = null, stack = null) {
     if (conditions) {
       return wrapperCondition.call(this, conditions, stack || this.ringStack);
     }
@@ -561,7 +561,7 @@ class Syslog extends nodefony.Events {
    * @method logToJson
    * @return {String} string in JSON format
    */
-  logToJson(conditions, stack = null) {
+  logToJson (conditions, stack = null) {
     let res = null;
     if (conditions) {
       res = this.getLogs(conditions, stack);
@@ -579,7 +579,7 @@ class Syslog extends nodefony.Events {
    * @param {function} callback before fire conditions events
    * @return {String}
    */
-  loadStack(stack, doEvent = false, beforeConditions = null) {
+  loadStack (stack, doEvent = false, beforeConditions = null) {
     let st = null;
     if (!stack) {
       throw new Error("syslog loadStack : not stack in arguments ");
@@ -587,7 +587,7 @@ class Syslog extends nodefony.Events {
     switch (nodefony.typeOf(stack)) {
     case "string":
       try {
-        //console.log(stack);
+        // console.log(stack);
         st = JSON.parse(stack);
         return this.loadStack(st, doEvent, beforeConditions);
       } catch (e) {
@@ -598,7 +598,7 @@ class Syslog extends nodefony.Events {
     case "object":
       try {
         for (let i = 0; i < stack.length; i++) {
-          let pdu = new nodefony.PDU(stack[i].payload, stack[i].severity, stack[i].moduleName || this.settings.moduleName, stack[i].msgid, stack[i].msg, stack[i].timeStamp);
+          const pdu = new nodefony.PDU(stack[i].payload, stack[i].severity, stack[i].moduleName || this.settings.moduleName, stack[i].msgid, stack[i].msg, stack[i].timeStamp);
           this.pushStack(pdu);
           if (doEvent) {
             if (beforeConditions && typeof beforeConditions === "function") {
@@ -622,8 +622,7 @@ class Syslog extends nodefony.Events {
    *    @method  filter
    *
    */
-  filter(conditions = null, callback = null) {
-
+  filter (conditions = null, callback = null) {
     if (!conditions) {
       throw new Error("filter conditions not found ");
     }
@@ -644,37 +643,37 @@ class Syslog extends nodefony.Events {
    *    @method  listenWithConditions
    *
    */
-  listenWithConditions(conditions, callback) {
+  listenWithConditions (conditions, callback) {
     return this.filter(conditions, callback);
   }
 
-  error(data) {
+  error (data) {
     return this.log(data, "ERROR");
   }
 
-  warn(data) {
+  warn (data) {
     return this.log(data, "WARNING");
   }
 
-  warnning(data) {
+  warnning (data) {
     return this.log(data, "WARNING");
   }
 
-  info(data) {
+  info (data) {
     return this.log(data, "INFO");
   }
 
-  debug(data) {
+  debug (data) {
     return this.log(data, "DEBUG");
   }
 
-  trace(data) {
+  trace (data) {
     return this.log(data, "NOTICE");
   }
 
-  static wrapper(pdu) {
+  static wrapper (pdu) {
     if (!pdu) {
-      throw new Error('Syslog pdu not defined')
+      throw new Error("Syslog pdu not defined");
     }
     const date = new Date(pdu.timeStamp);
     switch (pdu.severity) {
@@ -685,36 +684,36 @@ class Syslog extends nodefony.Events {
       return {
         logger: console.error,
         text: `${date.toDateString()} ${date.toLocaleTimeString()} ${red(pdu.severityName)} ${green(pdu.msgid)} : `
-      }
+      };
     case 4:
       return {
         logger: console.warn,
         text: `${date.toDateString()} ${date.toLocaleTimeString()} ${yellow(pdu.severityName)} ${green(pdu.msgid)} : `
-      }
+      };
     case 5:
       return {
         logger: console.log,
         text: `${date.toDateString()} ${date.toLocaleTimeString()} ${red(pdu.severityName)} ${green(pdu.msgid)} : `
-      }
+      };
     case 6:
       return {
         logger: console.info,
         text: `${date.toDateString()} ${date.toLocaleTimeString()} ${blue(pdu.severityName)} ${green(pdu.msgid)} : `
-      }
+      };
     case 7:
       return {
         logger: console.debug,
         text: `${date.toDateString()} ${date.toLocaleTimeString()} ${cyan(pdu.severityName)} ${green(pdu.msgid)} : `
-      }
+      };
     default:
       return {
         logger: console.log,
         text: `${date.toDateString()} ${date.toLocaleTimeString()} ${cyan(pdu.severityName)} ${green(pdu.msgid)} : `
-      }
+      };
     }
   }
 
-  static normalizeLog(pdu, pid = "") {
+  static normalizeLog (pdu, pid = "") {
     if (pdu.payload === "" || pdu.payload === undefined) {
       console.warn(`${pdu.severityName} ${pdu.msgid} : logger message empty !!!!`);
       console.trace(pdu);
@@ -724,12 +723,12 @@ class Syslog extends nodefony.Events {
     switch (typeof message) {
     case "object":
       switch (true) {
-      case (message instanceof nodefony.Error):
+      case message instanceof nodefony.Error:
         if (this.kernel && this.kernel.console) {
           message = message.message;
         }
         break;
-      case (message instanceof Error):
+      case message instanceof Error:
         if (this.kernel && this.kernel.console) {
           message = message.message;
         } else {
@@ -741,12 +740,12 @@ class Syslog extends nodefony.Events {
     default:
     }
     if (pdu.severity === -1) {
-      process.stdout.write("\u001b[0G")
+      process.stdout.write("\u001b[0G");
       process.stdout.write(`${green(pdu.msgid)} : ${message}`);
-      process.stdout.write("\u001b[90m\u001b[0m")
+      process.stdout.write("\u001b[90m\u001b[0m");
       return pdu;
     }
-    let wrap = Syslog.wrapper(pdu, message);
+    const wrap = Syslog.wrapper(pdu, message);
     wrap.logger(`${pid} ${wrap.text}`, message);
     return pdu;
   }

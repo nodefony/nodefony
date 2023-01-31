@@ -1,31 +1,30 @@
 /*
  *	PASSPORT LOCAL  FACTORY
  */
-const GitHubStrategy = require('passport-github2').Strategy;
+const GitHubStrategy = require("passport-github2").Strategy;
 
 module.exports = nodefony.registerFactory("passport-github2", () => {
-
   class githubFactory extends nodefony.passeportFactory {
-
-    constructor(security, settings) {
+    constructor (security, settings) {
       super("github", security, settings);
-      this.scopes = settings.scopes || ['user:email'];
+      this.scopes = settings.scopes || ["user:email"];
       this.provider = null;
     }
 
-    getStrategy(options) {
+    getStrategy (options) {
       return new Promise((resolve, reject) => {
         try {
-          let strategy = new GitHubStrategy(options, (accessToken, refreshToken, profile, cb) => {
-            this.log("TRY AUTHENTICATION " + this.name, "DEBUG");
-            let mytoken = new nodefony.security.tokens.github(profile, accessToken, refreshToken);
+          const strategy = new GitHubStrategy(options, (accessToken, refreshToken, profile, cb) => {
+            this.log(`TRY AUTHENTICATION ${this.name}`, "DEBUG");
+            const mytoken = new nodefony.security.tokens.github(profile, accessToken, refreshToken);
             return this.authenticateToken(mytoken).then((token) => {
               cb(null, token);
               return token;
-            }).catch((error) => {
-              cb(error, null);
-              throw error;
-            });
+            })
+              .catch((error) => {
+                cb(error, null);
+                throw error;
+              });
           });
           return resolve(strategy);
         } catch (e) {
@@ -34,20 +33,21 @@ module.exports = nodefony.registerFactory("passport-github2", () => {
       });
     }
 
-    createToken(context = null, provider = null) {
+    createToken (context = null, provider = null) {
       if (context.metaSecurity) {
         if (context.metaSecurity.token) {
           return new nodefony.security.tokens.github(
             context.metaSecurity.token.profile,
             context.metaSecurity.token.accessToken,
-            context.metaSecurity.token.refreshToken);
+            context.metaSecurity.token.refreshToken
+          );
         }
       }
       return new nodefony.security.tokens.github();
     }
 
-    authenticate(context) {
-      let url = context.url.replace(context.request.url.search, "");
+    authenticate (context) {
+      const url = context.url.replace(context.request.url.search, "");
       if (url !== this.settings.callbackURL) {
         return new Promise((resolve, reject) => {
           try {
@@ -62,7 +62,6 @@ module.exports = nodefony.registerFactory("passport-github2", () => {
       }
       return super.authenticate(context);
     }
-
   }
   return githubFactory;
 });

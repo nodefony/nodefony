@@ -10,7 +10,7 @@ try {
 } catch (e) {}
 
 const twigOptions = {
-  'twig options': {
+  "twig options": {
     async: true,
     allowAsync: true,
     cache: true
@@ -19,35 +19,34 @@ const twigOptions = {
 };
 
 class Twig extends nodefony.Template {
-
-  constructor(container, options) {
+  constructor (container, options) {
     super(container, twig, options);
     this.kernelSettings = this.container.getParameters("kernel");
-    this.cache = (this.kernelSettings.environment === "dev") ? false : true;
+    this.cache = this.kernelSettings.environment !== "dev";
     twig.cache(this.cache);
     this.rootDir = this.kernel.rootDir;
     this.name = "Twig";
     container.set("Twig", this);
     this.version = version || twig.VERSION;
     this.nodefonyExtend();
-    this.on("onBoot", ()=>{
-      this.router = this.get("router") ;
-      this.translation = this.get("translation") ;
+    this.on("onBoot", () => {
+      this.router = this.get("router");
+      this.translation = this.get("translation");
     });
   }
 
-  nodefonyExtend(){
+  nodefonyExtend () {
     // router
-    this.extendFunction("url" , this.url.bind(this));
-    this.extendFunction("path" , this.url.bind(this));
+    this.extendFunction("url", this.url.bind(this));
+    this.extendFunction("path", this.url.bind(this));
     // control
-    this.extendFunction("controller" ,Twig.controller);
-    this.extendFunction("render" , Twig.render);
+    this.extendFunction("controller", Twig.controller);
+    this.extendFunction("render", Twig.render);
     // translation
-    this.extendFunction("trans" , Twig.translate);
-    this.extendFunction("translate" , Twig.translate);
-    this.extendFilter("trans" , Twig.translate);
-    this.extendFilter("translate" , Twig.translate);
+    this.extendFunction("trans", Twig.translate);
+    this.extendFunction("translate", Twig.translate);
+    this.extendFilter("trans", Twig.translate);
+    this.extendFilter("translate", Twig.translate);
     this.extendFunction("getLangs", this.getLangs.bind(this));
     this.extendFunction("getLocale", Twig.getLocale);
     this.extendFunction("trans_default_domain", Twig.trans_default_domain);
@@ -60,47 +59,54 @@ class Twig extends nodefony.Template {
     this.extendFunction("CDN", Twig.CDN);
   }
 
-  static getFlashBag (...args){
+  static getFlashBag (...args) {
     return this.context.nodefony.getContext().getFlashBag(...args);
   }
-  static getUser (...args){
+
+  static getUser (...args) {
     return this.context.nodefony.getContext().getUser(...args);
   }
-  static CDN (...args){
-    let context = this.context.nodefony.getContext();
-    let cdn = context.kernelHttp.getCDN(...args);
-    let res = `${context.request.url.protocol}//`;
+
+  static CDN (...args) {
+    const context = this.context.nodefony.getContext();
+    const cdn = context.kernelHttp.getCDN(...args);
+    const res = `${context.request.url.protocol}//`;
     if (cdn) {
       return `${res}${cdn}`;
-    } else {
-      return ``
-      //return `${res}${context.request.url.host}`;
     }
+    return "";
+    // return `${res}${context.request.url.host}`;
   }
 
-  static absolute_url (...args){
+  static absolute_url (...args) {
     return this.context.nodefony.getContext().generateAbsoluteUrl(...args);
   }
-  static is_granted (...args){
+
+  static is_granted (...args) {
     return this.context.nodefony.getContext().is_granted(...args);
   }
 
-  static getLocale (){
+  static getLocale () {
     return this.context.nodefony.getContext().translation.getLocale();
   }
-  static trans_default_domain (domain){
+
+  static trans_default_domain (domain) {
     return this.context.nodefony.getContext().translation.trans_default_domain(domain);
   }
-  static getTransDefaultDomain (){
+
+  static getTransDefaultDomain () {
     return this.context.nodefony.getContext().translation.getTransDefaultDomain();
   }
-  static translate(value, domain, local){
+
+  static translate (value, domain, local) {
     return this.context.nodefony.getContext().translation.trans(value, domain, local);
   }
-  getLangs(){
-    return this.translation.getLangs() ;
+
+  getLangs () {
+    return this.translation.getLangs();
   }
-  url(name, variables, host){
+
+  url (name, variables, host) {
     try {
       return this.router.generatePath(name, variables, host);
     } catch (e) {
@@ -108,19 +114,21 @@ class Twig extends nodefony.Template {
       return null;
     }
   }
-  static controller(){
-    let pattern = Array.prototype.shift.call(arguments);
-    let data = Array.prototype.slice.call(arguments);
+
+  static controller () {
+    const pattern = Array.prototype.shift.call(arguments);
+    const data = Array.prototype.slice.call(arguments);
     return new nodefony.subRequest(this.context.nodefony.getContext(), pattern, data);
   }
-  static render(subRequest){
+
+  static render (subRequest) {
     return subRequest.handle();
   }
 
-  renderFile(file, option = {}, callback = null) {
+  renderFile (file, option = {}, callback = null) {
     option.settings = nodefony.extend(true, {}, twigOptions, {
       views: this.rootDir,
-      'twig options': {
+      "twig options": {
         cache: this.cache
       }
     });
@@ -133,7 +141,7 @@ class Twig extends nodefony.Template {
           return this.engine.renderFile(file.path, option, (error, result) => {
             if (error || result === undefined) {
               if (!error) {
-                error = new Error("ERROR PARSING TEMPLATE :" + file.path);
+                error = new Error(`ERROR PARSING TEMPLATE :${file.path}`);
                 return reject(error);
               }
               return reject(error);
@@ -155,10 +163,10 @@ class Twig extends nodefony.Template {
     }
   }
 
-  async render(view, param) {
+  async render (view, param) {
     try {
-      let template = await this.compile(view)
-        .catch(e => {
+      const template = await this.compile(view)
+        .catch((e) => {
           this.log(e, "ERROR");
           throw e;
         });
@@ -171,14 +179,14 @@ class Twig extends nodefony.Template {
     }
   }
 
-  compile(file, callback) {
+  compile (file, callback) {
     return new Promise((resolve, reject) => {
       this.engine.twig({
         path: file.path,
         async: true,
         allowAsync: true,
         base: this.rootDir,
-        //precompiled:false,
+        // precompiled:false,
         name: file.name,
         load: (template) => {
           if (callback) {
@@ -196,11 +204,11 @@ class Twig extends nodefony.Template {
     });
   }
 
-  extendFunction() {
+  extendFunction () {
     return twig.extendFunction.apply(twig, arguments);
   }
 
-  extendFilter() {
+  extendFilter () {
     return twig.extendFilter.apply(twig, arguments);
   }
 }

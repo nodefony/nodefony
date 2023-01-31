@@ -1,14 +1,13 @@
 const Webpack = require("webpack");
-//const MemoryFS = require("memory-fs");
+// const MemoryFS = require("memory-fs");
 const semver = require("semver");
 
-//https://webpack.js.org/api/node/
+// https://webpack.js.org/api/node/
 module.exports = class webpack extends nodefony.Service {
-
-  constructor(container) {
+  constructor (container) {
     super("WEBPACK", container);
     this.webpack = Webpack;
-    this.production = (this.kernel.environment === "prod") ? true : false;
+    this.production = this.kernel.environment === "prod";
     this.pathCache = this.kernel.cacheWebpack;
     this.kernel.once("onBoot", async () => {
       this.socksSettings = this.kernel.getBundle("http").settings.sockjs;
@@ -43,15 +42,14 @@ module.exports = class webpack extends nodefony.Service {
             shell.cd(this.kernel.rootDir);
             if (this.kernel.type !== "CONSOLE") {
               this.log("WEBPACK COMPILE FINISH");
-            } else {
-              if (this.kernel.cli.command === "webpack") {
-                this.log("WEBPACK COMPILE FINISH");
-              }
+            } else if (this.kernel.cli.command === "webpack") {
+              this.log("WEBPACK COMPILE FINISH");
             }
             this.fire("onWebpackFinich", this);
-            //console.log(ele)
+            // console.log(ele)
             return ele;
-          }).catch(e => {
+          })
+          .catch((e) => {
             this.log(e, "ERROR");
             shell.cd(this.kernel.rootDir);
           });
@@ -69,7 +67,7 @@ module.exports = class webpack extends nodefony.Service {
       }
       if (!this.production) {
         this.kernel.once("onTerminate", () => {
-          let res = fs.readdirSync(this.pathCache);
+          const res = fs.readdirSync(this.pathCache);
           if (res && res.length) {
             for (let i = 0; i < res.length; i++) {
               fs.rmdirSync(path.resolve(this.pathCache, res[i]));
@@ -80,17 +78,17 @@ module.exports = class webpack extends nodefony.Service {
     }
   }
 
-  compile() {
+  compile () {
     return new Promise(async (resolve, reject) => {
-      let tab = [];
+      const tab = [];
       try {
-        for (let bundle in this.kernel.bundles) {
+        for (const bundle in this.kernel.bundles) {
           if (this.kernel.isBundleCore(bundle) && !this.kernel.isCore) {
             continue;
           }
-          let myBundle = this.kernel.bundles[bundle];
+          const myBundle = this.kernel.bundles[bundle];
           shell.cd(myBundle.path);
-          let res = await myBundle.initWebpack.call(myBundle);
+          const res = await myBundle.initWebpack.call(myBundle);
           shell.cd(this.kernel.rootDir);
           tab.push(res);
         }
@@ -101,21 +99,21 @@ module.exports = class webpack extends nodefony.Service {
     });
   }
 
-  setFileSystem() {
+  setFileSystem () {
     switch (this.webPackSettings.outputFileSystem) {
-      case "memory-fs":
-        return null;
-        //return new MemoryFS();
-      default:
-        return null;
+    case "memory-fs":
+      return null;
+      // return new MemoryFS();
+    default:
+      return null;
     }
   }
 
-  getWebpackVersion() {
+  getWebpackVersion () {
     return process.env.WEBPACK_VERSION;
   }
 
-  loggerError(errors) {
+  loggerError (errors) {
     if (nodefony.isArray(errors)) {
       errors.forEach((item) => {
         if (this.kernel.debug) {
@@ -141,12 +139,12 @@ module.exports = class webpack extends nodefony.Service {
     }
   }
 
-  loggerStat(err, stats, bundle, file, watcher, config = {}) {
+  loggerStat (err, stats, bundle, file, watcher, config = {}) {
     if (err) {
       throw err;
     }
     const info = stats.toJson();
-    let error = stats.hasErrors();
+    const error = stats.hasErrors();
     if (error) {
       if (info.errors) {
         this.log(`Webpack bundle ${bundle} config : ${file}`, "ERROR");
@@ -155,9 +153,9 @@ module.exports = class webpack extends nodefony.Service {
     } else {
       if (bundle) {
         if (watcher) {
-          this.log("Bundle : " + bundle + " WATCHER IN CONFIG   ", "INFO");
+          this.log(`Bundle : ${bundle} WATCHER IN CONFIG   `, "INFO");
         } else {
-          this.log("COMPILE SUCCESS BUNDLE : " + bundle + " " + file, "INFO");
+          this.log(`COMPILE SUCCESS BUNDLE : ${bundle} ${file}`, "INFO");
         }
       }
       if (watcher && this.sockjs) {
@@ -168,10 +166,8 @@ module.exports = class webpack extends nodefony.Service {
           if (!this.kernel.getBundle(bundle).settings.devServer.hot) {
             this.sockjs.sendWatcher("change");
           }
-        } else {
-          if (!config.hot) {
-            this.sockjs.sendWatcher("change");
-          }
+        } else if (!config.hot) {
+          this.sockjs.sendWatcher("change");
         }
       }
       if (stats.hasWarnings()) {
@@ -180,22 +176,22 @@ module.exports = class webpack extends nodefony.Service {
             if (warn.message) {
               this.log(warn.message, "DEBUG");
             }
-          })
+          });
         }
       }
     }
   }
 
-  isWebpack5(webpack) {
+  isWebpack5 (webpack) {
     try {
-      return semver.gte(webpack.version, '5.0.0');
+      return semver.gte(webpack.version, "5.0.0");
     } catch (e) {
       this.log(e, "ERROR");
       return false;
     }
   }
 
-  setDevServer(config, watch, bundleSettings = {}, webpack5) {
+  setDevServer (config, watch, bundleSettings = {}, webpack5) {
     let options = {
       watch: false
     };
@@ -210,7 +206,7 @@ module.exports = class webpack extends nodefony.Service {
     }
     if (addEntry) {
       if (!this.sockjs) {
-        options = nodefony.extend({}, (config.devServer || {}), (bundleSettings.devServer || {}));
+        options = nodefony.extend({}, config.devServer || {}, bundleSettings.devServer || {});
       } else {
         options = nodefony.extend({
           hot: this.sockjs.hot,
@@ -219,48 +215,46 @@ module.exports = class webpack extends nodefony.Service {
           protocol: this.sockjs.protocol,
           domain: this.sockjs.settings.domain || this.kernel.domain,
           port: this.sockjs.settings.port || this.kernel.httpsPort
-        }, (config.devServer || {}), (bundleSettings.devServer || {}));
+        }, config.devServer || {}, bundleSettings.devServer || {});
       }
     }
     return options;
   }
 
-  addDevServerEntrypoints(config, watch, type, bundle, webpack) {
+  addDevServerEntrypoints (config, watch, type, bundle, webpack) {
     const webpack5 = this.isWebpack5(webpack);
-    let options = this.setDevServer(config, watch, bundle.settings, webpack5);
-    let devClient = [];
+    const options = this.setDevServer(config, watch, bundle.settings, webpack5);
+    const devClient = [];
     if (type !== "react") {
       devClient.push(`webpack-dev-server/client?${options.protocol}://${options.domain}:${options.port}`);
     }
     if (options.hot) {
       if (type === "react") {
         devClient.push("react-hot-loader/patch");
+      } else if (options.hot === "only") {
+        config.plugins.push(new webpack.HotModuleReplacementPlugin({
+          // Options...
+        }));
+        devClient.push("webpack/hot/only-dev-server");
       } else {
-        if (options.hot === "only") {
-          config.plugins.push(new webpack.HotModuleReplacementPlugin({
-            // Options...
-          }));
-          devClient.push("webpack/hot/only-dev-server");
-        } else {
-          config.plugins.push(new webpack.HotModuleReplacementPlugin({
-            // Options...
-          }));
-          devClient.push("webpack/hot/dev-server");
-        }
+        config.plugins.push(new webpack.HotModuleReplacementPlugin({
+          // Options...
+        }));
+        devClient.push("webpack/hot/dev-server");
       }
     }
     const prependDevClient = (entry) => {
       switch (nodefony.typeOf(entry)) {
-        case "function":
-          return () => Promise.resolve(entry()).then(prependDevClient);
-        case 'object':
-          const entryClone = {};
-          Object.keys(entry).forEach((key) => {
-            entryClone[key] = devClient.concat(entry[key]);
-          });
-          return entryClone;
-        default:
-          return devClient.concat(entry);
+      case "function":
+        return () => Promise.resolve(entry()).then(prependDevClient);
+      case "object":
+        const entryClone = {};
+        Object.keys(entry).forEach((key) => {
+          entryClone[key] = devClient.concat(entry[key]);
+        });
+        return entryClone;
+      default:
+        return devClient.concat(entry);
       }
     };
     [].concat(config).forEach((wpOpt) => {
@@ -270,17 +264,14 @@ module.exports = class webpack extends nodefony.Service {
   }
 
 
-  initHMR(options, watch, type, bundle, webpack) {
+  initHMR (options, watch, type, bundle, webpack) {
     const webpack5 = this.isWebpack5(webpack);
-    let devClient = [];
+    const devClient = [];
     if (options.hot) {
       if (type !== "react") {
-        const HMRPluginExists = bundle.webpackCompiler.options.plugins.find(
-          (p) => p.constructor === webpack.HotModuleReplacementPlugin
-        );
+        const HMRPluginExists = bundle.webpackCompiler.options.plugins.find((p) => p.constructor === webpack.HotModuleReplacementPlugin);
         if (HMRPluginExists) {
-          this.log(
-            `"hot: true" automatically applies HMR plugin, you don't have to add it manually to your webpack configuration.`, "WARNING");
+          this.log("\"hot: true\" automatically applies HMR plugin, you don't have to add it manually to your webpack configuration.", "WARNING");
         } else {
           // apply the HMR plugin
           const plugin = new webpack.HotModuleReplacementPlugin({
@@ -289,7 +280,7 @@ module.exports = class webpack extends nodefony.Service {
           plugin.apply(bundle.webpackCompiler);
         }
       } else {
-        //react-hot-loader/patch
+        // react-hot-loader/patch
         devClient.push(require.resolve("react-hot-loader/patch", {
           paths: [bundle.path]
         }));
@@ -307,10 +298,9 @@ module.exports = class webpack extends nodefony.Service {
           paths: [bundle.path]
         }));
       }
-      const SockJSClient = require.resolve(
-        "webpack-dev-server/client/clients/SockJSClient", {
-          paths: [bundle.path]
-        });
+      const SockJSClient = require.resolve("webpack-dev-server/client/clients/SockJSClient", {
+        paths: [bundle.path]
+      });
       const ProvidePlugin = new webpack.ProvidePlugin({
         __webpack_dev_server_client__: SockJSClient
       });
@@ -331,21 +321,20 @@ module.exports = class webpack extends nodefony.Service {
         searchParams.set("logging", options.logging);
         searchParams.set("hot", options.hot);
         searchParams.set("live-reload", true);
-        devClient.push(
-          `${require.resolve("webpack-dev-server/client", {
-            paths: [bundle.path]
-          })}?${searchParams.toString()}`
-        );
+        devClient.push(`${require.resolve("webpack-dev-server/client", {
+          paths: [bundle.path]
+        })}?${searchParams.toString()}`);
       }
       if (typeof webpack.EntryPlugin !== "undefined") {
         for (const additionalEntry of devClient) {
           new webpack.EntryPlugin(bundle.webpackCompiler.context, additionalEntry, {
             // eslint-disable-next-line no-undefined
-            name: undefined,
+            name: undefined
           }).apply(bundle.webpackCompiler);
         }
       }
-      /*else {
+
+      /* else {
            let i = 0;
            for (const additionalEntry of devClient) {
              const plugin = new webpack.SingleEntryPlugin(bundle.webpackCompiler.context, additionalEntry, `hmr-${bundle.bundleName}-${i++}`);
@@ -357,7 +346,7 @@ module.exports = class webpack extends nodefony.Service {
     }
   }
 
-  loadConfig(file, bundle, reload) {
+  loadConfig (file, bundle, reload) {
     return new Promise(async (resolve, reject) => {
       try {
         if (!(file instanceof nodefony.fileClass)) {
@@ -366,11 +355,11 @@ module.exports = class webpack extends nodefony.Service {
       } catch (e) {
         return reject(e);
       }
-      let Path = bundle.path;
-      let type = bundle.settings.type;
-      let publicPath = bundle.publicPath;
+      const Path = bundle.path;
+      const {type} = bundle.settings;
+      let {publicPath} = bundle;
       let config = null;
-      let basename = bundle.bundleName;
+      const basename = bundle.bundleName;
       let watch = bundle.webpackWatch || false;
       let devServer = null;
       let watchOptions = {};
@@ -383,21 +372,22 @@ module.exports = class webpack extends nodefony.Service {
       }
       try {
         switch (type) {
-          case "react":
-            publicPath = path.resolve("/", bundle.bundleName, "dist");
-            process.env.PUBLIC_URL = basename;
-            process.env.PUBLIC_PATH = publicPath;
-            process.env.HOST = this.socksSettings.domain + ":" + this.socksSettings.port;
-            process.env.HTTPS = true;
-            config = require(file.path)(process.env.NODE_ENV);
-            config.context = Path;
-            config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
-            if (publicPath) {
-              config.output.publicPath = publicPath + "/";
-            } else {
-              config.output.publicPath = "/" + path.basename(file.dirName) + "/dist/";
-            }
-            /*watchOptions = {
+        case "react":
+          publicPath = path.resolve("/", bundle.bundleName, "dist");
+          process.env.PUBLIC_URL = basename;
+          process.env.PUBLIC_PATH = publicPath;
+          process.env.HOST = `${this.socksSettings.domain}:${this.socksSettings.port}`;
+          process.env.HTTPS = true;
+          config = require(file.path)(process.env.NODE_ENV);
+          config.context = Path;
+          config.output.path = path.resolve(bundle.path, "Resources", "public", "dist");
+          if (publicPath) {
+            config.output.publicPath = `${publicPath}/`;
+          } else {
+            config.output.publicPath = `/${path.basename(file.dirName)}/dist/`;
+          }
+
+          /* watchOptions = {
               ignored: new RegExp(
                 `^(?!${path
                 .normalize(Path + '/')
@@ -405,12 +395,12 @@ module.exports = class webpack extends nodefony.Service {
                 'g'
               )
             };*/
-            break;
-          default:
-            if (type === 'vue') {
-              process.VUE_CLI_SERVICE = null;
-            }
-            config = require(file.path);
+          break;
+        default:
+          if (type === "vue") {
+            process.VUE_CLI_SERVICE = null;
+          }
+          config = require(file.path);
         }
         watchOptions = nodefony.extend({}, this.webPackSettings.watchOptions, config.watchOptions || {});
         const webpack5 = this.isWebpack5(webpack);
@@ -423,7 +413,7 @@ module.exports = class webpack extends nodefony.Service {
         } catch (e) {
           return reject(e);
         }
-        //context
+        // context
         if (!config.context) {
           config.context = Path;
         }
@@ -438,8 +428,8 @@ module.exports = class webpack extends nodefony.Service {
           }
         }
         bundle.webPackConfig = config;
-        //console.log(config)
-        //this.log(config, "DEBUG");
+        // console.log(config)
+        // this.log(config, "DEBUG");
         this.log(`Webpack (${webpack.version}) Compile bundle :  ${bundle.name}  `);
         try {
           bundle.webpackCompiler = webpack(config);
@@ -453,10 +443,8 @@ module.exports = class webpack extends nodefony.Service {
 
         if (this.kernel.isCore) {
           this.nbCompiler++;
-        } else {
-          if (!bundle.isCore) {
-            this.nbCompiler++;
-          }
+        } else if (!bundle.isCore) {
+          this.nbCompiler++;
         }
         if (this.kernel.type === "CONSOLE" && this.kernel.cli.command !== "webpack") {
           return resolve(bundle.webpackCompiler || false);
@@ -465,7 +453,8 @@ module.exports = class webpack extends nodefony.Service {
           bundle.webpackCompiler.hooks.beforeCompile.tap("beforeCompile", () => {
             shell.cd(Path);
           });
-          /*bundle.webpackCompiler.hooks.run.tap("run", () => {
+
+          /* bundle.webpackCompiler.hooks.run.tap("run", () => {
             console.log("run");
           });
           bundle.webpackCompiler.hooks.beforeRun.tap("beforeRun", () => {
@@ -506,7 +495,7 @@ module.exports = class webpack extends nodefony.Service {
           });
         }
       } catch (e) {
-        this.log(`Error webpack ${bundle.name}`, 'ERROR');
+        this.log(`Error webpack ${bundle.name}`, "ERROR");
         this.trace(e);
         return reject(e);
       }
@@ -534,19 +523,19 @@ module.exports = class webpack extends nodefony.Service {
           this.nbWatched++;
           bundle.watching = null;
           bundle.watching = bundle.webpackCompiler.watch(watchOptions, (err, stats) => {
-            this.log("BUNDLE : " + basename + " WACTHER WEBPACK COMPILE  ");
+            this.log(`BUNDLE : ${basename} WACTHER WEBPACK COMPILE  `);
             if (!err) {
-              this.log("\n" + this.displayConfigTable(config), "DEBUG");
+              this.log(`\n${this.displayConfigTable(config)}`, "DEBUG");
             }
             this.loggerStat(err, stats, basename, file.name, true, devServer);
             if (this.kernel.environment !== "prod") {
-              bundle.lastWebpackStats = stats
+              bundle.lastWebpackStats = stats;
             }
           });
           this.kernel.once("onTerminate", () => {
             if (bundle.watching) {
               bundle.watching.close(() => {
-                this.log("Watching Ended  " + config.context + " : " + util.inspect(config.entry), "INFO");
+                this.log(`Watching Ended  ${config.context} : ${util.inspect(config.entry)}`, "INFO");
               });
             }
           });
@@ -556,7 +545,7 @@ module.exports = class webpack extends nodefony.Service {
               return resolve(bundle.webpackCompiler || true);
             }
           }
-          let idfile = basename + "_" + file.name;
+          const idfile = `${basename}_${file.name}`;
           await this.runCompiler(bundle.webpackCompiler, idfile, basename, file.name, devServer, bundle);
         }
       } catch (e) {
@@ -565,11 +554,11 @@ module.exports = class webpack extends nodefony.Service {
     });
   }
 
-  runCompiler(compiler, id, bundleBase, file, devServer, bundle) {
+  runCompiler (compiler, id, bundleBase, file, devServer, bundle) {
     return new Promise((resolve, reject) => {
       try {
         if (this.production) {
-          let pathCache = path.resolve(this.pathCache, id);
+          const pathCache = path.resolve(this.pathCache, id);
           if (fs.existsSync(pathCache)) {
             return resolve(true);
           }
@@ -577,11 +566,11 @@ module.exports = class webpack extends nodefony.Service {
             fs.mkdirSync(pathCache);
           } catch (e) {}
         }
-        //this.log("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file, "DEBUG");
-        this.log(`Webpack Compile ${bundleBase} :  ${file}\n` + this.displayConfigTable(compiler.options), "DEBUG");
+        // this.log("BUNDLE : " + bundle + " WEBPACK COMPILE : " + file, "DEBUG");
+        this.log(`Webpack Compile ${bundleBase} :  ${file}\n${this.displayConfigTable(compiler.options)}`, "DEBUG");
         compiler.run((err, stats) => {
           if (this.kernel.environment !== "prod") {
-            bundle.lastWebpackStats = stats
+            bundle.lastWebpackStats = stats;
           }
           this.loggerStat(err, stats, bundleBase, file, false, devServer);
           compiler.close((closeErr) => {
@@ -593,20 +582,20 @@ module.exports = class webpack extends nodefony.Service {
           if (err) {
             console.trace(err);
             throw err;
-            //return reject(err);
+            // return reject(err);
           }
-          //return resolve(compiler);
+          // return resolve(compiler);
         });
       } catch (e) {
         console.trace(e);
-        this.log(e, 'ERROR');
+        this.log(e, "ERROR");
         return resolve(compiler);
       }
     });
   }
 
-  displayConfigTable(config) {
-    let options = {
+  displayConfigTable (config) {
+    const options = {
       head: [
         "ENTRY NAME [name]",
         "ENTRY",
@@ -617,11 +606,11 @@ module.exports = class webpack extends nodefony.Service {
         "WATCHER"
       ]
     };
-    let table = this.kernel.cli.displayTable([], options);
+    const table = this.kernel.cli.displayTable([], options);
     try {
-      for (let ele in config.entry) {
-        let entry = config.entry[ele].import ? config.entry[ele].import.toString() : config.entry[ele];
-        let lib = (config.output.library && config.output.library.name) ? config.output.library.name : config.output.library;
+      for (const ele in config.entry) {
+        const entry = config.entry[ele].import ? config.entry[ele].import.toString() : config.entry[ele];
+        const lib = config.output.library && config.output.library.name ? config.output.library.name : config.output.library;
         if (config.output) {
           table.push([
             ele,

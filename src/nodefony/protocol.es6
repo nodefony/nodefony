@@ -1,4 +1,4 @@
-const xml = require('xml2js');
+const xml = require("xml2js");
 
 const parser = function (type, settings) {
   let Parser = null;
@@ -10,7 +10,7 @@ const parser = function (type, settings) {
     };
   case "json":
     Parser = JSON.parse;
-    let context = this;
+    const context = this;
     if (context.root) {
       return function (value, callback) {
         try {
@@ -19,15 +19,14 @@ const parser = function (type, settings) {
           return callback(e, null);
         }
       };
-    } else {
-      return function (value, callback) {
-        try {
-          return callback(null, Parser(value));
-        } catch (e) {
-          return callback(e, null);
-        }
-      };
     }
+    return function (value, callback) {
+      try {
+        return callback(null, Parser(value));
+      } catch (e) {
+        return callback(e, null);
+      }
+    };
   }
 };
 
@@ -43,21 +42,21 @@ const builder = function (method, type) {
     };
   case "json":
     Builder = JSON.stringify;
-    let context = this;
+    const context = this;
     if (context.root) {
       return function (obj) {
-        let base = {};
+        const base = {};
         base[context.root] = nodefony.extend({}, context[method]);
         nodefony.extend(true, base[context.root], obj);
         return Builder(base);
       };
-    } else {
-      return function (obj) {
-        let base = nodefony.extend({}, context[method]);
-        nodefony.extend(true, base, obj);
-        return Builder(base);
-      };
     }
+    return function (obj) {
+      const base = nodefony.extend({}, context[method]);
+      nodefony.extend(true, base, obj);
+      return Builder(base);
+    };
+
     break;
   }
   return null;
@@ -69,8 +68,7 @@ const defaultSettingsProtocol = {
 };
 
 class Protocol {
-
-  constructor(rootName, settings) {
+  constructor (rootName, settings) {
     this.settings = nodefony.extend(true, {}, defaultSettingsProtocol, settings);
     this.root = rootName;
     this.extention = this.settings.extention;

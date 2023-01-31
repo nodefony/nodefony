@@ -1,32 +1,33 @@
-//const _ = require("lodash");
+// const _ = require("lodash");
 class FileResult extends nodefony.Result {
-  constructor(res) {
-    if(typeof(res) === 'number'){
+  constructor (res) {
+    if (typeof res === "number") {
       super();
-    }else{
+    } else {
       super(res);
     }
   }
 
-  toString() {
-    let txt = ``;
+  toString () {
+    let txt = "";
     for (let index = 0; index < this.length; index++) {
-      let info = this[index];
+      const info = this[index];
       txt += `${info.name}\n`;
     }
     return txt;
   }
-  toJson(json = []) {
+
+  toJson (json = []) {
     try {
       for (let index = 0; index < this.length; index++) {
-        let info = this[index];
+        const info = this[index];
         switch (info.type) {
         case "File":
           json.push(info.toJson());
           break;
         case "symbolicLink":
         case "Directory":
-          let dir = info.toJson();
+          const dir = info.toJson();
           if (info.children) {
             dir.children = info.children.toJson();
           }
@@ -40,15 +41,15 @@ class FileResult extends nodefony.Result {
     }
   }
 
-  uniq() {
+  uniq () {
     return this;
   }
 
-  find(ele, result = new FileResult()) {
+  find (ele, result = new FileResult()) {
     try {
       for (let index = 0; index < this.length; index++) {
-        let info = this[index];
-        let match = info.matchName(ele);
+        const info = this[index];
+        const match = info.matchName(ele);
         if (match) {
           result.push(info);
         }
@@ -60,10 +61,10 @@ class FileResult extends nodefony.Result {
     }
   }
 
-  getDirectories(result = new FileResult()) {
+  getDirectories (result = new FileResult()) {
     try {
       for (let index = 0; index < this.length; index++) {
-        let info = this[index];
+        const info = this[index];
         switch (info.type) {
         case "Directory":
           result.push(info);
@@ -80,10 +81,10 @@ class FileResult extends nodefony.Result {
     }
   }
 
-  getFiles(result = new FileResult()) {
+  getFiles (result = new FileResult()) {
     try {
       for (let index = 0; index < this.length; index++) {
-        let info = this[index];
+        const info = this[index];
         switch (info.type) {
         case "File":
           result.push(info);
@@ -100,8 +101,8 @@ class FileResult extends nodefony.Result {
     }
   }
 
-  sortByName(result = new FileResult()) {
-    let res = this.sort((a, b) => {
+  sortByName (result = new FileResult()) {
+    const res = this.sort((a, b) => {
       if (a.name.toString() > b.name.toString()) {
         return 1;
       }
@@ -116,8 +117,8 @@ class FileResult extends nodefony.Result {
     return this;
   }
 
-  sortByType(result = new FileResult()) {
-    let res = this.sort((a, b) => {
+  sortByType (result = new FileResult()) {
+    const res = this.sort((a, b) => {
       if (a.type.toString() > b.type.toString()) {
         return 1;
       }

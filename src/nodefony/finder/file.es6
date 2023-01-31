@@ -1,15 +1,16 @@
 class File extends nodefony.fileClass {
-  constructor(path, parent = null) {
+  constructor (path, parent = null) {
     super(path);
     this.parent = parent;
     this.children = new nodefony.FileResult();
   }
-  get length() {
+
+  get length () {
     return this.children.length;
   }
 
-  toJson() {
-    let obj = {
+  toJson () {
+    const obj = {
       path: this.path,
       name: this.name,
       ext: this.ext,

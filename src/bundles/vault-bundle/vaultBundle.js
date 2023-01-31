@@ -8,9 +8,8 @@
  *
  */
 module.exports = class vaultBundle extends nodefony.Bundle {
-
-  constructor(name, kernel, container) {
+  constructor (name, kernel, container) {
     // Mother Class constructor
     super(name, kernel, container);
   }
-}
+};

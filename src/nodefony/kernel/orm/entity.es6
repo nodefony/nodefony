@@ -1,7 +1,6 @@
-module.exports = nodefony.register("Entity", function () {
-
+module.exports = nodefony.register("Entity", () => {
   class Entity extends nodefony.Service {
-    constructor(bundle, name, orm, connectionName) {
+    constructor (bundle, name, orm, connectionName) {
       super(name, bundle.container);
       this.bundle = bundle;
       this.orm = this.get(orm);
@@ -9,9 +8,9 @@ module.exports = nodefony.register("Entity", function () {
       this.model = null;
       this.encoder = null;
       if (!this.orm) {
-        throw new Error(this.name + " entity can't be registered  ORM not found : " + orm);
+        throw new Error(`${this.name} entity can't be registered  ORM not found : ${orm}`);
       }
-      this.orm.on('onConnect', (connectionName, db) => {
+      this.orm.on("onConnect", (connectionName, db) => {
         if (connectionName === this.connectionName) {
           this.db = db;
           this.model = this.registerModel(this.db);
@@ -20,25 +19,25 @@ module.exports = nodefony.register("Entity", function () {
       });
     }
 
-    logger(pci, severity, msgid, msg) {
+    logger (pci, severity, msgid, msg) {
       if (!msgid) {
-        msgid = "Entity " + this.name;
+        msgid = `Entity ${this.name}`;
       }
       return super.logger(pci, severity, msgid, msg);
     }
 
-    setEncoder(encoder) {
+    setEncoder (encoder) {
       if (encoder instanceof nodefony.Encoder) {
         return this.encoder = encoder;
       }
       throw new Error(`setEncoder : Entity ${this.name} encoder must be an instance of nodefony.Encoder`);
     }
 
-    getEncoder() {
+    getEncoder () {
       return this.encoder;
     }
 
-    hasEncoder() {
+    hasEncoder () {
       if (this.encoder instanceof nodefony.Encoder) {
         return true;
       }
@@ -48,13 +47,12 @@ module.exports = nodefony.register("Entity", function () {
       throw new Error(`setEncoder : Entity ${this.name} encoder must be an instance of nodefony.Encoder`);
     }
 
-    async encode(value) {
+    async encode (value) {
       if (this.hasEncoder()) {
         return await this.encoder.encodePassword.apply(this.encoder, arguments);
       }
       return value;
     }
-
   }
 
   return Entity;

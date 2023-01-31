@@ -1,15 +1,15 @@
 const path = require("path");
-const webpack = require('webpack');
-const { merge } = require('webpack-merge');
+const webpack = require("webpack");
+const {merge} = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const context = path.resolve(__dirname, "..", "public");
 const public = path.resolve(__dirname, "..", "public", "assets");
 const bundleName = path.basename(path.resolve(__dirname, "..", ".."));
-const publicPath = bundleName + "/assets/";
+const publicPath = `${bundleName}/assets/`;
 
 let config = null;
-const debug = kernel.debug ? "*" : false ;
+const debug = kernel.debug ? "*" : false;
 if (kernel.environment === "dev") {
   config = require("./webpack/webpack.dev.config.js");
 } else {
@@ -17,7 +17,7 @@ if (kernel.environment === "dev") {
 }
 
 module.exports = merge({
-  context: context,
+  context,
   target: "web",
   entry: {
     test: ["./js/test.js"],
@@ -25,7 +25,7 @@ module.exports = merge({
   },
   output: {
     path: public,
-    publicPath: publicPath,
+    publicPath,
     filename: "./js/[name].js",
     hashFunction: "xxhash64",
     library: "[name]",
@@ -42,62 +42,62 @@ module.exports = merge({
       test: new RegExp("\.es6$|\.js$"),
       exclude: new RegExp("node_modules"),
       use: [{
-        loader: 'babel-loader',
+        loader: "babel-loader",
         options: {
-          presets: ['@babel/preset-env']
+          presets: ["@babel/preset-env"]
         }
       }]
     }, {
-      test: require.resolve('jquery'),
-      loader: 'expose-loader',
+      test: require.resolve("jquery"),
+      loader: "expose-loader",
       options: {
         exposes: [{
-          globalName: '$',
+          globalName: "$",
           override: true
-        },{
-          globalName: 'jQuery',
+        }, {
+          globalName: "jQuery",
           override: true
         }]
       }
     }, {
       test: /\.(sa|sc|c)ss$/,
       use: [
-          //'css-hot-loader',
-          MiniCssExtractPlugin.loader,
+        // 'css-hot-loader',
+        MiniCssExtractPlugin.loader,
         {
           loader: "css-loader",
           options: {
             sourceMap: true
           }
-          }, {
+        }, {
           loader: "sass-loader",
           options: {
             sourceMap: true
           }
-          }
-        ]
+        }
+      ]
     }, {
       // FONTS
       test: new RegExp("\.(eot|woff2?|svg|ttf)([\?]?.*)$"),
-      type: 'asset/inline'
+      type: "asset/inline"
     }, {
       // IMAGES
       test: new RegExp("\.(jpg|png|gif)$"),
-      type: 'asset/resource',
+      type: "asset/resource",
       generator: {
-         filename: "images/[name][ext][query]",
+        filename: "images/[name][ext][query]"
       }
     }]
   },
   plugins: [
     new MiniCssExtractPlugin({
       filename: "./css/[name].css"
-      //allChunks: true
+      // allChunks: true
     }),
     new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        "NODE_DEBUG":JSON.stringify(debug)
+      "process.env": {
+        "NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+        "NODE_DEBUG": JSON.stringify(debug)
       }
     })
   ]

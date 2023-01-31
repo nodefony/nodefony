@@ -65,50 +65,49 @@
  *          }
  *        }
  */
-let Transaction, Sequelize
+let Transaction, Sequelize;
 if (nodefony.Sequelize) {
-  Transaction = nodefony.Sequelize.Transaction
-  Sequelize = nodefony.Sequelize.Sequelize
+  Transaction = nodefony.Sequelize.Transaction;
+  Sequelize = nodefony.Sequelize.Sequelize;
 }
 
 const vault = async () => {
-  const serviceVault = kernel.get("vault")
+  const serviceVault = kernel.get("vault");
   return await serviceVault.getSecret({
     path: "nodefony/data/database/postgresql/connector/nodefony"
   })
-    .then((secret) => {
-      return secret.data.data
-    })
-    .catch(e => {
-      throw e
-    })
-}
+    .then((secret) => secret.data.data)
+    .catch((e) => {
+      throw e;
+    });
+};
 
-const connectors = {}
+const connectors = {};
 switch (kernel.appEnvironment.environment) {
-  case "production":
-  case "development":
-  default:
-    connectors.nodefony = {
-      driver: "sqlite",
-      dbname: path.resolve("app", "Resources", "databases", "nodefony.db"),
-      options: {
-        dialect: "sqlite",
-        // isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
-        retry: {
-          match: [
-            /Deadlock/i,
-            "SQLITE_BUSY"
-          ],
-          max: Infinity
-        },
-        pool: {
-          max: 5,
-          min: 0,
-          idle: 10000
-        }
+case "production":
+case "development":
+default:
+  connectors.nodefony = {
+    driver: "sqlite",
+    dbname: path.resolve("app", "Resources", "databases", "nodefony.db"),
+    options: {
+      dialect: "sqlite",
+      // isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+      retry: {
+        match: [
+          /Deadlock/i,
+          "SQLITE_BUSY"
+        ],
+        max: Infinity
+      },
+      pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
       }
     }
+  };
+
     /* connectors.nodefony = {
       driver: "mysql",
       dbname: 'nodefony',
@@ -178,4 +177,4 @@ module.exports = {
     storageSeedeers: "sequelize",
     options: {}
   }
-}
+};

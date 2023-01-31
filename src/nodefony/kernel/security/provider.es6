@@ -1,19 +1,18 @@
 class Provider extends nodefony.Service {
-
-  constructor(name, manager) {
+  constructor (name, manager) {
     super(name, manager.container);
     this.manager = manager;
     this.encoder = null;
   }
 
-  log(pci, severity, msgid, msg) {
+  log (pci, severity, msgid, msg) {
     if (!msgid) {
-      msgid = "PROVIDER " + this.name;
+      msgid = `PROVIDER ${this.name}`;
     }
     return super.log(pci, severity, msgid, msg);
   }
 
-  authenticate(token) {
+  authenticate (token) {
     return new Promise((resolve, reject) => {
       if (token && this.supports(token)) {
         return this.loadUserByUsername(token.getUsername())
@@ -28,30 +27,29 @@ class Provider extends nodefony.Service {
               return reject(new nodefony.Error(`user ${token.getUsername()} Incorrect password`, 401));
             }
             return reject(new nodefony.Error(`user ${token.getUsername()} not found `));
-          }).catch((error) => {
-            return reject(error);
-          });
+          })
+          .catch((error) => reject(error));
       }
-      return reject(new nodefony.Error("The token is not supported by this authentication provider " + this.name));
+      return reject(new nodefony.Error(`The token is not supported by this authentication provider ${this.name}`));
     });
   }
 
-  async loadUserByUsername( /*username*/ ) {
+  async loadUserByUsername (/* username*/) {
     throw new nodefony.Error(`Provider : ${this.name} loadUserByUsername method  not defined`);
   }
 
-  async isPasswordValid(raw, encoded) {
+  async isPasswordValid (raw, encoded) {
     return encoded === raw;
   }
 
-  async refreshUser(user) {
+  async refreshUser (user) {
     if (user instanceof nodefony.User) {
       return await this.loadUserByUsername(user.getUsername());
     }
     throw new nodefony.Error("refreshUser bad user type");
   }
 
-  supports( /*token*/ ) {
+  supports (/* token*/) {
     return true;
   }
 }

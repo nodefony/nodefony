@@ -1,29 +1,26 @@
-var http = require("http");
-var https = require("https");
-var WebSocketClient = require('websocket').client;
+const http = require("http");
+const https = require("https");
+const WebSocketClient = require("websocket").client;
 const request = require("request");
-const assert = require('assert');
+const assert = require("assert");
 
-describe("BUNDLE TEST", function () {
-
-  before(function () {
+describe("BUNDLE TEST", () => {
+  before(() => {
     global.options = {
-      url: "http://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpPort,
-      urlws: 'ws://' + kernel.settings.system.domain + ':' + kernel.settings.system.httpPort
+      url: `http://${kernel.settings.system.domain}:${kernel.settings.system.httpPort}`,
+      urlws: `ws://${kernel.settings.system.domain}:${kernel.settings.system.httpPort}`
     };
 
-    var serviceSession = kernel.get("sessions");
+    const serviceSession = kernel.get("sessions");
     global.startSesion = serviceSession.settings.start;
   });
 
-  describe('SESSION START HTTP', function () {
-
-    it("SESSION-NO-SESSION", function (done) {
-
+  describe("SESSION START HTTP", () => {
+    it("SESSION-NO-SESSION", (done) => {
       if (global.startSesion === false) {
-        var url = global.options.url;
-        var options = nodefony.extend({}, global.options, {
-          url: url + "/test/unit/session/none"
+        const {url} = global.options;
+        const options = nodefony.extend({}, global.options, {
+          url: `${url}/test/unit/session/none`
         });
         request(options, (error, res, body) => {
           if (error) {
@@ -39,10 +36,10 @@ describe("BUNDLE TEST", function () {
       }
     });
 
-    it("SESSION-START", function (done) {
-      var url = global.options.url;
-      var options = nodefony.extend({}, global.options, {
-        url: url + "/test/unit/session/start"
+    it("SESSION-START", (done) => {
+      const {url} = global.options;
+      const options = nodefony.extend({}, global.options, {
+        url: `${url}/test/unit/session/start`
       });
       request(options, (error, res, body) => {
         if (error) {
@@ -56,7 +53,7 @@ describe("BUNDLE TEST", function () {
             throw e;
           }
         }
-        let ret = JSON.parse(body);
+        const ret = JSON.parse(body);
         assert.deepStrictEqual(ret.id, id);
         assert.deepStrictEqual(ret.name, "nodefony");
         assert.deepStrictEqual(ret.strategy, "migrate");
@@ -65,10 +62,10 @@ describe("BUNDLE TEST", function () {
         done();
       });
     });
-    it("SESSION-INVALIDATE", function (done) {
-      var url = global.options.url;
-      var options = nodefony.extend({}, global.options, {
-        url: url + "/test/unit/session/invalidate"
+    it("SESSION-INVALIDATE", (done) => {
+      const {url} = global.options;
+      const options = nodefony.extend({}, global.options, {
+        url: `${url}/test/unit/session/invalidate`
       });
       request(options, (error, res, body) => {
         if (error) {
@@ -82,7 +79,7 @@ describe("BUNDLE TEST", function () {
             throw e;
           }
         }
-        let ret = JSON.parse(body);
+        const ret = JSON.parse(body);
         assert.deepStrictEqual(ret.id, id);
         assert.notEqual(ret.oldId, id);
         assert.deepStrictEqual(ret.name, "nodefony");
@@ -92,10 +89,10 @@ describe("BUNDLE TEST", function () {
         done();
       });
     });
-    it("SESSION-MIGRATE", function (done) {
-      var url = global.options.url;
-      var options = nodefony.extend({}, global.options, {
-        url: url + "/test/unit/session/migrate"
+    it("SESSION-MIGRATE", (done) => {
+      const {url} = global.options;
+      const options = nodefony.extend({}, global.options, {
+        url: `${url}/test/unit/session/migrate`
       });
       request(options, (error, res, body) => {
         if (error) {
@@ -109,7 +106,7 @@ describe("BUNDLE TEST", function () {
             throw e;
           }
         }
-        let ret = JSON.parse(body);
+        const ret = JSON.parse(body);
         assert.deepStrictEqual(ret.id, id);
         assert.notEqual(ret.oldId, id);
         assert.deepStrictEqual(ret.name, "nodefony");
@@ -121,54 +118,51 @@ describe("BUNDLE TEST", function () {
     });
   });
 
-  describe('SESSION START WEBSOCKET', function () {
-
-    it("WEBSOCKET", function (done) {
-      var url = global.options.urlws;
-      var options = nodefony.extend({}, global.options, {
-        url: url + "/test/unit/session/none"
+  describe("SESSION START WEBSOCKET", () => {
+    it("WEBSOCKET", (done) => {
+      const url = global.options.urlws;
+      const options = nodefony.extend({}, global.options, {
+        url: `${url}/test/unit/session/none`
       });
-      var client = new WebSocketClient();
+      const client = new WebSocketClient();
       client.connect(options.url, null, url, null, {});
-      client.on('connect', function (connection) {
+      client.on("connect", (connection) => {
         connection.on("message", (message) => {
-          var res = JSON.parse(message.utf8Data);
+          const res = JSON.parse(message.utf8Data);
           assert.deepStrictEqual(res.id, null);
           connection.close();
         });
-        connection.on('close', (reasonCode, description) => {
+        connection.on("close", (reasonCode, description) => {
           done();
         });
       });
-      client.on('connectFailed', function () {
+      client.on("connectFailed", () => {
         throw new Error("websoket client error");
       });
     });
-    it("SESSION-START", function (done) {
-      var url = global.options.urlws;
-      var options = nodefony.extend({}, global.options, {
-        url: url + "/test/unit/session/start"
+    it("SESSION-START", (done) => {
+      const url = global.options.urlws;
+      const options = nodefony.extend({}, global.options, {
+        url: `${url}/test/unit/session/start`
       });
 
-      var client = new WebSocketClient();
-      client.on('connect', function (connection) {
-        //console.log(connection)
-        //FIXME try to get cookies with websocket client ????
+      const client = new WebSocketClient();
+      client.on("connect", (connection) => {
+        // console.log(connection)
+        // FIXME try to get cookies with websocket client ????
 
         connection.on("message", (message) => {
-
-          var res = JSON.parse(message.utf8Data);
+          const res = JSON.parse(message.utf8Data);
           if (res.foo) {
             return connection.close();
           }
-          //assert.deepStrictEqual(res.id, id);
+          // assert.deepStrictEqual(res.id, id);
           assert.deepStrictEqual(res.name, "nodefony");
           assert.deepStrictEqual(res.strategy, "migrate");
           assert.deepStrictEqual(res.contextSession, "default");
           assert.deepStrictEqual(res.status, "active");
-
         });
-        connection.on('close', (reasonCode, description) => {
+        connection.on("close", (reasonCode, description) => {
           done();
         });
 
@@ -178,36 +172,72 @@ describe("BUNDLE TEST", function () {
           }));
         }, 500);
       });
-      client.on('connectFailed', function () {
+      client.on("connectFailed", () => {
+        throw new Error("websoket client error");
+      });
+      client.connect(options.url, null, url, null, {});
+    });
+
+    it("SESSION-INVALIDATE", (done) => {
+      const url = global.options.urlws;
+      const options = nodefony.extend({}, global.options, {
+        url: `${url}/test/unit/session/invalidate`
+      });
+      const client = new WebSocketClient();
+      client.on("connect", (connection) => {
+        // console.log(connection)
+        // FIXME try to get cookies with websocket client ????
+
+        connection.on("message", (message) => {
+          const res = JSON.parse(message.utf8Data);
+          if (res.foo) {
+            return connection.close();
+          }
+          // assert.deepStrictEqual(res.id, id);
+          // assert.notEqual(res.oldId, id);
+          assert.deepStrictEqual(res.name, "nodefony");
+          assert.deepStrictEqual(res.strategy, "migrate");
+          assert.deepStrictEqual(res.contextSession, "default");
+          assert.deepStrictEqual(res.status, "active");
+        });
+        connection.on("close", (reasonCode, description) => {
+          done();
+        });
+
+        setTimeout(() => {
+          connection.sendUTF(JSON.stringify({
+            foo: "bar"
+          }));
+        }, 500);
+      });
+      client.on("connectFailed", () => {
         throw new Error("websoket client error");
       });
       client.connect(options.url, null, url, null, {});
     });
 
-    it("SESSION-INVALIDATE", function (done) {
-      var url = global.options.urlws;
-      var options = nodefony.extend({}, global.options, {
-        url: url + "/test/unit/session/invalidate"
+    it("SESSION-MIGRATE", (done) => {
+      const url = global.options.urlws;
+      const options = nodefony.extend({}, global.options, {
+        url: `${url}/test/unit/session/migrate`
       });
-      var client = new WebSocketClient();
-      client.on('connect', function (connection) {
-        //console.log(connection)
-        //FIXME try to get cookies with websocket client ????
-
+      const client = new WebSocketClient();
+      client.on("connect", (connection) => {
+        // console.log(connection)
+        // FIXME try to get cookies with websocket client ????
         connection.on("message", (message) => {
-          var res = JSON.parse(message.utf8Data);
+          const res = JSON.parse(message.utf8Data);
           if (res.foo) {
             return connection.close();
           }
-          //assert.deepStrictEqual(res.id, id);
-          //assert.notEqual(res.oldId, id);
+          // assert.deepStrictEqual(res.id, id);
+          // assert.notEqual(res.oldId, id);
           assert.deepStrictEqual(res.name, "nodefony");
           assert.deepStrictEqual(res.strategy, "migrate");
           assert.deepStrictEqual(res.contextSession, "default");
           assert.deepStrictEqual(res.status, "active");
-
         });
-        connection.on('close', (reasonCode, description) => {
+        connection.on("close", (reasonCode, description) => {
           done();
         });
 
@@ -217,52 +247,10 @@ describe("BUNDLE TEST", function () {
           }));
         }, 500);
       });
-      client.on('connectFailed', function () {
-        throw new Error("websoket client error");
-      });
-      client.connect(options.url, null, url, null, {});
-
-    });
-
-    it("SESSION-MIGRATE", function (done) {
-      var url = global.options.urlws;
-      var options = nodefony.extend({}, global.options, {
-        url: url + "/test/unit/session/migrate"
-      });
-      var client = new WebSocketClient();
-      client.on('connect', function (connection) {
-        //console.log(connection)
-        //FIXME try to get cookies with websocket client ????
-        connection.on("message", (message) => {
-
-          var res = JSON.parse(message.utf8Data);
-          if (res.foo) {
-            return connection.close();
-          }
-          //assert.deepStrictEqual(res.id, id);
-          //assert.notEqual(res.oldId, id);
-          assert.deepStrictEqual(res.name, "nodefony");
-          assert.deepStrictEqual(res.strategy, "migrate");
-          assert.deepStrictEqual(res.contextSession, "default");
-          assert.deepStrictEqual(res.status, "active");
-
-        });
-        connection.on('close', (reasonCode, description) => {
-          done();
-        });
-
-        setTimeout(() => {
-          connection.sendUTF(JSON.stringify({
-            foo: "bar"
-          }));
-        }, 500);
-      });
-      client.on('connectFailed', function (error) {
+      client.on("connectFailed", (error) => {
         throw new Error(error);
       });
       client.connect(options.url, null, url, null, {});
-
     });
-
   });
 });

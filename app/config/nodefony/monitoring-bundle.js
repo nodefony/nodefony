@@ -12,7 +12,7 @@ module.exports = {
     storage: "orm"
   },
 
-  swagger:{
+  swagger: {
     projectName: "NODEFONY",
     logo: "/app/images/app-logo.png",
     urls: [{
@@ -26,9 +26,9 @@ module.exports = {
   },
 
   // entry point graphigl monitoring
-  graphigl:{
+  graphigl: {
     projectName: "Nodefony Graphql Api",
     logo: "/app/images/app-logo.png",
-    url:"/api/graphql"
-  },
+    url: "/api/graphql"
+  }
 };

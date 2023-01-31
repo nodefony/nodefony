@@ -11,20 +11,20 @@
  */
 
 
-const assert = require('assert');
+const assert = require("assert");
 
-var myObject = {
+const myObject = {
 
   foo: "bar",
   bar: "foo"
 };
 
-var myObject2 = {
+const myObject2 = {
   foo: "bar2",
   bar: "foo2"
 };
 
-var myClass = function() {
+const myClass = function () {
   this.settings = {
     foo: "bar"
   };
@@ -55,30 +55,26 @@ var myClass = function() {
   };
 };
 
-myClass.prototype.getConfig = function() {
+myClass.prototype.getConfig = function () {
   return this.settings;
 };
 
-myClass.prototype.getConfig2 = function() {
+myClass.prototype.getConfig2 = function () {
   return this.setting2;
 };
 
 
+describe("NODEFONY KERNEL ", () => {
+  describe("CONTAINER", () => {
+    beforeEach(() => {});
 
-
-describe("NODEFONY KERNEL ", function() {
-
-  describe('CONTAINER', function() {
-
-    beforeEach(function() {});
-
-    before(function() {
+    before(() => {
       if (!global.globalContainer) {
         global.globalContainer = new nodefony.Container();
       }
     });
 
-    it("LIB LOADED", function(done) {
+    it("LIB LOADED", (done) => {
       // check nodefony namespace
       assert.equal(typeof nodefony, "object");
 
@@ -89,8 +85,7 @@ describe("NODEFONY KERNEL ", function() {
       done();
     });
 
-    it("INSTANCE CONTAINER", function(done) {
-
+    it("INSTANCE CONTAINER", (done) => {
       // YOU CAN REGISTER INSTANCE HERSELF HAS SERVICES
       global.globalContainer.set("global", global.globalContainer);
       let res = global.globalContainer.get("global");
@@ -101,7 +96,7 @@ describe("NODEFONY KERNEL ", function() {
       res = global.globalContainer.get("obj");
       assert.deepStrictEqual(res, myObject);
 
-      var service = global.globalContainer.set("myService", new myClass());
+      const service = global.globalContainer.set("myService", new myClass());
       assert.deepEqual(service.getConfig(), {
         foo: "bar"
       });
@@ -113,19 +108,17 @@ describe("NODEFONY KERNEL ", function() {
       assert.equal(global.globalContainer.getParameters("config.foo"), "bar");
 
 
-
       done();
     });
 
-    it("SCOPE CONTAINER", function(done) {
-
+    it("SCOPE CONTAINER", (done) => {
       // CREATE SCOPE WITH NAME
       global.globalContainer.addScope("request");
       assert.deepEqual(global.globalContainer.scope.request, {});
 
       // CLONE  ;
       global.scope = global.globalContainer.enterScope("request");
-      var id = global.scope.id;
+      const {id} = global.scope;
       assert(global.globalContainer.scope.request[id], "SCOPE  ID  ERROR");
       assert.deepStrictEqual(global.globalContainer, global.scope.parent);
       assert.deepStrictEqual(global.globalContainer.scope.request[id], global.scope);
@@ -136,7 +129,7 @@ describe("NODEFONY KERNEL ", function() {
       assert.deepStrictEqual(global.scope.get("obj2"), myObject2);
 
 
-      var service = global.scope.get("myService");
+      const service = global.scope.get("myService");
       assert.deepEqual(service.getConfig(), {
         foo: "bar"
       });
@@ -157,13 +150,12 @@ describe("NODEFONY KERNEL ", function() {
       done();
     });
 
-    it("EXTENDED SCOPE ALREADY SCOPED", function(done) {
-
+    it("EXTENDED SCOPE ALREADY SCOPED", (done) => {
       global.scope.addScope("response");
       assert.deepEqual(global.scope.scope.response, {});
       // CLONE  ;
-      var scope = global.scope.enterScopeExtended("response");
-      var id = scope.id;
+      const scope = global.scope.enterScopeExtended("response");
+      const {id} = scope;
       assert(global.scope.scope.response[id], "SCOPE  ID  ERROR");
       assert.deepStrictEqual(global.scope, scope.parent);
       assert.deepStrictEqual(global.scope.scope.response[id], scope);
@@ -172,7 +164,7 @@ describe("NODEFONY KERNEL ", function() {
 
       assert.deepStrictEqual(scope.get("obj2"), myObject2);
 
-      var myObj = {
+      const myObj = {
         bar: "foo"
       };
       scope.set("myObj", myObj);
@@ -182,8 +174,8 @@ describe("NODEFONY KERNEL ", function() {
 
       // CHECK extended recursif
       scope.addScope("websocket");
-      //clone
-      var scope2 = scope.enterScope("websocket");
+      // clone
+      const scope2 = scope.enterScope("websocket");
       assert.deepStrictEqual(scope2.get("obj2"), myObject2);
 
 
@@ -204,8 +196,7 @@ describe("NODEFONY KERNEL ", function() {
       done();
     });
 
-    it("Leave and remove Scope ", function(done) {
-
+    it("Leave and remove Scope ", (done) => {
       global.scope.removeScope("response");
       assert.deepEqual(global.scope.scope.response, undefined);
 
@@ -216,11 +207,10 @@ describe("NODEFONY KERNEL ", function() {
       global.globalContainer.removeScope("request");
       assert.deepEqual(global.globalContainer.scope.request, undefined);
       done();
-
     });
 
-    it("After remove scope ", function(done) {
-      var service = global.globalContainer.get("myService");
+    it("After remove scope ", (done) => {
+      const service = global.globalContainer.get("myService");
       assert.deepEqual(service.getConfig(), {
         foo: "bar"
       });
@@ -238,7 +228,5 @@ describe("NODEFONY KERNEL ", function() {
 
       done();
     });
-
   });
-
 });

@@ -20,7 +20,7 @@
  **/
 
 module.exports = {
-  security:{
-    firewalls   :   {}
+  security: {
+    firewalls: {}
   }
 };

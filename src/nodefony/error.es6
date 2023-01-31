@@ -1,10 +1,10 @@
 const assert = require("assert");
-const STATUS_CODES = require("http").STATUS_CODES;
+const {STATUS_CODES} = require("http");
 const json = {
   configurable: true,
   writable: true,
-  value: function () {
-    let alt = {};
+  value () {
+    const alt = {};
     const storeKey = function (key) {
       alt[key] = this[key];
     };
@@ -12,22 +12,22 @@ const json = {
     return alt;
   }
 };
-Object.defineProperty(Error.prototype, 'toJSON', json);
+Object.defineProperty(Error.prototype, "toJSON", json);
 
 const exclude = {
-  context:true,
-  resolver:true,
-  container:true,
-  secure:true
+  context: true,
+  resolver: true,
+  container: true,
+  secure: true
 };
 const jsonNodefony = {
   configurable: true,
   writable: true,
-  value: function () {
-    let alt = {};
+  value () {
+    const alt = {};
     const storeKey = function (key) {
-      if (key in exclude){
-        return ;
+      if (key in exclude) {
+        return;
       }
       alt[key] = this[key];
     };
@@ -54,8 +54,7 @@ const isMongooseError = function (error) {
 };
 
 class nodefonyError extends Error {
-
-  constructor(message, code) {
+  constructor (message, code) {
     super(message);
     this.name = this.constructor.name;
     this.code = null;
@@ -68,11 +67,11 @@ class nodefonyError extends Error {
     }
   }
 
-  toJSON(){
+  toJSON () {
 
   }
 
-  static isError(error) {
+  static isError (error) {
     switch (true) {
     case error instanceof ReferenceError:
       return "ReferenceError";
@@ -102,7 +101,7 @@ class nodefonyError extends Error {
     return false;
   }
 
-  getType(error) {
+  getType (error) {
     const errorType = nodefony.Error.isError(error);
     if (errorType) {
       switch (errorType) {
@@ -170,8 +169,8 @@ class nodefonyError extends Error {
     return "Error";
   }
 
-  toString() {
-    let err = ``;
+  toString () {
+    let err = "";
     switch (this.errorType) {
     case "Error":
       if (kernel && kernel.environment === "prod") {
@@ -237,7 +236,7 @@ class nodefonyError extends Error {
     return err;
   }
 
-  parseMessage(message) {
+  parseMessage (message) {
     this.errorType = this.getType(message);
     switch (nodefony.typeOf(message)) {
     case "Error":
@@ -263,8 +262,8 @@ class nodefonyError extends Error {
         if (message.message) {
           this.message = message.message;
         } else {
-          //this.message = JSON.stringify(message);
-          this.message = util.inspect(message,{depth:0});
+          // this.message = JSON.stringify(message);
+          this.message = util.inspect(message, {depth: 0});
         }
       } catch (e) {
         this.error = e;
@@ -275,21 +274,20 @@ class nodefonyError extends Error {
     }
   }
 
-  getDefaultMessage() {
+  getDefaultMessage () {
     if (!this.message && this.code) {
-      let str = this.code.toString();
+      const str = this.code.toString();
       if (str in STATUS_CODES) {
         this.message = STATUS_CODES[str];
       }
     }
   }
 
-  logger() {
+  logger () {
     return console.log(this.toString());
   }
-
 }
 
-Object.defineProperty(nodefonyError.prototype, 'toJSON', jsonNodefony);
+Object.defineProperty(nodefonyError.prototype, "toJSON", jsonNodefony);
 
 module.exports = nodefonyError;

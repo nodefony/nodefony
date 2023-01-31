@@ -9,14 +9,12 @@
  *
  */
 module.exports = class testBundle extends nodefony.Bundle {
-
-  constructor(name, kernel, container) {
-
+  constructor (name, kernel, container) {
     // Mother Class constructor
     super(name, kernel, container);
 
     // Load core bundle library
-    //this.autoLoader.loadDirectory(this.path + "/src");
+    // this.autoLoader.loadDirectory(this.path + "/src");
 
 
     /*
@@ -24,6 +22,5 @@ module.exports = class testBundle extends nodefony.Bundle {
      *
      *      this.waitBundleReady = true ;
      */
-
   }
 };

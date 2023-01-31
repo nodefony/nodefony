@@ -1,22 +1,22 @@
-import nodefony from 'nodefony-client';
-import qs from 'querystring';
-import moment from 'moment';
-import 'moment/locale/fr';
-//import media from "nodefony-client/src/medias/medias";
-//media(nodefony);
-import Logo from './images/nodefony-logo.png'
+import nodefony from "nodefony-client";
+import qs from "querystring";
+import moment from "moment";
+import "moment/locale/fr";
+// import media from "nodefony-client/src/medias/medias";
+// media(nodefony);
+import Logo from "./images/nodefony-logo.png";
 
 import {
-  //defineComponent,
+  // defineComponent,
   createVNode,
   render
-} from 'vue';
+} from "vue";
 
-import snackBar from './notify/NsnackbarNotify';
-import alert from './notify/NalertNotify';
+import snackBar from "./notify/NsnackbarNotify";
+import alert from "./notify/NalertNotify";
 
 class Nodefony extends nodefony.Kernel {
-  constructor(name, settings) {
+  constructor (name, settings) {
     if (typeof settings.VUE_APP_DEBUG === "string") {
       if (settings.VUE_APP_DEBUG === "false") {
         settings.VUE_APP_DEBUG = false;
@@ -40,27 +40,28 @@ class Nodefony extends nodefony.Kernel {
     });
     this.notifyTab = new Map();
     this.application = null;
-    this.logo = Logo
+    this.logo = Logo;
   }
 
-  showBanner() {
-    this.logger(`${this.name}\n\n`,
+  showBanner () {
+    this.logger(
+      `${this.name}\n\n`,
       `\tVersion :\t\t\t ${this.version}\n`,
       `\tenvironment :\t\t ${this.environment}\n`,
       `\tnodefony-client :\t ${nodefony.version}\n`,
       `\tvue :\t\t\t\t ${this.vueVersion}\n`,
       `\tvuetify :\t\t\t ${this.vuetifyVersion}\n`,
-      `\tdebug :\t\t\t\t`,
+      "\tdebug :\t\t\t\t",
       this.debug,
-      `\n\n\n`
+      "\n\n\n"
     );
   }
 
-  queryString(data) {
-    return qs.stringify(data)
+  queryString (data) {
+    return qs.stringify(data);
   }
 
-  request(...args) {
+  request (...args) {
     return this.api.http(...args)
       .then((result) => {
         if (result.error) {
@@ -88,7 +89,7 @@ class Nodefony extends nodefony.Kernel {
   }
 
   // hooy plugins vue
-  async install(app, options) {
+  async install (app, options) {
     this.store = options.store;
     this.router = options.router;
     this.vuetify = options.vuetify;
@@ -96,52 +97,40 @@ class Nodefony extends nodefony.Kernel {
     this.app = app;
     this.moment = moment;
     this.showBanner();
-    //this.log(`Add Plugin nodefony : ${this.version}`, "INFO");
-    //this.log(`Nodefony Domain : ${this.domain}`);
+    // this.log(`Add Plugin nodefony : ${this.version}`, "INFO");
+    // this.log(`Nodefony Domain : ${this.domain}`);
     this.client = nodefony;
-    app.config.globalProperties.log = (...args) => {
-      return this.log(...args);
-    };
-    app.config.globalProperties.logger = (...args) => {
-      return this.logger(...args);
-    };
-    app.config.globalProperties.notify = (...args) => {
-      return this.notify(...args);
-    };
+    app.config.globalProperties.log = (...args) => this.log(...args);
+    app.config.globalProperties.logger = (...args) => this.logger(...args);
+    app.config.globalProperties.notify = (...args) => this.notify(...args);
     app.config.globalProperties.$moment = this.moment;
-    app.provide('nodefony', this);
-    app.provide('log', (...args) => {
-      return this.log(...args);
-    });
-    app.provide('logger', (...args) => {
-      return this.logger(...args);
-    });
-    app.provide('notify', (...args) => {
-      return this.notify(...args);
-    });
-    app.provide('moment', this.moment);
+    app.provide("nodefony", this);
+    app.provide("log", (...args) => this.log(...args));
+    app.provide("logger", (...args) => this.logger(...args));
+    app.provide("notify", (...args) => this.notify(...args));
+    app.provide("moment", this.moment);
   }
 
 
-  notify(pdu, options = {}, type = "snackBar", element = null) {
+  notify (pdu, options = {}, type = "snackBar", element = null) {
     let vNode = null;
     let props = null;
     switch (type) {
-      case 'snackBar':
-        props = nodefony.extend({
-          pdu,
-          timeout: 10000
-        }, options);
-        vNode = createVNode(snackBar, props, this.app);
-        break;
-      case 'alert':
-        props = nodefony.extend({
-          pdu
-        }, options);
-        vNode = createVNode(alert, props, this.app);
-        break;
+    case "snackBar":
+      props = nodefony.extend({
+        pdu,
+        timeout: 10000
+      }, options);
+      vNode = createVNode(snackBar, props, this.app);
+      break;
+    case "alert":
+      props = nodefony.extend({
+        pdu
+      }, options);
+      vNode = createVNode(alert, props, this.app);
+      break;
     }
-    //console.log(this.application.vnode.el, vNode)
+    // console.log(this.application.vnode.el, vNode)
 
     if (this.app && this.app._context) {
       vNode.appContext = this.app._context;
@@ -150,7 +139,7 @@ class Nodefony extends nodefony.Kernel {
     if (element) {
       render(vNode, element);
     } else {
-      //render(vNode, this.application.vnode.el)
+      // render(vNode, this.application.vnode.el)
       element = document.body;
       render(vNode, element);
     }
@@ -164,7 +153,7 @@ class Nodefony extends nodefony.Kernel {
       element = null;
       vNode = null;
     };
-    const close = function(message) {
+    const close = function (message) {
       if (message.uid === pdu.uid) {
         console.log("close pdu", pdu, close);
         destroy();
@@ -175,7 +164,7 @@ class Nodefony extends nodefony.Kernel {
 
     return vNode;
 
-    /*const div = document.createElement("div");
+    /* const div = document.createElement("div");
     document.body.appendChild(div);
 
     const snack = defineComponent({
@@ -183,20 +172,19 @@ class Nodefony extends nodefony.Kernel {
     })
     console.log(snack)*/
 
-    //options.props = {pdu}
-    //const snackbarInstance = createApp(snackBar, options);
-    //snackbarInstance.mount(div);
+    // options.props = {pdu}
+    // const snackbarInstance = createApp(snackBar, options);
+    // snackbarInstance.mount(div);
 
-    //snackbarInstance.unmount(div);
-    //document.body.removeChild(div);
+    // snackbarInstance.unmount(div);
+    // document.body.removeChild(div);
 
 
-
-    //let container = this.app.$el;
-    //console.log(this.app.refs, defineComponent)
+    // let container = this.app.$el;
+    // console.log(this.app.refs, defineComponent)
   }
 
-  /*notify(pdu, options = {}, type = "snackBar", element = null) {
+  /* notify(pdu, options = {}, type = "snackBar", element = null) {
     let container = this.application.$el;
     if (element) {
       container = element;
@@ -244,7 +232,6 @@ class Nodefony extends nodefony.Kernel {
     container.appendChild(component.$el);
     return component;
   }*/
-
 }
 nodefony.kernel = new Nodefony("VUE-NODEFONY-PLUGIN", process.env);
 

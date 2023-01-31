@@ -17,7 +17,7 @@ module.exports = {
 }
 ```
 
-### Override mail-bundle configuration your bundle  
+### Override mail-bundle configuration your bundle
 
 #### <code>./app/config/config.js</code>
 
@@ -94,7 +94,7 @@ async indexAction() {
       }else{
         return this.redirectToRoute("myroute");
       }
-      break;    
+      break;
   }
 }
 

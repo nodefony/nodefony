@@ -1,11 +1,10 @@
 class generateProject extends nodefony.Builder {
-
-  constructor(cli, cmd, args) {
+  constructor (cli, cmd, args) {
     super(cli, cmd, args);
     this.name = null;
     this.pathSkeleton = path.resolve(__dirname, "skeletons");
     this.bundleUsersPath = path.resolve(nodefony.path, "cli", "builder", "bundles", "users-bundle");
-    //this.bundlePath = path.resolve(nodefony.path, "cli", "builder", "bundles", "users-bundle");
+    // this.bundlePath = path.resolve(nodefony.path, "cli", "builder", "bundles", "users-bundle");
     if (this.cmd === "create:project" || this.cmd === "create") {
       if (args && args[0]) {
         this.name = args[0];
@@ -32,7 +31,7 @@ class generateProject extends nodefony.Builder {
       version: nodefony.version,
       year: new Date().getFullYear(),
       orm: "sequelize",
-      npm: 'npm',
+      npm: "npm",
       addons: {
         annotations: true,
         users: true
@@ -45,7 +44,7 @@ class generateProject extends nodefony.Builder {
     this.setEnv();
   }
 
-  generate(response) {
+  generate (response) {
     return super.generate(response, true)
       .then(() => {
         if (!this.buildFront) {
@@ -72,190 +71,187 @@ class generateProject extends nodefony.Builder {
       });
   }
 
-  generateUserBundle() {
+  generateUserBundle () {
     return new Promise((resolve, reject) => {
-      this.log('Copy users-bundle in src/bundles', "INFO", "USERS-BUNDLE");
+      this.log("Copy users-bundle in src/bundles", "INFO", "USERS-BUNDLE");
       try {
-        let mypath = path.resolve(this.path, "src", "bundles");
-        this.cli.cp('-Rf', this.bundleUsersPath, mypath);
+        const mypath = path.resolve(this.path, "src", "bundles");
+        this.cli.cp("-Rf", this.bundleUsersPath, mypath);
         return this.cli.packageManager.call(this.cli, ["install"], path.resolve(mypath, "users-bundle"))
-          .then((res) => {
-            return resolve(res);
-          });
+          .then((res) => resolve(res));
       } catch (e) {
         return reject(e);
       }
     });
   }
 
-  async interaction() {
-    let promtOptions = [{
-        type: 'input',
-        name: 'name',
-        default: this.response.name,
-        message: 'Enter Nodefony Project Name',
-        validate: (value) => {
-          if (value && value !== "nodefony") {
-            this.name = value;
-            nodefony.projectName = value;
-            return true;
-          }
-          return `${value} Unauthorised Please enter a valid project name`;
-        }
-      }, {
-        type: 'input',
-        name: 'description',
-        message: 'Enter short description',
-        default: "Project Description",
-        validate: (value) => {
-          if (!value) {
-            this.cli.response.description = `${this.response.description} ${this.name}`;
-          }
+  async interaction () {
+    const promtOptions = [{
+      type: "input",
+      name: "name",
+      default: this.response.name,
+      message: "Enter Nodefony Project Name",
+      validate: (value) => {
+        if (value && value !== "nodefony") {
+          this.name = value;
+          nodefony.projectName = value;
           return true;
-        },
-        filter: (value) => {
-          if (!value) {
-            return this.response.description;
-          }
-          if (value === "Project Description") {
-            return this.response.description;
-          }
-          return value;
         }
-      }, {
-        type: 'list',
-        name: 'front',
-        default: 0,
-        pageSize: 5,
-        choices: [{
-          name: "Sandbox (without Front framwork)"
-        }, {
-          name: "Vue.js"
-        }, {
-          name: "React"
-        }, {
-          name: "Electron",
-          disabled: true
-        }],
-        message: 'Choose Project Application Type (Mapping Front Framework in App) :',
-        filter: (value) => {
-          let front = null;
-          switch (value) {
-            case "Sandbox (without Front framwork)":
-              front = "sandbox";
-              break;
-            case "Vue.js":
-              front = "vue";
-              break;
-            case "React":
-              front = 'react';
-              break;
-            case "Electron":
-              front = 'electron';
-              break;
-            default:
-              front = value;
-          }
-          return front;
-        }
-      }, {
-        type: 'input',
-        name: 'path',
-        default: this.location,
-        message: 'Project Path',
-        validate: (value) => {
-          let myPath = null;
-          try {
-            myPath = new nodefony.fileClass(path.resolve(value));
-          } catch (e) {
-            return e.message;
-          }
-          let res = nodefony.isNodefonyTrunk(myPath.path);
-          if (res) {
-            return "You can't install project in nodefony Trunk project !";
-          }
-          if (value) {
-            this.location = value;
-            return true;
-          }
-          return 'Please enter a valid project Path';
-        }
-      }, {
-        type: 'input',
-        name: 'authorFullName',
-        default: this.response.authorFullName,
-        message: 'Please Enter Author Full Name',
-        filter: (value) => {
-          if (!value) {
-            this.response.authorName = this.response.authorFullName;
-            return this.response.authorFullName;
-          }
-          return value;
-        }
-      }, {
-        type: 'input',
-        name: 'authorMail',
-        default: this.response.authorMail,
-        message: 'Please Enter Email Author ',
-        filter: (value) => {
-          if (!value) {
-            return this.response.authorMail;
-          }
-          return value;
-        }
-      }, {
-        type: 'input',
-        name: 'domain',
-        default: this.response.domain,
-        message: 'Enter Server Domain :',
-      }, {
-        type: 'input',
-        name: 'portHttp',
-        default: this.response.portHttp,
-        message: 'Enter server Domain http Port  :',
-      }, {
-        type: 'input',
-        name: 'portHttps',
-        default: this.response.portHttps,
-        message: 'Enter Server Secure Domain https Port  :',
-      }, {
-        type: 'list',
-        name: 'orm',
-        default: 0,
-        pageSize: 2,
-        choices: ["sequelize", "mongoose"],
-        message: 'Choose default ORM  (Mapping Objet Relationnel) :'
-      }, {
-        type: 'list',
-        name: 'packageManager',
-        message: 'Choose a default Package Manager : ',
-        default: 0,
-        pageSize: 2,
-        choices: ["npm", "yarn", "pnpm"],
-        filter: (value) => {
-          if (this.cli[value]) {
-            this.cli.packageManager = this.cli[value];
-          } else {
-            throw new Error(`Package Manager ${value} not available ! `);
-          }
-          return value;
-        }
-      }, {
-        type: 'checkbox',
-        message: 'Select addons project',
-        name: 'addons',
-        pageSize: 10,
-        choices: [{
-          name: 'Users Management',
-          message: "Bootstrap only",
-          checked: this.response.addons.users,
-          disabled: (this.cli.response.command === "bundle")
-        }],
-        filter: (value) => {
-          return value;
-        }
+        return `${value} Unauthorised Please enter a valid project name`;
       }
-      /*, {
+    }, {
+      type: "input",
+      name: "description",
+      message: "Enter short description",
+      default: "Project Description",
+      validate: (value) => {
+        if (!value) {
+          this.cli.response.description = `${this.response.description} ${this.name}`;
+        }
+        return true;
+      },
+      filter: (value) => {
+        if (!value) {
+          return this.response.description;
+        }
+        if (value === "Project Description") {
+          return this.response.description;
+        }
+        return value;
+      }
+    }, {
+      type: "list",
+      name: "front",
+      default: 0,
+      pageSize: 5,
+      choices: [{
+        name: "Sandbox (without Front framwork)"
+      }, {
+        name: "Vue.js"
+      }, {
+        name: "React"
+      }, {
+        name: "Electron",
+        disabled: true
+      }],
+      message: "Choose Project Application Type (Mapping Front Framework in App) :",
+      filter: (value) => {
+        let front = null;
+        switch (value) {
+        case "Sandbox (without Front framwork)":
+          front = "sandbox";
+          break;
+        case "Vue.js":
+          front = "vue";
+          break;
+        case "React":
+          front = "react";
+          break;
+        case "Electron":
+          front = "electron";
+          break;
+        default:
+          front = value;
+        }
+        return front;
+      }
+    }, {
+      type: "input",
+      name: "path",
+      default: this.location,
+      message: "Project Path",
+      validate: (value) => {
+        let myPath = null;
+        try {
+          myPath = new nodefony.fileClass(path.resolve(value));
+        } catch (e) {
+          return e.message;
+        }
+        const res = nodefony.isNodefonyTrunk(myPath.path);
+        if (res) {
+          return "You can't install project in nodefony Trunk project !";
+        }
+        if (value) {
+          this.location = value;
+          return true;
+        }
+        return "Please enter a valid project Path";
+      }
+    }, {
+      type: "input",
+      name: "authorFullName",
+      default: this.response.authorFullName,
+      message: "Please Enter Author Full Name",
+      filter: (value) => {
+        if (!value) {
+          this.response.authorName = this.response.authorFullName;
+          return this.response.authorFullName;
+        }
+        return value;
+      }
+    }, {
+      type: "input",
+      name: "authorMail",
+      default: this.response.authorMail,
+      message: "Please Enter Email Author ",
+      filter: (value) => {
+        if (!value) {
+          return this.response.authorMail;
+        }
+        return value;
+      }
+    }, {
+      type: "input",
+      name: "domain",
+      default: this.response.domain,
+      message: "Enter Server Domain :"
+    }, {
+      type: "input",
+      name: "portHttp",
+      default: this.response.portHttp,
+      message: "Enter server Domain http Port  :"
+    }, {
+      type: "input",
+      name: "portHttps",
+      default: this.response.portHttps,
+      message: "Enter Server Secure Domain https Port  :"
+    }, {
+      type: "list",
+      name: "orm",
+      default: 0,
+      pageSize: 2,
+      choices: ["sequelize", "mongoose"],
+      message: "Choose default ORM  (Mapping Objet Relationnel) :"
+    }, {
+      type: "list",
+      name: "packageManager",
+      message: "Choose a default Package Manager : ",
+      default: 0,
+      pageSize: 2,
+      choices: ["npm", "yarn", "pnpm"],
+      filter: (value) => {
+        if (this.cli[value]) {
+          this.cli.packageManager = this.cli[value];
+        } else {
+          throw new Error(`Package Manager ${value} not available ! `);
+        }
+        return value;
+      }
+    }, {
+      type: "checkbox",
+      message: "Select addons project",
+      name: "addons",
+      pageSize: 10,
+      choices: [{
+        name: "Users Management",
+        message: "Bootstrap only",
+        checked: this.response.addons.users,
+        disabled: this.cli.response.command === "bundle"
+      }],
+      filter: (value) => value
+    }
+
+      /* , {
               type: 'confirm',
               name: 'bundle',
               message: 'Do You Want Generate Bundle?',
@@ -264,15 +260,15 @@ class generateProject extends nodefony.Builder {
     ];
     return this.cli.prompt(promtOptions)
       .then((response) => {
-        let addons = {
+        const addons = {
           users: false
         };
         if (response.addons.length) {
           for (let i = 0; i < response.addons.length; i++) {
             switch (response.addons[i]) {
-              case "Users Management":
-                addons.users = true;
-                break;
+            case "Users Management":
+              addons.users = true;
+              break;
             }
           }
         }
@@ -285,25 +281,29 @@ class generateProject extends nodefony.Builder {
               if (myresponse.remove) {
                 return response;
               }
-              let error = new Error(`${this.path} Already exist`);
+              const error = new Error(`${this.path} Already exist`);
               error.code = 0;
               throw error;
-            }).catch((e) => {
+            })
+            .catch((e) => {
               throw e;
             });
         }
         return response;
-      }).catch(e => {
+      })
+      .catch((e) => {
         throw e;
       });
   }
 
-  getPadDate() {
-    //return new Date().toISOString().split('.')[0].replace(/[^\d]/gi, '')
-    return new Date().toISOString().replace(/\.\d{3}Z$/, '').replace(/\W/g, '.');
+  getPadDate () {
+    // return new Date().toISOString().split('.')[0].replace(/[^\d]/gi, '')
+    return new Date().toISOString()
+      .replace(/\.\d{3}Z$/, "")
+      .replace(/\W/g, ".");
   }
 
-  createBuilder(response) {
+  createBuilder (response) {
     try {
       return {
         name: this.response.name,
@@ -377,10 +377,10 @@ class generateProject extends nodefony.Builder {
             }]
           }, {
             name: "mongoose",
-            type: "directory",
+            type: "directory"
           }, {
             name: "seedeers",
-            type: "directory",
+            type: "directory"
           }]
         }, {
           name: "config",

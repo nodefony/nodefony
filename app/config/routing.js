@@ -1,20 +1,21 @@
 // ROUTING
 
 module.exports = {
-  /*home: {
+
+  /* home: {
     pattern: "/",
     defaults: {
       controller: "app:app:index"
     }
   },*/
-  /*documentation: {
+  /* documentation: {
     pattern: "/documentation",
     defaults: {
       controller: "app:app:documentation"
     }
   }*/
-  //GOOGLE AUTH AREA
-  /*googleArea: {
+  // GOOGLE AUTH AREA
+  /* googleArea: {
     pattern: "/login/google",
     defaults: {
       controller: "framework:default:401"

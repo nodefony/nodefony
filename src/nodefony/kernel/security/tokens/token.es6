@@ -1,6 +1,5 @@
 class Token {
-
-  constructor(name, roles = []) {
+  constructor (name, roles = []) {
     this.name = name;
     this.roles = [];
     this.setRoles(roles);
@@ -11,20 +10,20 @@ class Token {
     this.provider = null;
   }
 
-  setFactory(name) {
+  setFactory (name) {
     this.factory = name;
   }
 
-  setProvider(provider) {
+  setProvider (provider) {
     this.provider = provider;
   }
 
-  getRoles() {
+  getRoles () {
     return this.roles;
   }
 
-  hasRole(name) {
-    for (let role in this.roles) {
+  hasRole (name) {
+    for (const role in this.roles) {
       if (this.roles[role].role === name) {
         return true;
       }
@@ -32,7 +31,7 @@ class Token {
     return false;
   }
 
-  setRoles(roles) {
+  setRoles (roles) {
     switch (nodefony.typeOf(roles)) {
     case "string":
       if (!this.hasRole(roles)) {
@@ -55,14 +54,12 @@ class Token {
         if (!this.hasRole(roles.role)) {
           this.roles.push(roles);
         }
-      } else {
-        if (roles.role) {
-          if (!this.hasRole(roles.role)) {
-            this.roles.push(new nodefony.Role(roles.role));
-          }
-        } else {
-          throw new Error("Bad typeof roles ");
+      } else if (roles.role) {
+        if (!this.hasRole(roles.role)) {
+          this.roles.push(new nodefony.Role(roles.role));
         }
+      } else {
+        throw new Error("Bad typeof roles ");
       }
       break;
     default:
@@ -70,22 +67,22 @@ class Token {
     }
   }
 
-  getCredentials() {
+  getCredentials () {
     return this.credentials;
   }
 
-  eraseCredentials() {
+  eraseCredentials () {
     if (this.user instanceof nodefony.User) {
       this.user.eraseCredentials();
     }
     this.credentials = "";
   }
 
-  getUser() {
+  getUser () {
     return this.user;
   }
 
-  setUser(user) {
+  setUser (user) {
     if (user instanceof nodefony.User) {
       this.user = user;
       this.setRoles(this.user.roles);
@@ -96,24 +93,24 @@ class Token {
     return this.user;
   }
 
-  getUsername() {
+  getUsername () {
     if (this.user instanceof nodefony.User) {
       return this.user.getUsername();
     }
     return this.user;
   }
 
-  isAuthenticated() {
+  isAuthenticated () {
     return this.authenticated;
   }
 
-  setAuthenticated(val) {
+  setAuthenticated (val) {
     this.authenticated = val;
   }
 
-  refreshToken(context) {
+  refreshToken (context) {
     if (this.provider) {
-      let user = context.user;
+      const {user} = context;
       return this.provider.loadUserByUsername(user.username)
         .then((user) => {
           this.roles = [];
@@ -127,7 +124,7 @@ class Token {
     }
   }
 
-  serialize() {
+  serialize () {
     let user = null;
     if (this.user && this.user.serialize) {
       user = this.user.serialize();
@@ -135,16 +132,16 @@ class Token {
     return {
       name: this.name,
       roles: this.roles,
-      user: user,
+      user,
       authenticated: this.authenticated,
       factory: this.factory,
       provider: this.provider ? this.provider.name : null
     };
   }
 
-  unserialize(token) {
+  unserialize (token) {
     try {
-      for (let ele in token) {
+      for (const ele in token) {
         switch (ele) {
         case "name":
           break;

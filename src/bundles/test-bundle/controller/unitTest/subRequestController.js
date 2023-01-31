@@ -1,27 +1,26 @@
 module.exports = class subRequestController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
   }
 
-  indexAction() {
-
+  indexAction () {
     return this.render("testBundle:unitTest:subrequest.html.twig", {
       title: "sub-request"
     });
   }
 
-  subAction() {
-    //console.log("PASS")
+  subAction () {
+    // console.log("PASS")
     return this.renderResponse("<h1>SUB-REQUEST</h1>");
   }
 
-  sub2Action() {
-    //console.log("PASS2")
+  sub2Action () {
+    // console.log("PASS2")
     return this.renderResponse("<h1>SUB-REQUEST-2</h1>");
   }
-  sub3Action() {
-    //console.log("PASS3")
+
+  sub3Action () {
+    // console.log("PASS3")
     return this.renderJson({
       foo: "bar"
     });

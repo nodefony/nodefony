@@ -1,21 +1,20 @@
-const mime = require('mime');
-const crypto = require('crypto');
+const mime = require("mime");
+const crypto = require("crypto");
 const checkPath = function (myPath) {
   if (!myPath) {
     return null;
   }
-  let abs = path.isAbsolute(myPath);
+  const abs = path.isAbsolute(myPath);
   if (abs) {
     return myPath;
-  } else {
-    return path.resolve(process.cwd(), myPath);
   }
+  return path.resolve(process.cwd(), myPath);
 };
 const regHidden = /^\./;
 const defautWriteOption = {
-  flags: 'w',
-  defaultEncoding: 'utf8'
-  //mode: 0o666
+  flags: "w",
+  defaultEncoding: "utf8"
+  // mode: 0o666
 };
 
 /*
@@ -25,7 +24,7 @@ const defautWriteOption = {
  *
  */
 class File {
-  constructor(Path) {
+  constructor (Path) {
     if (Path) {
       Path = checkPath(Path);
       this.stats = fs.lstatSync(Path);
@@ -42,22 +41,22 @@ class File {
       this.shortName = this.parse.name;
       if (this.type === "File") {
         this.mimeType = this.getMimeType(this.name);
-        this.encoding = "UTF-8"; //this.getCharset();
+        this.encoding = "UTF-8"; // this.getCharset();
         this.extention = this.getExtension(this.mimeType);
       }
       this.dirName = this.parse.dir;
       this.match = null;
     } else {
-      throw new Error("error fileClass Path : " + Path);
+      throw new Error(`error fileClass Path : ${Path}`);
     }
   }
 
-  toString() {
+  toString () {
     return JSON.stringify(this.toJson(), null, "\n");
   }
 
-  toJson() {
-    let obj = {
+  toJson () {
+    const obj = {
       path: this.path,
       name: this.name,
       ext: this.ext,
@@ -75,7 +74,7 @@ class File {
     return obj;
   }
 
-  checkType() {
+  checkType () {
     if (this.stats.isDirectory()) {
       return "Directory";
     }
@@ -97,41 +96,41 @@ class File {
     if (this.stats.isSocket()) {
       return "Socket";
     }
-    return;
   }
 
-  getType() {
+  getType () {
     return this.checkType();
   }
 
-  checkSum(type) {
+  checkSum (type) {
     if (!type) {
-      type = 'md5';
+      type = "md5";
     }
-    return crypto.createHash(type).update(this.content()).digest("hex");
+    return crypto.createHash(type).update(this.content())
+      .digest("hex");
   }
 
-  getMimeType(name) {
+  getMimeType (name) {
     return mime.getType(name || this.name);
   }
 
-  getExtension(mimeType) {
+  getExtension (mimeType) {
     return mime.getExtension(mimeType || this.mimeType);
   }
 
-  getExtention(mimeType) {
+  getExtention (mimeType) {
     return mime.getExtension(mimeType || this.mimeType);
   }
 
-  /*getCharset (mimeType){
+  /* getCharset (mimeType){
     //return mime.charsets.lookup(mimeType || this.mimeType );
   }*/
 
-  getRealpath(Path, options) {
+  getRealpath (Path, options) {
     return fs.realpathSync(Path, options);
   }
 
-  matchName(ele) {
+  matchName (ele) {
     if (ele instanceof RegExp) {
       this.match = ele.exec(this.name);
       return this.match;
@@ -142,49 +141,49 @@ class File {
     return false;
   }
 
-  matchType(type) {
+  matchType (type) {
     return type === this.type;
   }
 
-  isFile() {
+  isFile () {
     return this.type === "File";
   }
 
-  isDirectory() {
+  isDirectory () {
     return this.type === "Directory";
   }
 
-  isSymbolicLink() {
+  isSymbolicLink () {
     return this.type === "symbolicLink";
   }
 
-  dirname() {
+  dirname () {
     return path.dirname(this.path);
   }
 
-  isHidden() {
+  isHidden () {
     return regHidden.test(this.name);
   }
 
-  content(encoding) {
-    let encode = encoding ? encoding : (this.encoding ? this.encoding : 'utf8');
+  content (encoding) {
+    const encode = encoding ? encoding : this.encoding ? this.encoding : "utf8";
     return fs.readFileSync(this.path, encode);
   }
 
-  read(encoding) {
-    let encode = encoding ? encoding : (this.encoding ? this.encoding : 'utf8');
+  read (encoding) {
+    const encode = encoding ? encoding : this.encoding ? this.encoding : "utf8";
     if (this.type === "symbolicLink") {
-      let Path = fs.readlinkSync(this.path, encode);
+      const Path = fs.readlinkSync(this.path, encode);
       return fs.readFileSync(Path, encode);
     }
     return fs.readFileSync(this.path, encode);
   }
 
-  readAsync(encoding) {
-    let encode = encoding ? encoding : (this.encoding ? this.encoding : 'utf8');
+  readAsync (encoding) {
+    const encode = encoding ? encoding : this.encoding ? this.encoding : "utf8";
     if (this.type === "symbolicLink") {
       return new Promise((resolve, reject) => {
-        let Path = fs.readlinkSync(this.path, encode);
+        const Path = fs.readlinkSync(this.path, encode);
         return fs.readFileSync(Path, encode, (error, data) => {
           if (error) {
             return reject(error);
@@ -193,25 +192,24 @@ class File {
         });
       });
     }
-    return new Promise((resolve, reject) => {
-      return fs.readFile(this.path, encode, (error, data) => {
-        if (error) {
-          return reject(error);
-        }
-        return resolve(data);
-      });
-    });
+    return new Promise((resolve, reject) => fs.readFile(this.path, encode, (error, data) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(data);
+    }));
   }
 
-  readByLine(callback, encoding) {
+  readByLine (callback, encoding) {
     return new Promise((resolve, reject) => {
       let res = null;
       try {
         res = this.content(encoding);
         let nb = 0;
-        res.toString().split('\n').forEach(function (line) {
-          callback(line, ++nb);
-        });
+        res.toString().split("\n")
+          .forEach((line) => {
+            callback(line, ++nb);
+          });
       } catch (e) {
         return reject(e);
       }
@@ -219,11 +217,11 @@ class File {
     });
   }
 
-  write(data, options) {
+  write (data, options) {
     return fs.writeFileSync(this.path, data, nodefony.extend({}, defautWriteOption, options));
   }
 
-  move(target) {
+  move (target) {
     try {
       fs.renameSync(this.path, target);
       return new File(target);
@@ -232,7 +230,7 @@ class File {
     }
   }
 
-  unlink() {
+  unlink () {
     try {
       fs.unlinkSync(this.path);
     } catch (e) {

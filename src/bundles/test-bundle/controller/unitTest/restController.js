@@ -1,6 +1,5 @@
 module.exports = class restController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
   }
 
@@ -9,13 +8,12 @@ module.exports = class restController extends nodefony.controller {
    *  Routing
    *
    */
-  ["401Action"]() {
+  ["401Action"] () {
     return this.createUnauthorizedException();
   }
 
-  ["403Action"]() {
+  ["403Action"] () {
     this.response.setStatusCode(403);
     throw new Error();
   }
-
 };

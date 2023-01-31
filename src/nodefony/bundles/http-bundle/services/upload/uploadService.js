@@ -1,22 +1,20 @@
 module.exports = class upload extends nodefony.Service {
-
-  constructor(httpKernel) {
-
+  constructor (httpKernel) {
     super("upload", httpKernel.container, httpKernel.notificationsCenter);
     this.httpKernel = httpKernel;
 
     this.once("onBoot", async () => {
       this.config = this.httpKernel.settings.request;
-      let abs = path.isAbsolute(this.httpKernel.settings.request.uploadDir);
+      const abs = path.isAbsolute(this.httpKernel.settings.request.uploadDir);
       if (abs) {
         this.path = this.httpKernel.settings.request.uploadDir;
       } else {
-        this.path = path.resolve(this.kernel.rootDir + "/" + this.httpKernel.settings.request.uploadDir);
+        this.path = path.resolve(`${this.kernel.rootDir}/${this.httpKernel.settings.request.uploadDir}`);
       }
       let res = fs.existsSync(this.path);
       if (!res) {
         // create directory
-        this.log("create directory FOR UPLOAD FILE " + this.path, "DEBUG");
+        this.log(`create directory FOR UPLOAD FILE ${this.path}`, "DEBUG");
         try {
           res = fs.mkdirSync(this.path);
         } catch (e) {
@@ -28,7 +26,7 @@ module.exports = class upload extends nodefony.Service {
     });
   }
 
-  createUploadFile(file, name) {
+  createUploadFile (file, name) {
     try {
       return new uploadedFile(file, name);
     } catch (error) {
@@ -36,7 +34,7 @@ module.exports = class upload extends nodefony.Service {
     }
   }
 
-  logger(pci, severity, msgid, msg) {
+  logger (pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = "HTTP UPLOAD";
     }
@@ -45,8 +43,7 @@ module.exports = class upload extends nodefony.Service {
 };
 
 const uploadedFile = class uploadedFile extends nodefony.fileClass {
-
-  constructor(fomiFile, name) {
+  constructor (fomiFile, name) {
     super(fomiFile.filepath);
     this.fomiFile = fomiFile;
     this.size = this.getSize();
@@ -58,50 +55,49 @@ const uploadedFile = class uploadedFile extends nodefony.fileClass {
     this.hash = this.fomiFile.hash;
   }
 
-  getSize() {
+  getSize () {
     return this.fomiFile.size;
   }
 
-  getPrettySize() {
+  getPrettySize () {
     return nodefony.cli.niceBytes(this.fomiFile.size);
   }
 
-  realName(name= null) {
-    return this.fomiFile.originalFilename || name || this.fomiFile.newFilename ;
+  realName (name = null) {
+    return this.fomiFile.originalFilename || name || this.fomiFile.newFilename;
   }
 
-  getMimeType() {
+  getMimeType () {
     if (this.fomiFile) {
       return this.fomiFile.mimetype || super.getMimeType(this.filename);
     }
     return super.getMimeType();
   }
 
-  move(target) {
+  move (target) {
     let inst = null;
     try {
       if (fs.existsSync(target)) {
-        let newFile = new nodefony.fileClass(target);
-        let name = this.filename || this.name;
+        const newFile = new nodefony.fileClass(target);
+        const name = this.filename || this.name;
         if (newFile.isDirectory()) {
-          let n = path.resolve(newFile.path, name);
+          const n = path.resolve(newFile.path, name);
           inst = super.move(n);
           return new nodefony.fileClass(n);
         }
       }
-      let dirname = path.dirname(target);
+      const dirname = path.dirname(target);
 
       if (fs.existsSync(dirname)) {
         if (target === dirname) {
-          let name = path.resolve(target, "/", this.filename || this.name);
+          const name = path.resolve(target, "/", this.filename || this.name);
           inst = super.move(name);
         } else {
           inst = super.move(target);
         }
         return new nodefony.fileClass(target);
-      } else {
-        throw fs.lstatSync(dirname);
       }
+      throw fs.lstatSync(dirname);
     } catch (e) {
       throw e;
     }

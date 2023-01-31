@@ -10,29 +10,27 @@
  *
  */
 
-var http = require("http");
-//var https = require("https");
-//var WebSocketClient = require('websocket').client;
-var querystring = require('querystring');
+const http = require("http");
+// var https = require("https");
+// var WebSocketClient = require('websocket').client;
+const querystring = require("querystring");
 
-const assert = require('assert');
+const assert = require("assert");
 
-describe("BUNDLE TEST", function () {
-
-  before(function () {
+describe("BUNDLE TEST", () => {
+  before(() => {
     global.options = {
       hostname: kernel.settings.system.domain,
       port: kernel.settings.system.httpPort,
-      //path: '/myroute/',
-      method: 'GET'
+      // path: '/myroute/',
+      method: "GET"
     };
   });
 
-  describe('REDIRECT ', function () {
-
-    it("controller-redirect-302", function (done) {
-      global.options.path = '/test/unit/redirect';
-      let request = http.request(global.options, function (res) {
+  describe("REDIRECT ", () => {
+    it("controller-redirect-302", (done) => {
+      global.options.path = "/test/unit/redirect";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 302);
         assert.equal(res.statusMessage, "Found");
         assert.equal(res.headers.location, "/");
@@ -41,9 +39,9 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("controller-redirect-301", function (done) {
-      global.options.path = '/test/unit/redirect/301?foo=bar';
-      let request = http.request(global.options, function (res) {
+    it("controller-redirect-301", (done) => {
+      global.options.path = "/test/unit/redirect/301?foo=bar";
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 301);
         assert.equal(res.statusMessage, "Moved Permanently");
         assert.equal(res.headers.location, "/");
@@ -52,18 +50,18 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("controller-redirect-post-absolute", function (done) {
-      global.options.path = '/test/unit/redirect';
-      global.options.method = 'POST';
-      var post_data = querystring.stringify({
+    it("controller-redirect-post-absolute", (done) => {
+      global.options.path = "/test/unit/redirect";
+      global.options.method = "POST";
+      const post_data = querystring.stringify({
         url: "http://google.com",
-        status: 301,
+        status: 301
       });
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      let request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 301);
         assert.equal(res.statusMessage, "Moved Permanently");
         assert.equal(res.headers.location, "http://google.com");
@@ -73,18 +71,18 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("controller-redirect-post-", function (done) {
-      global.options.path = '/test/unit/redirect';
-      global.options.method = 'POST';
-      var post_data = querystring.stringify({
+    it("controller-redirect-post-", (done) => {
+      global.options.path = "/test/unit/redirect";
+      global.options.method = "POST";
+      const post_data = querystring.stringify({
         url: "bar/foo",
-        status: 301,
+        status: 301
       });
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      let request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 301);
         assert.equal(res.statusMessage, "Moved Permanently");
         assert.equal(res.headers.location, "bar/foo");
@@ -95,18 +93,18 @@ describe("BUNDLE TEST", function () {
     });
 
 
-    it("controller-redirect-post-301", function (done) {
-      global.options.path = '/test/unit/redirect';
-      global.options.method = 'POST';
-      var post_data = querystring.stringify({
+    it("controller-redirect-post-301", (done) => {
+      global.options.path = "/test/unit/redirect";
+      global.options.method = "POST";
+      const post_data = querystring.stringify({
         url: "/foo/bar",
-        status: 301,
+        status: 301
       });
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      let request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 301);
         assert.equal(res.statusMessage, "Moved Permanently");
         assert.equal(res.headers.location, "/foo/bar");
@@ -116,18 +114,18 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("controller-redirect-post-302", function (done) {
-      global.options.path = '/test/unit/redirect?bar=foo';
-      global.options.method = 'POST';
-      var post_data = querystring.stringify({
+    it("controller-redirect-post-302", (done) => {
+      global.options.path = "/test/unit/redirect?bar=foo";
+      global.options.method = "POST";
+      const post_data = querystring.stringify({
         url: "/ping",
-        status: 301,
+        status: 301
       });
       global.options.headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(post_data)
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": Buffer.byteLength(post_data)
       };
-      let request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 301);
         assert.equal(res.statusMessage, "Moved Permanently");
         assert.equal(res.headers.location, "/ping?bar=foo");
@@ -137,11 +135,11 @@ describe("BUNDLE TEST", function () {
       request.end();
     });
 
-    it("controller-redirect-route", function (done) {
-      global.options.path = '/test/unit/redirect/route?url=home';
-      global.options.method = 'GET';
+    it("controller-redirect-route", (done) => {
+      global.options.path = "/test/unit/redirect/route?url=home";
+      global.options.method = "GET";
       delete global.options.headers;
-      let request = http.request(global.options, function (res) {
+      const request = http.request(global.options, (res) => {
         assert.equal(res.statusCode, 301);
         assert.equal(res.statusMessage, "Moved Permanently");
         assert.equal(res.headers.location, "/");
@@ -149,6 +147,5 @@ describe("BUNDLE TEST", function () {
       });
       request.end();
     });
-
   });
 });

@@ -1,6 +1,5 @@
 class controllerTask extends nodefony.Task {
-
-  constructor(name, command) {
+  constructor (name, command) {
     super(name, command);
     nodefony.extend(this.cli.response, {
       config: this.getParameters("bundles.app"),
@@ -9,16 +8,17 @@ class controllerTask extends nodefony.Task {
     this.controller = nodefony.builders.bundle.controller(this.cli);
   }
 
-  showHelp() {
-    this.setHelp("generate:controller [-i] name [bundle]",
+  showHelp () {
+    this.setHelp(
+      "generate:controller [-i] name [bundle]",
       "Generate a Bundle Controller  Example : nodefony generate:controller defaultController demo "
     );
   }
 
-  getBundles() {
-    let bundles = [];
-    let allBundles = this.kernel.getBundles();
-    for (let bundle in allBundles) {
+  getBundles () {
+    const bundles = [];
+    const allBundles = this.kernel.getBundles();
+    for (const bundle in allBundles) {
       if (!this.kernel.isBundleCore(allBundles[bundle].name)) {
         bundles.push(allBundles[bundle].name);
       }
@@ -26,8 +26,8 @@ class controllerTask extends nodefony.Task {
     return bundles;
   }
 
-  getBundle(name) {
-    let bundle = this.kernel.getBundle(name);
+  getBundle (name) {
+    const bundle = this.kernel.getBundle(name);
     if (bundle) {
       this.controller.setBundle(bundle);
       return bundle;
@@ -35,16 +35,16 @@ class controllerTask extends nodefony.Task {
     throw new Error(`Bundle: ${name} not found`);
   }
 
-  interaction( /*args*/ ) {
+  interaction (/* args*/) {
     return this.cli.showAsciify(this.name)
       .then(() => {
-        let bundles = this.getBundles();
+        const bundles = this.getBundles();
         bundles.push(this.cli.getSeparator());
         bundles.push("Quit");
         return this.cli.prompt([{
-          type: 'list',
-          name: 'bundle',
-          message: 'Choose a bundle to generate a controller : ',
+          type: "list",
+          name: "bundle",
+          message: "Choose a bundle to generate a controller : ",
           default: 0,
           pageSize: bundles.length,
           choices: bundles,
@@ -55,17 +55,14 @@ class controllerTask extends nodefony.Task {
             return this.getBundle(val);
           }
         }]);
-      }).then((response) => {
-        return nodefony.extend(this.cli.response, response);
-      }).catch((e) => {
-        return Promise.reject(e);
-      });
+      })
+      .then((response) => nodefony.extend(this.cli.response, response))
+      .catch((e) => Promise.reject(e));
   }
 
-  generate(args, response) {
+  generate (args, response) {
     return this.controller.run(this.cli.interactive);
   }
-
 }
 
 module.exports = controllerTask;

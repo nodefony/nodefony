@@ -1,8 +1,7 @@
 const http = require("http");
 
 module.exports = class httpServer extends nodefony.Service {
-
-  constructor(httpKernel, options) {
+  constructor (httpKernel, options) {
     super("HTTP", httpKernel.container, httpKernel.notificationsCenter, options);
     this.httpKernel = httpKernel;
     this.port = this.httpKernel.kernel.httpPort;
@@ -17,15 +16,16 @@ module.exports = class httpServer extends nodefony.Service {
       this.bundle = this.kernel.getBundles("http");
       this.bundle.on("onServersReady", (type) => {
         if (type === this.type) {
-          let addr = this.server.address();
+          const addr = this.server.address();
           this.domain = addr.address;
           this.kernel.hostname = addr.address;
           this.port = addr.port;
           this.kernel.httpPort = addr.port;
-          this.kernel.hostHttp = this.kernel.hostname + ":" + addr.port;
+          this.kernel.hostHttp = `${this.kernel.hostname}:${addr.port}`;
           this.family = addr.family;
-          this.log("Listening on DOMAIN : http://" + this.domain + ":" + this.port, "INFO");
-          /*dns.lookup(this.domain, (err, addresses, family) => {
+          this.log(`Listening on DOMAIN : http://${this.domain}:${this.port}`, "INFO");
+
+          /* dns.lookup(this.domain, (err, addresses, family) => {
             if (err) {
               throw err;
             }
@@ -37,7 +37,7 @@ module.exports = class httpServer extends nodefony.Service {
     });
   }
 
-  createServer() {
+  createServer () {
     this.settings = this.getParameters("bundles.http").http || null;
     try {
       this.server = http.createServer();
@@ -47,9 +47,7 @@ module.exports = class httpServer extends nodefony.Service {
       throw e;
     }
 
-    this.server.on("request", (request, response) => {
-      return this.httpKernel.onHttpRequest(request, response, this.type);
-    });
+    this.server.on("request", (request, response) => this.httpKernel.onHttpRequest(request, response, this.type));
 
     if (this.settings.timeout) {
       this.server.timeout = this.settings.timeout;
@@ -66,39 +64,35 @@ module.exports = class httpServer extends nodefony.Service {
     });
 
     this.server.on("error", (error) => {
-      let myError = new nodefony.Error(error);
-      const txtError = typeof error.code=== 'string'? error.code : error.errno ;
+      const myError = new nodefony.Error(error);
+      const txtError = typeof error.code === "string" ? error.code : error.errno;
       switch (txtError) {
       case "ENOTFOUND":
-        this.log("CHECK DOMAIN IN /etc/hosts or config unable to connect to : " + this.domain, "ERROR");
+        this.log(`CHECK DOMAIN IN /etc/hosts or config unable to connect to : ${this.domain}`, "ERROR");
         this.log(myError, "CRITIC");
         break;
       case "EADDRINUSE":
-        this.log("Domain : " + this.domain + " Port : " + this.port + " ==> ALREADY USE ", "ERROR");
+        this.log(`Domain : ${this.domain} Port : ${this.port} ==> ALREADY USE `, "ERROR");
         this.log(myError, "CRITIC");
         this.server.close();
-        setTimeout(() => {
-          return this.kernel.terminate(1)
-        }, 1000);
+        setTimeout(() => this.kernel.terminate(1), 1000);
         break;
       default:
         this.log(myError, "CRITIC");
       }
     });
 
-    this.once("onTerminate", () => {
-      return new Promise((resolve, reject)=>{
-        if (this.server) {
-          this.server.closeAllConnections()
-          this.server.close(() => {
-            this.log(this.type + " SHUTDOWN Server is listening on DOMAIN : " + this.domain + "    PORT : " + this.port, "INFO");
-            return resolve(true)
-          });
-          return
-        }
-        return resolve(true)
-      })
-    });
+    this.once("onTerminate", () => new Promise((resolve, reject) => {
+      if (this.server) {
+        this.server.closeAllConnections();
+        this.server.close(() => {
+          this.log(`${this.type} SHUTDOWN Server is listening on DOMAIN : ${this.domain}    PORT : ${this.port}`, "INFO");
+          return resolve(true);
+        });
+        return;
+      }
+      return resolve(true);
+    }));
 
     this.server.on("clientError", (e, socket) => {
       this.fire("onClientError", e, socket);

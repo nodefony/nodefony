@@ -5,8 +5,8 @@
  *
  *
  */
-//const Mongoose = require('mongoose');
-const {Schema} = require('mongoose');
+// const Mongoose = require('mongoose');
+const {Schema} = require("mongoose");
 
 const schema = {
   remoteAddress: {
@@ -38,15 +38,14 @@ const schema = {
   },
   username: {
     type: String,
-    ref:"user"
+    ref: "user"
   },
   data: {
     type: String
   }
 };
 module.exports = class requests extends nodefony.Entity {
-
-  constructor(bundle) {
+  constructor (bundle) {
     /*
      *   @param bundle instance
      *   @param Entity name
@@ -56,11 +55,11 @@ module.exports = class requests extends nodefony.Entity {
     super(bundle, "requests", "mongoose", "nodefony");
   }
 
-  registerModel(db) {
-    let mySchema = new Schema(schema, {
+  registerModel (db) {
+    const mySchema = new Schema(schema, {
       timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt'
+        createdAt: "createdAt",
+        updatedAt: "updatedAt"
       }
     });
 

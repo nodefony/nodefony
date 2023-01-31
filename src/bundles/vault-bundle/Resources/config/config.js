@@ -9,19 +9,19 @@
  *
  * ===============================================================================
  *
- * 
+ *
  */
 
-let connect = {}
+let connect = {};
 switch (kernel.appEnvironment.environment) {
-  case "production":
-  case "development":
-  default:
-    connect = {
-      apiVersion: 'v1', // default
-      endpoint: 'http://localhost:8200', // default
-      token: 'hvs.mejHci5BDdqjiFuAWAhmlyjX',
-    }
+case "production":
+case "development":
+default:
+  connect = {
+    apiVersion: "v1", // default
+    endpoint: "http://localhost:8200", // default
+    token: "hvs.mejHci5BDdqjiFuAWAhmlyjX"
+  };
 }
 
 module.exports = {
@@ -65,23 +65,23 @@ module.exports = {
    *	example : create an other database connector
    */
   vault: {
-    connect: connect,
+    connect,
     getCredentialsApprole: kernel.appEnvironment.vault.getVaultCredentialsApprole,
     prepareAuth: kernel.appEnvironment.vault.prepareAuth,
     active: kernel.appEnvironment.vault.active,
     config: {
       mount: {
-        path: "nodefony",
+        path: "nodefony"
       },
       auths: {
         approle: {
-          mountPoint: 'nodefony-auth',
-          roleName: 'nodefony-role',
+          mountPoint: "nodefony-auth",
+          roleName: "nodefony-role"
         }
       },
       policy: {
-        name: 'nodefony-policy',
-        rules: '{ "path": { "nodefony/data/*": { "policy": "write" } } }',
+        name: "nodefony-policy",
+        rules: "{ \"path\": { \"nodefony/data/*\": { \"policy\": \"write\" } } }"
       },
       secrets: [{
         path: "nodefony/data/database/postgresql/connector/nodefony",
@@ -104,4 +104,4 @@ module.exports = {
       }]
     }
   }
-}
+};

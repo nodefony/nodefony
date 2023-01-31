@@ -1,8 +1,8 @@
-const babylon = require('@babel/parser');
+const babylon = require("@babel/parser");
 const defaultSettings = {
   sourceType: "module",
-  //strictMode: false,
-  //tokens: true,
+  // strictMode: false,
+  // tokens: true,
   plugins: [
     "espree"
   ]
@@ -12,36 +12,30 @@ const regAction = new RegExp("^(.*)Action$");
 
 
 class Babylon {
-  constructor() {
+  constructor () {
     this.engine = babylon;
     this.settings = nodefony.extend({}, defaultSettings);
   }
 
-  parse(file, options) {
+  parse (file, options) {
     return new Promise((resolve, reject) => {
       try {
         if (file) {
-          let opt = nodefony.extend({}, this.settings, options);
+          const opt = nodefony.extend({}, this.settings, options);
           switch (true) {
-          case (file instanceof nodefony.fileClass):
+          case file instanceof nodefony.fileClass:
             opt.sourceFilename = file.path;
             file.readAsync()
-              .then((str) => {
-                return resolve(this.engine.parse(str, opt));
-              }).catch(e => {
-                return reject(e);
-              });
+              .then((str) => resolve(this.engine.parse(str, opt)))
+              .catch((e) => reject(e));
             break;
-          case (typeof file === "string"):
+          case typeof file === "string":
             try {
-              let myfile = new nodefony.fileClass(file);
+              const myfile = new nodefony.fileClass(file);
               opt.sourceFilename = myfile.path;
               myfile.readAsync()
-                .then((str) => {
-                  return resolve(this.engine.parse(str, opt));
-                }).catch(e => {
-                  return reject(e);
-                });
+                .then((str) => resolve(this.engine.parse(str, opt)))
+                .catch((e) => reject(e));
             } catch (e) {
               return resolve(this.engine.parse(file, opt));
             }
@@ -55,11 +49,10 @@ class Babylon {
       } catch (e) {
         return reject(e);
       }
-
     });
   }
 
-  logger(res, deep) {
+  logger (res, deep) {
     if (deep) {
       console.log(util.inspect(res, {
         depth: 10
@@ -69,7 +62,7 @@ class Babylon {
     console.log(res);
   }
 
-  parseClassNode(node, obj) {
+  parseClassNode (node, obj) {
     if (nodefony.typeOf(node) === "array") {
       for (let i = 0; i < node.length; i++) {
         this.parseClassNode(node[i], obj);
@@ -104,30 +97,30 @@ class Babylon {
     case "ClassDeclaration":
     case "ClassExpression":
       let name = this.parseClassNode(node.id);
-      let res = regClass.exec(name);
+      const res = regClass.exec(name);
       if (res) {
         name = res[1];
       }
-      let superClass = this.parseClassNode(node.superClass);
-      let myclass = {
-        name: name,
+      const superClass = this.parseClassNode(node.superClass);
+      const myclass = {
+        name,
         extends: superClass,
         actions: [],
         comments: node.leadingComments || []
       };
       obj.class.push(myclass);
       return this.parseClassNode(node.body, myclass);
-    case 'MemberExpression':
-      let object = this.parseClassNode(node.object);
-      let property = this.parseClassNode(node.property);
+    case "MemberExpression":
+      const object = this.parseClassNode(node.object);
+      const property = this.parseClassNode(node.property);
       return `${object}.${property}`;
     case "ClassBody":
       return this.parseClassNode(node.body, obj);
-    case 'ClassMethod':
-      let methodName = this.parseClassNode(node.key);
-      let ret = regAction.exec(methodName);
+    case "ClassMethod":
+      const methodName = this.parseClassNode(node.key);
+      const ret = regAction.exec(methodName);
       if (ret) {
-        let action = {
+        const action = {
           name: ret[1],
           comments: []
         };
@@ -135,13 +128,13 @@ class Babylon {
           this.parseClassNode(node.leadingComments, action);
         }
         obj.actions.push(action);
-        //return this.parseClassNode(node.body, action);
+        // return this.parseClassNode(node.body, action);
       }
       break;
     case "CommentBlock":
       obj.comments.push(node.value);
       return node.value;
-    case 'Identifier':
+    case "Identifier":
       return node.name;
     case "Program":
       obj.program = {
@@ -153,10 +146,10 @@ class Babylon {
     return obj;
   }
 
-  parseController(file) {
+  parseController (file) {
     return this.parse(file)
       .then((ast) => {
-        let obj = {
+        const obj = {
           raw: ast
         };
         this.parseClassNode(ast, obj);

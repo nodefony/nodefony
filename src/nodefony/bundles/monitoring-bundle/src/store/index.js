@@ -1,11 +1,11 @@
-import { createStore } from 'vuex'
+import {createStore} from "vuex";
 
 // application store
-import app from './application/index.js'
+import app from "./application/index.js";
 
 // nodefony store
-import user from '@/plugins/nodefony/store/modules/user'
-import auth from '@/plugins/nodefony/store/modules/auth'
+import user from "@/plugins/nodefony/store/modules/user";
+import auth from "@/plugins/nodefony/store/modules/auth";
 
 
 export default createStore({
@@ -22,4 +22,4 @@ export default createStore({
     user,
     auth
   }
-})
+});

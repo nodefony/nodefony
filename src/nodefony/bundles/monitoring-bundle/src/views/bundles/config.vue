@@ -1,11 +1,11 @@
 <template>
-<v-card flat>
+  <v-card flat>
 
-	<v-container class="overflow-auto">
-		<vue-json-pretty :path="name"
-		                 :data="config"
-		                 @click="handleClick"> </vue-json-pretty>
-		<!--v-list density="compact">
+    <v-container class="overflow-auto">
+      <vue-json-pretty :path="name"
+                       :data="config"
+                       @click="handleClick"> </vue-json-pretty>
+      <!--v-list density="compact">
 			<v-list-item v-for="(item, key) in config"
 			             density="compact"
 			             :key="key">
@@ -15,59 +15,59 @@
 				<v-list-item-subtitle>{{item}}</v-list-item-subtitle>
 			</v-list-item>
 		</v-list-->
-	</v-container>
-</v-card>
+    </v-container>
+  </v-card>
 </template>
 
 
 <script>
 import {
-	ref,
-	reactive,
-	toRefs,
-	computed
+  computed,
+  reactive,
+  ref,
+  toRefs
 } from "vue";
 
-import VueJsonPretty from 'vue-json-pretty';
-import 'vue-json-pretty/lib/styles.css';
+import VueJsonPretty from "vue-json-pretty";
+import "vue-json-pretty/lib/styles.css";
 
 export default {
-	name: 'n-bundle-config',
-	components: {
-		VueJsonPretty,
-	},
-	props: {
-		config: {
-			type: Object,
-			default: null
-		},
-		name: {
-			type: String,
-			required: true
-		}
-	},
-	data() {
-		return {
+  name: "n-bundle-config",
+  components: {
+    VueJsonPretty
+  },
+  props: {
+    config: {
+      type: Object,
+      default: null
+    },
+    name: {
+      type: String,
+      required: true
+    }
+  },
+  data () {
+    return {
 
-		}
-	},
-	computed: {
+    };
+  },
+  computed: {
 
-	},
+  },
 
 
-	beforeMount() {
+  beforeMount () {
 
-	},
-	mounted() {
+  },
+  mounted () {
 
-	},
-	methods: {
-		handleClick(ele) {
-			console.log(ele)
-		}
-	}
-}
+  },
+  methods: {
+    handleClick (ele) {
+      console.log(ele);
+    }
+  }
+};
 </script>
 
 

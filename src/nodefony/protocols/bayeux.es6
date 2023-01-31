@@ -1,14 +1,12 @@
-const shortId = require('shortid');
+const shortId = require("shortid");
 
-module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function () {
-
+module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", () => {
   const defaultSettings = {
     timestamp: true
   };
 
   class Bayeux extends nodefony.io.protocol.reader {
-    constructor(rootName, settings) {
-
+    constructor (rootName, settings) {
       super(null, {
         extention: "json"
       });
@@ -18,34 +16,33 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
       this.supportedConnectionTypes = [];
 
       this.response = {
-        version: "1.0",
+        version: "1.0"
       };
-
     }
 
-    generateClientId() {
+    generateClientId () {
       return shortId.generate();
     }
 
-    generateTimestamp() {
+    generateTimestamp () {
       return new Date().toUTCString();
     }
 
-    handshakeResponse(message, advice, ext) {
+    handshakeResponse (message, advice, ext) {
       let reconnect = null;
       if (advice) {
         reconnect = "retry";
       } else {
         reconnect = "none";
       }
-      let ele = nodefony.extend({}, this.response, {
+      const ele = nodefony.extend({}, this.response, {
         channel: "/meta/handshake",
-        //clientId:this.generateClientId(),
+        // clientId:this.generateClientId(),
         supportedConnectionTypes: ["websocket"],
-        successful:true,
+        successful: true,
         authSuccessful: true,
         advice: {
-          reconnect: reconnect
+          reconnect
         },
         ext: ext || {}
       });
@@ -55,29 +52,29 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
       return ele;
     }
 
-    connectResponse(message, advice, ext) {
+    connectResponse (message, advice, ext) {
       let reconnect = null;
       if (advice) {
         reconnect = "retry";
       } else {
         reconnect = "none";
       }
-      let ele = nodefony.extend({}, this.response, {
+      const ele = nodefony.extend({}, this.response, {
         channel: "/meta/connect",
         successful: true,
         error: "",
         clientId: message.clientId,
         timestamp: new Date(),
         advice: {
-          reconnect: reconnect
+          reconnect
         },
         ext: ext || {}
       });
       return ele;
     }
 
-    disconnectResponse(message) {
-      let ele = nodefony.extend({}, this.response, {
+    disconnectResponse (message) {
+      const ele = nodefony.extend({}, this.response, {
         channel: "/meta/disconnect",
         clientId: message.clientId,
         successful: true
@@ -85,8 +82,8 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
       return ele;
     }
 
-    subscribeResponse(message) {
-      let ele = nodefony.extend({}, this.response, {
+    subscribeResponse (message) {
+      const ele = nodefony.extend({}, this.response, {
         channel: "/meta/subscribe",
         clientId: message.clientId,
         subscription: message.subscription,
@@ -95,8 +92,8 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
       return ele;
     }
 
-    unsubscribeResponse(message) {
-      var ele = nodefony.extend({}, this.response, {
+    unsubscribeResponse (message) {
+      const ele = nodefony.extend({}, this.response, {
         channel: "/meta/unsubscribe",
         clientId: message.clientId,
         subscription: message.subscription,
@@ -106,36 +103,36 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
       return ele;
     }
 
-    publishResponse(channel, id, error) {
+    publishResponse (channel, id, error) {
       return this.send(nodefony.extend({}, this.response, {
-        channel: channel,
-        successful: error ? false : true,
-        error: error,
-        id: id
+        channel,
+        successful: !error,
+        error,
+        id
       }));
     }
 
-    publishMessage(channel, data, clientId) {
+    publishMessage (channel, data, clientId) {
       return this.send(nodefony.extend({}, this.response, {
-        channel: channel,
-        data: data,
-        clientId: clientId
+        channel,
+        data,
+        clientId
       }));
     }
 
-    errorResponse(code, channel, message) {
+    errorResponse (code, channel, message) {
       return {
-        error: code + ":" + channel + ":" + message
+        error: `${code}:${channel}:${message}`
       };
     }
 
-    onMessage(message) {
+    onMessage (message) {
       switch (nodefony.typeOf(message)) {
       case "string":
         var ret = null;
         this.parser(message, (err, mess) => {
           if (err) {
-            //console.log(err)
+            // console.log(err)
             throw err;
           }
           ret = this.onMessage(mess);
@@ -160,7 +157,7 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
         break;
       case "array":
         var tab = [];
-        for (var i = 0; i < message.length; i++) {
+        for (let i = 0; i < message.length; i++) {
           tab.push(this.onMessage(message[i]));
         }
         return this.send(tab);
@@ -169,7 +166,7 @@ module.exports = nodefony.register.call(nodefony.io.protocol, "bayeux", function
       }
     }
 
-    send(message) {
+    send (message) {
       return this.builderResponse(message);
     }
   }

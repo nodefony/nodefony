@@ -2,7 +2,7 @@
  *  CLASS Result
  *
  */
-const fsPromises = require('fs').promises;
+const fsPromises = require("fs").promises;
 const defaultSettings = {
   recurse: false,
   depth: 10,
@@ -16,7 +16,7 @@ const defaultSettings = {
 
 const checkExclude = function (info, options) {
   let match = null;
-  let test = (options.exclude || options.excludeDir || options.excludeFile);
+  const test = options.exclude || options.excludeDir || options.excludeFile;
   if (!test) {
     return false;
   }
@@ -48,11 +48,11 @@ const checkExclude = function (info, options) {
 const checkMatch = function (info, options, result) {
   let match = false;
   let rec = false;
-  let test = (options.matchFile || options.matchDIr || options.match);
+  const test = options.matchFile || options.matchDIr || options.match;
   if (!test) {
     result.push(info);
     this.totals[info.type]++;
-    this.fire("on" + info.type, info, this);
+    this.fire(`on${info.type}`, info, this);
     return true;
   }
   if (options.matchDIr) {
@@ -74,8 +74,8 @@ const checkMatch = function (info, options, result) {
     }
   }
   if (options.match) {
-    let res = info.matchName(options.match);
-    //console.log("match ", info.name, res)
+    const res = info.matchName(options.match);
+    // console.log("match ", info.name, res)
     if (res) {
       match = true;
     } else {
@@ -83,26 +83,25 @@ const checkMatch = function (info, options, result) {
       rec = info.type;
     }
   }
-  //state match
+  // state match
   if (match) {
     result.push(info);
     this.totals[info.type]++;
-    this.fire("on" + info.type, info, this);
+    this.fire(`on${info.type}`, info, this);
     return true;
-  } else {
-    switch (rec) {
-      // false match
-    case "Directory":
-    case "symbolicLink":
-      result.push(info);
-      this.totals[info.type]++;
-      this.fire("on" + info.type, info, this);
-      return true;
-    default:
-      // false file
-      //console.log("bypass ", info.name)
-      return false;
-    }
+  }
+  switch (rec) {
+  // false match
+  case "Directory":
+  case "symbolicLink":
+    result.push(info);
+    this.totals[info.type]++;
+    this.fire(`on${info.type}`, info, this);
+    return true;
+  default:
+    // false file
+    // console.log("bypass ", info.name)
+    return false;
   }
 };
 
@@ -118,22 +117,16 @@ const parser = function (file, result = new nodefony.FileResult(), options = {},
     try {
       if (file.type !== "symbolicLink") {
         res = await fsPromises.readdir(file.path, {
-            encoding: 'utf8',
-            withFileTypes: false
-          })
-          .catch(e => {
-            return reject(e);
-          });
-      } else {
-        if (options.followSymLink) {
-          //console.log("symbolicLink First", file.name)
-          res = await fsPromises.readlink(file.path)
-            .catch((e) => {
-              return reject(e);
-            });
-        }
+          encoding: "utf8",
+          withFileTypes: false
+        })
+          .catch((e) => reject(e));
+      } else if (options.followSymLink) {
+        // console.log("symbolicLink First", file.name)
+        res = await fsPromises.readlink(file.path)
+          .catch((e) => reject(e));
       }
-      //console.log(res)
+      // console.log(res)
       if (res && res.length) {
         for (let i = 0; i < res.length; i++) {
           const ret = path.resolve(file.path, res[i]);
@@ -146,7 +139,7 @@ const parser = function (file, result = new nodefony.FileResult(), options = {},
             }
           }
           if (checkExclude(info, options)) {
-            //console.log("EXCLUDEEEEE", info.name)
+            // console.log("EXCLUDEEEEE", info.name)
             continue;
           }
           let symLink = null;
@@ -160,7 +153,7 @@ const parser = function (file, result = new nodefony.FileResult(), options = {},
             }
           }
           const match = checkMatch.call(this, info, options, result);
-          //console.log("match state", !match, info.name, info.type)
+          // console.log("match state", !match, info.name, info.type)
           if (!match) {
             continue;
           }
@@ -169,7 +162,7 @@ const parser = function (file, result = new nodefony.FileResult(), options = {},
             this.totals.hidden++;
             this.fire("onHidden", info, this);
           }
-          //console.log("PASSSS ", info.name, info.type)
+          // console.log("PASSSS ", info.name, info.type)
           if (info.type === "File") {
             continue;
           }
@@ -177,16 +170,16 @@ const parser = function (file, result = new nodefony.FileResult(), options = {},
           if (!options.recurse) {
             continue;
           }
-          //console.log("RECCCCCC", info.type, info.name)
+          // console.log("RECCCCCC", info.type, info.name)
           switch (info.type) {
           case "Directory":
-            //info.children = await parser.call(this, info, undefined, options, depth - 1, info);
+            // info.children = await parser.call(this, info, undefined, options, depth - 1, info);
             await parser.call(this, info, undefined, options, depth - 1, info);
             break;
           case "symbolicLink":
             if (symLink) {
               if (symLink.isDirectory()) {
-                //info.children = await parser.call(this, symLink, undefined, options, depth - 1, info);
+                // info.children = await parser.call(this, symLink, undefined, options, depth - 1, info);
                 await parser.call(this, symLink, undefined, options, depth - 1, info);
               }
             }
@@ -194,7 +187,7 @@ const parser = function (file, result = new nodefony.FileResult(), options = {},
           }
         }
       }
-      //console.log("resolve ", file.name, result.length)
+      // console.log("resolve ", file.name, result.length)
       return resolve(result);
     } catch (e) {
       this.fire("onError", e);
@@ -204,8 +197,7 @@ const parser = function (file, result = new nodefony.FileResult(), options = {},
 };
 
 class Finder extends nodefony.Events {
-
-  constructor(settings) {
+  constructor (settings) {
     super(settings);
     this.settings = nodefony.extend({}, defaultSettings, settings);
     this.totals = {
@@ -220,16 +212,16 @@ class Finder extends nodefony.Events {
     };
   }
 
-  clean() {
+  clean () {
     this.removeAllListeners();
-    for (let total in this.totals) {
+    for (const total in this.totals) {
       this.totals[total] = 0;
     }
   }
 
-  ckeckPath(Path) {
+  ckeckPath (Path) {
     const type = nodefony.typeOf(Path);
-    let result = new nodefony.FileResult();
+    const result = new nodefony.FileResult();
     switch (true) {
     case type === "string":
       try {
@@ -261,14 +253,14 @@ class Finder extends nodefony.Events {
     }
   }
 
-  async in(Path, settings = {}) {
+  async in (Path, settings = {}) {
     let result = null;
     try {
       result = this.ckeckPath(Path);
       this.settingsToListen(settings);
-      let options = nodefony.extend({}, this.settings, settings);
-      for await (let res of result) {
-        await parser.call(this, res, undefined, options, options.depth, res)
+      const options = nodefony.extend({}, this.settings, settings);
+      for await (const res of result) {
+        await parser.call(this, res, undefined, options, options.depth, res);
       }
     } catch (e) {
       this.fire("onError", e);

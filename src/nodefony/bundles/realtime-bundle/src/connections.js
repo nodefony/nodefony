@@ -3,27 +3,26 @@
  *  CLASS CONNECTION
  *
  */
- class Connections {
-
-  constructor() {
+class Connections {
+  constructor () {
     this.connections = {};
   }
 
-  generateId() {
-    return nodefony.generateId()
+  generateId () {
+    return nodefony.generateId();
   }
 
   // CONNECTIONS
-  getConnections() {
+  getConnections () {
     return this.connections;
   }
 
-  getConnectionId(connection) {
+  getConnectionId (connection) {
     return connection.realtimeId;
   }
 
-  setConnection(connection) {
-    let host = connection.request.host || connection.request.headers.host;
+  setConnection (connection) {
+    const host = connection.request.host || connection.request.headers.host;
     const remote = {
       remoteAddress: connection.remoteAddress || connection.request.remoteAddress,
       host: url.parse(host)
@@ -31,23 +30,23 @@
     const id = this.generateId();
     connection.realtimeId = id;
     return this.connections[id] = {
-      id: id,
-      remote: remote,
+      id,
+      remote,
       context: connection,
       mustClose: false,
       clients: {}
     };
   }
 
-  getConnection(connection) {
-    let id = this.getConnectionId(connection);
+  getConnection (connection) {
+    const id = this.getConnectionId(connection);
     return this.connections[id];
   }
 
-  async removeConnection(id) {
+  async removeConnection (id) {
     if (this.connections[id]) {
       delete this.connections[id].context.realtimeId;
-      await this.removeAllSocket(id)
+      await this.removeAllSocket(id);
       delete this.connections[id];
       return true;
     }
@@ -55,23 +54,22 @@
   }
 
   // SOCKET
-  getSocketId(client) {
+  getSocketId (client) {
     return client.idClient;
   }
 
-  setSocket(idConnection, client) {
+  setSocket (idConnection, client) {
     if (this.connections[idConnection]) {
-      client.setConnection(idConnection)
+      client.setConnection(idConnection);
       this.connections[idConnection].clients[client.id] = client;
       return client.id;
-    } else {
-      throw new Error(`Non connection found`);
     }
+    throw new Error("Non connection found");
   }
 
-  getSocket(clientId) {
-    for (let connection in this.connections) {
-      for (let client in this.connections[connection].clients) {
+  getSocket (clientId) {
+    for (const connection in this.connections) {
+      for (const client in this.connections[connection].clients) {
         if (client === clientId) {
           return this.connections[connection].clients[client];
         }
@@ -80,31 +78,31 @@
     return null;
   }
 
-  removeSocket(client) {
-    const idConnection = client.idConnection;
+  removeSocket (client) {
+    const {idConnection} = client;
     const idClient = client.id;
     if (idConnection && idClient) {
-      if (this.connections[idConnection] && this.connections[idConnection].clients[idClient] ) {
+      if (this.connections[idConnection] && this.connections[idConnection].clients[idClient]) {
         return this.connections[idConnection].clients[idClient].close()
-        .then(()=>{
-          delete this.connections[idConnection].clients[idClient];
-        });
+          .then(() => {
+            delete this.connections[idConnection].clients[idClient];
+          });
       }
     }
     throw new Error(`Socket ${idClient}, connection : ${idConnection}  not found or already closed`);
   }
 
-  async removeAllSocket(idConnection) {
+  async removeAllSocket (idConnection) {
     if (this.connections[idConnection]) {
-      for( let client in this.connections[idConnection].clients ){
+      for (const client in this.connections[idConnection].clients) {
         this.connections[idConnection].clients[client].close()
-        .then((socket)=>{
-          delete this.connections[idConnection].clients[idClient];
-          socket.destroy();
-        });
+          .then((socket) => {
+            delete this.connections[idConnection].clients[idClient];
+            socket.destroy();
+          });
       }
     }
   }
-};
+}
 
-module.exports = Connections ;
+module.exports = Connections;

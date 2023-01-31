@@ -1,5 +1,5 @@
 class authorizationError extends nodefony.httpError {
-  constructor(message, code, context) {
+  constructor (message, code, context) {
     if (context) {
       super(message, code, context.container);
     } else {
@@ -11,7 +11,7 @@ class authorizationError extends nodefony.httpError {
     }
   }
 
-  logger(data) {
+  logger (data) {
     if (this.secure) {
       if (data) {
         return this.context.logger.apply(this.secure, arguments);
@@ -21,9 +21,9 @@ class authorizationError extends nodefony.httpError {
     return super.logger(data);
   }
 
-  parserSecure() {}
+  parserSecure () {}
 
-  toString() {
+  toString () {
     switch (this.errorType) {
     case "authorizationError":
       return `${clc.red(this.message)}

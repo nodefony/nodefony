@@ -1,5 +1,5 @@
-//const http = require("http");
-//const semver = require('semver');
+// const http = require("http");
+// const semver = require('semver');
 
 let http2 = null;
 let HTTP2_HEADER_PATH = null;
@@ -14,13 +14,11 @@ try {
   HTTP2_HEADER_CONTENT_TYPE = http2.constants.HTTP2_HEADER_CONTENT_TYPE;
 } catch (e) {}
 
-//const version9 = semver.gt(process.versions.node, "9.3.0");
+// const version9 = semver.gt(process.versions.node, "9.3.0");
 
 module.exports = nodefony.register("http2Response", () => {
-
   const Response2 = class http2Response extends nodefony.Response {
-
-    constructor(response, container) {
+    constructor (response, container) {
       super(response, container);
       this.stream = null;
       if (response) {
@@ -30,11 +28,11 @@ module.exports = nodefony.register("http2Response", () => {
       if (this.stream && this.stream.pushAllowed) {
         this.context.pushAllowed = true;
       }
-      //this.userAgent = this.context.getUserAgent();
-      //this.isSafari = this.userAgent ? this.userAgent.includes('Safari') : false;
+      // this.userAgent = this.context.getUserAgent();
+      // this.isSafari = this.userAgent ? this.userAgent.includes('Safari') : false;
     }
 
-    writeHead(statusCode, headers) {
+    writeHead (statusCode, headers) {
       if (this.stream) {
         if (statusCode) {
           this.setStatusCode(statusCode);
@@ -42,25 +40,23 @@ module.exports = nodefony.register("http2Response", () => {
         if (!this.stream.headersSent) {
           try {
             if (this.context.method === "HEAD" || this.context.contentLength) {
-              this.setHeader('Content-Length', this.getLength());
+              this.setHeader("Content-Length", this.getLength());
             }
             this.headers = nodefony.extend(this.getHeaders(), headers);
-            if( this.statusCode ){
-              if(parseInt(this.statusCode, 10 ) > 599 ){
-                this.statusCode = 500
+            if (this.statusCode) {
+              if (parseInt(this.statusCode, 10) > 599) {
+                this.statusCode = 500;
               }
             }
             this.headers[HTTP2_HEADER_STATUS] = this.statusCode;
-            return this.stream.respond(
-              this.headers, {
-                endStream: false,
-              }
-            );
+            return this.stream.respond(this.headers, {
+              endStream: false
+            });
           } catch (e) {
             throw e;
           }
         } else {
-          //throw new Error("Headers already sent !!");
+          // throw new Error("Headers already sent !!");
           this.log("Headers already sent !!", "WARNING");
         }
       } else {
@@ -68,7 +64,7 @@ module.exports = nodefony.register("http2Response", () => {
       }
     }
 
-    send(data, encoding, flush = false) {
+    send (data, encoding, flush = false) {
       try {
         if (this.context.isRedirect) {
           if (!this.stream.headersSent) {
@@ -84,104 +80,101 @@ module.exports = nodefony.register("http2Response", () => {
           if (!flush) {
             this.context.displayDebugBar();
           }
-          return this.stream.write(this.body, (encoding || this.encoding));
-        } else {
-          return super.send(data, encoding);
+          return this.stream.write(this.body, encoding || this.encoding);
         }
+        return super.send(data, encoding);
       } catch (e) {
         throw e;
       }
     }
 
-    end(data, encoding) {
+    end (data, encoding) {
       if (this.stream) {
         this.ended = true;
-        return Promise.resolve(this.stream.end(data, (encoding || this.encoding)));
-      } else {
-        return super.end(data, encoding);
+        return Promise.resolve(this.stream.end(data, encoding || this.encoding));
       }
+      return super.end(data, encoding);
     }
 
-    getStatusMessage() {
-      //return this.statusMessage || http.STATUS_CODES[this.statusCode];
+    getStatusMessage () {
+      // return this.statusMessage || http.STATUS_CODES[this.statusCode];
       return null;
     }
 
-    getStatus() {
+    getStatus () {
       return {
         code: this.getStatusCode(),
         message: null
       };
     }
 
-    push(ele, headers, options) {
+    push (ele, headers, options) {
       return new Promise((resolve, reject) => {
         try {
           if (this.stream && this.stream.pushAllowed) {
-            let file = new nodefony.fileClass(ele);
-            let myheaders = nodefony.extend({
-              'content-length': file.stats.size,
-              'last-modified': file.stats.mtime.toUTCString(),
-              'Content-Type': file.mimeType || "application/octet-stream"
+            const file = new nodefony.fileClass(ele);
+            const myheaders = nodefony.extend({
+              "content-length": file.stats.size,
+              "last-modified": file.stats.mtime.toUTCString(),
+              "Content-Type": file.mimeType || "application/octet-stream"
             }, headers);
             return this.stream.pushStream({
               [HTTP2_HEADER_PATH]: myheaders.path
             }, {
               exclusive: true,
               parent: this.streamId
-            }, (err, pushStream /*, headers*/ ) => {
+            }, (err, pushStream /* , headers*/) => {
               if (err) {
                 return reject(err);
               }
-              pushStream.on('error', err => {
-                this.log(err, "ERROR", 'HTTP2 push stream');
+              pushStream.on("error", (err) => {
+                this.log(err, "ERROR", "HTTP2 push stream");
                 switch (err.code) {
                 case "ENOENT":
                   pushStream.respond({
-                    ':status': 404
+                    ":status": 404
                   });
                   break;
                 case "ERR_HTTP2_STREAM_ERROR":
                   return;
                 default:
                   pushStream.respond({
-                    ':status': 500
+                    ":status": 500
                   });
                 }
                 return reject(err);
               });
-              pushStream.on('close', () => {
-                this.log("Push Stream Closed", "DEBUG", 'HTTP2 push stream');
+              pushStream.on("close", () => {
+                this.log("Push Stream Closed", "DEBUG", "HTTP2 push stream");
               });
-              let myOptions = nodefony.extend({
+              const myOptions = nodefony.extend({
                 onError: (err) => {
-                  this.log(err, "ERROR", 'HTTP2 push stream');
-                  if (err.code === 'ENOENT') {
+                  this.log(err, "ERROR", "HTTP2 push stream");
+                  if (err.code === "ENOENT") {
                     pushStream.respond({
-                      ':status': 404
+                      ":status": 404
                     });
                   } else {
                     pushStream.respond({
-                      ':status': 500
+                      ":status": 500
                     });
                   }
-                  //pushStream.end();
+                  // pushStream.end();
                   return reject(err);
                 }
               }, options);
               try {
-                this.log(">> Pushing : " + file.path, "DEBUG", "HTTP2 Pushing");
+                this.log(`>> Pushing : ${file.path}`, "DEBUG", "HTTP2 Pushing");
                 pushStream.respondWithFile(file.path, myheaders, myOptions);
                 return resolve(pushStream);
               } catch (e) {
                 return reject(e);
               }
             });
-          } else {
-            let warn = new Error("HTTP/2 client has disabled push streams !! ");
-            this.log(warn.message, "DEBUG");
-            return reject(warn);
           }
+          const warn = new Error("HTTP/2 client has disabled push streams !! ");
+          this.log(warn.message, "DEBUG");
+          return reject(warn);
         } catch (e) {
           return reject(e);
         }

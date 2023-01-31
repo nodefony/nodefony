@@ -9,35 +9,32 @@
  *  kernel :   instance of kernel who launch the test
  *
  */
-const assert = require('assert');
+const assert = require("assert");
 
-describe("NODEFONY CORE FINDER", function () {
+describe("NODEFONY CORE FINDER", () => {
+  describe("CONTRUSTROR ", () => {
+    beforeEach(() => {});
 
-  describe('CONTRUSTROR ', function () {
-
-
-    beforeEach(function () {});
-
-    before(function () {
+    before(() => {
       try {
         global.finder = new nodefony.finder({
-          //path:kernel.rootDir
+          // path:kernel.rootDir
         });
       } catch (e) {
         throw e;
       }
     });
 
-    it("LIB LOADED", function (done) {
+    it("LIB LOADED", (done) => {
       assert.equal(typeof nodefony.finder, "function");
       done();
     });
 
-    it("NEW", function (done) {
-      var finder = null;
+    it("NEW", (done) => {
+      let finder = null;
       assert.equal(typeof nodefony.finder, "function");
 
-      assert.throws(function () {
+      assert.throws(() => {
         finder = new nodefony.finder({
           path: "path not found "
         });
@@ -46,28 +43,25 @@ describe("NODEFONY CORE FINDER", function () {
       finder = new nodefony.finder({});
       assert.equal(finder instanceof nodefony.finder, true);
       done();
-
     });
 
-    it("PARSE ROOTDIR", function (done) {
-
-      var res = finder.find({
+    it("PARSE ROOTDIR", (done) => {
+      const res = finder.find({
         recurse: false,
-        onFinish: function (error, result) {
-          //console.log("RESULT length :" + result.length());
+        onFinish (error, result) {
+          // console.log("RESULT length :" + result.length());
           done();
         }
       });
-
     });
 
-    it("RESULT JSON", function (done) {
+    it("RESULT JSON", (done) => {
       const res = finder.find({
         recurse: false,
         json: true,
-        onFinish: function (error, result) {
-          //console.log("RESULT length :" + result.length());
-          //console.log(result.json.nodefony.children.web)
+        onFinish (error, result) {
+          // console.log("RESULT length :" + result.length());
+          // console.log(result.json.nodefony.children.web)
         }
       });
 
@@ -75,18 +69,14 @@ describe("NODEFONY CORE FINDER", function () {
         path: kernel.rootDir,
         json: true,
         recurse: false,
-        onFinish: function (error, result) {
-          //console.log("RESULT length :" + result.length());
-          //console.log(result.json.nodefony.children.web)
+        onFinish (error, result) {
+          // console.log("RESULT length :" + result.length());
+          // console.log(result.json.nodefony.children.web)
           done();
-        }.bind(this)
+        }
       });
 
-      //console.log(finderJson.)
-
+      // console.log(finderJson.)
     });
-
-
   });
-
 });

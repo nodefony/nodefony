@@ -1,34 +1,31 @@
-module.exports = nodefony.register("http2Request", function () {
-
+module.exports = nodefony.register("http2Request", () => {
   const Request = class http2Request extends nodefony.Request {
-
-    constructor(request, context) {
+    constructor (request, context) {
       super(request, context);
     }
 
-    getHost() {
+    getHost () {
       return this.headers[":authority"];
     }
 
-    getUserAgent() {
-      return this.headers['user-agent'];
+    getUserAgent () {
+      return this.headers["user-agent"];
     }
 
-    getMethod() {
+    getMethod () {
       return this.headers[":method"];
     }
 
-    getFullUrl() {
+    getFullUrl () {
       // proxy mode
-      let myurl = `://${this.host}${this.headers[":path"]}`;
-      if (this.headers && this.headers['x-forwarded-for']) {
-        return `${this.headers['x-forwarded-proto']}${myurl}`;
+      const myurl = `://${this.host}${this.headers[":path"]}`;
+      if (this.headers && this.headers["x-forwarded-for"]) {
+        return `${this.headers["x-forwarded-proto"]}${myurl}`;
       }
       if (this.headers[":scheme"] === "https") {
         return `https${myurl}`;
-      } else {
-        return `http${myurl}`;
       }
+      return `http${myurl}`;
     }
   };
   return Request;

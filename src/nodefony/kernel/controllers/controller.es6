@@ -1,10 +1,10 @@
-const myRequest = require('request');
+const myRequest = require("request");
 const {
   graphql
-} = require('graphql');
+} = require("graphql");
 
 class Controller extends nodefony.Service {
-  constructor(container, context) {
+  constructor (container, context) {
     super(null, container, container.get("notificationsCenter"));
     this.setContext(context);
     this.graphql = graphql;
@@ -12,10 +12,10 @@ class Controller extends nodefony.Service {
     this.httpKernel = this.get("httpKernel");
     this.mailer = this.get("mailer");
     this.router = this.get("router");
-    this.serviceTemplating = this.get('templating');
+    this.serviceTemplating = this.get("templating");
   }
 
-  setContext(context) {
+  setContext (context) {
     this.context = context;
     this.method = this.getMethod();
     this.response = this.context.response;
@@ -32,31 +32,34 @@ class Controller extends nodefony.Service {
     });
   }
 
-  getContext() {
+  getContext () {
     return this.context;
   }
 
-  setContextJson(encoding) {
+  setContextJson (encoding) {
     return this.context.setContextJson(encoding);
   }
-  setJsonContext(encoding) {
+
+  setJsonContext (encoding) {
     return this.context.setContextJson(encoding);
   }
-  setContextHtml(encoding) {
-    return this.context.setContextHtml(encoding);
-  }
-  setHtmlContext(encoding) {
+
+  setContextHtml (encoding) {
     return this.context.setContextHtml(encoding);
   }
 
-  log(pci, severity, msgid, msg) {
+  setHtmlContext (encoding) {
+    return this.context.setContextHtml(encoding);
+  }
+
+  log (pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = `CONTROLLER : ${this.bundle.name}Bundle:${this.name}`;
     }
     return super.log(pci, severity, msgid, msg);
   }
 
-  clean() {
+  clean () {
     delete this.session;
     delete this.context;
     delete this.response;
@@ -71,70 +74,67 @@ class Controller extends nodefony.Service {
     super.clean();
   }
 
-  getLocale() {
+  getLocale () {
     return this.context.locale;
   }
 
-  getRequest() {
+  getRequest () {
     return this.request;
   }
 
-  getResponse(content) {
+  getResponse (content) {
     if (content) {
       this.response.setBody(content);
     }
     return this.response;
   }
 
-  getMethod() {
+  getMethod () {
     return this.context.getMethod();
   }
 
-  startSession(sessionContext) {
-    let sessionService = this.get("sessions");
+  startSession (sessionContext) {
+    const sessionService = this.get("sessions");
     // is subRequest
-    if (this.context.parent){
-      return this.getSession()
+    if (this.context.parent) {
+      return this.getSession();
     }
     if (!this.context.requestEnded || this.context.security) {
       return this.sessionAutoStart = sessionService.setAutoStart(sessionContext);
-    } else {
-      return sessionService.start(this.context, sessionContext);
     }
+    return sessionService.start(this.context, sessionContext);
   }
 
-  getSession() {
+  getSession () {
     return this.context.session || null;
   }
 
-  getFlashBag(key) {
-    let session = this.getSession();
+  getFlashBag (key) {
+    const session = this.getSession();
     if (session) {
       return session.getFlashBag(key);
-    } else {
-      this.log("getFlashBag session not started !", "ERROR");
-      return null;
     }
+    this.log("getFlashBag session not started !", "ERROR");
+    return null;
   }
 
-  setFlashBag(key, value) {
-    let session = this.getSession();
+  setFlashBag (key, value) {
+    const session = this.getSession();
     if (session) {
       return session.setFlashBag(key, value);
-    } else {
-      return null;
     }
+    return null;
   }
 
-  addFlash(key, value) {
+  addFlash (key, value) {
     return this.setFlashBag(key, value);
   }
 
-  setCsrfToken(name, options) {
+  setCsrfToken (name, options) {
     return this.context.setCsrfToken(name, options);
   }
 
-  setContentType(mime, encoding) {
+  setContentType (mime, encoding) {
     if (this.context.method !== "websoket") {
       let type = null;
       if (encoding) {
@@ -146,33 +146,33 @@ class Controller extends nodefony.Service {
     }
   }
 
-  getORM() {
+  getORM () {
     return this.getOrm();
   }
 
-  getOrm() {
+  getOrm () {
     return this.get(this.kernel.settings.orm);
   }
 
-  getConnection(name) {
+  getConnection (name) {
     if (name) {
       return this.getOrm().getConnection(name);
     }
     throw new Error("getConnection must have name");
   }
 
-  getEntity(name) {
+  getEntity (name) {
     return this.getOrm().getEntity(name);
   }
 
-  getNodefonyEntity(name) {
+  getNodefonyEntity (name) {
     return this.getOrm().getNodefonyEntity(name);
   }
 
-  getTransaction(name) {
+  getTransaction (name) {
     const orm = this.getOrm();
     if (!orm) {
-      throw new Error(`Orm not found`);
+      throw new Error("Orm not found");
     }
     try {
       return orm.getTransaction(name);
@@ -181,10 +181,10 @@ class Controller extends nodefony.Service {
     }
   }
 
-  async startTransaction(name) {
+  async startTransaction (name) {
     const orm = this.getOrm();
     if (!orm) {
-      throw new Error(`Orm not found`);
+      throw new Error("Orm not found");
     }
     try {
       return await orm.startTransaction(name);
@@ -193,7 +193,7 @@ class Controller extends nodefony.Service {
     }
   }
 
-  sendMail() {
+  sendMail () {
     if (!this.mailer) {
       throw new Error("mail-bundle not registred !");
     }
@@ -223,18 +223,16 @@ class Controller extends nodefony.Service {
    *  this.log(e, "ERROR");
    * });
    **/
-  push(asset, headers, options) {
+  push (asset, headers, options) {
     if (this.context.type === "HTTP2" && this.context.pushAllowed) {
       let assetPublic = null;
       if (!headers) {
         headers = {};
-        assetPublic = asset.replace(this.bundle.publicPath, "/" + this.bundle.bundleName);
+        assetPublic = asset.replace(this.bundle.publicPath, `/${this.bundle.bundleName}`);
         headers.path = assetPublic;
-      } else {
-        if (!headers.path) {
-          assetPublic = asset.replace(this.bundle.publicPath, "/" + this.bundle.bundleName);
-          headers.path = assetPublic;
-        }
+      } else if (!headers.path) {
+        assetPublic = asset.replace(this.bundle.publicPath, `/${this.bundle.bundleName}`);
+        headers.path = assetPublic;
       }
       try {
         return this.response.push(asset, headers, options)
@@ -244,27 +242,25 @@ class Controller extends nodefony.Service {
             return error;
           });
       } catch (e) {
-        return new Promise((resolve, reject) => {
-          return reject(e);
-        });
+        return new Promise((resolve, reject) => reject(e));
       }
     } else {
-      return new Promise((resolve /*, reject*/ ) => {
+      return new Promise((resolve /* , reject*/) => {
         if (this.context.type !== "HTTP2") {
-          //let error = `HTTP2 push : ${asset} method must be called with HTTP2 request !!!!`;
-          //this.log(error, "WARNING");
+          // let error = `HTTP2 push : ${asset} method must be called with HTTP2 request !!!!`;
+          // this.log(error, "WARNING");
           return resolve();
-          //return reject();
+          // return reject();
         }
-        let error = `HTTP2 Server push : ${asset} not pushAllowed `;
+        const error = `HTTP2 Server push : ${asset} not pushAllowed `;
         this.log(error, "WARNING");
         return resolve();
-        //return reject(new Error("HTTP2 Server push not pushAllowed"));
+        // return reject(new Error("HTTP2 Server push not pushAllowed"));
       });
     }
   }
 
-  renderResponse(data, status, headers) {
+  renderResponse (data, status, headers) {
     return new Promise((resolve, reject) => {
       try {
         return resolve(this.renderResponseSync(data, status, headers));
@@ -274,11 +270,9 @@ class Controller extends nodefony.Service {
     });
   }
 
-  renderResponseAsync(data, status, headers) {
+  renderResponseAsync (data, status, headers) {
     return this.renderResponse(data, status, headers)
-      .then((result) => {
-        return this.context.send(result);
-      })
+      .then((result) => this.context.send(result))
       .catch((e) => {
         this.log(e, "ERROR");
         this.createException(e);
@@ -286,7 +280,7 @@ class Controller extends nodefony.Service {
       });
   }
 
-  renderResponseSync(data, status, headers) {
+  renderResponseSync (data, status, headers) {
     try {
       this.response.setBody(data);
       if (headers) {
@@ -303,13 +297,9 @@ class Controller extends nodefony.Service {
   }
 
 
-  renderJson(obj, status, headers) {
+  renderJson (obj, status, headers) {
     if (nodefony.isPromise(obj)) {
-      return obj.then(result => {
-        return this.renderJsonSync(result, status, headers);
-      }).catch(error => {
-        return this.createException(error);
-      });
+      return obj.then((result) => this.renderJsonSync(result, status, headers)).catch((error) => this.createException(error));
     }
     return new Promise((resolve, reject) => {
       try {
@@ -320,18 +310,17 @@ class Controller extends nodefony.Service {
     });
   }
 
-  renderJsonAsync(obj, status, headers) {
+  renderJsonAsync (obj, status, headers) {
     return this.renderJson(obj, status, headers)
-      .then((result) => {
-        return this.context.send(result);
-      }).catch((e) => {
+      .then((result) => this.context.send(result))
+      .catch((e) => {
         this.log(e, "ERROR");
         this.createException(e);
         return e;
       });
   }
 
-  renderJsonSync(obj, status, headers) {
+  renderJsonSync (obj, status, headers) {
     let data = null;
     try {
       data = JSON.stringify(obj);
@@ -351,10 +340,9 @@ class Controller extends nodefony.Service {
       this.log(e, "ERROR");
       throw e;
     }
-
   }
 
-  async render(view, param) {
+  async render (view, param) {
     if (!this.response) {
       throw new Error("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK");
     }
@@ -365,7 +353,7 @@ class Controller extends nodefony.Service {
     }
   }
 
-  renderSync(view, param) {
+  renderSync (view, param) {
     if (!this.response) {
       throw new Error("WARNING ASYNC !!  RESPONSE ALREADY SENT BY EXPCEPTION FRAMEWORK", "WARNING");
     }
@@ -376,18 +364,17 @@ class Controller extends nodefony.Service {
     }
   }
 
-  renderAsync(view, param) {
+  renderAsync (view, param) {
     return this.render(view, param)
-      .then((result) => {
-        return this.context.send(result);
-      }).catch((e) => {
+      .then((result) => this.context.send(result))
+      .catch((e) => {
         this.log(e, "ERROR");
         this.createException(e);
         return e;
       });
   }
 
-  renderView(view, param) {
+  renderView (view, param) {
     return new Promise((resolve, reject) => {
       try {
         return resolve(this.renderViewSync(view, param));
@@ -397,7 +384,7 @@ class Controller extends nodefony.Service {
     });
   }
 
-  renderViewSync(view, param) {
+  renderViewSync (view, param) {
     let res = null;
     let templ = null;
     let extendParam = null;
@@ -419,13 +406,13 @@ class Controller extends nodefony.Service {
     }
   }
 
-  renderRawView(Path, param) {
+  renderRawView (Path, param) {
     let extendParam = this.httpKernel.extendTemplate(param, this.context);
     try {
       this.serviceTemplating.renderFile(Path, extendParam, (error, result) => {
         if (error || result === undefined) {
           if (!error) {
-            error = new Error("ERROR PARSING TEMPLATE :" + Path.path);
+            error = new Error(`ERROR PARSING TEMPLATE :${Path.path}`);
           }
           extendParam = null;
           throw error;
@@ -447,10 +434,10 @@ class Controller extends nodefony.Service {
     return this.response.body;
   }
 
-  renderHtmlFile(Path) {
+  renderHtmlFile (Path) {
     return new Promise((resolve, reject) => {
       try {
-        let file = this.getFile(Path);
+        const file = this.getFile(Path);
         return resolve(file.readAsync());
       } catch (e) {
         return reject(e);
@@ -458,7 +445,7 @@ class Controller extends nodefony.Service {
     });
   }
 
-  renderTwigFile(Path, param) {
+  renderTwigFile (Path, param) {
     return new Promise((resolve, reject) => {
       let extendParam = null;
       try {
@@ -474,10 +461,10 @@ class Controller extends nodefony.Service {
     });
   }
 
-  renderXmlFile(Path, mime, encoding) {
+  renderXmlFile (Path, mime, encoding) {
     return new Promise((resolve, reject) => {
       try {
-        let file = this.getFile(Path);
+        const file = this.getFile(Path);
         this.setContentType(mime || "application/xml", encoding);
         return resolve(file.readAsync());
       } catch (e) {
@@ -486,20 +473,18 @@ class Controller extends nodefony.Service {
     });
   }
 
-  getFile(file) {
+  getFile (file) {
     try {
       let File = null;
       if (file instanceof nodefony.fileClass) {
         File = file;
+      } else if (typeof file === "string") {
+        File = new nodefony.fileClass(file);
       } else {
-        if (typeof file === "string") {
-          File = new nodefony.fileClass(file);
-        } else {
-          throw new Error("File argument bad type for getFile :" + typeof file);
-        }
+        throw new Error(`File argument bad type for getFile :${typeof file}`);
       }
       if (File.type !== "File") {
-        throw new Error("getFile bad type for  :" + file);
+        throw new Error(`getFile bad type for  :${file}`);
       }
       return File;
     } catch (e) {
@@ -507,12 +492,12 @@ class Controller extends nodefony.Service {
     }
   }
 
-  streamFile(file, headers, options={}) {
-    options.autoClose =false;
+  streamFile (file, headers, options = {}) {
+    options.autoClose = false;
     try {
       const streamFile = fs.createReadStream(this.getFile(file).path, options);
       streamFile.on("open", () => {
-        //console.log("open")
+        // console.log("open")
         try {
           this.response.response.writeHead(this.response.statusCode, headers);
           streamFile.pipe(this.response.response, {
@@ -525,11 +510,11 @@ class Controller extends nodefony.Service {
         }
       });
       streamFile.on("end", () => {
-        //console.log("end")
+        // console.log("end")
         try {
           if (streamFile) {
             streamFile.unpipe(this.response.response);
-            //console.trace(streamFile)
+            // console.trace(streamFile)
             if (streamFile.fd) {
               fs.close(streamFile.fd);
             }
@@ -543,7 +528,7 @@ class Controller extends nodefony.Service {
         }
       });
       streamFile.on("close", () => {
-        //console.log("close")
+        // console.log("close")
         if (streamFile) {
           streamFile.unpipe(this.response.response);
           if (streamFile.fd) {
@@ -561,7 +546,7 @@ class Controller extends nodefony.Service {
         }
         throw error;
       });
-      streamFile.on('close', () => {
+      streamFile.on("close", () => {
         if (streamFile) {
           streamFile.unpipe(this.response.response);
           if (streamFile.fd) {
@@ -579,16 +564,16 @@ class Controller extends nodefony.Service {
     }
   }
 
-  renderFileDownload(file, options, headers) {
-    //console.log("renderFileDownload :" + file.path)
-    let File = this.getFile(file);
-    let length = File.stats.size;
-    let head = nodefony.extend({
-      'Content-Disposition': 'attachment; filename="' + File.name + '"',
-      'Content-Length': length,
+  renderFileDownload (file, options, headers) {
+    // console.log("renderFileDownload :" + file.path)
+    const File = this.getFile(file);
+    const length = File.stats.size;
+    const head = nodefony.extend({
+      "Content-Disposition": `attachment; filename="${File.name}"`,
+      "Content-Length": length,
       "Expires": "0",
-      'Content-Description': 'File Transfer',
-      'Content-Type': File.mimeType || "application/octet-stream",
+      "Content-Description": "File Transfer",
+      "Content-Type": File.mimeType || "application/octet-stream"
     }, headers || {});
     try {
       this.streamFile(File, head, options);
@@ -597,44 +582,44 @@ class Controller extends nodefony.Service {
     }
   }
 
-  renderMediaStream(file, options, headers) {
-    let File = this.getFile(file);
+  renderMediaStream (file, options, headers) {
+    const File = this.getFile(file);
     if (!options) {
       options = {};
     }
     this.response.setEncoding("binary");
-    let range = this.request.headers.range;
-    let length = File.stats.size;
+    const {range} = this.request.headers;
+    const length = File.stats.size;
     let head = null;
     let value = null;
     if (range) {
-      //console.log("HEADER = " + range);
-      let parts = range.replace(/bytes=/, "").split("-");
-      //console.log(parts)
-      let partialstart = parts[0];
-      let partialend = parts[1];
-      let start = parseInt(partialstart, 10);
-      let end = partialend ? parseInt(partialend, 10) : length - 1;
-      let chunksize = (end - start) + 1;
-      //console.log("start :" + start) ;
-      //console.log("end :" + end) ;
+      // console.log("HEADER = " + range);
+      const parts = range.replace(/bytes=/, "").split("-");
+      // console.log(parts)
+      const partialstart = parts[0];
+      const partialend = parts[1];
+      const start = parseInt(partialstart, 10);
+      const end = partialend ? parseInt(partialend, 10) : length - 1;
+      const chunksize = end - start + 1;
+      // console.log("start :" + start) ;
+      // console.log("end :" + end) ;
       value = nodefony.extend(options, {
-        start: start,
-        end: end
+        start,
+        end
       });
-      //console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
+      // console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
       head = nodefony.extend({
-        'Content-Range': 'bytes ' + start + '-' + end + '/' + length,
-        'Accept-Ranges': 'bytes',
-        'Content-Length': chunksize,
-        'Content-Type': File.mimeType || "application/octet-stream"
+        "Content-Range": `bytes ${start}-${end}/${length}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": chunksize,
+        "Content-Type": File.mimeType || "application/octet-stream"
       }, headers);
       this.response.setStatusCode(206);
     } else {
       head = nodefony.extend({
-        'Content-Type': File.mimeType || "application/octet-stream",
-        'Content-Length': length,
-        'Content-Disposition': ' inline; filename="' + File.name + '"'
+        "Content-Type": File.mimeType || "application/octet-stream",
+        "Content-Length": length,
+        "Content-Disposition": ` inline; filename="${File.name}"`
       }, headers);
     }
     // streamFile
@@ -645,31 +630,32 @@ class Controller extends nodefony.Service {
     }
   }
 
-  createNotFoundException(message) {
+  createNotFoundException (message) {
     throw new nodefony.httpError(message, 404, this.container);
   }
 
-  createUnauthorizedException(message) {
+  createUnauthorizedException (message) {
     throw new nodefony.securityError(message, 401, null, this.context);
   }
 
-  createException(message, code = 500) {
-    throw new nodefony.httpError(message, code, this.container);
-  }
-  renderException(message, code = 500) {
+  createException (message, code = 500) {
     throw new nodefony.httpError(message, code, this.container);
   }
 
-  createAccessDeniedException(message, code = 403) {
+  renderException (message, code = 500) {
+    throw new nodefony.httpError(message, code, this.container);
+  }
+
+  createAccessDeniedException (message, code = 403) {
     throw new nodefony.authorizationError(message, code, this.context);
   }
 
-  createSecurityException(message, code = 401) {
+  createSecurityException (message, code = 401) {
     throw new nodefony.securityError(message, code, this.context.security, this.context);
   }
 
 
-  isGranted(role) {
+  isGranted (role) {
     try {
       return this.context.is_granted(role);
     } catch (e) {
@@ -677,15 +663,15 @@ class Controller extends nodefony.Service {
     }
   }
 
-  is_granted(role) {
+  is_granted (role) {
     return this.isGranted(role);
   }
 
-  translate() {
+  translate () {
     return this.context.translation.trans.apply(this.context.translation, arguments);
   }
 
-  redirect(url, status, headers) {
+  redirect (url, status, headers) {
     if (!this.context.redirect) {
       throw new Error("subRequest can't redirect request");
     }
@@ -699,7 +685,7 @@ class Controller extends nodefony.Service {
     }
   }
 
-  redirectToRoute(route, variables, status, headers) {
+  redirectToRoute (route, variables, status, headers) {
     if (!route) {
       throw new Error("Redirect error no route !!!");
     }
@@ -710,46 +696,44 @@ class Controller extends nodefony.Service {
     }
   }
 
-  redirectHttps(status) {
+  redirectHttps (status) {
     return this.context.redirectHttps(status || 301);
   }
 
-  forward(name, param) {
-    //let pattern = Array.prototype.shift.call(arguments);
-    //let data = Array.prototype.slice.call(arguments);
-    //let subRequest = new nodefony.subRequest(this, pattern);
-    //return subRequest.handle(data);
-    let resolver = this.router.resolveName(this.context, name);
+  forward (name, param) {
+    // let pattern = Array.prototype.shift.call(arguments);
+    // let data = Array.prototype.slice.call(arguments);
+    // let subRequest = new nodefony.subRequest(this, pattern);
+    // return subRequest.handle(data);
+    const resolver = this.router.resolveName(this.context, name);
     return resolver.callController(param, true);
   }
 
-  getUser() {
+  getUser () {
     return this.context.getUser();
   }
 
-  getToken() {
+  getToken () {
     return this.context.getToken();
   }
 
-  isAjax() {
+  isAjax () {
     return this.getRequest().isAjax();
   }
 
-  hideDebugBar() {
+  hideDebugBar () {
     this.context.showDebugBar = false;
   }
 
-  getRoute() {
+  getRoute () {
     return this.context.resolver.getRoute();
   }
 
-  logout() {
+  logout () {
     if (this.security) {
       this.log(`Logout Controller : ${this.name}`, "DEBUG");
       return this.security.logout(this.context)
-        .then(() => {
-          return true;
-        })
+        .then(() => true)
         .catch((e) => {
           throw e;
         });
@@ -757,9 +741,8 @@ class Controller extends nodefony.Service {
     return new Promise((resolve, reject) => {
       if (this.context.session) {
         return this.context.session.invalidate()
-          .then(() => {
-            return resolve(true);
-          }).catch(e => {
+          .then(() => resolve(true))
+          .catch((e) => {
             this.log(e, "ERROR");
             return reject(e);
           });
@@ -768,7 +751,7 @@ class Controller extends nodefony.Service {
     });
   }
 
-  generateUrl(name, variables, absolute) {
+  generateUrl (name, variables, absolute) {
     try {
       if (absolute) {
         return this.context.generateAbsoluteUrl(name, variables);
@@ -779,7 +762,7 @@ class Controller extends nodefony.Service {
     }
   }
 
-  generateAbsoluteUrl(name, variables) {
+  generateAbsoluteUrl (name, variables) {
     try {
       return this.context.generateAbsoluteUrl(name, variables);
     } catch (e) {
@@ -787,8 +770,8 @@ class Controller extends nodefony.Service {
     }
   }
 
-  htmlMdParser(content, options) {
-    let markdown = require('markdown-it')(nodefony.extend({
+  htmlMdParser (content, options) {
+    const markdown = require("markdown-it")(nodefony.extend({
       html: true
     }, options));
     try {

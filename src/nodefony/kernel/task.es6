@@ -3,7 +3,7 @@
  * command:task:action
  */
 class Task extends nodefony.Service {
-  constructor(name, command) {
+  constructor (name, command) {
     super(name, command.container, command.notificationsCenter);
     this.command = command;
     this.cli = this.command.cli;
@@ -11,51 +11,46 @@ class Task extends nodefony.Service {
     this.interactive = this.command.interactive;
   }
 
-  showBanner() {
+  showBanner () {
     return this.cli.asciify(`      ${this.command.name} ${this.name}`)
       .then((data) => {
         if (this.json) {
           return data;
         }
         this.cli.clear();
-        let color = this.cli.clc.blueBright.bold;
+        const color = this.cli.clc.blueBright.bold;
         console.log(color(data));
         this.cli.blankLine();
         return data;
       })
-      .catch((e) => {
-        return e;
-      });
+      .catch((e) => e);
   }
 
-  run(args) {
+  run (args) {
     if (this.interactive) {
       return this.interaction(args)
-        .then((response) => {
-          return this.generate(args, response);
-        })
-        .catch((e) => {
-          throw e;
-        });
-    } else {
-      return this.generate(args, null)
+        .then((response) => this.generate(args, response))
         .catch((e) => {
           throw e;
         });
     }
+    return this.generate(args, null)
+      .catch((e) => {
+        throw e;
+      });
   }
 
-  generate(args, response) {
+  generate (args, response) {
     return Promise.resolve(response);
-    //return Promise.reject(new Error(`Run Task Class : ${this.name} error has not generate method `));
+    // return Promise.reject(new Error(`Run Task Class : ${this.name} error has not generate method `));
   }
 
-  interaction( /*args*/ ) {
+  interaction (/* args*/) {
     return Promise.resolve();
-    //return Promise.reject(new Error(`Run Task Class : ${this.name} has not interaction method no interactive mode`));
+    // return Promise.reject(new Error(`Run Task Class : ${this.name} has not interaction method no interactive mode`));
   }
 
-  logger(pci, severity, msgid, msg) {
+  logger (pci, severity, msgid, msg) {
     try {
       if (!msgid) {
         msgid = `COMMAND ${this.command.name} TASK ${this.name}`;
@@ -66,20 +61,19 @@ class Task extends nodefony.Service {
     }
   }
 
-  showHelp(help = "") {
+  showHelp (help = "") {
     return help;
   }
 
-  setHelp(command, description) {
+  setHelp (command, description) {
     this.cli.displayTable([
-        ["", this.cli.clc.green(command), description]
-      ], this.command.optionsTables);
+      ["", this.cli.clc.green(command), description]
+    ], this.command.optionsTables);
   }
 
-  terminate(code) {
+  terminate (code) {
     return this.cli.terminate(code);
   }
-
 }
 
 nodefony.Task = Task;

@@ -7,8 +7,7 @@
  *  @Route ("/test/firewall/api")
  */
 module.exports = class apiController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
   }
 
@@ -17,7 +16,7 @@ module.exports = class apiController extends nodefony.controller {
    *	@method indexAction
    *  @Route ("/stateless", name="api-stateless")
    */
-  indexAction() {
+  indexAction () {
     try {
       return this.renderJson({
         foo: "bar",
@@ -28,5 +27,4 @@ module.exports = class apiController extends nodefony.controller {
       throw e;
     }
   }
-
 };

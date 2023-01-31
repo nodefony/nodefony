@@ -2,7 +2,7 @@
  * NODEFONY CONFIG BUNDLE  httpBundle
  *
  */
-const path = require('path');
+const path = require("path");
 const readFile = function (Path) {
   try {
     return fs.readFileSync(Path, {
@@ -14,21 +14,25 @@ const readFile = function (Path) {
   }
 };
 const {
-  createHash,
-} = require('node:crypto');
+  createHash
+} = require("node:crypto");
 
 const createSecret = function () {
-  let sercretPath = path.resolve("config", "certificates", "ca", "private", "ca.key.pem");
-  return createHash('sha512').update(readFile(sercretPath)).digest('base64').substr(0, 32);
+  const sercretPath = path.resolve("config", "certificates", "ca", "private", "ca.key.pem");
+  return createHash("sha512").update(readFile(sercretPath))
+    .digest("base64")
+    .substr(0, 32);
 };
 const secret = createSecret();
 
 const createIv = function () {
-  let sercretPath = path.resolve("config", "certificates", "ca", "public", "public.key.pem");
-  return createHash('sha512').update(readFile(sercretPath)).digest('base64').substr(0, 16);
+  const sercretPath = path.resolve("config", "certificates", "ca", "public", "public.key.pem");
+  return createHash("sha512").update(readFile(sercretPath))
+    .digest("base64")
+    .substr(0, 16);
 };
 const iv = createIv();
-const tmpDir = kernel.tmpDir.path || "/tmp"
+const tmpDir = kernel.tmpDir.path || "/tmp";
 
 module.exports = {
   watch: false,
@@ -39,9 +43,9 @@ module.exports = {
     multiples: true,
     maxFieldsSize: 2097152, // 2MB
     maxFields: 1000,
-    encoding: 'utf-8'
+    encoding: "utf-8"
   },
-  //For more options parser QS @see : https://github.com/ljharb/qs
+  // For more options parser QS @see : https://github.com/ljharb/qs
   queryString: {
     parameterLimit: 1000,
     delimiter: "&",
@@ -114,12 +118,12 @@ module.exports = {
   statics: {
     defaultOptions: {
       cacheControl: true,
-      maxAge: (96 * 60 * 60)
+      maxAge: 96 * 60 * 60
     },
     web: {
       path: "web",
       options: {
-        maxAge: (30 * 24 * 60 * 60 * 1000)
+        maxAge: 30 * 24 * 60 * 60 * 1000
       }
     }
   },
@@ -155,8 +159,9 @@ module.exports = {
     encrypt: {
       algorithm: "aes-256-ctr",
       password: secret,
-      iv: iv
+      iv
     },
+
     /**
      * SERVICE memcached
      */
@@ -171,11 +176,12 @@ module.exports = {
       options: {
         debug: false,
         timeout: 5000
-      },
+      }
     }
   },
+
   /**
    * SERVICE requestClient
    */
   requestClient: null
-}
+};

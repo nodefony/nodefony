@@ -1,12 +1,10 @@
-module.exports = function () {
-
+module.exports = (function () {
   const ele = class ele {
-
-    constructor(name) {
+    constructor (name) {
       this.name = name;
     }
 
-    toJson() {
+    toJson () {
       return {
         name: this.name
       };
@@ -14,4 +12,4 @@ module.exports = function () {
   };
 
   return new ele("lib5152");
-}();
+}());

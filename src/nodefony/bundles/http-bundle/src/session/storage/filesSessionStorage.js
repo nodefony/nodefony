@@ -1,47 +1,44 @@
-const mkdirp = require('mkdirp');
+const mkdirp = require("mkdirp");
 
-nodefony.register.call(nodefony.session.storage, "files", function () {
-
+nodefony.register.call(nodefony.session.storage, "files", () => {
   const finderGC = function (path, msMaxlifetime, context) {
     let nbSessionsDelete = 0;
     return new nodefony.finder({
-      path: path,
+      path,
       onFile: function (file) {
-        var mtime = new Date(file.stats.mtime).getTime();
+        const mtime = new Date(file.stats.mtime).getTime();
         if (mtime + msMaxlifetime < new Date().getTime()) {
           file.unlink();
-          this.manager.log("FILES SESSIONS STORAGE GARBADGE COLLECTOR SESSION context : " + context + " ID : " + file.name + " DELETED");
+          this.manager.log(`FILES SESSIONS STORAGE GARBADGE COLLECTOR SESSION context : ${context} ID : ${file.name} DELETED`);
           nbSessionsDelete++;
         }
       }.bind(this),
-      onFinish: ( /*error, result*/ ) => {
-        this.manager.log("FILES SESSIONS STORAGE context : " + (context || "default") + " GARBADGE COLLECTOR ==> " + nbSessionsDelete + " DELETED");
+      onFinish: (/* error, result*/) => {
+        this.manager.log(`FILES SESSIONS STORAGE context : ${context || "default"} GARBADGE COLLECTOR ==> ${nbSessionsDelete} DELETED`);
       }
     });
   };
 
   const fileSessionStorage = class fileSessionStorage {
-    constructor(manager) {
+    constructor (manager) {
       this.manager = manager;
       this.path = manager.settings.save_path;
       this.gc_maxlifetime = manager.settings.gc_maxlifetime;
       this.contextSessions = [];
     }
 
-    start(id, contextSession) {
+    start (id, contextSession) {
       let fileSession = null;
       let Path = null;
       if (contextSession) {
-        Path = this.path + "/" + contextSession + "/" + id;
+        Path = `${this.path}/${contextSession}/${id}`;
       } else {
-        Path = this.path + "/default/" + id;
+        Path = `${this.path}/default/${id}`;
       }
       try {
         fileSession = new nodefony.fileClass(Path);
       } catch (e) {
-        return new Promise((resolve /*, reject*/ ) => {
-          return resolve({});
-        });
+        return new Promise((resolve /* , reject*/) => resolve({}));
       }
       try {
         return this.read(fileSession);
@@ -50,17 +47,17 @@ nodefony.register.call(nodefony.session.storage, "files", function () {
       }
     }
 
-    open(contextSession) {
+    open (contextSession) {
       let Path = null;
       if (contextSession) {
-        Path = this.path + "/" + contextSession;
+        Path = `${this.path}/${contextSession}`;
         this.contextSessions.push(contextSession);
       } else {
         Path = this.path;
       }
-      let res = fs.existsSync(Path);
+      const res = fs.existsSync(Path);
       if (!res) {
-        this.manager.log("create directory context sessions " + Path);
+        this.manager.log(`create directory context sessions ${Path}`);
         try {
           mkdirp.sync(Path);
         } catch (e) {
@@ -72,38 +69,35 @@ nodefony.register.call(nodefony.session.storage, "files", function () {
           path: Path,
           recurse: false,
           onFinish: (error, result) => {
-            this.manager.log("CONTEXT " + (contextSession ? contextSession : "GLOBAL") + " SESSIONS STORAGE  ==>  " + this.manager.settings.handler.toUpperCase() + " COUNT SESSIONS : " + result.length());
+            this.manager.log(`CONTEXT ${contextSession ? contextSession : "GLOBAL"} SESSIONS STORAGE  ==>  ${this.manager.settings.handler.toUpperCase()} COUNT SESSIONS : ${result.length()}`);
           }
         });
       }
       return true;
     }
 
-    close() {
+    close () {
       this.gc(this.gc_maxlifetime);
       return true;
     }
 
-    destroy(id, contextSession) {
-
-      var fileDestroy = null;
+    destroy (id, contextSession) {
+      let fileDestroy = null;
       let Path = null;
       if (contextSession) {
-        Path = this.path + "/" + contextSession + "/" + id;
+        Path = `${this.path}/${contextSession}/${id}`;
       } else {
-        Path = this.path + "/default/" + id;
+        Path = `${this.path}/default/${id}`;
       }
       try {
         fileDestroy = new nodefony.fileClass(Path);
       } catch (e) {
-        this.manager.log("STORAGE FILE :" + Path, "DEBUG");
-        return new Promise((resolve /*, reject*/ ) => {
-          return resolve(id);
-        });
+        this.manager.log(`STORAGE FILE :${Path}`, "DEBUG");
+        return new Promise((resolve /* , reject*/) => resolve(id));
       }
       return new Promise((resolve, reject) => {
         try {
-          this.manager.log("FILES SESSIONS STORAGE DESTROY SESSION context : " + contextSession + " ID : " + fileDestroy.name + " DELETED");
+          this.manager.log(`FILES SESSIONS STORAGE DESTROY SESSION context : ${contextSession} ID : ${fileDestroy.name} DELETED`);
           return resolve(fileDestroy.unlink());
         } catch (e) {
           return reject(id);
@@ -111,23 +105,21 @@ nodefony.register.call(nodefony.session.storage, "files", function () {
       });
     }
 
-    gc(maxlifetime, contextSession) {
-      let msMaxlifetime = ((maxlifetime || this.gc_maxlifetime) * 1000);
+    gc (maxlifetime, contextSession) {
+      const msMaxlifetime = (maxlifetime || this.gc_maxlifetime) * 1000;
       if (contextSession) {
-        let Path = this.path + "/" + contextSession;
+        const Path = `${this.path}/${contextSession}`;
         finderGC.call(this, Path, msMaxlifetime, contextSession);
-      } else {
-        if (this.contextSessions.length) {
-          for (let i = 0; i < this.contextSessions.length; i++) {
-            finderGC.call(this, this.path + "/" + this.contextSessions[i], msMaxlifetime, this.contextSessions[i]);
-          }
+      } else if (this.contextSessions.length) {
+        for (let i = 0; i < this.contextSessions.length; i++) {
+          finderGC.call(this, `${this.path}/${this.contextSessions[i]}`, msMaxlifetime, this.contextSessions[i]);
         }
       }
     }
 
-    read(file) {
+    read (file) {
       return new Promise((resolve, reject) => {
-        //let id = file.name;
+        // let id = file.name;
         try {
           fs.readFile(file.path, "utf8", (err, data) => {
             if (err) {
@@ -135,31 +127,30 @@ nodefony.register.call(nodefony.session.storage, "files", function () {
             }
             return resolve(JSON.parse(data));
           });
-
         } catch (e) {
-          this.manager.log("FILES SESSIONS STORAGE READ  ==> " + e, "ERROR");
+          this.manager.log(`FILES SESSIONS STORAGE READ  ==> ${e}`, "ERROR");
           return reject(e);
         }
       });
     }
 
-    write(fileName, serialize, contextSession) {
+    write (fileName, serialize, contextSession) {
       let Path = null;
       if (contextSession) {
-        Path = this.path + "/" + contextSession + "/" + fileName;
+        Path = `${this.path}/${contextSession}/${fileName}`;
       } else {
-        Path = this.path + "/default/" + fileName;
+        Path = `${this.path}/default/${fileName}`;
       }
       return new Promise((resolve, reject) => {
         try {
-          fs.writeFile(Path, JSON.stringify(serialize), 'utf8', (err) => {
+          fs.writeFile(Path, JSON.stringify(serialize), "utf8", (err) => {
             if (err) {
               return reject(err);
             }
             return resolve(serialize);
           });
         } catch (e) {
-          this.manager.log("FILES SESSIONS STORAGE : " + e, "ERROR");
+          this.manager.log(`FILES SESSIONS STORAGE : ${e}`, "ERROR");
           return reject(e);
         }
       });

@@ -3,11 +3,10 @@
  *  CONTROLLER test unit
  *
  */
-const querystring = require('querystring');
+const querystring = require("querystring");
 
 module.exports = class controllerTestController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
     this.orm = this.getORM();
     this.ormName = this.kernel.getOrm();
@@ -18,16 +17,16 @@ module.exports = class controllerTestController extends nodefony.controller {
    *  redirectAction
    *
    */
-  redirectAction(status) {
-    var url = "/";
-    var headers = {};
+  redirectAction (status) {
+    let url = "/";
+    let headers = {};
     if (this.queryPost.status) {
       status = this.queryPost.status;
     }
     if (this.queryPost.url) {
-      var size = Object.keys(this.queryGet).length;
+      const size = Object.keys(this.queryGet).length;
       if (size) {
-        url = this.queryPost.url + "?" + querystring.stringify(this.queryGet);
+        url = `${this.queryPost.url}?${querystring.stringify(this.queryGet)}`;
       } else {
         url = this.queryPost.url;
       }
@@ -47,12 +46,12 @@ module.exports = class controllerTestController extends nodefony.controller {
    *  requestAction
    *
    */
-  requestAction() {
+  requestAction () {
     return this.renderJson({
       method: this.getMethod(),
       query: this.query,
       queryPost: this.queryPost,
-      queryGet: this.queryGet,
+      queryGet: this.queryGet
     });
   }
 
@@ -61,7 +60,7 @@ module.exports = class controllerTestController extends nodefony.controller {
    *  promiseAction
    *
    */
-  promiseAction(action) {
+  promiseAction (action) {
     switch (action) {
     case "promise":
       return this.forward("testBundle:controllerTest:promise1");
@@ -104,28 +103,24 @@ module.exports = class controllerTestController extends nodefony.controller {
    *
    */
 
-  promise1Action() {
-    var data = null;
-    var myFunc2 = () => {
-      return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            status: 200,
-            data: data
-          });
-        }, 500);
-      });
-    };
-    new Promise((resolve /*, reject*/ ) => {
+  promise1Action () {
+    let data = null;
+    const myFunc2 = () => new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          status: 200,
+          data
+        });
+      }, 500);
+    });
+    new Promise((resolve /* , reject*/) => {
       setTimeout(() => {
         data = {
           foo: "bar"
         };
         resolve(myFunc2());
       }, 500);
-    }).then((...args) => {
-      return this.renderJsonAsync(...args);
-    });
+    }).then((...args) => this.renderJsonAsync(...args));
   }
 
   /**
@@ -133,197 +128,170 @@ module.exports = class controllerTestController extends nodefony.controller {
    *  promise
    *
    */
-  promise2() {
-    new Promise((resolve /*, reject*/ ) => {
+  promise2 () {
+    new Promise((resolve /* , reject*/) => {
       setTimeout(() => {
         resolve({
           foo: "bar"
         });
       }, 500);
-    }).then((ele) => {
-      return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            status: 200,
-            data: ele
-          });
-        }, 500);
-      });
-    }).then((ele) => {
-      return this.renderJsonAsync(ele);
-    });
-  }
-
-  /**
-   *
-   *  promise json
-   *
-   */
-  promise3() {
-    var myFunc = () => {
-      return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            status: 200,
-            time: "200"
-          });
-        }, 200);
-      });
-    };
-
-    var myFunc2 = () => {
-      return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            status: 200,
-            time: "500"
-          });
-        }, 500);
-      });
-    };
-
-    return Promise.all([myFunc(), myFunc2()]).then((data) => {
-      return this.renderJson(data);
-    });
-  }
-
-
-  /**
-   *
-   *  promise json
-   *
-   */
-  promise4() {
-
-    var myFunc = () => {
-      return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            status: 200,
-            time: "200"
-          });
-        }, 200);
-      });
-    };
-
-    var myFunc2 = () => {
-      return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            status: 200,
-            time: "500"
-          });
-        }, 500);
-      });
-    };
-
-    return Promise.all([myFunc(), myFunc2()]).then((data) => {
-      return this.renderJson(data);
-      /*return this.renderResponse( JSON.stringify( data ) , 200 , {
-        'Content-Type': "text/json ; charset="+ this.context.response.encoding
-      } ) ;*/
-    });
-  }
-
-  /**
-   *
-   *  promise reject
-   *
-   */
-  promise5() {
-
-    var myFunc = () => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          reject({
-            status: 500,
-            promise: "1"
-          });
-        }, 200);
-      });
-    };
-
-    var myFunc2 = () => {
-      return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            status: 200,
-            promise: "2"
-          });
-        }, 500);
-      });
-    };
-
-    return Promise.all([myFunc(), myFunc2()]).then((data) => {
-      return this.renderJson(data);
-      /*return this.renderResponse( JSON.stringify( data ) , 200 , {
-        'Content-Type': "text/json ; charset="+ this.context.response.encoding
-      } ) ;*/
-    }).catch((data) => {
-      this.getResponse().setStatusCode(data.status);
-      return this.renderJson(data);
-    });
-  }
-
-  /**
-   *
-   *  promise reject
-   *
-   */
-  promise6() {
-    var myFunc = () => {
-      return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            status: 200,
-            promise: "1"
-          });
-        }, 200);
-      });
-    };
-    var myFunc2 = () => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          reject({
-            status: 404,
-            promise: "2"
-          });
-        }, 500);
-      });
-    };
-    return Promise.all([myFunc(), myFunc2()]).then((data) => {
-      return this.renderJson(data);
-    }).catch((data) => {
-      this.getResponse().setStatusCode(data.status);
-      return this.renderJson(data);
-    });
-  }
-
-  /**
-   *
-   *  promise reject
-   *
-   */
-  promise7() {
-
-    return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            foo: "bar"
-          });
-        }, 500);
-      }).then((ele) => {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            reject({
-              status: 500,
-              data: ele
-            });
-          }, 500);
+    }).then((ele) => new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          status: 200,
+          data: ele
         });
-      }).then((ele) => {
-        return this.renderJson(ele);
-      })
+      }, 500);
+    }))
+      .then((ele) => this.renderJsonAsync(ele));
+  }
+
+  /**
+   *
+   *  promise json
+   *
+   */
+  promise3 () {
+    const myFunc = () => new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          status: 200,
+          time: "200"
+        });
+      }, 200);
+    });
+
+    const myFunc2 = () => new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          status: 200,
+          time: "500"
+        });
+      }, 500);
+    });
+
+    return Promise.all([myFunc(), myFunc2()]).then((data) => this.renderJson(data));
+  }
+
+
+  /**
+   *
+   *  promise json
+   *
+   */
+  promise4 () {
+    const myFunc = () => new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          status: 200,
+          time: "200"
+        });
+      }, 200);
+    });
+
+    const myFunc2 = () => new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          status: 200,
+          time: "500"
+        });
+      }, 500);
+    });
+
+    return Promise.all([myFunc(), myFunc2()]).then((data) => this.renderJson(data)
+
+      /* return this.renderResponse( JSON.stringify( data ) , 200 , {
+        'Content-Type': "text/json ; charset="+ this.context.response.encoding
+      } ) ;*/
+    );
+  }
+
+  /**
+   *
+   *  promise reject
+   *
+   */
+  promise5 () {
+    const myFunc = () => new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject({
+          status: 500,
+          promise: "1"
+        });
+      }, 200);
+    });
+
+    const myFunc2 = () => new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          status: 200,
+          promise: "2"
+        });
+      }, 500);
+    });
+
+    return Promise.all([myFunc(), myFunc2()]).then((data) => this.renderJson(data)
+
+      /* return this.renderResponse( JSON.stringify( data ) , 200 , {
+        'Content-Type': "text/json ; charset="+ this.context.response.encoding
+      } ) ;*/
+    )
+      .catch((data) => {
+        this.getResponse().setStatusCode(data.status);
+        return this.renderJson(data);
+      });
+  }
+
+  /**
+   *
+   *  promise reject
+   *
+   */
+  promise6 () {
+    const myFunc = () => new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          status: 200,
+          promise: "1"
+        });
+      }, 200);
+    });
+    const myFunc2 = () => new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject({
+          status: 404,
+          promise: "2"
+        });
+      }, 500);
+    });
+    return Promise.all([myFunc(), myFunc2()]).then((data) => this.renderJson(data))
+      .catch((data) => {
+        this.getResponse().setStatusCode(data.status);
+        return this.renderJson(data);
+      });
+  }
+
+  /**
+   *
+   *  promise reject
+   *
+   */
+  promise7 () {
+    return new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          foo: "bar"
+        });
+      }, 500);
+    }).then((ele) => new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject({
+          status: 500,
+          data: ele
+        });
+      }, 500);
+    }))
+      .then((ele) => this.renderJson(ele))
       .catch((data) => {
         this.getResponse().setStatusCode(data.status);
         return this.renderJson(data);
@@ -335,46 +303,46 @@ module.exports = class controllerTestController extends nodefony.controller {
    *  promise throw
    *
    */
-  promise8() {
-    return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            status: 500,
-            data: {
-              foo: "bar"
-            }
-          });
-        }, 500);
-      }).then((ele) => {
-        throw ele;
-      }).then((ele) => {
-        return this.renderJson(ele);
-      })
+  promise8 () {
+    return new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          status: 500,
+          data: {
+            foo: "bar"
+          }
+        });
+      }, 500);
+    }).then((ele) => {
+      throw ele;
+    })
+      .then((ele) => this.renderJson(ele))
       .catch((data) => {
         this.getResponse().setStatusCode(data.status);
         return this.renderJson(data);
       });
   }
+
+
   /**
    *
    *  promise throw
    *
    */
-  promise88() {
-    return new Promise((resolve /*, reject*/ ) => {
-        setTimeout(() => {
-          resolve({
-            status: 500,
-            data: {
-              foo: "bar"
-            }
-          });
-        }, 500);
-      }).then(() => {
-        notDefinded;
-      }).then((ele) => {
-        return this.renderJson(ele);
-      })
+  promise88 () {
+    return new Promise((resolve /* , reject*/) => {
+      setTimeout(() => {
+        resolve({
+          status: 500,
+          data: {
+            foo: "bar"
+          }
+        });
+      }, 500);
+    }).then(() => {
+      notDefinded;
+    })
+      .then((ele) => this.renderJson(ele))
       .catch((data) => {
         this.getResponse().setStatusCode(500);
         return this.renderJson({
@@ -389,9 +357,9 @@ module.exports = class controllerTestController extends nodefony.controller {
    *  promise sequelise
    *
    */
-  promise9() {
-    //var orm = this.getORM();
-    var userEntity = this.orm.getEntity("user");
+  promise9 () {
+    // var orm = this.getORM();
+    const userEntity = this.orm.getEntity("user");
     let query = null;
     switch (this.ormName) {
     case "sequelize":
@@ -408,12 +376,10 @@ module.exports = class controllerTestController extends nodefony.controller {
       break;
     }
     return userEntity.findOne(query)
-      .then((ele) => {
-        return this.renderJson({
-          status: 200,
-          data: ele
-        });
-      })
+      .then((ele) => this.renderJson({
+        status: 200,
+        data: ele
+      }))
       .catch((data) => {
         this.getResponse().setStatusCode(500);
         return this.renderJson({
@@ -428,13 +394,13 @@ module.exports = class controllerTestController extends nodefony.controller {
    *  promise sequelise
    *
    */
-  async promise10() {
-    //var orm = this.getORM();
-    var userEntity = this.orm.getEntity("user");
-    var sessionEntity = this.orm.getEntity("session");
+  async promise10 () {
+    // var orm = this.getORM();
+    const userEntity = this.orm.getEntity("user");
+    const sessionEntity = this.orm.getEntity("session");
     let query = null;
     let query2 = null;
-    let session = await this.startSession()
+    const session = await this.startSession();
     switch (this.ormName) {
     case "sequelize":
       query = {
@@ -444,7 +410,7 @@ module.exports = class controllerTestController extends nodefony.controller {
       };
       query2 = {
         where: {
-          //user_id: ele[0].id
+          // user_id: ele[0].id
           session_id: this.getSession() ? this.getSession().id : "0"
         }
       };
@@ -454,18 +420,14 @@ module.exports = class controllerTestController extends nodefony.controller {
         username: "anonymous"
       };
       query2 = {
-        //user_id: ele[0].id
+        // user_id: ele[0].id
         session_id: this.getSession() ? this.getSession().id : "0"
       };
       break;
     }
     return userEntity.findOne(query)
-      .then(() => {
-        return sessionEntity.findOne(query2);
-      })
-      .then((ele) => {
-        return this.renderJson(ele);
-      })
+      .then(() => sessionEntity.findOne(query2))
+      .then((ele) => this.renderJson(ele))
       .catch((data) => {
         this.getResponse().setStatusCode(500);
         return this.renderJson({
@@ -480,10 +442,10 @@ module.exports = class controllerTestController extends nodefony.controller {
    *  promise sequelise
    *
    */
-  promise11() {
-    //var orm = this.getORM();
-    var userEntity = this.orm.getEntity("user");
-    //var sessionEntity = orm.getEntity("session") ;
+  promise11 () {
+    // var orm = this.getORM();
+    const userEntity = this.orm.getEntity("user");
+    // var sessionEntity = orm.getEntity("session") ;
     let query = null;
     switch (this.ormName) {
     case "sequelize":
@@ -500,15 +462,11 @@ module.exports = class controllerTestController extends nodefony.controller {
       break;
     }
     return userEntity.findOne(query)
-      .then((ele) => {
-        return ele;
-      })
-      .then((ele) => {
-        return this.renderJson({
-          status: 200,
-          data: ele
-        });
-      })
+      .then((ele) => ele)
+      .then((ele) => this.renderJson({
+        status: 200,
+        data: ele
+      }))
       .catch((data) => {
         this.getResponse().setStatusCode(500);
         return this.renderJson({
@@ -517,15 +475,17 @@ module.exports = class controllerTestController extends nodefony.controller {
         });
       });
   }
+
+
   /**
    *
    *  promise sequelise
    *
    */
-  promise12() {
-    //var orm = this.getORM();
-    var userEntity = this.orm.getEntity("user");
-    //var sessionEntity = orm.getEntity("session") ;
+  promise12 () {
+    // var orm = this.getORM();
+    const userEntity = this.orm.getEntity("user");
+    // var sessionEntity = orm.getEntity("session") ;
     let query = null;
     switch (this.ormName) {
     case "sequelize":
@@ -545,29 +505,29 @@ module.exports = class controllerTestController extends nodefony.controller {
       .then((ele) => {
         throw ele;
       })
-      .then((ele) => {
-        return this.renderJson({
-          status: 200,
-          data: ele
-        });
-      })
+      .then((ele) => this.renderJson({
+        status: 200,
+        data: ele
+      }))
       .catch((data) => {
         this.getResponse().setStatusCode(500);
         return this.renderJson({
           status: 500,
-          data: data
+          data
         });
       });
   }
+
+
   /**
    *
    *  promise sequelise
    *
    */
-  promise13() {
-    var orm = this.getORM();
-    var userEntity = orm.getEntity("user");
-    //var sessionEntity = orm.getEntity("session") ;
+  promise13 () {
+    const orm = this.getORM();
+    const userEntity = orm.getEntity("user");
+    // var sessionEntity = orm.getEntity("session") ;
     let query = null;
     switch (this.ormName) {
     case "sequelize":
@@ -587,12 +547,10 @@ module.exports = class controllerTestController extends nodefony.controller {
       .then(() => {
         notDefinded;
       })
-      .then((ele) => {
-        return this.renderJson({
-          status: 200,
-          data: ele
-        });
-      })
+      .then((ele) => this.renderJson({
+        status: 200,
+        data: ele
+      }))
       .catch((data) => {
         this.getResponse().setStatusCode(500);
         return this.renderJson({
@@ -607,7 +565,7 @@ module.exports = class controllerTestController extends nodefony.controller {
    *  promiseAction
    *
    */
-  exceptionAction(action) {
+  exceptionAction (action) {
     switch (action) {
     case "500":
       return this.createException(new Error("My create Exception"));
@@ -623,10 +581,10 @@ module.exports = class controllerTestController extends nodefony.controller {
       break;
     case "notDefined":
       throw null;
-      //return this.notificationsCenter.fire("onError", this.container, null);
+      // return this.notificationsCenter.fire("onError", this.container, null);
     case "fire":
       return new Error("My Fire Exception");
-      //return this.notificationsCenter.fire("onError", this.container, new Error("My Fire Exception"));
+      // return this.notificationsCenter.fire("onError", this.container, new Error("My Fire Exception"));
     case "timeout":
       this.response.setTimeout(1000);
       return;

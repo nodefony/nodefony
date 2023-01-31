@@ -1,16 +1,15 @@
-import nodefony from 'nodefony-client'
-import nodefonyClient from './nodefonyClient.js'
-//import nodefonyClientWS from './nodefonyClientWs.js'
+import nodefony from "nodefony-client";
+import nodefonyClient from "./nodefonyClient.js";
+// import nodefonyClientWS from './nodefonyClientWs.js'
 import {
   createApolloProvider
-} from '@vue/apollo-option'
+} from "@vue/apollo-option";
 import {
-  ApolloClient,
-} from '@apollo/client/core'
+  ApolloClient
+} from "@apollo/client/core";
 
 class Apollo extends nodefony.Kernel {
-
-  constructor(name, settings) {
+  constructor (name, settings) {
     if (typeof settings.VUE_APP_DEBUG === "string") {
       if (settings.VUE_APP_DEBUG === "false") {
         settings.VUE_APP_DEBUG = false;
@@ -26,46 +25,47 @@ class Apollo extends nodefony.Kernel {
   }
 
 
-  install(app, options) {
+  install (app, options) {
     this.store = options.store;
     this.router = options.router;
     this.vuetify = options.vuetify;
     this.i18n = options.i18n;
-    this.nodefony = options.nodefony
+    this.nodefony = options.nodefony;
     this.app = app;
     this.set("store", this.store);
     this.set("router", this.router);
     this.set("i18n", this.i18n);
     this.set("nodefony", this.nodefony);
-    app.provide('appolo', this)
+    app.provide("appolo", this);
     this.client = nodefonyClient(this.nodefony);
-    this.provider = this.addProvider()
-    this.app.use(this.provider)
-    this.showBanner()
+    this.provider = this.addProvider();
+    this.app.use(this.provider);
+    this.showBanner();
   }
 
-  showBanner() {
-    this.logger(`${this.name}\n\n`,
+  showBanner () {
+    this.logger(
+      `${this.name}\n\n`,
       `\tVersion :\t\t\t ${this.client.version}\n`,
-      `\n\n\n`
+      "\n\n\n"
     );
   }
 
-  addProvider() {
+  addProvider () {
     return createApolloProvider({
       defaultClient: this.client,
       defaultOptions: {
         // apollo options applied to all queries in components
         $query: {
-          //loadingKey: 'loading',
-          fetchPolicy: 'cache-and-network',
+          // loadingKey: 'loading',
+          fetchPolicy: "cache-and-network"
         }
       }
-    })
+    });
   }
 
 
-  /*addNodefonyClientWss() {
+  /* addNodefonyClientWss() {
     const url = `wss://${window.location.host}/api/ws/graphql`
     const link = nodefonyClientWS(url)
     this.checkQueryWs(link.client).catch(e=>{
@@ -89,8 +89,6 @@ class Apollo extends nodefony.Kernel {
       console.log(result)
     });
   }*/
-
-
 }
 
 export default new Apollo("VUE-APPOLO-PLUGIN", process.env);

@@ -1,6 +1,5 @@
 module.exports = class testController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
     this.setContextJson();
   }
@@ -10,14 +9,14 @@ module.exports = class testController extends nodefony.controller {
    *	Routing
    *
    */
-  myrouteAction(page, ele) {
+  myrouteAction (page, ele) {
     return this.renderJson({
-      page: page,
+      page,
       element: ele
     });
   }
 
-  requirementMethodAction( /*page, ele*/ ) {
+  requirementMethodAction (/* page, ele*/) {
     return this.renderJson({
       method: this.context.method,
       query: this.query,
@@ -27,12 +26,12 @@ module.exports = class testController extends nodefony.controller {
     });
   }
 
-  wildcardAction(ele, ele2) {
-    let pattern = this.context.originUrl.path;
+  wildcardAction (ele, ele2) {
+    const pattern = this.context.originUrl.path;
     return this.renderJson({
       path: pattern,
-      ele: ele,
-      ele2: ele2
+      ele,
+      ele2
     });
   }
 
@@ -41,13 +40,12 @@ module.exports = class testController extends nodefony.controller {
    *	response  status
    *
    */
-  responseStatusAction(statusRoute) {
-
-    var response = this.getResponse();
+  responseStatusAction (statusRoute) {
+    const response = this.getResponse();
     response.setStatusCode(statusRoute);
-    var status = response.getStatus();
-    //console.log(status)
-    var generate = this.generateUrl("response-status", {
+    const status = response.getStatus();
+    // console.log(status)
+    const generate = this.generateUrl("response-status", {
       st: statusRoute
     });
     return this.renderJson({
@@ -62,9 +60,8 @@ module.exports = class testController extends nodefony.controller {
    *	response  message
    *
    */
-  responseMessageAction(statusRoute, messageRoute) {
-
-    var response = this.getResponse();
+  responseMessageAction (statusRoute, messageRoute) {
+    const response = this.getResponse();
     let generate = null;
     if (messageRoute === "null") {
       response.setStatusCode(statusRoute);
@@ -78,14 +75,13 @@ module.exports = class testController extends nodefony.controller {
         message: messageRoute
       });
     }
-    var status = response.getStatus();
-    //console.log(generate)
+    const status = response.getStatus();
+    // console.log(generate)
     return this.renderJson({
       code: status.code,
       message: status.message,
       generateUrl: generate
     });
-
   }
 
   /**
@@ -93,8 +89,8 @@ module.exports = class testController extends nodefony.controller {
    *	response  query
    *
    */
-  responseQueryAction(ele, ele2) {
-    var generate = this.generateUrl("response-query", {
+  responseQueryAction (ele, ele2) {
+    const generate = this.generateUrl("response-query", {
       myVariable: ele,
       myVariable2: ele2,
       queryString: this.query
@@ -103,6 +99,5 @@ module.exports = class testController extends nodefony.controller {
       generateUrl: generate,
       query: this.query
     });
-
   }
 };

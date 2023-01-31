@@ -1,5 +1,5 @@
 class Vue extends nodefony.builders.sandbox {
-  constructor(cli, cmd, args, options) {
+  constructor (cli, cmd, args, options) {
     super(cli, cmd, args, nodefony.extend(true, {}, options, {
       typescript: false,
       addons: {
@@ -15,36 +15,37 @@ class Vue extends nodefony.builders.sandbox {
     this.vueLocation = null;
   }
 
-  run() {
+  run () {
     return super.run(true).
-    then(async (res) => {
-      if (this.response.addons.i18n) {
-        try {
-          await this.addI18n();
-        } catch (e) {
-          this.log(e, "WARNING");
+      then(async (res) => {
+        if (this.response.addons.i18n) {
+          try {
+            await this.addI18n();
+          } catch (e) {
+            this.log(e, "WARNING");
+          }
         }
-      }
-      return res;
-    });
+        return res;
+      });
   }
 
-  async interaction() {
+  async interaction () {
     this.cli.reset();
     await this.cli.showAsciify("Vue");
-    let promtOptions = [{
-      type: 'checkbox',
-      message: 'Select vue addons',
-      name: 'addons',
+    const promtOptions = [{
+      type: "checkbox",
+      message: "Select vue addons",
+      name: "addons",
       pageSize: 10,
       choices: [{
-          name: "vuetify",
-          checked: this.response.addons.vuetify
-        }, {
-          name: 'i18n',
-          checked: this.response.addons.i18n
-        }
-        /*, {
+        name: "vuetify",
+        checked: this.response.addons.vuetify
+      }, {
+        name: "i18n",
+        checked: this.response.addons.i18n
+      }
+
+        /* , {
                 name: 'apollo-client',
                 checked: this.response.addons.apollo
               }*/
@@ -52,22 +53,22 @@ class Vue extends nodefony.builders.sandbox {
     }];
     return this.cli.prompt(promtOptions)
       .then((response) => {
-        let addons = {
+        const addons = {
           vuetify: false,
           i18n: false,
           apollo: false
         };
         for (let i = 0; i < response.addons.length; i++) {
           switch (response.addons[i]) {
-            case "vuetify":
-              addons.vuetify = true;
-              break;
-            case "i18n":
-              addons.i18n = true;
-              break;
-            case "apollo-client":
-              addons.apollo = true;
-              break;
+          case "vuetify":
+            addons.vuetify = true;
+            break;
+          case "i18n":
+            addons.i18n = true;
+            break;
+          case "apollo-client":
+            addons.apollo = true;
+            break;
           }
         }
         delete response.addons;
@@ -76,64 +77,60 @@ class Vue extends nodefony.builders.sandbox {
       });
   }
 
-  generate(response, force) {
+  generate (response, force) {
     return this.builVue()
-      .then((location) => {
-        return this.checkTypeScript()
-          .then(async () => {
-            //let packages = ["clean-webpack-plugin"];
-            let packagesDev = ["@vue/cli", "webpack-dev-server", "clean-webpack-plugin", "webpack"];
-            //  await this.addPackage(packages, false);
-            await this.addPackage(packagesDev, true);
-            if (this.response.addons.vuetify) {
-              await this.addVuetify();
-            }
-            if (this.response.addons.apollo) {
-              await this.addApolloClient();
-            }
-            return super.generate(response, force)
-              .then(() => {
-                return this.response;
-              })
-              .catch((e) => {
-                throw e;
-              });
-          })
-          .catch((e) => {
-            throw e;
-          });
-      })
+      .then((location) => this.checkTypeScript()
+        .then(async () => {
+          // let packages = ["clean-webpack-plugin"];
+          const packagesDev = ["@vue/cli", "webpack-dev-server", "clean-webpack-plugin", "webpack"];
+          //  await this.addPackage(packages, false);
+          await this.addPackage(packagesDev, true);
+          if (this.response.addons.vuetify) {
+            await this.addVuetify();
+          }
+          if (this.response.addons.apollo) {
+            await this.addApolloClient();
+          }
+          return super.generate(response, force)
+            .then(() => this.response)
+            .catch((e) => {
+              throw e;
+            });
+        })
+        .catch((e) => {
+          throw e;
+        }))
       .catch((e) => {
         throw e;
       });
   }
 
-  async addPackage(name, env = null, location = this.vueLocation) {
+  async addPackage (name, env = null, location = this.vueLocation) {
     let args = [];
     let packageManager = null;
     let command = null;
     switch (nodefony.typeOf(name)) {
-      case "array":
-        args = name;
-        break;
-      case "string":
-        args.push(name);
-        break;
-      default:
-        return location;
+    case "array":
+      args = name;
+      break;
+    case "string":
+      args.push(name);
+      break;
+    default:
+      return location;
     }
     switch (nodefony.packageManager) {
-      case 'yarn':
-        packageManager = this.cli.yarn.bind(this.cli);
-        command = ["add"].concat(args);
-        break;
-      case 'pnpm':
-        packageManager = this.cli.pnpm.bind(this.cli);
-        command = ["install"].concat(args);
-        break;
-      default:
-        packageManager = this.cli.npm.bind(this.cli);
-        command = ["install"].concat(args);
+    case "yarn":
+      packageManager = this.cli.yarn.bind(this.cli);
+      command = ["add"].concat(args);
+      break;
+    case "pnpm":
+      packageManager = this.cli.pnpm.bind(this.cli);
+      command = ["install"].concat(args);
+      break;
+    default:
+      packageManager = this.cli.npm.bind(this.cli);
+      command = ["install"].concat(args);
     }
     if (env) {
       command.push("-D");
@@ -142,9 +139,9 @@ class Vue extends nodefony.builders.sandbox {
     return location;
   }
 
-  addVuePlugin(args = [], location = this.vueLocation) {
+  addVuePlugin (args = [], location = this.vueLocation) {
     return new Promise(async (resolve, reject) => {
-      this.log("install Vue plugin : " + args.join(" "));
+      this.log(`install Vue plugin : ${args.join(" ")}`);
       let cmd = null;
       try {
         cmd = await this.cli.spawn("npx", args, {
@@ -153,8 +150,8 @@ class Vue extends nodefony.builders.sandbox {
           stdio: "inherit"
         }, (code) => {
           if (code === 1) {
-            this.log(new Error(`install Vue cli new error : ${code} ${args}`), "ERROR")
-            //return reject(new Error("install Vue cli new error : " + code));
+            this.log(new Error(`install Vue cli new error : ${code} ${args}`), "ERROR");
+            // return reject(new Error("install Vue cli new error : " + code));
             return resolve(cmd);
           }
           return resolve(cmd);
@@ -167,42 +164,42 @@ class Vue extends nodefony.builders.sandbox {
     });
   }
 
-  addVuetify(location = this.vueLocation) {
-    let args = ["vue", "add", "vuetify"];
+  addVuetify (location = this.vueLocation) {
+    const args = ["vue", "add", "vuetify"];
     return this.addVuePlugin(args, location);
   }
 
-  addI18n(location = this.vueLocation) {
-    let args = ["vue", "add", "i18n"];
+  addI18n (location = this.vueLocation) {
+    const args = ["vue", "add", "i18n"];
     return this.addVuePlugin(args, location);
   }
 
   // TODO: apollo
-  async addApolloClient(location = this.vueLocation) {
-    let packages = [
+  async addApolloClient (location = this.vueLocation) {
+    const packages = [
       "apollo-cache-inmemory",
       "apollo-client",
       "apollo-link",
       "apollo-link-context",
       "apollo-link-http"
-    ]
+    ];
     await this.addPackage(packages);
-    return Promise.resolve(this.vueLocation)
+    return Promise.resolve(this.vueLocation);
   }
 
-  checkTypeScript() {
+  checkTypeScript () {
     return new Promise((resolve) => {
       try {
         if (this.response.command === "project") {
           new nodefony.fileClass(path.resolve(this.location, "app", "src", "main.ts"));
           this.response.typescript = true;
-          //let skelete = path.resolve(this.pathSkeleton, "vue.config.js.ts");
-          //this.cli.cp("-f", skelete, path.resolve(this.location, "app", "vue.config.js"));
+          // let skelete = path.resolve(this.pathSkeleton, "vue.config.js.ts");
+          // this.cli.cp("-f", skelete, path.resolve(this.location, "app", "vue.config.js"));
         } else {
           new nodefony.fileClass(path.resolve(this.location, "src", "main.ts"));
           this.response.typescript = true;
-          //let skelete = path.resolve(this.pathSkeleton, "vue.config.js.ts");
-          //this.cli.cp("-f", skelete, path.resolve(this.location, "vue.config.js"));
+          // let skelete = path.resolve(this.pathSkeleton, "vue.config.js.ts");
+          // this.cli.cp("-f", skelete, path.resolve(this.location, "vue.config.js"));
         }
         return resolve(true);
       } catch (e) {
@@ -212,7 +209,7 @@ class Vue extends nodefony.builders.sandbox {
     });
   }
 
-  getCli() {
+  getCli () {
     let cliPath = null;
     try {
       cliPath = path.resolve(__dirname, "..", "..", "..", "node_modules", ".bin", "vue");
@@ -235,30 +232,30 @@ class Vue extends nodefony.builders.sandbox {
     return cliPath;
   }
 
-  getLocation() {
+  getLocation () {
     switch (this.cli.response.command) {
-      case "bundle":
-        return this.cli.response.location;
-      default:
-        return this.location;
+    case "bundle":
+      return this.cli.response.location;
+    default:
+      return this.location;
     }
   }
 
-  builVue() {
+  builVue () {
     let name = null;
-    let location = this.getLocation();
+    const location = this.getLocation();
     switch (this.cli.response.command) {
-      case "project":
-        name = "app";
-        break;
-      case "bundle":
-        name = this.cli.response.bundleName;
-        break;
+    case "project":
+      name = "app";
+      break;
+    case "bundle":
+      name = this.cli.response.bundleName;
+      break;
     }
     this.vueLocation = path.resolve(location, name);
     return new Promise((resolve, reject) => {
-      let args = ["create", "-n", name];
-      this.log("install Vue cli : vue " + args.join(" "));
+      const args = ["create", "-n", name];
+      this.log(`install Vue cli : vue ${args.join(" ")}`);
       let cmd = null;
       try {
         cmd = this.cli.spawn(this.cliVue, args, {
@@ -267,7 +264,7 @@ class Vue extends nodefony.builders.sandbox {
           stdio: "inherit"
         }, (code) => {
           if (code === 1) {
-            return reject(new Error("install Vue cli new error : " + code));
+            return reject(new Error(`install Vue cli new error : ${code}`));
           }
           return resolve(path.resolve(this.location, this.response.name));
         });
@@ -278,34 +275,33 @@ class Vue extends nodefony.builders.sandbox {
     });
   }
 
-  builderProject() {
+  builderProject () {
     try {
       return {
         name: "app",
         type: "directory",
         childs: [{
-            name: "appKernel.js",
-            type: "file",
-            skeleton: path.resolve(this.globalSkeleton, "app", "appKernel.js"),
-            params: this.response
-          }, {
-            name: "vue.config.js",
-            type: "file",
-            skeleton: path.resolve(this.pathSkeleton, "vue.config.js"),
-            params: this.response
-          },
-          this.generateController(),
-          this.generateConfig(false, true),
-          this.generateRessources()
-        ]
+          name: "appKernel.js",
+          type: "file",
+          skeleton: path.resolve(this.globalSkeleton, "app", "appKernel.js"),
+          params: this.response
+        }, {
+          name: "vue.config.js",
+          type: "file",
+          skeleton: path.resolve(this.pathSkeleton, "vue.config.js"),
+          params: this.response
+        },
+        this.generateController(),
+        this.generateConfig(false, true),
+        this.generateRessources()]
       };
     } catch (e) {
       throw e;
     }
   }
 
-  builderBundle() {
-    let bundle = [];
+  builderBundle () {
+    const bundle = [];
     bundle.push({
       name: `${this.response.name}Bundle.js`,
       type: "file",
@@ -319,7 +315,7 @@ class Vue extends nodefony.builders.sandbox {
       params: this.response
     });
     bundle.push(this.generateController());
-    //bundle.push(this.generateConfig(this.response.addons.webpack));
+    // bundle.push(this.generateConfig(this.response.addons.webpack));
     bundle.push(this.generateRessources());
     bundle.push({
       name: "Entity",
@@ -332,8 +328,8 @@ class Vue extends nodefony.builders.sandbox {
     return bundle;
   }
 
-  generateRessources() {
-    let resources = {
+  generateRessources () {
+    const resources = {
       name: "Resources",
       type: "directory",
       childs: []
@@ -356,7 +352,7 @@ class Vue extends nodefony.builders.sandbox {
     resources.childs.push(this.generateViews());
     // public
     resources.childs.push(this.generatePublic());
-    //translations
+    // translations
     resources.childs.push({
       name: "translations",
       type: "copy",
@@ -368,8 +364,8 @@ class Vue extends nodefony.builders.sandbox {
     return resources;
   }
 
-  generatePublic() {
-    let publicWeb = {
+  generatePublic () {
+    const publicWeb = {
       name: "public",
       type: "directory",
       childs: []
@@ -377,7 +373,7 @@ class Vue extends nodefony.builders.sandbox {
     publicWeb.childs.push({
       name: "favicon.ico",
       type: "copy",
-      path: path.resolve(this.globalSkeleton, "Resources", "public", "favicon.ico"),
+      path: path.resolve(this.globalSkeleton, "Resources", "public", "favicon.ico")
     });
     publicWeb.childs.push({
       name: "images",
@@ -385,14 +381,14 @@ class Vue extends nodefony.builders.sandbox {
       childs: [{
         name: this.cli.response.command === "project" ? "app-logo.png" : `${this.response.shortName}-logo.png`,
         type: "copy",
-        path: path.resolve(this.globalSkeleton, "Resources", "public", "images", "app-logo.png"),
+        path: path.resolve(this.globalSkeleton, "Resources", "public", "images", "app-logo.png")
       }]
     });
     return publicWeb;
   }
 
-  generateViews() {
-    let views = {
+  generateViews () {
+    const views = {
       name: "views",
       type: "directory",
       childs: []
@@ -409,7 +405,6 @@ class Vue extends nodefony.builders.sandbox {
     }
     return views;
   }
-
 }
 nodefony.builders.vue = Vue;
 module.exports = Vue;

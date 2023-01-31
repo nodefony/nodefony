@@ -10,26 +10,25 @@
  *
  */
 
-//const http = require("http");
-//var https = require("https");
-//const WebSocketClient = require('websocket').client;
-const assert = require('assert');
-//var querystring = require("querystring");
+// const http = require("http");
+// var https = require("https");
+// const WebSocketClient = require('websocket').client;
+const assert = require("assert");
+// var querystring = require("querystring");
 
 
-describe("BUNDLE TEST", function () {
-
-  before(function () {
+describe("BUNDLE TEST", () => {
+  before(() => {
     global.firewall = kernel.get("security");
     global.options = {
       hostname: kernel.settings.system.domain,
       port: kernel.settings.system.httpPort,
-      method: 'GET',
-      urlws: 'ws://' + kernel.settings.system.domain + ':' + kernel.settings.system.httpPort
+      method: "GET",
+      urlws: `ws://${kernel.settings.system.domain}:${kernel.settings.system.httpPort}`
     };
   });
 
-  describe('FIREWALL CONFIG', () => {
+  describe("FIREWALL CONFIG", () => {
     it("SETTINGS", (done) => {
       assert.deepStrictEqual(global.firewall.name, "FIREWALL");
       assert.deepStrictEqual(global.firewall.sessionStrategy, "migrate");
@@ -42,7 +41,7 @@ describe("BUNDLE TEST", function () {
 
     it("test-basic-area", (done) => {
       assert(global.firewall.securedAreas["test-basic-area"]);
-      let basic = global.firewall.securedAreas["test-basic-area"];
+      const basic = global.firewall.securedAreas["test-basic-area"];
       assert.deepStrictEqual(basic.sessionContext, "default");
       assert.deepStrictEqual(basic.redirect_Https, false);
       assert.deepStrictEqual(basic.providerName, "nodefony");
@@ -55,9 +54,9 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(basic.cors, null);
       assert.deepStrictEqual(basic.formLogin, null);
       assert.deepStrictEqual(basic.checkLogin, "/test/firewall/basic");
-      assert.deepStrictEqual(basic.stringPattern, '^/test/firewall/basic');
+      assert.deepStrictEqual(basic.stringPattern, "^/test/firewall/basic");
       try {
-        let res = basic.pattern.test("/test/firewall/basic/myroute");
+        const res = basic.pattern.test("/test/firewall/basic/myroute");
         assert.ok(res);
       } catch (e) {
         throw e;
@@ -66,7 +65,7 @@ describe("BUNDLE TEST", function () {
     });
     it("test-digest-area", (done) => {
       assert(global.firewall.securedAreas["test-digest-area"]);
-      let digest = global.firewall.securedAreas["test-digest-area"];
+      const digest = global.firewall.securedAreas["test-digest-area"];
       assert.deepStrictEqual(digest.sessionContext, "default");
       assert.deepStrictEqual(digest.redirect_Https, false);
       assert.deepStrictEqual(digest.providerName, "nodefony");
@@ -79,15 +78,14 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(digest.cors, null);
       assert.deepStrictEqual(digest.formLogin, null);
       assert.deepStrictEqual(digest.checkLogin, "/test/firewall/digest");
-      assert.deepStrictEqual(digest.stringPattern, '^/test/firewall/digest');
+      assert.deepStrictEqual(digest.stringPattern, "^/test/firewall/digest");
       try {
-        let res = digest.pattern.test("/test/firewall/digest/myroute");
+        const res = digest.pattern.test("/test/firewall/digest/myroute");
         assert.ok(res);
       } catch (e) {
         throw e;
       }
       done();
     });
-
   });
 });

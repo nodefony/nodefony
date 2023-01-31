@@ -1,9 +1,9 @@
 class Role {
-  constructor(role) {
+  constructor (role) {
     this.role = role;
   }
 
-  getRole() {
+  getRole () {
     return this.role;
   }
 }

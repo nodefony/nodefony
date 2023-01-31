@@ -10,12 +10,12 @@
  *
  */
 
-//const http = require("http");
-//var https = require("https");
-//const WebSocketClient = require('websocket').client;
-const assert = require('assert');
-//var querystring = require("querystring");
-const request = require('request');
+// const http = require("http");
+// var https = require("https");
+// const WebSocketClient = require('websocket').client;
+const assert = require("assert");
+// var querystring = require("querystring");
+const request = require("request");
 
 /*
 ldap_area:
@@ -47,20 +47,19 @@ if (!ldapArea) {
   return;
 }
 
-describe("BUNDLE TEST", function () {
-
-  before(function () {
-    //store.removeCookies
-    let myjar = request.jar();
-    let service = kernel.get("httpsServer");
-    let res = service.getCertificats();
+describe("BUNDLE TEST", () => {
+  before(() => {
+    // store.removeCookies
+    const myjar = request.jar();
+    const service = kernel.get("httpsServer");
+    const res = service.getCertificats();
     global.options = {
-      baseUrl: "https://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpsPort,
+      baseUrl: `https://${kernel.settings.system.domain}:${kernel.settings.system.httpsPort}`,
       url: "/test/firewall/ldap",
-      method: 'GET',
+      method: "GET",
       encoding: "utf8",
       followRedirect: true,
-      //followAllRedirects: true,
+      // followAllRedirects: true,
       jar: myjar,
       headers: {
         Accept: "application/json"
@@ -71,8 +70,7 @@ describe("BUNDLE TEST", function () {
     };
   });
 
-  describe('AREA: ldap_area Factory: passport-ldap', () => {
-
+  describe("AREA: ldap_area Factory: passport-ldap", () => {
     it("Settings ldap_area", (done) => {
       assert(ldapArea);
       assert.deepStrictEqual(ldapArea.sessionContext, "default");
@@ -81,9 +79,9 @@ describe("BUNDLE TEST", function () {
       assert(ldapArea.factories.length);
       assert.deepStrictEqual(ldapArea.factories.length, 1);
       assert.deepStrictEqual(ldapArea.factories[0].name, "ldapauth");
-      assert.deepStrictEqual(ldapArea.stringPattern, '^/test/firewall/ldap');
+      assert.deepStrictEqual(ldapArea.stringPattern, "^/test/firewall/ldap");
       try {
-        let res = ldapArea.pattern.test("/test/firewall/ldap");
+        const res = ldapArea.pattern.test("/test/firewall/ldap");
         assert.ok(res);
       } catch (e) {
         throw e;
@@ -92,16 +90,15 @@ describe("BUNDLE TEST", function () {
     });
 
     it("Enter AREA json", (done) => {
-
       request(global.options, (error, response, body) => {
         if (error) {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 400);
-        assert.deepStrictEqual(response.statusMessage, 'Missing credentials');
-        let json = JSON.parse(body);
+        assert.deepStrictEqual(response.statusMessage, "Missing credentials");
+        const json = JSON.parse(body);
         assert.equal(json.code, 400);
-        assert.equal(json.message, 'Missing credentials');
+        assert.equal(json.message, "Missing credentials");
         done();
       });
     });
@@ -109,12 +106,12 @@ describe("BUNDLE TEST", function () {
     it("Enter AREA http", (done) => {
       global.options.headers.Accept = "txt/html";
       global.options.followRedirect = false;
-      request(global.options, (error, response /*, body*/ ) => {
+      request(global.options, (error, response /* , body*/) => {
         if (error) {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 302);
-        assert.deepStrictEqual(response.statusMessage, 'Unauthorized');
+        assert.deepStrictEqual(response.statusMessage, "Unauthorized");
 
         done();
       });
@@ -133,10 +130,10 @@ describe("BUNDLE TEST", function () {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 401);
-        assert.deepStrictEqual(response.statusMessage, 'Unauthorized');
-        let json = JSON.parse(body);
+        assert.deepStrictEqual(response.statusMessage, "Unauthorized");
+        const json = JSON.parse(body);
         assert.equal(json.code, 401);
-        assert.equal(json.message, 'Unauthorized');
+        assert.equal(json.message, "Unauthorized");
         assert.deepStrictEqual(json.url, global.options.baseUrl + global.options.url);
         assert(json.pdu);
         done();
@@ -156,15 +153,15 @@ describe("BUNDLE TEST", function () {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 200);
-        assert.deepStrictEqual(response.statusMessage, 'OK');
-        let json = JSON.parse(body);
+        assert.deepStrictEqual(response.statusMessage, "OK");
+        const json = JSON.parse(body);
         global.data = json.data;
-        let jwt = response.headers["set-cookie"][0];
+        const jwt = response.headers["set-cookie"][0];
         assert(jwt);
         assert(new RegExp("^jwt=.*$").test(jwt));
 
         // valid ldap token
-        let token = json.data;
+        const token = json.data;
         assert.deepStrictEqual(token.name, "ldap");
         assert.deepStrictEqual(token.authenticated, true);
         assert.deepStrictEqual(token.factory, "ldapauth");
@@ -182,9 +179,9 @@ describe("BUNDLE TEST", function () {
         if (error) {
           throw error;
         }
-        let json = JSON.parse(body);
+        const json = JSON.parse(body);
         // Valid token
-        let token = json.token;
+        const {token} = json;
         assert.deepStrictEqual(token.name, "jwt");
         assert.deepStrictEqual(token.authenticated, true);
         assert.deepStrictEqual(token.factory, "jwt");
@@ -197,6 +194,5 @@ describe("BUNDLE TEST", function () {
         done();
       });
     });
-
   });
 });

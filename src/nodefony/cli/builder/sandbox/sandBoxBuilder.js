@@ -1,5 +1,5 @@
 class SandBox extends nodefony.Builder {
-  constructor(cli, cmd, args, options = {}) {
+  constructor (cli, cmd, args, options = {}) {
     super(cli, cmd, args);
     this.sandboxSkeleton = path.resolve(__dirname, "skeletons");
     this.force = true;
@@ -17,13 +17,13 @@ class SandBox extends nodefony.Builder {
     this.setEnv("development");
   }
 
-  async interaction() {
+  async interaction () {
     this.cli.reset();
     await this.cli.showAsciify("SandBox");
-    let promtOptions = [{
-      type: 'checkbox',
-      message: 'Select addons',
-      name: 'addons',
+    const promtOptions = [{
+      type: "checkbox",
+      message: "Select addons",
+      name: "addons",
       pageSize: 10,
       choices: [{
         name: "Annotations",
@@ -33,7 +33,7 @@ class SandBox extends nodefony.Builder {
         name: "Webpack",
         checked: this.response.addons.webpack
       }, {
-        name: 'Bootstrap',
+        name: "Bootstrap",
         checked: this.response.addons.bootstrap
       }, {
         name: "Command",
@@ -44,16 +44,16 @@ class SandBox extends nodefony.Builder {
         message: "Add Unit Tests Matrice",
         checked: this.response.addons.unittest
       }, {
-        name: 'Progressive Web App (PWA) Workbox',
+        name: "Progressive Web App (PWA) Workbox",
         checked: this.response.addons.workbox
       }, {
-        name: 'Build Matrice C++ Binding',
+        name: "Build Matrice C++ Binding",
         checked: this.response.addons.binding
       }]
     }];
     return this.cli.prompt(promtOptions)
       .then((response) => {
-        let addons = {
+        const addons = {
           webpack: false,
           bootstrap: false,
           command: false,
@@ -65,27 +65,27 @@ class SandBox extends nodefony.Builder {
         if (response.addons.length) {
           for (let i = 0; i < response.addons.length; i++) {
             switch (response.addons[i]) {
-              case "Bootstrap":
-                addons.bootstrap = true;
-                break;
-              case "Annotations":
-                addons.annotations = true;
-                break;
-              case "Command":
-                addons.command = true;
-                break;
-              case "Unit Tests":
-                addons.unittest = true;
-                break;
-              case "Progressive Web App (PWA) Workbox":
-                addons.workbox = true;
-                break;
-              case "Build Matrice C++ Binding":
-                addons.binding = true;
-                break;
-              case "Webpack":
-                addons.webpack = true;
-                break;
+            case "Bootstrap":
+              addons.bootstrap = true;
+              break;
+            case "Annotations":
+              addons.annotations = true;
+              break;
+            case "Command":
+              addons.command = true;
+              break;
+            case "Unit Tests":
+              addons.unittest = true;
+              break;
+            case "Progressive Web App (PWA) Workbox":
+              addons.workbox = true;
+              break;
+            case "Build Matrice C++ Binding":
+              addons.binding = true;
+              break;
+            case "Webpack":
+              addons.webpack = true;
+              break;
             }
           }
         }
@@ -98,75 +98,74 @@ class SandBox extends nodefony.Builder {
       });
   }
 
-  createBuilder(response) {
+  createBuilder (response) {
     switch (this.cli.response.command) {
-      case "project":
-        this.response.packageName = "app";
-        this.response.shortName = "app";
-        return this.builderProject(response);
-      default:
-        if (!this.response.bundle) {
-          this.cli.response.command = "project";
-          return this.createBuilder(response);
-        }
-        this.response.packageName = this.response.name;
-        this.response.shortName = this.response.name;
-        return this.builderBundle(response);
+    case "project":
+      this.response.packageName = "app";
+      this.response.shortName = "app";
+      return this.builderProject(response);
+    default:
+      if (!this.response.bundle) {
+        this.cli.response.command = "project";
+        return this.createBuilder(response);
+      }
+      this.response.packageName = this.response.name;
+      this.response.shortName = this.response.name;
+      return this.builderBundle(response);
     }
   }
 
-  builderProject() {
+  builderProject () {
     try {
-      let obj = {
+      const obj = {
         name: "app",
         type: "directory",
         childs: [{
-            name: "package.json",
-            type: "file",
-            skeleton: path.resolve(this.globalSkeleton, "package.json.twig"),
-            params: this.response
-          }, {
-            name: "appKernel.js",
-            type: "file",
-            skeleton: path.resolve(this.globalSkeleton, "app", "appKernel.js"),
-            params: this.response
-          }, {
-            name: "Entity",
-            type: "directory",
-            childs: [{
-              name: "sequelize",
-              type: "directory",
-              childs: [{
-                name: ".gitignore",
-                type: "file"
-              }]
-            },{
-              name: "mongoose",
-              type: "directory",
-              childs: [{
-                name: ".gitignore",
-                type: "file"
-              }]
-            }]
-          },{
-            name: "services",
+          name: "package.json",
+          type: "file",
+          skeleton: path.resolve(this.globalSkeleton, "package.json.twig"),
+          params: this.response
+        }, {
+          name: "appKernel.js",
+          type: "file",
+          skeleton: path.resolve(this.globalSkeleton, "app", "appKernel.js"),
+          params: this.response
+        }, {
+          name: "Entity",
+          type: "directory",
+          childs: [{
+            name: "sequelize",
             type: "directory",
             childs: [{
               name: ".gitignore",
               type: "file"
             }]
-          },
-          this.generateController(),
-          this.generateConfig(this.response.addons.webpack, true),
-          this.generateRessources(),
-          this.generateCommand(),
-          this.generateUnitTest()
-        ]
+          }, {
+            name: "mongoose",
+            type: "directory",
+            childs: [{
+              name: ".gitignore",
+              type: "file"
+            }]
+          }]
+        }, {
+          name: "services",
+          type: "directory",
+          childs: [{
+            name: ".gitignore",
+            type: "file"
+          }]
+        },
+        this.generateController(),
+        this.generateConfig(this.response.addons.webpack, true),
+        this.generateRessources(),
+        this.generateCommand(),
+        this.generateUnitTest()]
       };
       if (this.response.addons.binding) {
         obj.childs.push({
           name: "build",
-          type: "directory",
+          type: "directory"
         });
         obj.childs.push({
           name: "binding.gyp",
@@ -183,8 +182,8 @@ class SandBox extends nodefony.Builder {
     }
   }
 
-  builderBundle() {
-    let bundle = [];
+  builderBundle () {
+    const bundle = [];
     bundle.push({
       name: "package.json",
       type: "file",
@@ -203,7 +202,7 @@ class SandBox extends nodefony.Builder {
     if (this.response.addons.binding) {
       bundle.push({
         name: "build",
-        type: "directory",
+        type: "directory"
       });
       bundle.push({
         name: "binding.gyp",
@@ -223,7 +222,7 @@ class SandBox extends nodefony.Builder {
           name: ".gitignore",
           type: "file"
         }]
-      },{
+      }, {
         name: "mongoose",
         type: "directory",
         childs: [{
@@ -237,8 +236,8 @@ class SandBox extends nodefony.Builder {
     return bundle;
   }
 
-  generateDoc() {
-    let doc = {
+  generateDoc () {
+    const doc = {
       name: "doc",
       type: "directory",
       childs: []
@@ -246,8 +245,8 @@ class SandBox extends nodefony.Builder {
     return doc;
   }
 
-  generateConfig(webpack = false, project =false) {
-    let childs = [{
+  generateConfig (webpack = false, project = false) {
+    const childs = [{
       name: "config.js",
       type: "file",
       skeleton: path.resolve(this.globalSkeleton, "config", "config.js"),
@@ -268,7 +267,7 @@ class SandBox extends nodefony.Builder {
       path: path.resolve(this.globalSkeleton, "config", "services.js")
     }];
 
-    if ( project){
+    if (project) {
       childs.push({
         name: "nodefony",
         type: "copy",
@@ -278,10 +277,10 @@ class SandBox extends nodefony.Builder {
         }
       });
     }
-    let config = {
+    const config = {
       name: "config",
       type: "directory",
-      childs: childs
+      childs
     };
     if (webpack) {
       config.childs.push({
@@ -302,8 +301,8 @@ class SandBox extends nodefony.Builder {
     return config;
   }
 
-  generateController(directory = "controller") {
-    let controller = {
+  generateController (directory = "controller") {
+    const controller = {
       name: directory,
       type: "directory",
       childs: []
@@ -312,7 +311,7 @@ class SandBox extends nodefony.Builder {
     if (this.cli.response.command === "project") {
       this.response.controllerName = "appController";
       controller.childs.push({
-        name: `appController.js`,
+        name: "appController.js",
         type: "file",
         skeleton: path.resolve(this.globalSkeleton, "controller", "controllerClass.js"),
         params: this.response
@@ -331,8 +330,8 @@ class SandBox extends nodefony.Builder {
     return controller;
   }
 
-  generateCommand() {
-    let command = {
+  generateCommand () {
+    const command = {
       name: "Command",
       type: "directory",
       childs: []
@@ -346,13 +345,13 @@ class SandBox extends nodefony.Builder {
       }
       this.response.commandName = name;
       command.childs.push({
-        name: name + "Command.js",
+        name: `${name}Command.js`,
         type: "file",
         skeleton: path.resolve(this.globalSkeleton, "command", "commandClass.js"),
         params: this.response
       });
       command.childs.push({
-        name: name + "Task.js",
+        name: `${name}Task.js`,
         type: "file",
         skeleton: path.resolve(this.globalSkeleton, "command", "taskClass.js"),
         params: this.response
@@ -361,8 +360,8 @@ class SandBox extends nodefony.Builder {
     return command;
   }
 
-  generateUnitTest() {
-    let unit = {
+  generateUnitTest () {
+    const unit = {
       name: "tests",
       type: "directory",
       childs: []
@@ -378,7 +377,7 @@ class SandBox extends nodefony.Builder {
     this.response.testName = name;
     if (this.response.addons.unittest) {
       unit.childs.push({
-        name: name + "Test.js",
+        name: `${name}Test.js`,
         type: "file",
         skeleton: path.resolve(this.globalSkeleton, "unittest", "testFile.js"),
         params: this.response
@@ -387,8 +386,8 @@ class SandBox extends nodefony.Builder {
     return unit;
   }
 
-  generateRessources() {
-    let resources = {
+  generateRessources () {
+    const resources = {
       name: "Resources",
       type: "directory",
       childs: []
@@ -409,7 +408,7 @@ class SandBox extends nodefony.Builder {
     }
     // views
     resources.childs.push(this.generateViews());
-    //translations
+    // translations
     resources.childs.push({
       name: "translations",
       type: "copy",
@@ -418,9 +417,9 @@ class SandBox extends nodefony.Builder {
         recurse: true
       }
     });
-    //public
+    // public
     resources.childs.push(this.generatePublic());
-    //js
+    // js
     resources.childs.push({
       name: "js",
       type: "directory",
@@ -431,7 +430,7 @@ class SandBox extends nodefony.Builder {
         params: this.response
       }]
     });
-    //css
+    // css
     resources.childs.push(this.generateCss());
 
     if (this.response.addons.workbox) {
@@ -439,7 +438,7 @@ class SandBox extends nodefony.Builder {
         name: "templates",
         type: "directory",
         childs: [{
-          name: `index.html.twig`,
+          name: "index.html.twig",
           type: "file",
           skeleton: path.resolve(this.sandboxSkeleton, "workbox", "templates", "index.html.twig"),
           params: this.response
@@ -449,7 +448,7 @@ class SandBox extends nodefony.Builder {
         name: "workers",
         type: "directory",
         childs: [{
-          name: `service-worker.js`,
+          name: "service-worker.js",
           type: "file",
           skeleton: path.resolve(this.sandboxSkeleton, "workbox", "workers", "service-worker.js"),
           params: this.response
@@ -459,8 +458,8 @@ class SandBox extends nodefony.Builder {
     return resources;
   }
 
-  generateViews() {
-    let views = {
+  generateViews () {
+    const views = {
       name: "views",
       type: "directory",
       childs: [{
@@ -488,9 +487,9 @@ class SandBox extends nodefony.Builder {
     return views;
   }
 
-  generateCss() {
+  generateCss () {
     if (this.response.addons.bootstrap) {
-      let scss = {
+      const scss = {
         name: "scss",
         type: "directory",
         childs: [{
@@ -515,23 +514,22 @@ class SandBox extends nodefony.Builder {
         params: this.response
       });
       return scss;
-    } else {
-      let css = {
-        name: "css",
-        type: "directory",
-        childs: [{
-          name: this.cli.response.command === "project" ? "app.css" : `${this.response.name}.css`,
-          type: "file",
-          skeleton: path.resolve(this.sandboxSkeleton, "Resources", "css", "entry.css"),
-          params: this.response
-        }]
-      };
-      return css;
     }
+    const css = {
+      name: "css",
+      type: "directory",
+      childs: [{
+        name: this.cli.response.command === "project" ? "app.css" : `${this.response.name}.css`,
+        type: "file",
+        skeleton: path.resolve(this.sandboxSkeleton, "Resources", "css", "entry.css"),
+        params: this.response
+      }]
+    };
+    return css;
   }
 
-  generatePublic() {
-    let publicWeb = {
+  generatePublic () {
+    const publicWeb = {
       name: "public",
       type: "directory",
       childs: []
@@ -539,7 +537,7 @@ class SandBox extends nodefony.Builder {
     publicWeb.childs.push({
       name: "favicon.ico",
       type: "copy",
-      path: path.resolve(this.globalSkeleton, "Resources", "public", "favicon.ico"),
+      path: path.resolve(this.globalSkeleton, "Resources", "public", "favicon.ico")
     });
     if (this.response.addons.workbox) {
       publicWeb.childs.push({
@@ -555,7 +553,7 @@ class SandBox extends nodefony.Builder {
       childs: [{
         name: this.cli.response.command === "project" ? "app-logo.png" : `${this.response.shortName}-logo.png`,
         type: "copy",
-        path: path.resolve(this.globalSkeleton, "Resources", "public", "images", "app-logo.png"),
+        path: path.resolve(this.globalSkeleton, "Resources", "public", "images", "app-logo.png")
       }]
     });
     if (!this.response.addons.webpack) {
@@ -587,8 +585,8 @@ class SandBox extends nodefony.Builder {
     return publicWeb;
   }
 
-  generateBinding() {
-    let src = {
+  generateBinding () {
+    const src = {
       name: "src",
       type: "directory",
       childs: []
@@ -598,7 +596,7 @@ class SandBox extends nodefony.Builder {
         name: "addon",
         type: "directory",
         childs: [{
-          name: this.response.shortName + ".cc",
+          name: `${this.response.shortName}.cc`,
           type: "file",
           skeleton: path.resolve(this.globalSkeleton, "binding", "binding.cc"),
           params: this.response

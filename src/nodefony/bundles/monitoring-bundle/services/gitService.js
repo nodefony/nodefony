@@ -1,10 +1,9 @@
-const promiseGit = require('simple-git');
-const remote = `https://github.com/nodefony/nodefony.git`;
+const promiseGit = require("simple-git");
+const remote = "https://github.com/nodefony/nodefony.git";
 const useNodefonyVersion = `v${nodefony.version}`;
 
 module.exports = class git extends nodefony.Service {
-
-  constructor(container) {
+  constructor (container) {
     super("git", container, container.get("notificationsCenter"));
     this.project = nodefony.projectName;
     this.gitKernel = promiseGit(this.kernel.git._baseDir);
@@ -34,26 +33,29 @@ module.exports = class git extends nodefony.Service {
                     .then((newCurrent) => {
                       this.currentVersion = newCurrent;
                       return newCurrent;
-                    }).catch((err) => {
+                    })
+                    .catch((err) => {
                       throw err;
                     });
                 }
               }
               return current;
-            }).catch((err) => {
+            })
+            .catch((err) => {
               throw err;
             });
-        }).catch((err) => {
+        })
+        .catch((err) => {
           this.log(err, "ERROR");
         });
     }
   }
 
-  getRepo(name) {
+  getRepo (name) {
     if (!name) {
       return this.gitKernel;
     }
-    const type = typeof (name);
+    const type = typeof name;
     if (type === "string") {
       switch (name) {
       case "nodefony":
@@ -70,21 +72,21 @@ module.exports = class git extends nodefony.Service {
     return name;
   }
 
-  getClonePath() {
+  getClonePath () {
     return this.nodefonyClonePath;
   }
 
-  cloneNodefony() {
+  cloneNodefony () {
     if (fs.existsSync(this.nodefonyClonePath)) {
       return this.initCloneRepo(true);
     }
     const Git = promiseGit(this.clonePath);
     this.log(`git clone nodefony documentation in ${this.clonePath}`);
     return Git
-      //.silent(true)
+      // .silent(true)
       .clone(remote)
       .then(() => {
-        this.log(`git clone ok nodefony documentation`);
+        this.log("git clone ok nodefony documentation");
         return this.initCloneRepo();
       })
       .catch((err) => {
@@ -92,7 +94,7 @@ module.exports = class git extends nodefony.Service {
       });
   }
 
-  initCloneRepo(pull) {
+  initCloneRepo (pull) {
     this.cloneGit = promiseGit(this.nodefonyClonePath);
     if (pull) {
       return this.pull(this.cloneGit, this.currentVersion)
@@ -102,10 +104,12 @@ module.exports = class git extends nodefony.Service {
             .then((current) => {
               this.currentVersion = current;
               return current;
-            }).catch(e => {
+            })
+            .catch((e) => {
               throw e;
             });
-        }).catch(e => {
+        })
+        .catch((e) => {
           throw e;
         });
     }
@@ -113,116 +117,104 @@ module.exports = class git extends nodefony.Service {
       .then((current) => {
         this.currentVersion = current;
         return current;
-      }).catch(e => {
+      })
+      .catch((e) => {
         throw e;
       });
   }
 
-  getReleases(repo, force) {
+  getReleases (repo, force) {
     if (!repo) {
       return this.getProjectTags(force);
-    } else {
-      if (typeof repo === "string") {
-        switch (repo) {
-        case "nodefony":
-          return this.getNodefonyTags(force);
-        default:
-          return this.getProjectTags(force);
-        }
+    } else if (typeof repo === "string") {
+      switch (repo) {
+      case "nodefony":
+        return this.getNodefonyTags(force);
+      default:
+        return this.getProjectTags(force);
       }
     }
     return repo.tags()
-      .then((tags) => {
-        return tags;
-      }).catch(e => {
+      .then((tags) => tags)
+      .catch((e) => {
         throw e;
       });
   }
 
-  getNodefonyTags(force) {
+  getNodefonyTags (force) {
     if (this.nodefonyTags && force !== true) {
-      return new Promise((resolve) => {
-        return resolve(this.nodefonyTags);
-      });
+      return new Promise((resolve) => resolve(this.nodefonyTags));
     }
     if (this.cloneGit) {
       return this.cloneGit.tags()
         .then((tags) => {
           this.nodefonyTags = tags;
           return tags;
-        }).catch(e => {
+        })
+        .catch((e) => {
           throw e;
         });
-    } else {
-      return Promise.resolve(this.currentVersion);
     }
+    return Promise.resolve(this.currentVersion);
   }
 
-  getProjectTags(force) {
+  getProjectTags (force) {
     if (this.tags && force !== true) {
-      return new Promise((resolve) => {
-        return resolve(this.tags);
-      });
-    } else {
-      return this.gitKernel.tags()
-        .then((tags) => {
-          this.tags = tags;
-          return tags;
-        }).catch(e => {
-          throw e;
-        });
+      return new Promise((resolve) => resolve(this.tags));
     }
+    return this.gitKernel.tags()
+      .then((tags) => {
+        this.tags = tags;
+        return tags;
+      })
+      .catch((e) => {
+        throw e;
+      });
   }
 
-  checkoutVersion(version, repo) {
+  checkoutVersion (version, repo) {
     this.log(`Checkout Documentation :  ${version}`);
     return this.getRepo(repo).checkout(version)
-      .then(() => {
-        return this.getCurrentBranch(this.cloneGit)
-          .then((current) => {
-            this.log(`Documentation version:  ${current}`);
-            this.currentVersion = current;
-            return current;
-          });
-      }).catch(e => {
+      .then(() => this.getCurrentBranch(this.cloneGit)
+        .then((current) => {
+          this.log(`Documentation version:  ${current}`);
+          this.currentVersion = current;
+          return current;
+        }))
+      .catch((e) => {
         throw e;
       });
   }
 
-  getStatus(repo) {
+  getStatus (repo) {
     return this.getRepo(repo).status()
-      .then((status) => {
-        return status;
-      }).catch(e => {
+      .then((status) => status)
+      .catch((e) => {
         throw e;
       });
   }
 
-  getCurrentBranch(repo) {
+  getCurrentBranch (repo) {
     return this.getRepo(repo).branch()
-      .then((BranchSummary) => {
-        return BranchSummary.current;
-      }).catch(e => {
+      .then((BranchSummary) => BranchSummary.current)
+      .catch((e) => {
         throw e;
       });
   }
 
-  getMostRecentCommit(repo) {
+  getMostRecentCommit (repo) {
     return this.getRepo(repo).log()
-      .then((ListLogSummary) => {
-        return ListLogSummary;
-      }).catch(e => {
+      .then((ListLogSummary) => ListLogSummary)
+      .catch((e) => {
         throw e;
       });
   }
 
-  pull(repo, branch) {
+  pull (repo, branch) {
     return this.getRepo(repo).pull(remote, branch)
-      .then((PullSummary) => {
-        return PullSummary;
-      }).catch(e => {
+      .then((PullSummary) => PullSummary)
+      .catch((e) => {
         throw e;
       });
   }
-
 };

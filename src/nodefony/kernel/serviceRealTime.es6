@@ -1,22 +1,20 @@
 class Realtime extends nodefony.Service {
-
-  constructor(name, container, notificationsCenter, options) {
+  constructor (name, container, notificationsCenter, options) {
     super(name, container, notificationsCenter, options);
     this.realTime = this.get("realTime");
   }
 
-  createServer() {
+  createServer () {
 
   }
 
-  startServer() {
+  startServer () {
 
   }
 
-  stopServer() {
+  stopServer () {
 
   }
-
 }
 
 nodefony.services.realtime = Realtime;

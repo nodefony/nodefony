@@ -1,5 +1,5 @@
 module.exports = class SpawnSocket {
-  constructor() {
+  constructor () {
 
   }
 };

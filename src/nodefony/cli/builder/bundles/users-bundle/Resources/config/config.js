@@ -12,8 +12,8 @@
  *        GENERATE BY nodefony-starter BUILDER
  */
 
-//const crypto = require('crypto');
-const path = require('path');
+// const crypto = require('crypto');
+const path = require("path");
 const readFile = function (Path) {
   try {
     return fs.readFileSync(Path, {
@@ -25,13 +25,14 @@ const readFile = function (Path) {
   }
 };
 const randomSecret = function () {
-  let sercretPath = path.resolve("config", "certificates", "ca", "private", "ca.key.pem");
+  const sercretPath = path.resolve("config", "certificates", "ca", "private", "ca.key.pem");
   return readFile(sercretPath);
 };
 
 module.exports = {
   type: "sandbox",
   locale: "en_en",
+
   /**
    *    WATCHERS
    *

@@ -1,19 +1,18 @@
-const QS = require('qs');
-const { syncBuiltinESMExports } = require('module');
+const QS = require("qs");
+const {syncBuiltinESMExports} = require("module");
 syncBuiltinESMExports();
-let formidable = null
-import('formidable').then((esmFS) => {
-  formidable = esmFS.default
-})
+let formidable = null;
+import("formidable").then((esmFS) => {
+  formidable = esmFS.default;
+});
 
-module.exports = nodefony.register("Request", function () {
-
+module.exports = nodefony.register("Request", () => {
   // ARRAY PHP LIKE
   const reg = /(.*)[\[][\]]$/;
   const settingsXml = {};
 
   class Parser {
-    constructor(request) {
+    constructor (request) {
       this.request = request;
       this.chunks = [];
       this.request.request.on("data", (data) => {
@@ -24,22 +23,25 @@ module.exports = nodefony.register("Request", function () {
         }
       });
     }
-    write(buffer) {
+
+    write (buffer) {
       this.chunks.push(buffer);
       return buffer;
     }
-    async parse() {
+
+    async parse () {
       this.request.data = Buffer.concat(this.chunks);
       return this;
     }
   }
 
   class ParserQs extends Parser {
-    constructor(request) {
+    constructor (request) {
       super(request);
       this.queryStringParser = this.request.context.queryStringParser || {};
     }
-    async parse() {
+
+    async parse () {
       try {
         await super.parse();
         this.request.queryPost = QS.parse(this.request.data.toString(this.charset), this.queryStringParser);
@@ -53,11 +55,12 @@ module.exports = nodefony.register("Request", function () {
   }
 
   class ParserXml extends Parser {
-    constructor(request) {
+    constructor (request) {
       super(request);
       this.xmlParser = new xmlParser(settingsXml);
     }
-    async parse() {
+
+    async parse () {
       await super.parse();
       return new Promise((resolve, reject) => {
         this.xmlParser.parseString(this.request.data.toString(this.charset), (err, result) => {
@@ -68,7 +71,7 @@ module.exports = nodefony.register("Request", function () {
           this.request.context.requestEnded = true;
           return resolve(this);
         });
-      })
+      });
     }
   }
 
@@ -79,30 +82,30 @@ module.exports = nodefony.register("Request", function () {
         subtype: new RegExp(".*")
       }];
     }
-    let obj = {};
+    const obj = {};
     try {
-      let types = acc.split(",");
+      const types = acc.split(",");
       for (let i = 0; i < types.length; i++) {
-        let type = types[i].split(";");
-        let mine = type.shift();
-        let dec = mine.split("/");
-        let ele1 = dec.shift();
-        let ele2 = dec.shift();
+        const type = types[i].split(";");
+        const mine = type.shift();
+        const dec = mine.split("/");
+        const ele1 = dec.shift();
+        const ele2 = dec.shift();
         obj[mine] = {
           type: new RegExp(ele1 === "*" ? ".*" : ele1),
           subtype: new RegExp(ele2 === "*" ? ".*" : ele2)
         };
         for (let j = 0; j < type.length; j++) {
-          let params = type[j].split("=");
-          let name = params.shift();
+          const params = type[j].split("=");
+          const name = params.shift();
           obj[mine][name] = params.shift();
         }
       }
       // sort
-      let tab = [];
-      let qvalue = [];
-      for (let ele in obj) {
-        let line = obj[ele];
+      const tab = [];
+      const qvalue = [];
+      for (const ele in obj) {
+        const line = obj[ele];
         if (line.q) {
           qvalue.push(obj[ele]);
         } else {
@@ -133,8 +136,7 @@ module.exports = nodefony.register("Request", function () {
   };
 
   const Request = class httpRequest {
-
-    constructor(request, context) {
+    constructor (request, context) {
       this.context = context;
       this.request = request;
       this.request.body = null;
@@ -152,9 +154,9 @@ module.exports = nodefony.register("Request", function () {
       this.parser = null;
       this.queryPost = {};
       this.queryFile = [];
-      //this.context.setParameters("query.files", this.queryFile);
+      // this.context.setParameters("query.files", this.queryFile);
       this.queryGet = this.url.query;
-      //this.context.setParameters("query.get", this.queryGet);
+      // this.context.setParameters("query.get", this.queryGet);
       this.query = this.url.query;
       this.origin = this.headers.origin;
       try {
@@ -171,7 +173,7 @@ module.exports = nodefony.register("Request", function () {
 
       this.dataSize = 0;
       this.data = Buffer.from([], this.charset);
-      this.request.on('data', (data) => {
+      this.request.on("data", (data) => {
         this.dataSize += data.length;
       });
       this.context.once("onRequestEnd", () => {
@@ -180,7 +182,7 @@ module.exports = nodefony.register("Request", function () {
       this.initialize();
     }
 
-    initialize() {
+    initialize () {
       return this.parseRequest()
         .then((parser) => {
           switch (true) {
@@ -219,16 +221,15 @@ module.exports = nodefony.register("Request", function () {
         .catch((error) => {
           if (this.context.requestEnded) {
             return this.context.kernelHttp.onError(this.context.container, error);
-          } else {
-            this.request.once("end", () => {
-              this.context.requestEnded = true;
-              return this.context.kernelHttp.onError(this.context.container, error);
-            });
           }
+          this.request.once("end", () => {
+            this.context.requestEnded = true;
+            return this.context.kernelHttp.onError(this.context.container, error);
+          });
         });
     }
 
-    parseRequest() {
+    parseRequest () {
       return new Promise((resolve, reject) => {
         if (this.method in parse) {
           switch (this.contentType) {
@@ -245,13 +246,13 @@ module.exports = nodefony.register("Request", function () {
             return resolve(this.parser);
           default:
             const parserInst = new Parser(this);
-            let opt = nodefony.extend(this.context.requestSettings, {
+            const opt = nodefony.extend(this.context.requestSettings, {
               encoding: this.charset === "utf8" ? "utf-8" : this.charset
             });
             this.parser = formidable(opt);
             this.parser.parse(this.request, async (err, fields, files) => {
               if (err) {
-                this.log(`err.message use Simple parser`,"WARNING");
+                this.log("err.message use Simple parser", "WARNING");
                 switch (err.code) {
                 case 1003:
                 case 1011:
@@ -263,8 +264,8 @@ module.exports = nodefony.register("Request", function () {
                   return resolve(await this.parser.parse());
                   break;
                 default:
-                  console.error(err)
-                  err.code = err.httpCode
+                  console.error(err);
+                  err.code = err.httpCode;
                   return reject(err);
                 }
               }
@@ -273,26 +274,22 @@ module.exports = nodefony.register("Request", function () {
                 this.queryPost = fields;
                 this.query = nodefony.extend({}, this.query, this.queryPost);
                 if (Object.keys(files).length) {
-                  for (let file in files) {
+                  for (const file in files) {
                     try {
                       if (reg.exec(file)) {
                         if (nodefony.isArray(files[file])) {
-                          for (let multifiles in files[file]) {
+                          for (const multifiles in files[file]) {
                             this.createFileUpload(multifiles, files[file][multifiles], opt.maxFileSize);
                           }
-                        } else {
-                          if (files[file].filepath) {
-                            this.createFileUpload(file, files[file], opt.maxFileSize);
-                          }
-                        }
-                      } else {
-                        if (nodefony.isArray(files[file])) {
-                          for (let multifiles in files[file]) {
-                            this.createFileUpload(null, files[file][multifiles], opt.maxFileSize);
-                          }
-                        } else {
+                        } else if (files[file].filepath) {
                           this.createFileUpload(file, files[file], opt.maxFileSize);
                         }
+                      } else if (nodefony.isArray(files[file])) {
+                        for (const multifiles in files[file]) {
+                          this.createFileUpload(null, files[file][multifiles], opt.maxFileSize);
+                        }
+                      } else {
+                        this.createFileUpload(file, files[file], opt.maxFileSize);
                       }
                     } catch (err) {
                       return reject(err);
@@ -313,17 +310,17 @@ module.exports = nodefony.register("Request", function () {
       });
     }
 
-    createFileUpload(name, file, maxSize) {
+    createFileUpload (name, file, maxSize) {
       if (file.size > maxSize) {
-        throw new Error('maxFileSize exceeded, received ' + file.size + ' bytes of file data for : ' + file.originalFilename || name || file.newFilename);
+        throw new Error(`maxFileSize exceeded, received ${file.size} bytes of file data for : ${file.originalFilename}` || name || file.newFilename);
       }
-      let fileUpload = this.context.uploadService.createUploadFile(file, name);
-      let index = this.queryFile.push(fileUpload);
+      const fileUpload = this.context.uploadService.createUploadFile(file, name);
+      const index = this.queryFile.push(fileUpload);
       this.queryFile[fileUpload.filename] = this.queryFile[index - 1];
       return fileUpload;
     }
 
-    accepts(Type) {
+    accepts (Type) {
       let parse = null;
       let subtype = "*";
       let type = "*";
@@ -345,7 +342,7 @@ module.exports = nodefony.register("Request", function () {
           }
         }
         for (let i = 0; i < this.accept.length; i++) {
-          let line = this.accept[i];
+          const line = this.accept[i];
           if ((type === "*" || line.type.test(type)) && (subtype === "*" || line.subtype.test(subtype))) {
             return true;
           }
@@ -357,11 +354,11 @@ module.exports = nodefony.register("Request", function () {
       }
     }
 
-    getHost() {
+    getHost () {
       return this.request.headers.host;
     }
 
-    getHostName(host) {
+    getHostName (host) {
       if (this.url && this.url.hostname) {
         return this.url.hostname;
       }
@@ -374,20 +371,20 @@ module.exports = nodefony.register("Request", function () {
       return "";
     }
 
-    getUserAgent() {
-      return this.request.headers['user-agent'];
+    getUserAgent () {
+      return this.request.headers["user-agent"];
     }
 
-    getMethod() {
+    getMethod () {
       return this.request.method;
     }
 
-    clean() {
+    clean () {
       this.data = null;
       delete this.data;
       this.body = null;
       delete this.body;
-      if(this.parser && this.parser.chunks){
+      if (this.parser && this.parser.chunks) {
         this.parser.chunks = null;
         delete this.parser.chunks;
       }
@@ -405,26 +402,26 @@ module.exports = nodefony.register("Request", function () {
       delete this.request;
       this.accept = null;
       delete this.accept;
-      //this.container = null ;
-      //delete this.container ;
-      //super.clean();
+      // this.container = null ;
+      // delete this.container ;
+      // super.clean();
     }
 
-    log(pci, severity, msgid, msg) {
+    log (pci, severity, msgid, msg) {
       if (!msgid) {
-        msgid = this.context.type + " REQUEST ";
+        msgid = `${this.context.type} REQUEST `;
       }
       return this.context.log(pci, severity, msgid, msg);
     }
 
-    getContentType(request) {
+    getContentType (request) {
       if (request.headers["content-type"]) {
-        let tab = request.headers["content-type"].split(";");
+        const tab = request.headers["content-type"].split(";");
         if (tab.length > 1) {
           for (let i = 1; i < tab.length; i++) {
             if (typeof tab[i] === "string") {
-              let ele = tab[i].split("=");
-              let key = ele[0].replace(" ", "").toLowerCase();
+              const ele = tab[i].split("=");
+              const key = ele[0].replace(" ", "").toLowerCase();
               this.rawContentType[key] = ele[1];
             } else {
               continue;
@@ -437,22 +434,22 @@ module.exports = nodefony.register("Request", function () {
       return null;
     }
 
-    getCharset() {
+    getCharset () {
       if (this.rawContentType.charset) {
         return this.rawContentType.charset;
       }
       return "utf8";
     }
 
-    getDomain() {
+    getDomain () {
       return this.getHostName();
-      //return this.host.split(":")[0];
+      // return this.host.split(":")[0];
     }
 
-    getRemoteAddress() {
+    getRemoteAddress () {
       // proxy mode
-      if (this.headers && this.headers['x-forwarded-for']) {
-        return this.headers['x-forwarded-for'];
+      if (this.headers && this.headers["x-forwarded-for"]) {
+        return this.headers["x-forwarded-for"];
       }
       if (this.request.connection && this.request.connection.remoteAddress) {
         return this.request.connection.remoteAddress;
@@ -466,15 +463,15 @@ module.exports = nodefony.register("Request", function () {
       return null;
     }
 
-    setUrl(Url) {
+    setUrl (Url) {
       this.url = this.getUrl(Url);
     }
 
-    getUrl(sUrl, query) {
+    getUrl (sUrl, query) {
       return url.parse(sUrl, query);
     }
 
-    /*cleanUrl(Url){
+    /* cleanUrl(Url){
       let parse =  url.parse(Url)
       let myurl = null
       if( parse.pathname ){
@@ -486,29 +483,28 @@ module.exports = nodefony.register("Request", function () {
       return url.format(parse)
     }*/
 
-    getFullUrl(request) {
-      let myurl = `://${this.host}${request.url}`;
+    getFullUrl (request) {
+      const myurl = `://${this.host}${request.url}`;
       // proxy mode
-      if (this.headers && this.headers['x-forwarded-for']) {
-        return `${this.headers['x-forwarded-proto']}${myurl}`;
+      if (this.headers && this.headers["x-forwarded-for"]) {
+        return `${this.headers["x-forwarded-proto"]}${myurl}`;
       }
       if (request.connection.encrypted) {
         return `https${myurl}`;
-      } else {
-        return `http${myurl}`;
       }
+      return `http${myurl}`;
     }
 
-    getHeader(name) {
+    getHeader (name) {
       if (name in this.headers) {
         return this.headers[name];
       }
       return null;
     }
 
-    isAjax() {
-      if (this.headers['x-requested-with']) {
-        return ('xmlhttprequest' === this.headers['x-requested-with'].toLowerCase());
+    isAjax () {
+      if (this.headers["x-requested-with"]) {
+        return this.headers["x-requested-with"].toLowerCase() === "xmlhttprequest";
       }
       return false;
     }

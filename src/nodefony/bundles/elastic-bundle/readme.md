@@ -17,7 +17,7 @@ module.exports = {
 }
 ```
 
-### Override elastic-bundle configuration your bundle  
+### Override elastic-bundle configuration your bundle
 
 #### <code>./app/config/config.js</code>
 

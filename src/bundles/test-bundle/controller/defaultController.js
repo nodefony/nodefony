@@ -4,13 +4,12 @@ const lib = require("./lib.js");
 /**
  */
 module.exports = class defaultController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
     // start session for all actions
     this.startSession();
 
-    /*let i = 0;
+    /* let i = 0;
     //flush(this.context, i);
     let interval = setInterval(() => {
       //flush(this.context, i++);
@@ -20,19 +19,18 @@ module.exports = class defaultController extends nodefony.controller {
       console.log("pass onrequestEnd");
     });*/
 
-    /*let cookie = new nodefony.cookies.cookie("test", JSON.stringify({
+    /* let cookie = new nodefony.cookies.cookie("test", JSON.stringify({
       "foo": "bar"
     }), {
       signed: true,
       secure: true,
       path: "/test"
     });*/
-    //this.response.addCookie(cookie);
-    //console.log(this.context.cookies.test.unsign());
-
+    // this.response.addCookie(cookie);
+    // console.log(this.context.cookies.test.unsign());
   }
 
-  indexAction() {
+  indexAction () {
     try {
       return this.render("testBundle::index.html.twig", {
         lib: lib.toJson(),
@@ -43,7 +41,7 @@ module.exports = class defaultController extends nodefony.controller {
     }
   }
 
-  index2Action() {
+  index2Action () {
     try {
       throw new Error("pass error");
     } catch (e) {
@@ -55,11 +53,11 @@ module.exports = class defaultController extends nodefony.controller {
     }
   }
 
-  myPromise() {
+  myPromise () {
     return new Promise((resolve, reject) => {
       try {
         let iterator = 0;
-        let interval = setInterval(() => {
+        const interval = setInterval(() => {
           try {
             if (iterator === 10) {
               clearInterval(interval);
@@ -70,17 +68,16 @@ module.exports = class defaultController extends nodefony.controller {
             throw e;
           }
         }, 1000);
-        //if (true) {
-        //throw new Error("pass error");
-        //}
-
+        // if (true) {
+        // throw new Error("pass error");
+        // }
       } catch (e) {
         return reject(e);
       }
     });
   }
 
-  /*indexAction() {
+  /* indexAction() {
     return this.myPromise()
       .then(ele => {
         return this.render("testBundle::index.html.twig", {
@@ -103,7 +100,7 @@ module.exports = class defaultController extends nodefony.controller {
    *	@method loginAction
    *  @Route ("/api/login", name="api-login")
    */
-  loginApiAction() {
+  loginApiAction () {
     try {
       return this.render("testBundle:api:login.html.twig");
     } catch (e) {
@@ -116,7 +113,7 @@ module.exports = class defaultController extends nodefony.controller {
    *	@method indexAction
    *  @Route ("/api/token", name="api-token")
    */
-  tokenApiAction() {
+  tokenApiAction () {
     try {
       return this.renderJson({});
     } catch (e) {
@@ -130,11 +127,11 @@ module.exports = class defaultController extends nodefony.controller {
    *      name="test-session-attributes")
    *
    */
-  sessionAction() {
-    let ele = this.context.session.get("ele");
+  sessionAction () {
+    const ele = this.context.session.get("ele");
     if (ele) {
       return this.renderJson({
-        ele: ele,
+        ele,
         param: this.context.session.getParameters("ele"),
         params: this.context.session.getParameters(),
         conxtext: this.context.session.getParameters("context")
@@ -155,7 +152,7 @@ module.exports = class defaultController extends nodefony.controller {
   /**
    *
    */
-  watcherAction() {
+  watcherAction () {
     return this.renderJson(lib.toJson());
   }
 
@@ -163,15 +160,15 @@ module.exports = class defaultController extends nodefony.controller {
    *
    *    render JSON
    */
-  jsonAction() {
+  jsonAction () {
     return this.renderJson({
       foo: "bar",
       bar: "foo"
     });
   }
 
-  restAction() {
-    let error = new Error("API");
+  restAction () {
+    const error = new Error("API");
     error.pdu = JSON.stringify(new nodefony.PDU(error.message, "ERROR", "MONGODB", "USERNOTFOUND"));
     throw error;
   }
@@ -180,7 +177,7 @@ module.exports = class defaultController extends nodefony.controller {
    *
    *    DEMO WEBSOCKET
    */
-  websoketAction(message) {
+  websoketAction (message) {
     switch (this.getMethod()) {
     case "WEBSOCKET":
       if (message) {
@@ -189,12 +186,12 @@ module.exports = class defaultController extends nodefony.controller {
       } else {
         // PREPARE  PUSH MESSAGES SERVER
         // SEND MESSAGES TO CLIENTS
-        var i = 0;
-        var id = setInterval(() => {
-          var mess = "I am a  message " + i + "\n";
-          this.log("SEND TO CLIENT :" + mess, "INFO");
+        let i = 0;
+        let id = setInterval(() => {
+          const mess = `I am a  message ${i}\n`;
+          this.log(`SEND TO CLIENT :${mess}`, "INFO");
           this.context.send(mess);
-          //this.renderResponse(mess);
+          // this.renderResponse(mess);
           i++;
         }, 1000);
         setTimeout(() => {

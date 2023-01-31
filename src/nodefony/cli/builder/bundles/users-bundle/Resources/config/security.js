@@ -13,6 +13,7 @@ const cors = {
 
 module.exports = {
   security: {
+
     /**
      *  FIREWALL  PROVIDER
      */
@@ -52,8 +53,8 @@ module.exports = {
           default_target_path: "/users"
         },
         "passport-local": {
-          usernameField: 'username',
-          passwordField: 'passwd'
+          usernameField: "username",
+          passwordField: "passwd"
         },
         logout: "/logout",
         context: null,
@@ -64,8 +65,8 @@ module.exports = {
         pattern: /^\/api\/jwt\/login/,
         provider: "nodefony",
         "passport-local": {
-          usernameField: 'username',
-          passwordField: 'passwd'
+          usernameField: "username",
+          passwordField: "passwd"
         },
         stateless: false,
         redirectHttps: true,
@@ -78,7 +79,7 @@ module.exports = {
         stateless: true,
         "passport-jwt": {
           algorithms: "RS256",
-          //secretOrKey:"Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone."
+          // secretOrKey:"Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone."
           certificats: {
             private: path.resolve("config", "certificates", "ca", "private", "ca.key.pem"),
             public: path.resolve("config", "certificates", "ca", "public", "public.key.pem")

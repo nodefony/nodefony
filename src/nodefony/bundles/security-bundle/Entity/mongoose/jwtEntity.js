@@ -1,4 +1,5 @@
-const Schema = require('mongoose').Schema;
+const {Schema} = require("mongoose");
+
 /*
  *
  *
@@ -7,8 +8,7 @@ const Schema = require('mongoose').Schema;
  *
  */
 module.exports = class jwt extends nodefony.Entity {
-
-  constructor(bundle) {
+  constructor (bundle) {
     /*
      *   @param bundle instance
      *   @param Entity name
@@ -18,10 +18,10 @@ module.exports = class jwt extends nodefony.Entity {
     super(bundle, "jwt", "mongoose", "nodefony");
   }
 
-  getSchema() {
+  getSchema () {
     return {
       username: {
-        type: String,
+        type: String
       },
       refreshToken: {
         type: String,
@@ -38,11 +38,11 @@ module.exports = class jwt extends nodefony.Entity {
     };
   }
 
-  registerModel(db) {
-    let mySchema = new Schema(this.getSchema(), {
+  registerModel (db) {
+    const mySchema = new Schema(this.getSchema(), {
       timestamps: {
-        createdAt: 'createdAt',
-        updatedAt: 'updatedAt'
+        createdAt: "createdAt",
+        updatedAt: "updatedAt"
       }
     });
 
@@ -58,15 +58,16 @@ module.exports = class jwt extends nodefony.Entity {
       try {
         session = await db.startSession.call(db);
         return this.create({
-            username: username,
-            refreshToken: refreshToken,
-            token: token,
-            active: active
-          })
+          username,
+          refreshToken,
+          token,
+          active
+        })
           .then((mytoken) => {
             session.commitTransaction();
             return mytoken;
-          }).catch(e => {
+          })
+          .catch((e) => {
             session.abortTransaction();
             throw e;
           });
@@ -83,15 +84,16 @@ module.exports = class jwt extends nodefony.Entity {
       try {
         session = await db.startSession.call(db);
         return this.update({
-            username: username,
-            refreshToken: refreshToken
-          }, {
-            token: token
-          })
+          username,
+          refreshToken
+        }, {
+          token
+        })
           .then((mytoken) => {
             session.commitTransaction();
             return mytoken;
-          }).catch(e => {
+          })
+          .catch((e) => {
             session.abortTransaction();
             throw e;
           });
@@ -108,21 +110,20 @@ module.exports = class jwt extends nodefony.Entity {
       try {
         session = await db.startSession.call(db);
         let res = null;
-          res = this.deleteMany({
-            refreshToken: refreshToken
+        res = this.deleteMany({
+          refreshToken
+        });
+        return res
+          .then((mytoken) => {
+            session.commitTransaction();
+            if (mytoken.deletedCount) {
+              return true;
+            }
+            return false;
+          }).catch((e) => {
+            session.abortTransaction();
+            throw e;
           });
-          return res
-            .then((mytoken) => {
-              session.commitTransaction();
-              if (mytoken.deletedCount){
-                return true ;
-              }
-              return false;
-            }).catch(e => {
-              session.abortTransaction();
-              throw e;
-            });
-
       } catch (e) {
         if (session) {
           session.abortTransaction();
@@ -140,14 +141,14 @@ module.exports = class jwt extends nodefony.Entity {
           res = this.remove();
         } else {
           res = this.deleteMany({
-            username: username
+            username
           });
         }
         return res
           .then((mytoken) => {
             session.commitTransaction();
             return mytoken.deletedCount;
-          }).catch(e => {
+          }).catch((e) => {
             session.abortTransaction();
             throw e;
           });
@@ -161,8 +162,8 @@ module.exports = class jwt extends nodefony.Entity {
     return db.model(this.name, mySchema);
   }
 
-  logger(pci /*, sequelize*/ ) {
-    const msgid = "Entity " + this.name;
+  logger (pci /* , sequelize*/) {
+    const msgid = `Entity ${this.name}`;
     return super.logger(pci, "DEBUG", msgid);
   }
 };

@@ -1,5 +1,5 @@
 
 exports.task = () => {
-  console.log("passssss")
-    return 'dummy task';
+  console.log("passssss");
+  return "dummy task";
 };

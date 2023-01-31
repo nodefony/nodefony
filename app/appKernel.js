@@ -3,130 +3,128 @@
  */
 "use strict;";
 const blue = clc.blueBright.bold;
-const green = clc.green;
-//const yellow = clc.yellow.bold;
+const {green} = clc;
+// const yellow = clc.yellow.bold;
 const magenta = clc.magenta.bold;
-const reset = clc.reset; // '\x1b[0m';
+const {reset} = clc; // '\x1b[0m';
 
 module.exports = class appKernel extends nodefony.kernel {
-  constructor(environment, cli, settings) {
+  constructor (environment, cli, settings) {
     // kernel constructor
     try {
       super(environment, cli, settings);
-      this.appEnvironment = this.getAppEnvironment()
-      if (this.appEnvironment.environment === 'development') {
+      this.appEnvironment = this.getAppEnvironment();
+      if (this.appEnvironment.environment === "development") {
         this.once("onPreRegister", () => {
           if (this.type === "SERVER") {
-              return this.showBanner()
+            return this.showBanner();
           }
-        })
+        });
       }
     } catch (e) {
-      console.error(e)
+      console.error(e);
       throw e;
     }
   }
 
-  showBanner() {
-    let banner = `App Environment`
-    for (let ele in this.appEnvironment) {
-      let module = this.appEnvironment[ele]
+  showBanner () {
+    let banner = "App Environment";
+    for (const ele in this.appEnvironment) {
+      const module = this.appEnvironment[ele];
       switch (ele) {
-        case "environment":
-          banner = `       ${magenta("Application Environement")} : ${green(module)}`;
-          console.log(banner)
-          this.cli.blankLine();
-          break;
-        case "vault":
-          banner = `Module :  ${green(ele)}     Vault : ${blue(module.active)}`;
-          this.log(banner);
-          break
-        default:
-          banner = `Module :  ${green(ele)}     `;
-          if (module.vault) {
-            banner += `Vault : ${blue(module.vault.active)}`
-          }
-          this.log(banner);
+      case "environment":
+        banner = `       ${magenta("Application Environement")} : ${green(module)}`;
+        console.log(banner);
+        this.cli.blankLine();
+        break;
+      case "vault":
+        banner = `Module :  ${green(ele)}     Vault : ${blue(module.active)}`;
+        this.log(banner);
+        break;
+      default:
+        banner = `Module :  ${green(ele)}     `;
+        if (module.vault) {
+          banner += `Vault : ${blue(module.vault.active)}`;
+        }
+        this.log(banner);
       }
     }
     this.cli.blankLine();
   }
 
-  getAppEnvironment() {
-    const environment = this.getVariableEnvironment()
+  getAppEnvironment () {
+    const environment = this.getVariableEnvironment();
     return {
-      environment: environment,
+      environment,
       database: this.getDatabaseEnvironment(environment),
       vault: this.getVaultEnvironment(environment)
-    }
+    };
   }
 
-  getVariableEnvironment() {
+  getVariableEnvironment () {
     if (process.env.NODEFONY_ENV) {
-      return process.env.NODEFONY_ENV
+      return process.env.NODEFONY_ENV;
     }
-    const production = process.env.NODE_ENV === "production"
-    const development = process.env.NODE_ENV === "development"
+    const production = process.env.NODE_ENV === "production";
+    const development = process.env.NODE_ENV === "development";
     if (production) {
-      return 'production'
+      return "production";
     }
     if (development) {
-      return 'development'
+      return "development";
     }
-    return 'development'
+    return "development";
   }
 
   /* VAULT BUNDLE */
-  getVaultEnvironment(environment) {
+  getVaultEnvironment (environment) {
     switch (environment) {
-      case 'production':
-        return {
-          active: true,
-            prepareAuth: false,
-            getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
-        }
-      case 'development':
-      default:
-        return {
-          active: true,
-            prepareAuth: true,
-            getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
-        }
-    }
-  }
-  getDatabaseEnvironment(environment) {
-    switch (environment) {
-      case 'production':
-        return {
-          vault: {
-            active: true,
-            path: "nodefony/data/postgresql/connector/nodefony"
-          },
-        }
-      case 'development':
-      default:
-        return {
-          vault: {
-            active: false,
-            path: "nodefony/data/sqlite/connector/nodefony"
-          },
-        }
+    case "production":
+      return {
+        active: true,
+        prepareAuth: false,
+        getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
+      };
+    case "development":
+    default:
+      return {
+        active: true,
+        prepareAuth: true,
+        getVaultCredentialsApprole: this.getVaultCredentialsApprole(environment)
+      };
     }
   }
 
-  getVaultCredentialsApprole(environment) {
+  getDatabaseEnvironment (environment) {
     switch (environment) {
-      case 'production':
-        return async () => {
-          return {
-            role_id: "",
-            secret_id: ""
-          }
+    case "production":
+      return {
+        vault: {
+          active: true,
+          path: "nodefony/data/postgresql/connector/nodefony"
         }
-      case 'development':
-      default:
-        return null
+      };
+    case "development":
+    default:
+      return {
+        vault: {
+          active: false,
+          path: "nodefony/data/sqlite/connector/nodefony"
+        }
+      };
     }
   }
 
+  getVaultCredentialsApprole (environment) {
+    switch (environment) {
+    case "production":
+      return async () => ({
+        role_id: "",
+        secret_id: ""
+      });
+    case "development":
+    default:
+      return null;
+    }
+  }
 };

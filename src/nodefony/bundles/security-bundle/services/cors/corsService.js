@@ -1,5 +1,5 @@
-const readConfig = function readConfig(settings) {
-  for (let ele in settings) {
+const readConfig = function readConfig (settings) {
+  for (const ele in settings) {
     let str = null;
     switch (ele) {
     case "Allow-Origin":
@@ -11,11 +11,11 @@ const readConfig = function readConfig(settings) {
         case "object":
           str = "";
           let i = 0;
-          for (let name in settings[ele]) {
+          for (const name in settings[ele]) {
             if (i === 0) {
               str = settings[ele][name];
             } else {
-              str += "|" + settings[ele][name];
+              str += `|${settings[ele][name]}`;
             }
             i++;
           }
@@ -29,7 +29,7 @@ const readConfig = function readConfig(settings) {
             if (i === 0) {
               str = settings[ele][i];
             } else {
-              str += "|" + settings[ele][i];
+              str += `|${settings[ele][i]}`;
             }
           }
           if (str) {
@@ -44,7 +44,7 @@ const readConfig = function readConfig(settings) {
       break;
     case "Access-Control":
     case "access-control":
-      for (let header in settings[ele]) {
+      for (const header in settings[ele]) {
         if (nodefony.typeOf(settings[ele][header]) === "array") {
           settings[ele][header] = settings[ele][header].toString();
         }
@@ -56,20 +56,21 @@ const readConfig = function readConfig(settings) {
 };
 
 const Cors = class Cors {
-  constructor(settings) {
+  constructor (settings) {
     this.allowMatch = null;
     this.headers = {};
     readConfig.call(this, settings);
   }
-  match(context, redirect) {
+
+  match (context, redirect) {
     let origin;
     if (redirect) {
-      origin = redirect + "://" + context.originUrl.host;
+      origin = `${redirect}://${context.originUrl.host}`;
     } else {
-      origin = context.originUrl.protocol + "//" + context.originUrl.host;
+      origin = `${context.originUrl.protocol}//${context.originUrl.host}`;
     }
     if (this.allowMatch) {
-      let res = this.allowMatch.exec(origin);
+      const res = this.allowMatch.exec(origin);
       if (!res) {
         return 401;
       }
@@ -84,35 +85,34 @@ const Cors = class Cors {
         return 204;
       }
       return 200;
-    } else {
-      return 401;
     }
+    return 401;
   }
 };
 
 module.exports = class cors extends nodefony.Service {
-  constructor(container, httpKernel) {
+  constructor (container, httpKernel) {
     super("CORS", container);
     this.allowMatch = null;
     this.headers = {};
     this.httpKernel = httpKernel;
-    this.kernel.once( "onPreBoot", () => {
+    this.kernel.once("onPreBoot", () => {
       this.settings = this.kernel.getBundle("security").settings.cors;
       readConfig.call(this, this.settings);
     });
   }
 
-  createCors(settings) {
+  createCors (settings) {
     if (!settings) {
       return new Cors(this.settings);
     }
     return new Cors(settings);
   }
 
-  isCrossDomain(context) {
+  isCrossDomain (context) {
     // request origin
-    let URL = context.originUrl;
-    let hostnameOrigin = URL.hostname;
+    const URL = context.originUrl;
+    const hostnameOrigin = URL.hostname;
     let portOrigin = parseInt(URL.port, 10);
 
     // request server
@@ -121,12 +121,12 @@ module.exports = class cors extends nodefony.Service {
     let protocolOrigin = null;
 
     if (context.session) {
-      let redirect = context.session.getFlashBag("redirect");
+      const redirect = context.session.getFlashBag("redirect");
       if (redirect) {
         return false;
       }
     }
-    //console.log( "prototcol ::::" + URL.protocol )
+    // console.log( "prototcol ::::" + URL.protocol )
     if (!portOrigin) {
       if (URL.protocol === "http:") {
         URL.port = 80;
@@ -137,13 +137,13 @@ module.exports = class cors extends nodefony.Service {
         portOrigin = 443;
       }
     }
-    //console.log( "portOrigin ::::" + portOrigin )
+    // console.log( "portOrigin ::::" + portOrigin )
     if (context.proxy) {
       requestProto = context.proxy.proxyProto;
       requestPort = parseInt(context.proxy.proxyPort, 10);
     }
 
-    //console.log( "requestProto : " + requestProto)
+    // console.log( "requestProto : " + requestProto)
     switch (requestProto) {
     case "http":
     case "https":
@@ -160,19 +160,19 @@ module.exports = class cors extends nodefony.Service {
       break;
     }
 
-    //console.log("check domain Request:" + this.httpKernel.regAlias.test(hostnameOrigin) + " Origin : " + hostnameOrigin)
-    //check domain
+    // console.log("check domain Request:" + this.httpKernel.regAlias.test(hostnameOrigin) + " Origin : " + hostnameOrigin)
+    // check domain
     if (!this.httpKernel.regAlias.test(hostnameOrigin)) {
       return true;
     }
 
-    //console.log("check protocol Request:" + requestProto + " Origin : " + protocolOrigin)
+    // console.log("check protocol Request:" + requestProto + " Origin : " + protocolOrigin)
     // check protocol
-    if (requestProto + ":" !== protocolOrigin) {
+    if (`${requestProto}:` !== protocolOrigin) {
       return true;
     }
 
-    //console.log("check port Request:" + requestPort + " Origin : " + portOrigin)
+    // console.log("check port Request:" + requestPort + " Origin : " + portOrigin)
     // check port
     if (requestPort !== portOrigin) {
       return true;

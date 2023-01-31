@@ -1,25 +1,27 @@
 class fixturesCommand extends nodefony.Command {
-  constructor(cli, bundle) {
+  constructor (cli, bundle) {
     super("fixtures", cli, bundle);
   }
 
-  showHelp() {
-    this.setHelp("fixtures:list",
+  showHelp () {
+    this.setHelp(
+      "fixtures:list",
       "nodefony fixtures:list "
     );
-    this.setHelp("fixtures:load [bundleName] [fixtureName]",
+    this.setHelp(
+      "fixtures:load [bundleName] [fixtureName]",
       "run fixtures example: nodefony fixtures:load user users"
     );
     super.showHelp();
   }
 
-  getFixtures(log = true) {
-    let fix = {};
-    for (let bundle in this.kernel.bundles) {
+  getFixtures (log = true) {
+    const fix = {};
+    for (const bundle in this.kernel.bundles) {
       fix[bundle] = [];
-      let bund = this.kernel.bundles[bundle];
-      let fixtures = bund.getFixtures();
-      for (let fixture in fixtures) {
+      const bund = this.kernel.bundles[bundle];
+      const fixtures = bund.getFixtures();
+      for (const fixture in fixtures) {
         if (log) {
           fix[bundle].push(new fixtures[fixture](this.container).name);
         } else {
@@ -30,7 +32,7 @@ class fixturesCommand extends nodefony.Command {
     return fix;
   }
 
-  list(log = true) {
+  list (log = true) {
     return new Promise((resolve) => {
       let fixtures = null;
       if (this.kernel.ready) {
@@ -39,27 +41,26 @@ class fixturesCommand extends nodefony.Command {
           this.log(fixtures);
         }
         return resolve(fixtures);
-      } else {
-        this.kernel.once("onReady", () => {
-          fixtures = this.getFixtures(log);
-          if (log) {
-            this.log(fixtures);
-          }
-          return resolve(fixtures);
-        });
       }
+      this.kernel.once("onReady", () => {
+        fixtures = this.getFixtures(log);
+        if (log) {
+          this.log(fixtures);
+        }
+        return resolve(fixtures);
+      });
     });
   }
 
-  async load(bundle = null, fixtureName = null) {
+  async load (bundle = null, fixtureName = null) {
     try {
       const fixtures = await this.list(false);
-      for (let fixture in fixtures) {
+      for (const fixture in fixtures) {
         if (bundle && fixture !== bundle) {
           continue;
         }
         this.log(`LOAD FIXTURE bundle : ${fixture}`, "INFO");
-        for await (let fix of fixtures[fixture]) {
+        for await (const fix of fixtures[fixture]) {
           if (fixtureName && fix.name !== fixtureName) {
             continue;
           }

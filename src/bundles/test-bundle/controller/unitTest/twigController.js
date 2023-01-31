@@ -10,14 +10,13 @@
  */
 
 class twigController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
   }
 
-  renderAction() {
-    var response = this.getResponse();
-    var status = response.getStatus();
+  renderAction () {
+    const response = this.getResponse();
+    const status = response.getStatus();
     let str = null;
     switch (this.query.type) {
     case "render":
@@ -106,9 +105,9 @@ class twigController extends nodefony.controller {
     }
   }
 
-  extendAction() {
-    var response = this.getResponse();
-    var status = response.getStatus();
+  extendAction () {
+    const response = this.getResponse();
+    const status = response.getStatus();
     switch (this.query.type) {
     case "render":
       return this.render("testBundle:unitTest:render.json.twig", {
@@ -184,13 +183,13 @@ class twigController extends nodefony.controller {
     }
   }
 
-  websocketAction(message) {
-    if (this.getMethod() === 'WEBSOCKET') {
-      var obj = function (state, message, connection) {
+  websocketAction (message) {
+    if (this.getMethod() === "WEBSOCKET") {
+      const obj = function (state, message, connection) {
         return {
           type: state,
-          message: message,
-          connection: connection
+          message,
+          connection
         };
       };
       let result = null;
@@ -198,43 +197,40 @@ class twigController extends nodefony.controller {
         result = obj("START", "CONNECTED", this.context.connection.connected);
         this.context.send(JSON.stringify(result));
         return;
-      } else {
-        var res = null;
-        try {
-          if (message.utf8Data) {
-            res = JSON.parse(message.utf8Data);
-          } else {
-            if (typeof message === "string") {
-              res = JSON.parse(message);
-            } else {
-              res = message;
-            }
-          }
-        } catch (e) {
-          throw e;
+      }
+      let res = null;
+      try {
+        if (message.utf8Data) {
+          res = JSON.parse(message.utf8Data);
+        } else if (typeof message === "string") {
+          res = JSON.parse(message);
+        } else {
+          res = message;
         }
-        switch (res.type) {
-        case "START":
-          result = obj("TWIG-RENDER", null, this.context.connection.connected);
-          return this.renderJson(result);
-        case "TWIG-RENDER":
-          return this.render("testBundle:unitTest:websocket.json.twig", {
-            code: this.context.connection.connected,
-            type: "TWIG-RENDER",
-            message: null,
-            data: "null"
-          }).then((result) => {
-            var ret = JSON.parse(result);
-            ret.type = 'STOP';
-            return JSON.stringify(ret);
-          });
-        case "RENDER":
-          return this.renderJson({
-            type: "RENDER"
-          });
-        case "STOP":
-          return this.context.connection.close();
-        }
+      } catch (e) {
+        throw e;
+      }
+      switch (res.type) {
+      case "START":
+        result = obj("TWIG-RENDER", null, this.context.connection.connected);
+        return this.renderJson(result);
+      case "TWIG-RENDER":
+        return this.render("testBundle:unitTest:websocket.json.twig", {
+          code: this.context.connection.connected,
+          type: "TWIG-RENDER",
+          message: null,
+          data: "null"
+        }).then((result) => {
+          const ret = JSON.parse(result);
+          ret.type = "STOP";
+          return JSON.stringify(ret);
+        });
+      case "RENDER":
+        return this.renderJson({
+          type: "RENDER"
+        });
+      case "STOP":
+        return this.context.connection.close();
       }
     }
     throw new Error("HTTP context not defined WEBSOCKET  ");

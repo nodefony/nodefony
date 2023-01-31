@@ -1,6 +1,5 @@
 class Result extends Array {
-
-  constructor(res) {
+  constructor (res) {
     if (res) {
       if (res instanceof Array) {
         super();
@@ -8,7 +7,7 @@ class Result extends Array {
           this.push(res[i]);
         }
         if (res instanceof Result) {
-          //this.concat(res);
+          // this.concat(res);
           res.clean();
         }
       } else {
@@ -19,9 +18,9 @@ class Result extends Array {
     }
   }
 
-  toJson(json = []) {
+  toJson (json = []) {
     for (let index = 0; index < this.length; index++) {
-      let ele = this[index];
+      const ele = this[index];
       json.push(ele);
     }
     try {
@@ -31,9 +30,9 @@ class Result extends Array {
     }
   }
 
-  toString(json = []) {
+  toString (json = []) {
     for (let index = 0; index < this.length; index++) {
-      let ele = this[index];
+      const ele = this[index];
       json.push(ele);
     }
     try {
@@ -43,7 +42,7 @@ class Result extends Array {
     }
   }
 
-  clean(callback) {
+  clean (callback) {
     if (callback) {
       Array.prototype.forEach.call(this, (ele) => {
         try {
@@ -56,11 +55,11 @@ class Result extends Array {
     this.length = 0;
   }
 
-  query(query, logger = false, options = {}, sevrity = 'INFO', clean = false) {
+  query (query, logger = false, options = {}, sevrity = "INFO", clean = false) {
     try {
       const res = new Result(this.filter((data) => {
         try {
-          let res = data.query(query, logger, options, sevrity);
+          const res = data.query(query, logger, options, sevrity);
           if (res) {
             return data;
           }
@@ -78,10 +77,10 @@ class Result extends Array {
     }
   }
 
-  queryGrep(query, grep, clean = false) {
+  queryGrep (query, grep, clean = false) {
     try {
       const res = new Result(this.filter((data) => {
-        let res = data.queryGrep(query, grep);
+        const res = data.queryGrep(query, grep);
         if (res) {
           return data;
         }

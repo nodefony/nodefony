@@ -2,25 +2,24 @@
  *	Token ldap
  */
 
-nodefony.registerToken("ldap", function () {
-
+nodefony.registerToken("ldap", () => {
   const defaultWrapper = function () {
     return {
-      username: '',
-      name: '',
-      surname: '',
-      lang: '',
+      username: "",
+      name: "",
+      surname: "",
+      lang: "",
       enabled: true,
       userNonExpired: true,
       credentialsNonExpired: true,
       accountNonLocked: true,
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       roles: ["USER"],
-      displayName: '',
-      url: '',
-      gender: '',
-      image: ''
+      displayName: "",
+      url: "",
+      gender: "",
+      image: ""
     };
   };
 
@@ -42,12 +41,10 @@ nodefony.registerToken("ldap", function () {
         ns = Array.prototype.shift.call(str);
         if (!this[ns]) {
           this[ns] = value;
+        } else if (ISDefined(value)) {
+          this[ns] = value;
         } else {
-          if (ISDefined(value)) {
-            this[ns] = value;
-          } else {
-            return this[ns];
-          }
+          return this[ns];
         }
         return value;
       default:
@@ -64,24 +61,23 @@ nodefony.registerToken("ldap", function () {
   };
 
   class ldapToken extends nodefony.Token {
-
-    constructor(profile, wrapper) {
+    constructor (profile, wrapper) {
       super("ldap");
       this.profile = profile;
       this.profileWrapper = wrapper;
-      let obj = this.wrapperLdap(this.profile);
+      const obj = this.wrapperLdap(this.profile);
       if (obj.username) {
-        let user = new nodefony.User(obj.username);
+        const user = new nodefony.User(obj.username);
         user.unserialize(obj);
         this.setUser(user);
       }
     }
 
-    wrapperLdap(profile) {
-      let obj = {};
-      for (let name in this.profileWrapper) {
-        let res = parseParameterString.call({
-          profile: profile
+    wrapperLdap (profile) {
+      const obj = {};
+      for (const name in this.profileWrapper) {
+        const res = parseParameterString.call({
+          profile
         }, this.profileWrapper[name], null);
         if (res) {
           obj[name] = res;
@@ -92,13 +88,13 @@ nodefony.registerToken("ldap", function () {
       return nodefony.extend(defaultWrapper.call(this), obj);
     }
 
-    serialize() {
-      let serial = super.serialize();
+    serialize () {
+      const serial = super.serialize();
       serial.profile = this.profile;
       return serial;
     }
 
-    unserialize(token) {
+    unserialize (token) {
       this.profile = token.profile;
       return super.unserialize(token);
     }

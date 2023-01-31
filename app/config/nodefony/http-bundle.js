@@ -16,7 +16,7 @@
  *       sockjs dev server ( webpack dev server like WDS)
  *
  */
-const tmpDir = kernel.tmpDir.path || "/tmp"
+const tmpDir = kernel.tmpDir.path || "/tmp";
 
 module.exports = {
   // For more options request parser formidable @see : https://github.com/felixge/node-formidable
@@ -25,14 +25,14 @@ module.exports = {
     maxFileSize: 524288000, // In Bytes 500 MB
     maxFieldsSize: 2097152, // 2 MB
     maxFields: 1000, // 0 for unlimited
-    encoding: 'utf-8'
+    encoding: "utf-8"
   },
-  //For more options queryString parser QS @see : https://github.com/ljharb/qs
+  // For more options queryString parser QS @see : https://github.com/ljharb/qs
   queryString: {
     parameterLimit: 1000,
     delimiter: "&"
   },
-  //Server @see : https://nodejs.org/dist/latest-v8.x/docs/api/http.html*http_class_http_server
+  // Server @see : https://nodejs.org/dist/latest-v8.x/docs/api/http.html*http_class_http_server
   http: {
     responseTimeout: 40000,
     headers: {
@@ -66,7 +66,7 @@ module.exports = {
     web: {
       path: path.resolve("web"),
       options: {
-        maxAge: 0 //30*24*60*60*1000
+        maxAge: 0 // 30*24*60*60*1000
       }
     }
   },
@@ -79,7 +79,7 @@ module.exports = {
     start: false, // false || true || Session Context Name (waf)
     name: "nodefony",
     handler: "orm", // files | orm | memcached
-    //save_path: "./tmp/sessions", // for session.storage.files only
+    // save_path: "./tmp/sessions", // for session.storage.files only
     use_strict_mode: true,
     gc_probability: 1,
     gc_divisor: 100,

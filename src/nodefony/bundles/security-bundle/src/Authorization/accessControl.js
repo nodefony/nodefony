@@ -1,34 +1,33 @@
 const net = require("net");
 
 class AccessControl {
-
-  constructor(authorization) {
+  constructor (authorization) {
     this.authorization = authorization;
     this.pattern = null;
     this.roles = [];
     this.allowRoles = [];
     this.ip = [];
     this.allowIp = [];
-    //this.allow_if = null;
+    // this.allow_if = null;
     this.hosts = [];
     this.requires_channel = [];
     this.methods = [];
     this.actived = false;
   }
 
-  log(pci, severity, msgid, msg) {
+  log (pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = "\x1b[36mAccess Control\x1b[0m";
     }
     return this.authorization.log(pci, severity, msgid, msg);
   }
 
-  handle(context) {
+  handle (context) {
     try {
       if (!context) {
         throw new nodefony.Error("Access Control No context", 500);
       }
-      let ret = this.checkAllowAccess(context);
+      const ret = this.checkAllowAccess(context);
       if (ret === context) {
         return context;
       }
@@ -42,14 +41,14 @@ class AccessControl {
     }
   }
 
-  match(route) {
+  match (route) {
     if (this.pattern.test(route)) {
       return this;
     }
     return false;
   }
 
-  checkAllowAccess(context) {
+  checkAllowAccess (context) {
     let ret = false;
     try {
       ret = this.checkScheme(context);
@@ -63,22 +62,22 @@ class AccessControl {
       ret = this.checkIp(context);
       if (ret === false) {
         return false;
-        //return new nodefony.authorizationError(`Access Control Unauthorized IP`);
+        // return new nodefony.authorizationError(`Access Control Unauthorized IP`);
       }
       ret = this.checkMethod(context);
       if (ret === false) {
         return false;
-        //return new nodefony.authorizationError(`Access Control Unauthorized Method`);
+        // return new nodefony.authorizationError(`Access Control Unauthorized Method`);
       }
       ret = this.checkHost(context);
       if (ret === false) {
         return false;
-        //return new nodefony.authorizationError(`Access Control Unauthorized Host`);
+        // return new nodefony.authorizationError(`Access Control Unauthorized Host`);
       }
       // allowIf
       ret = this.checkAllowRole(context);
       if (ret === false) {
-        return new nodefony.authorizationError(`Access Control Unauthorized Role`, 401, context);
+        return new nodefony.authorizationError("Access Control Unauthorized Role", 401, context);
       }
       ret = this.checkAllowIp(context);
       if (ret === false) {
@@ -91,7 +90,7 @@ class AccessControl {
     }
   }
 
-  setMatchPattern(pattern) {
+  setMatchPattern (pattern) {
     switch (nodefony.typeOf(pattern)) {
     case "string":
       this.pattern = new RegExp(pattern);
@@ -104,8 +103,8 @@ class AccessControl {
     }
   }
 
-  hasRole(name) {
-    for (let role in this.roles) {
+  hasRole (name) {
+    for (const role in this.roles) {
       if (this.roles[role].role === name) {
         return true;
       }
@@ -113,7 +112,7 @@ class AccessControl {
     return false;
   }
 
-  setRoles(roles, tab) {
+  setRoles (roles, tab) {
     if (!tab) {
       tab = this.roles;
     }
@@ -153,7 +152,7 @@ class AccessControl {
     }
   }
 
-  setTokenRole(context) {
+  setTokenRole (context) {
     try {
       if (context.token instanceof nodefony.Token) {
         return context.token.setRoles(this.roles);
@@ -164,7 +163,7 @@ class AccessControl {
     }
   }
 
-  checkAllowRole(context) {
+  checkAllowRole (context) {
     if (this.allowRoles.length === 0) {
       return true;
     }
@@ -193,13 +192,13 @@ class AccessControl {
     return isAllow;
   }
 
-  setIp(ips, tab) {
+  setIp (ips, tab) {
     if (!tab) {
       tab = this.ip;
     }
     switch (nodefony.typeOf(ips)) {
     case "string":
-      let type = net.isIP(ips);
+      const type = net.isIP(ips);
       if (type) {
         return tab.push(ips);
       }
@@ -220,11 +219,11 @@ class AccessControl {
     }
   }
 
-  checkIp(context) {
+  checkIp (context) {
     if (this.ip.length === 0) {
       return true;
     }
-    let ipPublic = context.request.remoteAddress;
+    const ipPublic = context.request.remoteAddress;
     let isAllow = false;
     for (let i = 0; i < this.ip.length; i++) {
       if (ipPublic === this.ip[i]) {
@@ -235,11 +234,11 @@ class AccessControl {
     return isAllow;
   }
 
-  checkAllowIp(context) {
+  checkAllowIp (context) {
     if (this.allowIp.length === 0) {
       return true;
     }
-    let ipPublic = context.request.remoteAddress;
+    const ipPublic = context.request.remoteAddress;
     let isAllow = false;
     for (let i = 0; i < this.allowIp.length; i++) {
       if (ipPublic === this.allowIp[i]) {
@@ -250,12 +249,12 @@ class AccessControl {
     return isAllow;
   }
 
-  setAllowIf(conf) {
+  setAllowIf (conf) {
     switch (nodefony.typeOf(conf)) {
     case "string":
       break;
     case "object":
-      for (let ele in conf) {
+      for (const ele in conf) {
         switch (ele) {
         case "roles":
           this.setRoles(conf[ele], this.allowRoles);
@@ -269,15 +268,14 @@ class AccessControl {
         }
       }
       break;
-      //case "function":
+      // case "function":
       //  return this.setAllowIf(conf.call(this));
     default:
       throw new nodefony.Error(`Access Control Bad config allow_if : ${conf}`);
     }
-
   }
 
-  setHost(conf) {
+  setHost (conf) {
     switch (nodefony.typeOf(conf)) {
     case "string":
       if (this.hosts.indexOf(conf) < 0) {
@@ -300,12 +298,12 @@ class AccessControl {
     }
   }
 
-  checkHost(context) {
+  checkHost (context) {
     if (this.hosts.length === 0) {
       return true;
     }
     let isAllow = false;
-    let requestHost = context.getHostName();
+    const requestHost = context.getHostName();
     for (let i = 0; i < this.hosts.length; i++) {
       if (requestHost === this.hosts[i]) {
         isAllow = true;
@@ -315,7 +313,7 @@ class AccessControl {
     return isAllow;
   }
 
-  setScheme(conf) {
+  setScheme (conf) {
     switch (conf) {
     case "https":
       this.requires_channel.push(conf);
@@ -330,7 +328,7 @@ class AccessControl {
     }
   }
 
-  checkScheme(context) {
+  checkScheme (context) {
     if (this.requires_channel.length) {
       if (this.requires_channel.indexOf(context.scheme) < 0) {
         if (context.scheme === "ws" || context.scheme === "wss") {
@@ -347,7 +345,7 @@ class AccessControl {
     return true;
   }
 
-  setMethod(conf) {
+  setMethod (conf) {
     switch (nodefony.typeOf(conf)) {
     case "string":
       if (this.methods.indexOf(conf) < 0) {
@@ -370,7 +368,7 @@ class AccessControl {
     }
   }
 
-  checkMethod(context) {
+  checkMethod (context) {
     if (this.methods.length === 0) {
       return true;
     }

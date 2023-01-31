@@ -1,8 +1,6 @@
 module.exports = nodefony.registerProvider("chainProvider", () => {
-
   class chainProvider extends nodefony.Provider {
-
-    constructor(manager, config) {
+    constructor (manager, config) {
       super("chainProvider", manager);
       this.config = config;
       this.providers = [];
@@ -17,8 +15,8 @@ module.exports = nodefony.registerProvider("chainProvider", () => {
       });
     }
 
-    setProvider(name) {
-      let provider = this.manager.getProvider(name);
+    setProvider (name) {
+      const provider = this.manager.getProvider(name);
       if (provider) {
         this.providers.push(provider);
         this.nbProviders++;
@@ -27,7 +25,7 @@ module.exports = nodefony.registerProvider("chainProvider", () => {
       }
     }
 
-    authenticateProviders(token, index = 1) {
+    authenticateProviders (token, index = 1) {
       return new Promise((resolve, reject) => {
         if (this.nbProviders) {
           try {
@@ -55,26 +53,18 @@ module.exports = nodefony.registerProvider("chainProvider", () => {
       });
     }
 
-    authenticate(token) {
-      return new Promise((resolve, reject) => {
-        return this.authenticateProviders(token)
-          .then((token) => {
-            return resolve(token);
-          })
-          .catch((e) => {
-            return reject(e);
-          });
-      });
+    authenticate (token) {
+      return new Promise((resolve, reject) => this.authenticateProviders(token)
+        .then((token) => resolve(token))
+        .catch((e) => reject(e)));
     }
 
-    loadUsersByUsername(username, index = 1) {
+    loadUsersByUsername (username, index = 1) {
       return new Promise((resolve, reject) => {
         if (this.provider.length) {
           try {
             return this.provider[index - 1].loadUserByUsername(username)
-              .then((user) => {
-                return resolve(user);
-              })
+              .then((user) => resolve(user))
               .catch((e) => {
                 this.providers[index - 1].logger(e, "ERROR");
                 if (index === this.provider.length) {
@@ -88,27 +78,22 @@ module.exports = nodefony.registerProvider("chainProvider", () => {
         } else {
           return reject(new Error("No provider valid "));
         }
-
       });
     }
 
-    loadUserByUsername(username) {
+    loadUserByUsername (username) {
       if (this.provider.length) {
         return this.loadUsersByUsername(username);
-      } else {
-        return new Promise((resolve, reject) => {
-          return reject(new Error(`Chain Provider not ready`));
-        });
       }
+      return new Promise((resolve, reject) => reject(new Error("Chain Provider not ready")));
     }
 
-    refreshUser(user) {
+    refreshUser (user) {
       if (user instanceof nodefony.User) {
         return this.provider.loadUserByUsername(user.getUsername());
       }
       throw new Error("refreshUser bad user type");
     }
-
   }
   return chainProvider;
 });

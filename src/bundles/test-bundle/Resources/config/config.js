@@ -12,7 +12,8 @@ module.exports = {
   },
 
   "mail-bundle": {
-    /*nodemailer: {
+
+    /* nodemailer: {
       default: "free",
       transporters: {
         free: {
@@ -41,7 +42,7 @@ module.exports = {
   "sequelize-bundle": {
     connectors: {
       myconnector: {
-        driver: 'sqlite',
+        driver: "sqlite",
         dbname: path.resolve(__dirname, "..", "databases", "myconnector.db"),
         options: {
           dialect: "sqlite",

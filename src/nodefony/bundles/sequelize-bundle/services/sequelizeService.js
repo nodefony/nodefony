@@ -1,40 +1,40 @@
-//const cls = require('cls-hooked');
-//const namespace = cls.createNamespace('nodefony');
-nodefony.Sequelize = require('sequelize');
+// const cls = require('cls-hooked');
+// const namespace = cls.createNamespace('nodefony');
+nodefony.Sequelize = require("sequelize");
 const {
   Sequelize
 } = nodefony.Sequelize;
-//Sequelize.useCLS(namespace);
+// Sequelize.useCLS(namespace);
 const {
   JsonSchemaManager,
   OpenApi3Strategy
-} = require('@alt3/sequelize-to-json-schemas');
+} = require("@alt3/sequelize-to-json-schemas");
 
-const myerror = function(err) {
+const myerror = function (err) {
   if (this.state !== "DISCONNECTED") {
-    this.orm.kernel.fire('onError', err, this);
+    this.orm.kernel.fire("onError", err, this);
   }
-  //this.log(err, "ERROR");
-  //this.log(this.settings, "INFO", `CONFIGURATION Sequelize ${this.name}`);
+  // this.log(err, "ERROR");
+  // this.log(this.settings, "INFO", `CONFIGURATION Sequelize ${this.name}`);
   if (err.code) {
     switch (err.code) {
-      case 'PROTOCOL_CONNECTION_LOST':
-      case "ECONNREFUSED":
-        this.state = "DISCONNECTED";
-        return {
-          status: 500,
-            code: err.code,
-            message: err.message
-        };
-      default:
-        return err;
+    case "PROTOCOL_CONNECTION_LOST":
+    case "ECONNREFUSED":
+      this.state = "DISCONNECTED";
+      return {
+        status: 500,
+        code: err.code,
+        message: err.message
+      };
+    default:
+      return err;
     }
   } else {
     return err;
   }
 };
 
-/*const Op = Sequelize.Op;
+/* const Op = Sequelize.Op;
 const operatorsAliases = {
   $eq: Op.eq,
   $ne: Op.ne,
@@ -78,8 +78,7 @@ const operatorsAliases = {
  *
  */
 class connectionDB {
-
-  constructor(name, type, options, orm) {
+  constructor (name, type, options, orm) {
     this.state = "DISCONNECTED";
     this.name = name;
     this.type = type;
@@ -89,31 +88,32 @@ class connectionDB {
     this.settings = options;
   }
 
-  async close() {
+  async close () {
     if (this.db) {
-      this.log(`Close connection ${this.name}`)
+      this.log(`Close connection ${this.name}`);
       this.db.close()
         .catch((e) => {
-          throw e
-        })
+          throw e;
+        });
     }
   }
 
-  toObject() {
+  toObject () {
     return {
       state: this.state,
       name: this.name,
       type: this.type,
       settings: this.settings
-    }
+    };
   }
 
-  setConnection(db, config) {
+  setConnection (db, config) {
     if (!db) {
       throw new Error("Cannot create class connection without db native");
     }
     this.db = db;
-    /*this.db.afterDisconnect((connection)=>{
+
+    /* this.db.afterDisconnect((connection)=>{
       this.log(connection,"WARNING");
     });
     this.db.beforeConnect((config)=>{
@@ -125,15 +125,15 @@ class connectionDB {
     if (this.orm.kernel.type === "CONSOLE") {
       severity = "DEBUG";
     }
-    this.log('Connection been established successfully Type : ' + this.type + " Database : " + config.dbname, severity);
+    this.log(`Connection been established successfully Type : ${this.type} Database : ${config.dbname}`, severity);
     return db;
   }
 
-  getConnection() {
+  getConnection () {
     return this.db;
   }
 
-  async connect(type, config) {
+  async connect (type, config) {
     if (this.orm.debug) {
       config.options.logging = (value) => {
         this.log(value, "INFO");
@@ -144,58 +144,56 @@ class connectionDB {
     let conn = null;
     try {
       switch (type) {
-        case "sqlite":
-          config.options.storage = path.resolve(config.dbname);
-          break;
+      case "sqlite":
+        config.options.storage = path.resolve(config.dbname);
+        break;
       }
-      let username = config.username
-      let password = config.password
+      let {username} = config;
+      let {password} = config;
       try {
-        if (config.credentials && nodefony.typeOf(config.credentials) === 'function') {
-          this.log(`Try Get Credentials (async method)`);
-          let auth = await config.credentials(this)
-            .catch(e => {
-              throw e
-            })
+        if (config.credentials && nodefony.typeOf(config.credentials) === "function") {
+          this.log("Try Get Credentials (async method)");
+          const auth = await config.credentials(this)
+            .catch((e) => {
+              throw e;
+            });
           if (auth.username) {
             this.log(`Add username Credential for connector ${this.name}`);
-            username = auth.username
+            username = auth.username;
           } else {
-            this.log(`Credentials (async method) no username secret`, "WARNING")
+            this.log("Credentials (async method) no username secret", "WARNING");
           }
           if (auth.password) {
             this.log(`Add password Credential for connector ${this.name}`);
-            password = auth.password
+            password = auth.password;
           } else {
-            this.log(`Credentials (async method) no password secret`, "WARNING")
+            this.log("Credentials (async method) no password secret", "WARNING");
           }
           this.log(`Success Credential (async method) ${auth}`, "DEBUG");
         }
       } catch (e) {
-        this.log(e, "WARNING")
+        this.log(e, "WARNING");
       }
-      this.log(`Try Connect engine database`, "DEBUG")
+      this.log("Try Connect engine database", "DEBUG");
       conn = new this.orm.engine(config.dbname, username, password, config.options);
-      //process.nextTick(() => {
+      // process.nextTick(() => {
       return conn
         .authenticate()
-        .then(() => {
-          return this.setConnection(conn, config);
-        })
-        .catch(err => {
-          this.log('Unable to connect to the database : ' + err, "ERROR");
+        .then(() => this.setConnection(conn, config))
+        .catch((err) => {
+          this.log(`Unable to connect to the database : ${err}`, "ERROR");
           myerror.call(this, err);
-          this.orm.fire('onErrorConnection', this, err);
+          this.orm.fire("onErrorConnection", this, err);
         });
-      //});
+      // });
     } catch (err) {
       myerror.call(this, err);
-      this.orm.fire('onErrorConnection', this, err);
+      this.orm.fire("onErrorConnection", this, err);
     }
     return conn;
   }
 
-  log(pci, severity, msgid, msg) {
+  log (pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = `CONNECTION Sequelize ${this.name}`;
     }
@@ -209,53 +207,52 @@ class connectionDB {
  *
  */
 class sequelize extends nodefony.Orm {
-
-  constructor(container, kernel, autoLoader) {
+  constructor (container, kernel, autoLoader) {
     super("sequelize", container, kernel, autoLoader);
     this.engine = Sequelize;
-    this.strategy = 'migrate'
+    this.strategy = "migrate";
     this.kernel.on("onTerminate", async () => {
-      await this.closeConnections()
-    })
+      await this.closeConnections();
+    });
   }
 
-  static isError(error) {
+  static isError (error) {
     return error instanceof Sequelize.Error;
   }
 
-  static errorToString(error) {
+  static errorToString (error) {
     if (error.name) {
       switch (error.name) {
-        case "SequelizeBaseError":
-        case "SequelizeValidationError":
-        case "SequelizeDatabaseError":
-        case "SequelizeTimeoutError":
-        case "SequelizeUniqueConstraintError":
-        case "SequelizeForeignKeyConstraintError":
-        case "SequelizeExclusionConstraintError":
-        case "SequelizeConnectionError":
-        case "SequelizeConnectionRefusedError":
-        case "SequelizeAccessDeniedError":
-        case "SequelizeHostNotFoundError":
-        case "SequelizeHostNotReachableError":
-        case "SequelizeInvalidConnectionError":
-        case "SequelizeConnectionTimedOutError":
-        case "SequelizeInstanceError":
-          let parser = "";
-          if (error.errors && error.errors.length) {
-            error.errors.map((ele) => {
-              parser += `\n\tfield ${ele.path} : ${ele.message}`;
-            });
-          }
-          return ` ${clc.red(error.message)}
+      case "SequelizeBaseError":
+      case "SequelizeValidationError":
+      case "SequelizeDatabaseError":
+      case "SequelizeTimeoutError":
+      case "SequelizeUniqueConstraintError":
+      case "SequelizeForeignKeyConstraintError":
+      case "SequelizeExclusionConstraintError":
+      case "SequelizeConnectionError":
+      case "SequelizeConnectionRefusedError":
+      case "SequelizeAccessDeniedError":
+      case "SequelizeHostNotFoundError":
+      case "SequelizeHostNotReachableError":
+      case "SequelizeInvalidConnectionError":
+      case "SequelizeConnectionTimedOutError":
+      case "SequelizeInstanceError":
+        let parser = "";
+        if (error.errors && error.errors.length) {
+          error.errors.map((ele) => {
+            parser += `\n\tfield ${ele.path} : ${ele.message}`;
+          });
+        }
+        return ` ${clc.red(error.message)}
             ${clc.blue("Name :")} ${error.name}
             ${clc.blue("Type :")} ${error.errorType}
             ${clc.red("Message :")} ${error.message}
             ${clc.red("fields :")} ${error.fields}
             ${clc.red("errors :")} ${parser}
             ${clc.green("Stack :")} ${error.stack}`;
-        default:
-          return `${clc.red(error.message)}`;
+      default:
+        return `${clc.red(error.message)}`;
       }
     }
     return ` ${error.message}
@@ -263,44 +260,44 @@ class sequelize extends nodefony.Orm {
       ${clc.blue("Type :")} ${error.errorType}`;
   }
 
-  async closeConnections() {
-    for (let connection in this.connections) {
+  async closeConnections () {
+    for (const connection in this.connections) {
       await this.connections[connection].close();
     }
   }
 
-  boot() {
+  boot () {
     return new Promise((resolve, reject) => {
       super.boot();
-      this.kernel.once('onBoot', async ( /*kernel*/ ) => {
+      this.kernel.once("onBoot", async (/* kernel*/) => {
         this.settings = this.getParameters("bundles.sequelize");
         this.debug = this.settings.debug;
         if (this.settings.strategy) {
-          this.strategy = this.settings.strategy
+          this.strategy = this.settings.strategy;
         }
         if (this.settings.connectors && Object.keys(this.settings.connectors).length) {
-          for (let name in this.settings.connectors) {
+          for (const name in this.settings.connectors) {
             await this.createConnection(name, this.settings.connectors[name]);
           }
         } else {
           process.nextTick(async () => {
-            this.log('onOrmReady', "DEBUG", "EVENTS SEQUELIZE");
+            this.log("onOrmReady", "DEBUG", "EVENTS SEQUELIZE");
             try {
-              await this.fireAsync('onOrmReady', this);
+              await this.fireAsync("onOrmReady", this);
               this.ready = true;
-              return resolve(this)
+              return resolve(this);
             } catch (e) {
               this.log(e, "ERROR", "EVENTS onOrmReady");
-              return reject(e)
+              return reject(e);
             }
           });
         }
       });
 
       this.prependOnceListener("onOrmReady", async () => {
-        for (let entity in this.entities) {
+        for (const entity in this.entities) {
           if (this.entities[entity].model && this.entities[entity].model.associate) {
-            await this.entities[entity].model.associate(this.entities[entity].db.models)
+            await this.entities[entity].model.associate(this.entities[entity].db.models);
             this.log(`ASSOCIATE model : ${this.entities[entity].model.name}`, "DEBUG");
           }
         }
@@ -313,36 +310,36 @@ class sequelize extends nodefony.Orm {
           this.displayTable();
         }
       });
-    })
+    });
   }
 
-  getConnectorSettings(tab) {
-    for (let dbname in this.settings.connectors) {
-      let conn = ["", "", "", "", ""];
+  getConnectorSettings (tab) {
+    for (const dbname in this.settings.connectors) {
+      const conn = ["", "", "", "", ""];
       conn[0] = dbname;
-      for (let data in this.settings.connectors[dbname]) {
+      for (const data in this.settings.connectors[dbname]) {
         switch (data) {
-          case "dbname":
-            conn[2] = this.settings.connectors[dbname][data];
-            break;
-          case "options":
-            conn[1] = this.settings.connectors[dbname][data].dialect;
-            if (this.settings.connectors[dbname][data].host) {
-              conn[3] = this.settings.connectors[dbname][data].host + ":" + this.settings.connectors[dbname][data].port;
-            }
-            break;
+        case "dbname":
+          conn[2] = this.settings.connectors[dbname][data];
+          break;
+        case "options":
+          conn[1] = this.settings.connectors[dbname][data].dialect;
+          if (this.settings.connectors[dbname][data].host) {
+            conn[3] = `${this.settings.connectors[dbname][data].host}:${this.settings.connectors[dbname][data].port}`;
+          }
+          break;
         }
       }
       if (this.connections[dbname]) {
-        conn[4] = (this.connections[dbname].state);
+        conn[4] = this.connections[dbname].state;
       }
       tab.push(conn);
     }
     return tab;
   }
 
-  displayTable(severity = "DEBUG") {
-    let options = {
+  displayTable (severity = "DEBUG") {
+    const options = {
       head: [
         "CONNECTOR NAME",
         "DRIVER",
@@ -351,58 +348,58 @@ class sequelize extends nodefony.Orm {
         "status"
       ]
     };
-    let table = this.kernel.cli.displayTable(null, options);
+    const table = this.kernel.cli.displayTable(null, options);
     this.getConnectorSettings(table);
 
-    let res = table.toString();
-    this.log("ORM CONNECTORS LIST  : \n" + res, severity);
+    const res = table.toString();
+    this.log(`ORM CONNECTORS LIST  : \n${res}`, severity);
     return res;
   }
 
-  async createConnection(name, config) {
+  async createConnection (name, config) {
     try {
       this.connections[name] = new connectionDB(name, config.driver, config, this);
     } catch (e) {
       throw e;
     }
     return await this.connections[name].connect(config.driver, config)
-      .catch(e => {
-        throw e
-      })
+      .catch((e) => {
+        throw e;
+      });
   }
 
-  getConnection(connector) {
+  getConnection (connector) {
     return this.connections[connector] || null;
   }
 
-  getTransactionConnector(connector) {
-    let connection = this.getConnection(connector);
+  getTransactionConnector (connector) {
+    const connection = this.getConnection(connector);
     if (connection) {
-      let db = connection.getConnection();
+      const db = connection.getConnection();
       return db.transaction.bind(db);
     }
     throw new error(`transaction not found for CONNECTOR : ${name}`);
   }
 
-  async startTransaction(entityName, options) {
+  async startTransaction (entityName, options) {
     const entity = this.getNodefonyEntity(entityName);
     if (!entity) {
       throw new Error(`Entity : ${entityName} not found`);
     }
-    let db = entity.db;
+    const {db} = entity;
     return await db.transaction.call(db, options);
   }
 
-  getTransaction(entityName) {
+  getTransaction (entityName) {
     const entity = this.getNodefonyEntity(entityName);
     if (!entity) {
       throw new Error(`Entity : ${entityName} not found`);
     }
-    let db = entity.db;
+    const {db} = entity;
     return db.transaction.bind(db);
   }
 
-  getOpenApiSchema(entity) {
+  getOpenApiSchema (entity) {
     try {
       const schemaManager = new JsonSchemaManager();
       const schema = schemaManager.generate(entity, new OpenApi3Strategy());
@@ -412,9 +409,9 @@ class sequelize extends nodefony.Orm {
     }
   }
 
-  getConnectorsList(name = null) {
-    let obj = {};
-    for (let ele in this.connections) {
+  getConnectorsList (name = null) {
+    const obj = {};
+    for (const ele in this.connections) {
       if (name) {
         if (name !== ele) {
           continue;
@@ -425,9 +422,9 @@ class sequelize extends nodefony.Orm {
     return obj;
   }
 
-  parseAtribute(attributes) {
+  parseAtribute (attributes) {
     const obj = {};
-    for (let attr in attributes) {
+    for (const attr in attributes) {
       let type = null;
       try {
         type = attributes[attr].type.toString();
@@ -438,15 +435,15 @@ class sequelize extends nodefony.Orm {
         fieldName: attributes[attr].fieldName,
         field: attributes[attr].field,
         defaultValue: attributes[attr].defaultValue,
-        type: type
+        type
       };
     }
     return obj;
   }
 
-  getEntitiesList(bundle = null, name = null) {
-    let obj = {};
-    for (let ele in this.entities) {
+  getEntitiesList (bundle = null, name = null) {
+    const obj = {};
+    for (const ele in this.entities) {
       if (bundle) {
         if (bundle !== this.entities[ele].bundle.name) {
           continue;
@@ -468,7 +465,7 @@ class sequelize extends nodefony.Orm {
     return obj;
   }
 
-  /*getOpenApiSchema(entity) {
+  /* getOpenApiSchema(entity) {
     let attr = {
       type: "object",
       properties: {},

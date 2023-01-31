@@ -1,23 +1,24 @@
 class displayTask extends nodefony.Task {
-
-  constructor(name, command) {
+  constructor (name, command) {
     super(name, command);
     this.router = this.get("router");
   }
 
-  showHelp() {
-    this.setHelp("router:display:routes [routeName]",
+  showHelp () {
+    this.setHelp(
+      "router:display:routes [routeName]",
       "Display all routes or route  Example : nodefony router:display:route home"
     );
-    this.setHelp("router:display:match uri",
+    this.setHelp(
+      "router:display:match uri",
       "Get route who match uri Example : nodefony router:display:match /nodefony"
     );
   }
 
-  routes(name = null) {
+  routes (name = null) {
     try {
       if (this.command.json) {
-        let ele = this.getRoutes(name);
+        const ele = this.getRoutes(name);
         console.log(JSON.stringify(ele));
         return ele;
       }
@@ -27,16 +28,15 @@ class displayTask extends nodefony.Task {
     }
   }
 
-  match(url) {
+  match (url) {
     if (url) {
       return this.matchRoutes(url);
-    } else {
-      this.log(new Error("Bad argument must have url  to match"), "ERROR");
     }
+    this.log(new Error("Bad argument must have url  to match"), "ERROR");
   }
 
 
-  getRoutes(name, display) {
+  getRoutes (name, display) {
     let ele = this.router.getRoutes(name);
     if (ele && display) {
       if (nodefony.typeOf(ele) === "object") {
@@ -55,44 +55,45 @@ class displayTask extends nodefony.Task {
     throw new Error(`Route : ${name} don't exist`);
   }
 
-  displayTable(titre, ele, firstMatch) {
-    let head = [
+  displayTable (titre, ele, firstMatch) {
+    const head = [
       "NB",
       "ROUTE",
       "PATH",
-      //"VARIABLES",
-      //"HOST",
+      // "VARIABLES",
+      // "HOST",
       "BUNDLE",
       "CONTROLLER",
       "ACTION"
-      //"OPTIONS"
-      //"SCHEMES",
-      //"PATTERN",
+      // "OPTIONS"
+      // "SCHEMES",
+      // "PATTERN",
     ];
-    //if (firstMatch) {
-      head.push("FIRST MATCH");
-    //}
-    let table = this.cli.displayTable([], {
-      head: head
+    // if (firstMatch) {
+    head.push("FIRST MATCH");
+    // }
+    const table = this.cli.displayTable([], {
+      head
     });
     for (let i = 0; i < ele.length; i++) {
       if (ele[i].defaults.controller) {
-        var detail = ele[i].defaults.controller.split(":");
-        var tab = [
+        const detail = ele[i].defaults.controller.split(":");
+        const tab = [
           i + 1,
           ele[i].name,
           ele[i].path,
-          //ele[i].variables,
-          //ele[i].host|| "",
+          // ele[i].variables,
+          // ele[i].host|| "",
           detail[0],
           detail[1],
           detail[2]
-          //util.inspect( ele[i].options)
-          //ele[i].schemes|| "",
-          //ele[i].pattern,
+          // util.inspect( ele[i].options)
+          // ele[i].schemes|| "",
+          // ele[i].pattern,
         ];
-        tab.push(ele[i].firstMatch || "none")
-        /*if (firstMatch) {
+        tab.push(ele[i].firstMatch || "none");
+
+        /* if (firstMatch) {
           tab.push(ele[i].firstMatch);
         }else{
           tab.push("none");
@@ -104,28 +105,27 @@ class displayTask extends nodefony.Task {
     return table;
   }
 
-  matchRoutes(uri) {
-    let myUrl = url.parse(uri);
-    this.log("URI TO CHECK : " + uri);
-    var routes = this.getRoutes();
-    var tab = [];
-    for (var i = 0; i < routes.length; i++) {
-      var pattern = routes[i].pattern;
-      var res = myUrl.pathname.match(pattern);
+  matchRoutes (uri) {
+    const myUrl = url.parse(uri);
+    this.log(`URI TO CHECK : ${uri}`);
+    const routes = this.getRoutes();
+    const tab = [];
+    for (let i = 0; i < routes.length; i++) {
+      const {pattern} = routes[i];
+      const res = myUrl.pathname.match(pattern);
       if (res) {
         tab.push(routes[i]);
       }
     }
     if (tab.length) {
       tab[0].firstMatch = "*";
-      this.displayTable("MATCH URI : " + uri, tab, true);
+      this.displayTable(`MATCH URI : ${uri}`, tab, true);
     } else {
       this.displayTable("no routes match GENARATE ALL ROUTE", routes);
       this.log(`URI : ${uri} no routes to match `, "ERROR");
     }
     return tab;
   }
-
 }
 
 module.exports = displayTask;

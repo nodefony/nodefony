@@ -11,7 +11,8 @@
  */
 require("../css/test.css");
 require("jquery");
-module.exports = function () {
+module.exports = (function () {
+
   /*
    *	Class
    *
@@ -23,21 +24,21 @@ module.exports = function () {
   const SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
 
   const test = class test {
-    constructor() {
+    constructor () {
       $(document).ready(() => {
         // init speakToText
         this.speakToText();
         // init textToSpeak
-        //this.textToSpeak("Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone.");
-        this.textToSpeak($("#version").html().replace(/^\s*|\s*$/g, ''));
-        //this.textToSpeak($("#french").html().replace(/^\s*|\s*$/g, ''));
-        //airplay
-        //$("video").get(0).webkitShowPlaybackTargetPicker();
-
+        // this.textToSpeak("Les sanglots longs Des violons De l’automne Blessent mon cœur D’une langueur Monotone.");
+        this.textToSpeak($("#version").html()
+          .replace(/^\s*|\s*$/g, ""));
+        // this.textToSpeak($("#french").html().replace(/^\s*|\s*$/g, ''));
+        // airplay
+        // $("video").get(0).webkitShowPlaybackTargetPicker();
       });
     }
 
-    speakToText() {
+    speakToText () {
       this.recognizing = null;
       this.recognition = new SpeechRecognition();
       this.recognition.continuous = true;
@@ -53,16 +54,17 @@ module.exports = function () {
       this.recognition.onresult = this.onresult.bind(this);
     }
 
-    textToSpeak(text) {
+    textToSpeak (text) {
       this.SpeechSynthesisUtterance = new SpeechSynthesisUtterance();
       this.SpeechSynthesisUtterance.text = text;
-      this.SpeechSynthesisUtterance.lang = 'fr-FR';
+      this.SpeechSynthesisUtterance.lang = "fr-FR";
       this.SpeechSynthesisUtterance.rate = 1.2;
       this.speechSynthesis = speechSynthesis;
-      //this.SpeechSynthesisUtterance.onend = function(event) { alert('Finished in ' + event.elapsedTime + ' seconds.'); }
+      // this.SpeechSynthesisUtterance.onend = function(event) { alert('Finished in ' + event.elapsedTime + ' seconds.'); }
       this.speechSynthesis.speak(this.SpeechSynthesisUtterance);
     }
-    onresult(event) {
+
+    onresult (event) {
       let final = "";
       let interim = "";
       for (let i = 0; i < event.results.length; ++i) {
@@ -76,12 +78,12 @@ module.exports = function () {
       this.interim_span.innerHTML = interim;
     }
 
-    reset() {
+    reset () {
       this.recognizing = false;
       this.button.innerHTML = "Click to Speak";
     }
 
-    toggleStartStop() {
+    toggleStartStop () {
       if (this.recognizing) {
         this.recognition.stop();
         this.reset();
@@ -96,7 +98,7 @@ module.exports = function () {
   };
 
   return new test();
-}();
+}());
 
 /*
  * HMR
@@ -105,7 +107,7 @@ module.exports = function () {
 if (module.hot) {
   module.hot.accept((err) => {
     if (err) {
-      console.error('Cannot apply HMR update.', err);
+      console.error("Cannot apply HMR update.", err);
     }
   });
 }

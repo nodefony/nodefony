@@ -3,13 +3,13 @@ const {
   DataTypes,
   Model
 } = nodefony.Sequelize;
+
 /*
  *    ENTITY boat
  */
 
 module.exports = class boat extends nodefony.Entity {
-
-  constructor(bundle) {
+  constructor (bundle) {
     /*
      *   @param bundle instance
      *   @param Entity name
@@ -17,10 +17,9 @@ module.exports = class boat extends nodefony.Entity {
      *   @param connection name
      */
     super(bundle, "boat", "sequelize", "myconnector");
-
   }
 
-  getSchema() {
+  getSchema () {
     return {
       id: {
         type: DataTypes.INTEGER,
@@ -36,15 +35,15 @@ module.exports = class boat extends nodefony.Entity {
     };
   }
 
-  registerModel(db) {
-    let model = db.define(this.name, this.getSchema(), {
+  registerModel (db) {
+    const model = db.define(this.name, this.getSchema(), {
       logging: this.log.bind(this)
     });
     return model;
   }
 
-  logger(pci /*, sequelize*/ ) {
-    const msgid = "Entity " + this.name;
+  logger (pci /* , sequelize*/) {
+    const msgid = `Entity ${this.name}`;
     return super.logger(pci, "DEBUG", msgid);
   }
 };

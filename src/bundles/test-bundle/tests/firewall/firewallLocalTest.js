@@ -10,12 +10,12 @@
  *
  */
 
-//const http = require("http");
-//var https = require("https");
-//const WebSocketClient = require('websocket').client;
-const assert = require('assert');
-//var querystring = require("querystring");
-const request = require('request');
+// const http = require("http");
+// var https = require("https");
+// const WebSocketClient = require('websocket').client;
+const assert = require("assert");
+// var querystring = require("querystring");
+const request = require("request");
 
 /*
 test-local-area:
@@ -57,14 +57,13 @@ test-local-area:
 
 const myjar = request.jar();
 
-describe("BUNDLE TEST", function () {
-
-  before(function () {
+describe("BUNDLE TEST", () => {
+  before(() => {
     global.firewall = kernel.get("security");
     global.options = {
-      baseUrl: "http://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpPort,
+      baseUrl: `http://${kernel.settings.system.domain}:${kernel.settings.system.httpPort}`,
       url: "/test/firewall/local",
-      method: 'GET',
+      method: "GET",
       encoding: "utf8",
       headers: {
         Accept: "application/json"
@@ -72,11 +71,10 @@ describe("BUNDLE TEST", function () {
     };
   });
 
-  describe('AREA : test-api-area Factory: passpot-local', () => {
-
+  describe("AREA : test-api-area Factory: passpot-local", () => {
     it("Settings test-local-area", (done) => {
       assert(global.firewall.securedAreas["test-local-area"]);
-      let local = global.firewall.securedAreas["test-local-area"];
+      const local = global.firewall.securedAreas["test-local-area"];
       assert.deepStrictEqual(local.sessionContext, "default");
       assert.deepStrictEqual(local.redirect_Https, false);
       assert.deepStrictEqual(local.providerName, "nodefony");
@@ -89,9 +87,9 @@ describe("BUNDLE TEST", function () {
       assert(local.cors);
       assert.deepStrictEqual(local.formLogin, "/login/secure");
       assert.deepStrictEqual(local.checkLogin, "/test/firewall/local");
-      assert.deepStrictEqual(local.stringPattern, '^/test/firewall/local');
+      assert.deepStrictEqual(local.stringPattern, "^/test/firewall/local");
       try {
-        let res = local.pattern.test("/test/firewall/local/myroute");
+        const res = local.pattern.test("/test/firewall/local/myroute");
         assert.ok(res);
       } catch (e) {
         throw e;
@@ -105,12 +103,12 @@ describe("BUNDLE TEST", function () {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 400);
-        assert.deepStrictEqual(response.statusMessage, 'Missing credentials');
-        let json = JSON.parse(body);
+        assert.deepStrictEqual(response.statusMessage, "Missing credentials");
+        const json = JSON.parse(body);
         assert.equal(json.code, 400);
         assert.deepStrictEqual(json.message, "Missing credentials");
         assert.deepStrictEqual(json.url, global.options.baseUrl + global.options.url);
-        //assert(json.pdu);
+        // assert(json.pdu);
         done();
       });
     });
@@ -122,11 +120,11 @@ describe("BUNDLE TEST", function () {
         if (error) {
           throw error;
         }
-        //assert.deepStrictEqual(body, "");
-        //assert.deepStrictEqual(response.headers.location, "/login/secure");
+        // assert.deepStrictEqual(body, "");
+        // assert.deepStrictEqual(response.headers.location, "/login/secure");
         assert.deepStrictEqual(response.statusCode, 400);
-        assert.deepStrictEqual(response.statusMessage, 'Missing credentials');
-        let session = response.headers["set-cookie"][0];
+        assert.deepStrictEqual(response.statusMessage, "Missing credentials");
+        const session = response.headers["set-cookie"][0];
         assert(session);
         done();
       });
@@ -145,8 +143,8 @@ describe("BUNDLE TEST", function () {
         assert.deepStrictEqual(body, "");
         assert.deepStrictEqual(response.headers.location, "/test/firewall/jwt");
         assert.deepStrictEqual(response.statusCode, 301);
-        assert.deepStrictEqual(response.statusMessage, 'Moved Permanently');
-        let session = response.headers["set-cookie"][0];
+        assert.deepStrictEqual(response.statusMessage, "Moved Permanently");
+        const session = response.headers["set-cookie"][0];
         assert(session);
         assert(new RegExp("^nodefony=.*$").test(session));
         done();
@@ -158,19 +156,19 @@ describe("BUNDLE TEST", function () {
       global.options.headers.Accept = "application/json";
       global.options.followRedirect = true;
       global.options.followAllRedirects = true;
-      //global.options.jar = myjar;
+      // global.options.jar = myjar;
       global.options.form = {
         username: "admin",
         passwd: "admin"
       };
-      request(global.options, (error, response /*, body*/ ) => {
+      request(global.options, (error, response /* , body*/) => {
         if (error) {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 401);
-        assert.deepStrictEqual(response.statusMessage, 'No Auth Token');
-        //let session = response.headers["set-cookie"][0];
-        //assert(session);
+        assert.deepStrictEqual(response.statusMessage, "No Auth Token");
+        // let session = response.headers["set-cookie"][0];
+        // assert(session);
         done();
       });
     });
@@ -190,10 +188,10 @@ describe("BUNDLE TEST", function () {
           throw error;
         }
         assert.deepStrictEqual(response.statusCode, 200);
-        let json = JSON.parse(body);
+        const json = JSON.parse(body);
         assert(json.data);
         global.data = json.data;
-        let jwt = response.headers["set-cookie"][0];
+        const jwt = response.headers["set-cookie"][0];
         assert(jwt);
         assert(new RegExp("^jwt=.*$").test(jwt));
         done();
@@ -201,13 +199,13 @@ describe("BUNDLE TEST", function () {
     });
 
     it("Valid Token", (done) => {
-      let service = kernel.get("httpsServer");
-      let res = service.getCertificats();
+      const service = kernel.get("httpsServer");
+      const res = service.getCertificats();
       global.options.url = "/test/firewall/api/stateless";
       global.options.form = null;
       global.options.method = "GET";
       global.options.followRedirect = true;
-      global.options.baseUrl = "https://" + kernel.settings.system.domain + ":" + kernel.settings.system.httpsPort;
+      global.options.baseUrl = `https://${kernel.settings.system.domain}:${kernel.settings.system.httpsPort}`;
       global.options.key = res.key;
       global.options.cert = res.cert;
       global.options.ca = res.ca;
@@ -215,9 +213,9 @@ describe("BUNDLE TEST", function () {
         if (error) {
           throw error;
         }
-        let json = JSON.parse(body);
+        const json = JSON.parse(body);
         // Valid token
-        let token = json.token;
+        const {token} = json;
         assert.deepStrictEqual(token.name, "jwt");
         assert.deepStrictEqual(token.authenticated, true);
         assert.deepStrictEqual(token.factory, "jwt");
@@ -225,7 +223,7 @@ describe("BUNDLE TEST", function () {
         assert.deepStrictEqual(token.user.username, json.user.username);
         assert.deepStrictEqual(token.user.name, json.user.name);
         assert.deepStrictEqual(token.user.surname, json.user.surname);
-        //assert.deepStrictEqual(token.user, json.user);
+        // assert.deepStrictEqual(token.user, json.user);
         assert(token.jwtToken);
         // valid token during authenticate Local
         assert(token.jwtToken.data);
@@ -233,6 +231,5 @@ describe("BUNDLE TEST", function () {
         done();
       });
     });
-
   });
 });

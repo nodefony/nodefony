@@ -10,28 +10,26 @@
  *
  */
 
-//const http = require("http");
-//const https = require("https");
-//const WebSocketClient = require('websocket').client;
-//const querystring = require('querystring');
-const assert = require('assert');
+// const http = require("http");
+// const https = require("https");
+// const WebSocketClient = require('websocket').client;
+// const querystring = require('querystring');
+const assert = require("assert");
 
 
-describe("BUNDLE TEST", function () {
-
-  before(function () {
+describe("BUNDLE TEST", () => {
+  before(() => {
     global.options = {
       hostname: kernel.settings.system.domain,
       port: kernel.settings.system.httpPort,
-      //headers: {'Accept': 'application/json'},
-      method: 'GET'
+      // headers: {'Accept': 'application/json'},
+      method: "GET"
     };
   });
 
-  describe('SERVICE INSTANCE', function () {
-
-    it("INSTANCE myservice", function (done) {
-      let myservice = kernel.get("myservice");
+  describe("SERVICE INSTANCE", () => {
+    it("INSTANCE myservice", (done) => {
+      const myservice = kernel.get("myservice");
       assert(myservice);
       assert.deepStrictEqual(myservice.name, "myservice");
       assert(myservice.router);
@@ -43,8 +41,8 @@ describe("BUNDLE TEST", function () {
       done();
     });
 
-    it("INSTANCE myservice call method boot", function (done) {
-      let myservice = kernel.get("myservice");
+    it("INSTANCE myservice call method boot", (done) => {
+      const myservice = kernel.get("myservice");
       assert(myservice.ele);
       assert.deepStrictEqual(myservice.ele, "myargs");
       assert(myservice.https);
@@ -54,8 +52,8 @@ describe("BUNDLE TEST", function () {
       done();
     });
 
-    it("INSTANCE myservice call method boot2", function (done) {
-      let myservice = kernel.get("myservice");
+    it("INSTANCE myservice call method boot2", (done) => {
+      const myservice = kernel.get("myservice");
       assert(myservice.ele2);
       assert.deepStrictEqual(myservice.ele2, [1, 2, 3, 4]);
       assert.deepStrictEqual(myservice.ele3, null);
@@ -63,6 +61,5 @@ describe("BUNDLE TEST", function () {
       assert.deepStrictEqual(myservice.http.name, "HTTP");
       done();
     });
-
   });
 });

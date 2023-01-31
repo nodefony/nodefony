@@ -1,18 +1,17 @@
 const Api = require(path.resolve(__dirname, "api.es6"));
 class JsonApi extends Api {
-
-  constructor(config, context = null) {
+  constructor (config, context = null) {
     super(config, context);
     this.json = {
       api: this.name,
       version: this.version,
-      //result: null,
+      // result: null,
       message: "",
       messageId: null
-      //error: null,
-      //errorCode: null,
-      //errorType: null,
-      //debug: this.debug
+      // error: null,
+      // errorCode: null,
+      // errorType: null,
+      // debug: this.debug
     };
 
     this.setResultName(this.options.resultName);
@@ -23,18 +22,16 @@ class JsonApi extends Api {
       this.json.url = this.context.url || "";
       this.json.method = this.context.method;
       this.json.scheme = this.context.scheme;
-      this.context.once("onError", (e) => {
-        return this.renderError(e);
-      });
+      this.context.once("onError", (e) => this.renderError(e));
     }
   }
 
-  setResultName(name = "result", value = null) {
+  setResultName (name = "result", value = null) {
     this.resultName = name;
     this.json[this.resultName] = value;
   }
 
-  isError(e, json = {}) {
+  isError (e, json = {}) {
     if (nodefony.isArray(e)) {
       const errorType = nodefony.Error.isError(e[0]);
       if (errorType) {
@@ -71,44 +68,43 @@ class JsonApi extends Api {
     return json;
   }
 
-  sanitize(payload, json) {
+  sanitize (payload, json) {
     this.isError(payload, json);
     if (json.error) {
       return json[this.resultName] = null;
-    } else {
-      if (!json.severity) {
-        json.severity = "INFO";
-      }
-      if (!json.code) {
-        if (this.context && this.context.response) {
-          json.code = this.context.response.getStatusCode();
-        } else {
-          json.code = 200;
-        }
-      }
-      if (!json.message && this.context && this.context.response) {
-        json.message = this.context.response.getStatusMessage(json.code);
-      }
-      return json[this.resultName] = payload;
     }
+    if (!json.severity) {
+      json.severity = "INFO";
+    }
+    if (!json.code) {
+      if (this.context && this.context.response) {
+        json.code = this.context.response.getStatusCode();
+      } else {
+        json.code = 200;
+      }
+    }
+    if (!json.message && this.context && this.context.response) {
+      json.message = this.context.response.getStatusMessage(json.code);
+    }
+    return json[this.resultName] = payload;
   }
 
-  render(payload, code, message = "", severity = null, messageID = null) {
+  render (payload, code, message = "", severity = null, messageID = null) {
     try {
-      let json = nodefony.extend(this.json, {
-        severity: severity,
-        code: code,
-        message: message,
+      const json = nodefony.extend(this.json, {
+        severity,
+        code,
+        message,
         messageId: messageID
       });
       this.sanitize(payload, json);
       if (this.context) {
         const controller = this.context.get("controller");
-        if(!controller){
+        if (!controller) {
           return json;
-          //this.log(payload,"ERROR")
-          //this.log(`Controller not found`,"ERROR")
-          //throw new Error(`Controller not found`);
+          // this.log(payload,"ERROR")
+          // this.log(`Controller not found`,"ERROR")
+          // throw new Error(`Controller not found`);
         }
         if (this.debug) {
           json.pdu = new nodefony.PDU({
@@ -127,12 +123,12 @@ class JsonApi extends Api {
     }
   }
 
-  renderAsync(payload, code, message = "", severity = null, messageID = null) {
+  renderAsync (payload, code, message = "", severity = null, messageID = null) {
     try {
-      let json = nodefony.extend(this.json, {
-        severity: severity,
-        code: code,
-        message: message,
+      const json = nodefony.extend(this.json, {
+        severity,
+        code,
+        message,
         messageId: messageID
       });
       this.sanitize(payload, json);
@@ -156,8 +152,8 @@ class JsonApi extends Api {
   }
 
 
-  renderPdu(payload, code, message = "", severity = "INFO", messageID = null, api = this.name) {
-    let json = nodefony.extend({
+  renderPdu (payload, code, message = "", severity = "INFO", messageID = null, api = this.name) {
+    const json = nodefony.extend({
 
     }, this.json);
     this.sanitize(payload, json, severity);
@@ -172,10 +168,9 @@ class JsonApi extends Api {
     return new nodefony.PDU(json, severity, api, messageID, message);
   }
 
-  renderError(error, code, message = "", severity = "ERROR", messageID = null) {
+  renderError (error, code, message = "", severity = "ERROR", messageID = null) {
     return this.render(error, code, message, severity, messageID);
   }
-
 }
 
 nodefony.api.Json = JsonApi;

@@ -1,4 +1,4 @@
-const serveStatic = require('serve-static');
+const serveStatic = require("serve-static");
 
 const defaultStatic = {
   cacheControl: true,
@@ -6,8 +6,7 @@ const defaultStatic = {
 };
 
 module.exports = class serverStatics extends nodefony.Service {
-
-  constructor(container, options) {
+  constructor (container, options) {
     super("STATICS", container, container.get("notificationsCenter"));
     if (this.kernel.type !== "SERVER") {
       return;
@@ -22,14 +21,14 @@ module.exports = class serverStatics extends nodefony.Service {
     this.mime = this.serveStatic.mime;
     this.servers = {};
     this.kernel.on("onPostReady", () => {
-      for (let ele in this.servers) {
-        this.log("Server Static RootDir  ==> " + ele, "INFO");
+      for (const ele in this.servers) {
+        this.log(`Server Static RootDir  ==> ${ele}`, "INFO");
       }
     });
   }
 
-  initStaticFiles() {
-    for (let staticRoot in this.settings) {
+  initStaticFiles () {
+    for (const staticRoot in this.settings) {
       if (staticRoot === "defaultOptions") {
         continue;
       }
@@ -56,20 +55,21 @@ module.exports = class serverStatics extends nodefony.Service {
     }
   }
 
-  addDirectory(Path, options) {
+  addDirectory (Path, options) {
     if (!Path) {
       throw new Error("Static file path not Defined ");
     }
-    let opt = nodefony.extend({}, this.global, options);
-    /*if (typeof opt.maxAge === "string") {
+    const opt = nodefony.extend({}, this.global, options);
+
+    /* if (typeof opt.maxAge === "string") {
       //opt.maxAge = parseInt(eval(opt.maxAge), 10);
     }*/
-    let server = this.serveStatic(Path, opt);
+    const server = this.serveStatic(Path, opt);
     this.servers[Path] = server;
     return server;
   }
 
-  getStatic(server, request, response) {
+  getStatic (server, request, response) {
     return new Promise((resolve, reject) => {
       server(request, response, (err) => {
         // static not found 404
@@ -81,12 +81,12 @@ module.exports = class serverStatics extends nodefony.Service {
     });
   }
 
-  async handle(request, response) {
-    let pathname = url.parse(request.url).pathname;
-    let type = this.mime.lookup(pathname);
+  async handle (request, response) {
+    const {pathname} = url.parse(request.url);
+    const type = this.mime.lookup(pathname);
     response.setHeader("Content-Type", type);
     let res = null;
-    for (let server in this.servers) {
+    for (const server in this.servers) {
       try {
         res = await this.getStatic(this.servers[server], request, response);
       } catch (e) {

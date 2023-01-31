@@ -21,13 +21,13 @@ module.exports = {
   redis: {
     debug: true,
     globalOptions: {
-      socket:{
+      socket: {
         host: "localhost",
         port: 6379,
         family: "IPv4"
-      },
-      //username:"nodefony",
-      //password:"nodefony",
+      }
+      // username:"nodefony",
+      // password:"nodefony",
     },
     connections: {
       main: {
@@ -38,7 +38,7 @@ module.exports = {
       },
       subscribe: {
         name: "subscribe"
-      },
+      }
     }
   }
 };

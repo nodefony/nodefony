@@ -1,15 +1,14 @@
 module.exports = class loginController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
   }
 
-  loginAction() {
+  loginAction () {
     return this.renderJson(this.getRoute());
   }
 
 
-  logoutAction() {
+  logoutAction () {
     return this.renderJson({});
   }
 };

@@ -1,8 +1,6 @@
-module.exports = nodefony.register("httpError", function () {
-
+module.exports = nodefony.register("httpError", () => {
   class httpError extends nodefony.Error {
-
-    constructor(message, code, container) {
+    constructor (message, code, container) {
       super(message, code);
       this.container = container;
       this.context = null;
@@ -20,7 +18,7 @@ module.exports = nodefony.register("httpError", function () {
       }
     }
 
-    log(data) {
+    log (data) {
       if (this.context) {
         if (data) {
           return this.context.log.apply(this.context, arguments);
@@ -30,8 +28,8 @@ module.exports = nodefony.register("httpError", function () {
       return super.log(data);
     }
 
-    toString() {
-      let err = ``;
+    toString () {
+      let err = "";
       switch (this.errorType) {
       case "httpError":
         if (kernel && kernel.environment === "prod") {
@@ -55,11 +53,11 @@ module.exports = nodefony.register("httpError", function () {
       }
     }
 
-    parserContainer() {
+    parserContainer () {
       this.bundle = this.container.get("bundle") ? this.container.get("bundle").name : "";
       this.controller = this.container.get("controller") ? this.container.get("controller").name : "";
       this.action = this.container.get("action") ? this.container.get("action") : "";
-      this.context = this.container.get('context');
+      this.context = this.container.get("context");
       if (this.context) {
         this.url = this.context.url || "";
         this.method = this.context.method;
@@ -74,7 +72,7 @@ module.exports = nodefony.register("httpError", function () {
           if (this.message === "null") {
             this.message = "Internal Server Error";
           }
-          let st = this.context.response.setStatusCode(this.code, this.message);
+          const st = this.context.response.setStatusCode(this.code, this.message);
           this.code = st.code;
           this.message = st.message;
           this.resolve();
@@ -82,7 +80,8 @@ module.exports = nodefony.register("httpError", function () {
         if (this.code === 1000 || this.code === 200 || typeof code === "string") {
           this.code = 500;
         }
-        /*if (this.context.isJson) {
+
+        /* if (this.context.isJson) {
           try {
             let obj = {
               code: this.code,
@@ -104,7 +103,7 @@ module.exports = nodefony.register("httpError", function () {
       }
     }
 
-    resolve(setStatus = false) {
+    resolve (setStatus = false) {
       switch (this.code) {
       case 404:
         this.resolver = this.context.router.resolveName(this.context, "frameworkBundle:default:404");
@@ -129,7 +128,7 @@ module.exports = nodefony.register("httpError", function () {
       }
     }
 
-    parseMessage(message) {
+    parseMessage (message) {
       switch (nodefony.typeOf(message)) {
       case "Error":
         super.parseMessage(message);
@@ -160,8 +159,7 @@ module.exports = nodefony.register("httpError", function () {
           if (message.message) {
             return this.message = message.message;
           }
-          return this.message = util.inspect(message,{depth:0});
-
+          return this.message = util.inspect(message, {depth: 0});
         } catch (e) {
           this.error = e;
           this.code = 500;

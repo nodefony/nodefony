@@ -1,11 +1,12 @@
-const execSync = require('child_process').execSync;
+const {execSync} = require("child_process");
 const uuid = require("uuid");
 
-const myobj = {}
-const hasOwn = myobj.hasOwnProperty
+const myobj = {};
+const hasOwn = myobj.hasOwnProperty;
 const fnToString = hasOwn.toString;
 const ObjectFunctionString = fnToString.call(Object);
-const getProto = Object.getPrototypeOf
+const getProto = Object.getPrototypeOf;
+
 /**
  *  The class is a **`Nodefony Nodefony `** .
  *  @class Nodefony
@@ -14,9 +15,8 @@ const getProto = Object.getPrototypeOf
  *
  */
 class Nodefony {
-
-  constructor(context) {
-    //this.require = require;
+  constructor (context) {
+    // this.require = require;
     this.path = path.resolve(__dirname);
     this.io = {};
     this.context = context;
@@ -55,7 +55,7 @@ class Nodefony {
     this.appConfig = null;
     this.projectName = "nodefony";
     this.appKernel = null;
-    this.isRegExp = require('lodash.isregexp');
+    this.isRegExp = require("lodash.isregexp");
     this.isCore = false;
     this.isElectron = this.isElectronContext();
     this.yarn = this.checkYarn();
@@ -64,7 +64,7 @@ class Nodefony {
     this.checkTrunk();
   }
 
-  checkTrunk(cwd = path.resolve(".")) {
+  checkTrunk (cwd = path.resolve(".")) {
     this.isTrunk = this.isNodefonyTrunk(cwd);
     if (this.isTrunk) {
       this.builded = this.isBuilded(cwd);
@@ -77,7 +77,7 @@ class Nodefony {
     }
   }
 
-  isBuilded(cwd = path.resolve(".")) {
+  isBuilded (cwd = path.resolve(".")) {
     try {
       fs.lstatSync(path.resolve(cwd, "node_modules"));
       return true;
@@ -86,16 +86,16 @@ class Nodefony {
     }
   }
 
-  generateId(...args) {
+  generateId (...args) {
     return uuid.v4(...args);
   }
 
-  setConfig(cwd = path.resolve(".")) {
+  setConfig (cwd = path.resolve(".")) {
     try {
       this.projectPackage = require(path.resolve(cwd, "package.json"));
       this.projectVersion = this.projectPackage.version;
       this.projectName = this.projectPackage.name;
-      this.context.kernel = {}
+      this.context.kernel = {};
       this.kernelConfig = this.loadConfig(this.kernelConfigPath);
       this.appConfig = this.loadConfig(this.appConfigPath, console.warn);
       this.packageManager = this.kernelConfig.packageManager || "npm";
@@ -103,47 +103,47 @@ class Nodefony {
       if (!this.Error) {
         this.Error = require(path.resolve(__dirname, "error.es6"));
       }
-      let error = new this.Error(e);
+      const error = new this.Error(e);
       throw error;
     }
   }
 
-  setPm2Config() {
+  setPm2Config () {
     if (this.builded) {
       this.pm2Config = require(this.pm2ConfigPath);
     }
     return this.pm2Config;
   }
 
-  loadConfig(file, log) {
+  loadConfig (file, log) {
     try {
-      let ext = path.extname(file);
+      const ext = path.extname(file);
       switch (ext) {
-        case ".js":
-          return require(file);
-        case ".yml":
-          return yaml.load(this.readFileSync(file));
+      case ".js":
+        return require(file);
+      case ".yml":
+        return yaml.load(this.readFileSync(file));
       }
     } catch (e) {
       if (log) {
-        //log(e);
+        // log(e);
         return {};
       }
       throw e;
     }
   }
 
-  readFileSync(file) {
+  readFileSync (file) {
     try {
       return fs.readFileSync(file, {
-        encoding: 'utf8'
+        encoding: "utf8"
       });
     } catch (e) {
       throw e;
     }
   }
 
-  isCoreTrunk() {
+  isCoreTrunk () {
     if (this.isTrunk) {
       if (this.projectPackage.name === "nodefony-core") {
         return true;
@@ -158,19 +158,19 @@ class Nodefony {
     return false;
   }
 
-  isFunction(it) {
-    return Object.prototype.toString.call(it) === '[object Function]';
+  isFunction (it) {
+    return Object.prototype.toString.call(it) === "[object Function]";
   }
 
-  isArray(it) {
-    return Object.prototype.toString.call(it) === '[object Array]';
+  isArray (it) {
+    return Object.prototype.toString.call(it) === "[object Array]";
   }
 
-  isError(it) {
+  isError (it) {
     return nodefony.Error.isError(it);
   }
 
-  isContainer(container) {
+  isContainer (container) {
     if (container) {
       if (container instanceof nodefony.Container) {
         return true;
@@ -183,21 +183,21 @@ class Nodefony {
     return false;
   }
 
-  isPromise(obj) {
+  isPromise (obj) {
     switch (true) {
-      case obj instanceof Promise:
-      case obj instanceof BlueBird:
-        return true;
-      default:
-        return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+    case obj instanceof Promise:
+    case obj instanceof BlueBird:
+      return true;
+    default:
+      return Boolean(obj) && (typeof obj === "object" || typeof obj === "function") && typeof obj.then === "function";
     }
   }
 
-  isUndefined(value) {
+  isUndefined (value) {
     return value === undefined;
   }
 
-  isEmptyObject(obj) {
+  isEmptyObject (obj) {
     let name;
     for (name in obj) {
       return false;
@@ -205,7 +205,7 @@ class Nodefony {
     return true;
   }
 
-  isPlainObject(obj) {
+  isPlainObject (obj) {
     let proto, Ctor;
     if (!obj || toString.call(obj) !== "[object Object]") {
       return false;
@@ -223,9 +223,9 @@ class Nodefony {
    *  @param  value
    *  @return {String} type of value
    */
-  typeOf(value) {
-    let t = typeof value;
-    if (t === 'object') {
+  typeOf (value) {
+    const t = typeof value;
+    if (t === "object") {
       if (value === null) {
         return null;
       }
@@ -236,7 +236,7 @@ class Nodefony {
         return "array";
       }
       if (this.isFunction(value)) {
-        return 'function';
+        return "function";
       }
       if (value instanceof Date) {
         return "date";
@@ -253,19 +253,17 @@ class Nodefony {
       if (this.isError(value)) {
         return "Error";
       }
-    } else {
-      if (t === 'function' && typeof value.call === 'undefined') {
-        return 'object';
-      }
+    } else if (t === "function" && typeof value.call === "undefined") {
+      return "object";
     }
     return t;
   }
 
-  extend() {
+  extend () {
     let options, name, src, copy, copyIsArray, clone,
       target = arguments[0] || {},
       i = 1,
-      length = arguments.length,
+      {length} = arguments,
       deep = false;
 
     // Handle a deep copy situation
@@ -328,13 +326,12 @@ class Nodefony {
    *  @param {Function} closure
    *
    */
-  register(name, closure) {
+  register (name, closure) {
     if (typeof closure === "function") {
       // exec closure
       return this[name] = closure(this, name);
-    } else {
-      return this[name] = closure;
     }
+    return this[name] = closure;
   }
 
   /**
@@ -344,11 +341,11 @@ class Nodefony {
    *  @param {Function} closure
    *
    */
-  registerBundle(name, closure) {
+  registerBundle (name, closure) {
     if (typeof closure === "function") {
       return this.bundles[name] = closure();
     }
-    throw new Error("Register bundle : " + name + "  error bundle bad format");
+    throw new Error(`Register bundle : ${name}  error bundle bad format`);
   }
 
   /**
@@ -358,11 +355,11 @@ class Nodefony {
    *  @param {Function} closure
    *
    */
-  registerFixture(name, closure) {
+  registerFixture (name, closure) {
     if (typeof closure === "function") {
       return closure();
     }
-    throw new Error("Register fixtures : " + name + "  error fixtures bad format");
+    throw new Error(`Register fixtures : ${name}  error fixtures bad format`);
   }
 
   /**
@@ -372,37 +369,39 @@ class Nodefony {
    *  @param {Function} closure
    *
    */
-  registerCommand(name, closure) {
+  registerCommand (name, closure) {
     if (typeof closure === "function") {
       return closure();
     }
-    throw new Error("Register commands : " + name + "  error commands bad format");
+    throw new Error(`Register commands : ${name}  error commands bad format`);
   }
 
-  registerFactory(name, closure) {
+  registerFactory (name, closure) {
     if (typeof closure === "function") {
       return nodefony.security.factories[name] = closure();
     }
-    throw new Error("Register Factory : " + name + "  Error Factory bad format");
+    throw new Error(`Register Factory : ${name}  Error Factory bad format`);
   }
-  registerToken(name, closure) {
+
+  registerToken (name, closure) {
     if (typeof closure === "function") {
       return nodefony.security.tokens[name] = closure();
     }
-    throw new Error("Register Token : " + name + "  Error Token bad format");
+    throw new Error(`Register Token : ${name}  Error Token bad format`);
   }
-  registerProvider(name, closure) {
+
+  registerProvider (name, closure) {
     if (typeof closure === "function") {
       return nodefony.security.providers[name] = closure();
     }
-    throw new Error("Register Provider : " + name + "  Error Provider bad format");
+    throw new Error(`Register Provider : ${name}  Error Provider bad format`);
   }
 
-  getVersion() {
+  getVersion () {
     return require(path.resolve(__dirname, "package.json")).version;
   }
 
-  isNodefonyTrunk(cwd = path.resolve(".")) {
+  isNodefonyTrunk (cwd = path.resolve(".")) {
     try {
       try {
         this.kernelConfigPath = path.resolve(cwd, "config", "config.js");
@@ -432,36 +431,36 @@ class Nodefony {
     }
   }
 
-  loadAppKernel(cwd = path.resolve("."), detectError = false) {
+  loadAppKernel (cwd = path.resolve("."), detectError = false) {
     try {
-      let detectpath = path.resolve(cwd, "app", "appKernel.js")
+      const detectpath = path.resolve(cwd, "app", "appKernel.js");
       try {
         fs.lstatSync(detectpath);
       } catch (e) {
         if (detectError) {
-          console.error(e)
-          throw e
+          console.error(e);
+          throw e;
         }
-        return null
+        return null;
       }
       return this.appKernel = require(detectpath);
     } catch (e) {
       if (e.message === "Class extends value undefined is not a constructor or null") {
-        return null
+        return null;
       }
-      console.trace(e)
-      return null
+      console.trace(e);
+      return null;
     }
   }
 
-  isElectronContext() {
+  isElectronContext () {
     if (this.versions.electron) {
-      return require('electron');
+      return require("electron");
     }
     return false;
   }
 
-  checkYarn() {
+  checkYarn () {
     try {
       return require("yarn");
     } catch (e) {
@@ -469,7 +468,7 @@ class Nodefony {
     }
   }
 
-  checkNpm() {
+  checkNpm () {
     try {
       return require("npm");
     } catch (e) {
@@ -477,7 +476,7 @@ class Nodefony {
     }
   }
 
-  checkYarnVersion() {
+  checkYarnVersion () {
     let res = null;
     try {
       res = execSync("yarn -v", {
@@ -492,7 +491,7 @@ class Nodefony {
     }
   }
 
-  checkNpmVersion() {
+  checkNpmVersion () {
     let res = null;
     try {
       res = execSync("npm -v", {
@@ -507,26 +506,26 @@ class Nodefony {
     }
   }
 
-  manageCache(cli) {
+  manageCache (cli) {
     if (this.isTrunk) {
-      let cacheLink = path.resolve("tmp", "assestLink");
+      const cacheLink = path.resolve("tmp", "assestLink");
       if (fs.existsSync(cacheLink)) {
         if (cli && cli.logger && cli.debug) {
-          cli.logger("DELETE TMP LINK :" + cacheLink, "DEBUG");
+          cli.logger(`DELETE TMP LINK :${cacheLink}`, "DEBUG");
         }
         shell.rm("-Rf", this.cacheLink);
       }
-      let cacheWebpack = path.resolve("tmp", "webpack");
+      const cacheWebpack = path.resolve("tmp", "webpack");
       if (fs.existsSync(cacheWebpack)) {
         if (cli && cli.logger && cli.debug) {
-          cli.logger("DELETE TMP :" + cacheWebpack, "DEBUG");
+          cli.logger(`DELETE TMP :${cacheWebpack}`, "DEBUG");
         }
         shell.rm("-Rf", cacheWebpack);
       }
     }
   }
 
-  showHelp(cli) {
+  showHelp (cli) {
     // Servers
     cli.setTitleHelp(`${cli.clc.cyan("Servers")}`);
     cli.setHelp("", "dev", "Run Nodefony Development Server");
@@ -552,341 +551,330 @@ class Nodefony {
     cli.setHelp("", "build [sync|migrate]", "Build Nodefony Framework ,transpile, certificats, skeleton , install (default orm migrate)");
     cli.setHelp("", "install [sync|migrate]", "Install Nodefony Project transpile, sync or migrate Orm (default orm migrate)");
     cli.setHelp("", "rebuild", "Rebuild Nodefony Framework in production (Usefull when node version change )");
-    cli.setHelp("", "certificates", `Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'`);
-    //cli.setHelp("", "dependencies", "List Project dependencies");
+    cli.setHelp("", "certificates", "Generate HTTPS Certificates  'Change default openssl configuration in config/openssl'");
+    // cli.setHelp("", "dependencies", "List Project dependencies");
     cli.setHelp("", "outdated", "List Project dependencies outdated");
     cli.setHelp("", "version", "Get Project Version");
   }
 
-  async start(cmd, args, cli, options = {}) {
+  async start (cmd, args, cli, options = {}) {
     if (cmd !== "preprod" && cluster.isWorker) {
       cmd = "production";
     }
     let environment = false;
     let name = nodefony.projectName;
     switch (cmd) {
-      case "dev":
-      case "development":
+    case "dev":
+    case "development":
+      cli.keepAlive = true;
+      this.manageCache(cli);
+      environment = "dev";
+      process.env.MODE_START = "NODEFONY_DEV";
+      cli.setType("SERVER");
+      const kernel = new nodefony.appKernel(environment, cli, options);
+      return await kernel.start()
+        .catch((e) => {
+          cli.log(e, "ERROR");
+          throw e;
+        });
+    case "preprod":
+    case "preproduction":
+      cli.keepAlive = true;
+      this.manageCache(cli);
+      environment = "prod";
+      process.env.MODE_START = "NODEFONY";
+      cli.setType("SERVER");
+      return this.preProd(environment, cli, options)
+        .catch((e) => {
+          cli.log(e, "ERROR");
+          throw e;
+        });
+    case "production":
+    case "prod":
+    case "start":
+    case "pm2":
+      try {
         cli.keepAlive = true;
-        this.manageCache(cli);
-        environment = "dev";
-        process.env.MODE_START = "NODEFONY_DEV";
-        cli.setType("SERVER");
-        const kernel = new nodefony.appKernel(environment, cli, options);
-        return await kernel.start()
-          .catch(e => {
-            cli.log(e, "ERROR");
-            throw e
-          });
-      case "preprod":
-      case "preproduction":
-        cli.keepAlive = true;
-        this.manageCache(cli);
         environment = "prod";
-        process.env.MODE_START = "NODEFONY";
-        cli.setType("SERVER");
-        return this.preProd(environment, cli, options)
-          .catch(e => {
-            cli.log(e, "ERROR");
-            throw e
-          });
-      case "production":
-      case "prod":
-      case "start":
-      case "pm2":
-        try {
-          cli.keepAlive = true;
-          environment = "prod";
-          if (process.env.MODE_START && process.env.MODE_START === "PM2") {
-            cli.setType("SERVER");
-            const kernel = new nodefony.appKernel(environment, cli, options);
-            return await kernel.start()
-              .catch(async (e) => {
-                cli.log(e, "ERROR");
-                cli.log(`terminate code 1`)
-                await cli.terminate(1)
-                throw e
-              });
-          } else {
-            let options = cli.commander.opts();
-            if (options.dump && !(cmd === "prod" || cmd === "production" || cmd === "pm2")) {
-              await cli.setCommand("webpack:dump");
-            }
-            cli.setType("SERVER");
-            this.manageCache(cli);
-            process.env.MODE_START = "PM2_START";
-            return await this.pm2Start(cli, options)
-              .then((deamon) => {
-                if (deamon) {
-                  cli.logger(`DAEMONIZE Process
+        if (process.env.MODE_START && process.env.MODE_START === "PM2") {
+          cli.setType("SERVER");
+          const kernel = new nodefony.appKernel(environment, cli, options);
+          return await kernel.start()
+            .catch(async (e) => {
+              cli.log(e, "ERROR");
+              cli.log("terminate code 1");
+              await cli.terminate(1);
+              throw e;
+            });
+        } else {
+          const options = cli.commander.opts();
+          if (options.dump && !(cmd === "prod" || cmd === "production" || cmd === "pm2")) {
+            await cli.setCommand("webpack:dump");
+          }
+          cli.setType("SERVER");
+          this.manageCache(cli);
+          process.env.MODE_START = "PM2_START";
+          return await this.pm2Start(cli, options)
+            .then((deamon) => {
+              if (deamon) {
+                cli.logger(`DAEMONIZE Process
                       --no-daemon  if don't want DAEMONIZE  (Usefull for docker)`);
-                  return pm2.disconnect(() => {
-                    cli.log(`pm2.disconnect`)
-                    cli.log(`terminate code 0`)
-                    return cli.terminate(0);
-                  })
-                }
-                cli.log(`NO DAEMONIZE`)
-                return
-              })
-              .catch((e) => {
-                cli.log(e, "ERROR")
-                console.trace(e)
                 return pm2.disconnect(() => {
-                  cli.log(`pm2.disconnect`)
-                  cli.log(`terminate code 1`)
-                  return cli.terminate(1);
-                  /*pm2.killDaemon(() => {
+                  cli.log("pm2.disconnect");
+                  cli.log("terminate code 0");
+                  return cli.terminate(0);
+                });
+              }
+              cli.log("NO DAEMONIZE");
+            })
+            .catch((e) => {
+              cli.log(e, "ERROR");
+              console.trace(e);
+              return pm2.disconnect(() => {
+                cli.log("pm2.disconnect");
+                cli.log("terminate code 1");
+                return cli.terminate(1);
+
+                /* pm2.killDaemon(() => {
                     cli.logger(`pm2 killDaemon `, "ERROR");
                     cli.log(`terminate code 1`)
                   })*/
-                })
-              })
-          }
-        } catch (e) {
-          //console.error(e)
-          throw e
-        }
-        break;
-      case "stop":
-        cli.keepAlive = true;
-        if (args.length) {
-          name = args[0];
-        }
-        return pm2.stop(name, (error, proc) => {
-          if (error) {
-            cli.logger(error, "ERROR");
-            cli.terminate(-1);
-          }
-          cli.logger(`PM2 Stop Project  ${name}`);
-          this.tablePm2(cli, proc);
-          return pm2.disconnect(() => {
-            cli.terminate(0);
-          })
-        });
-        break;
-      case "reload":
-        cli.keepAlive = true;
-        if (args.length) {
-          name = args[0];
-        }
-        return pm2.reload(name, (error, proc) => {
-          if (error) {
-            cli.logger(error, "ERROR");
-            return cli.terminate(-1);
-          }
-          cli.logger(`PM2 reload Project  ${name}`);
-          this.tablePm2(cli, proc);
-          return pm2.disconnect(() => {
-            return cli.terminate(0);
-          })
-        });
-        break;
-      case "restart":
-        cli.keepAlive = true;
-        if (args.length) {
-          name = args[0];
-        }
-        return pm2.restart(name, (error, proc) => {
-          if (error) {
-            cli.logger(error, "ERROR");
-            return cli.terminate(-1);
-          }
-          cli.logger(`PM2 restart Project  ${name}`);
-          this.tablePm2(cli, proc);
-          return pm2.disconnect(() => {
-            return cli.terminate(0);
-          })
-        });
-        break;
-      case "delete":
-        cli.keepAlive = true;
-        if (args.length) {
-          name = args[0];
-        }
-        return pm2.delete(name, (error, proc) => {
-          if (error) {
-            cli.logger(error, "ERROR");
-            return cli.terminate(-1);
-          }
-          cli.logger(`PM2 delete Project  ${name}`);
-          this.tablePm2(cli, proc);
-          return pm2.disconnect(() => {
-            return cli.terminate(0);
-          })
-        });
-        break;
-      case "kill":
-        cli.keepAlive = true;
-        return new Promise(async (resolve, reject) => {
-          const util = require('node:util');
-          const exec = util.promisify(require('node:child_process').exec);
-          let ret = null
-          try {
-            const {
-              stdout,
-              stderr
-            } = await exec('npx pm2 kill');
-            if (stderr) {
-              cli.log(`Kill PM2 MANAGER ${stderr}`, "WARNING");
-            } else {
-              cli.log(`Kill PM2 MANAGER success ${stdout}`);
-              ret = 0
-              return resolve(process.exit(ret))
-            }
-          } catch (e) {
-            cli.log(`Kill PM2 MANAGER ${e}`, "ERROR");
-          }
-          try {
-            const {
-              stdout,
-              stderr
-            } = await exec('pkill pm2');
-            if (stderr) {
-              cli.log(`pkill pm2 ${stderr}`, "WARNING");
-            } else {
-              cli.log(`pkill pm2 success ${stdout}`);
-              ret = 0
-            }
-          } catch (e) {
-            cli.log(`pkill pm2 ${e}`, "WARNING");
-          }
-          try {
-            const {
-              stdout,
-              stderr
-            } = await exec('killall pm2');
-            if (stderr) {
-              cli.log(`killall pm2  ${stderr}`, "WARNING");
-            } else {
-              cli.log(`killall pm2 success ${stdout}`);
-              ret = 0
-            }
-          } catch (e) {
-            cli.log(`killall pm2 ${e}`, "WARNING");
-          }
-          if (ret = 0) {
-            return resolve(process.exit(ret));
-          }
-          return resolve(process.exit(-1));
-        })
-      case "status":
-      case "list":
-        cli.keepAlive = true;
-        return pm2.list((error, processDescriptionList) => {
-          if (error) {
-            cli.logger(error, "ERROR");
-            return cli.terminate(-1);
-          }
-          this.tablePm2(cli, processDescriptionList);
-          return pm2.disconnect(() => {
-            return pm2.disconnect(() => {
-              return cli.terminate(0);
-            })
-          })
-        });
-        break;
-      case "log":
-      case "logs":
-        cli.keepAlive = true;
-        let myname = null;
-        let line = 20;
-        if (this.isTrunk) {
-          myname = nodefony.projectName;
-        } else {
-          myname = "all";
-        }
-        if (args.length) {
-          myname = args[0];
-          if (args[1]) {
-            line = args[1];
-          }
-        }
-        cli.reset();
-        cli.logger(`PM2 LOG MANAGEMENT project : ${myname}  line : ${line}`, "INFO");
-        pm2.streamLogs(myname, line);
-        break;
-      case "clean-log":
-        cli.keepAlive = true;
-        return pm2.flush((error, result) => {
-          if (error) {
-            cli.logger(error, "ERROR");
-            return cli.terminate(-1);
-          }
-          cli.logger(`clean log ${nodefony.projectName}`);
-          this.tablePm2(cli, result);
-          return pm2.disconnect(() => {
-            return cli.terminate(0);
-          })
-        });
-        break;
-      case "pm2-logrotate":
-        return cli.npm(["run", "pm2", "install", "pm2-logrotate"]);
-      case "pm2-save":
-        return cli.npm(["run", "pm2", "save"]);
-      case "pm2-startup":
-        return cli.spawn("npx", ["pm2", "startup"], {
-          cwd: process.cwd(),
-          env: process.env,
-          stdio: "inherit"
-        }).then((code) => {
-          cli.log(`[PM2] Init System found To setup the Startup Script, copy/paste the previous command :)`);
-          return code;
-        }).catch(e => {
-          cli.log(e, "ERROR");
-        });
-      case "pm2-unstartup":
-        return cli.npm(["run", "pm2", "unstartup"]);
-      case "outdated":
-        return cli.setCommand("nodefony:outdated");
-      case "test":
-        return cli.setCommand("unitest:launch:all");
-        //case "dependencies":
-        //return cli.setCommand("nodefony:bundles:dependencies");
-      default:
-        if (cli.kernel) {
-          return await cli.kernel.matchCommand()
-            .then((command) => {
-              let name = "";
-              if (command && command.name) {
-                name = command.name;
-              }
-              cli.logger(`${cli.getEmoji("checkered_flag")}`, "INFO", `Command ${name}`);
-              return command;
-            })
-            .catch((error) => {
-              throw error;
-              //this.logger(error, "ERROR", `COMMAND`);
+              });
             });
         }
-        if (this.appKernel) {
-          environment = "prod";
-          cli.setType("CONSOLE");
-          process.env.MODE_START = "NODEFONY_CONSOLE";
-          this.manageCache(cli);
-          try {
-            let kernel = new this.appKernel(environment, cli, options);
-            return await kernel.start()
-              .catch(e => {
-                throw e;
-              });
-          } catch (e) {
-            console.error(e);
-            throw e
+      } catch (e) {
+        // console.error(e)
+        throw e;
+      }
+      break;
+    case "stop":
+      cli.keepAlive = true;
+      if (args.length) {
+        name = args[0];
+      }
+      return pm2.stop(name, (error, proc) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          cli.terminate(-1);
+        }
+        cli.logger(`PM2 Stop Project  ${name}`);
+        this.tablePm2(cli, proc);
+        return pm2.disconnect(() => {
+          cli.terminate(0);
+        });
+      });
+      break;
+    case "reload":
+      cli.keepAlive = true;
+      if (args.length) {
+        name = args[0];
+      }
+      return pm2.reload(name, (error, proc) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          return cli.terminate(-1);
+        }
+        cli.logger(`PM2 reload Project  ${name}`);
+        this.tablePm2(cli, proc);
+        return pm2.disconnect(() => cli.terminate(0));
+      });
+      break;
+    case "restart":
+      cli.keepAlive = true;
+      if (args.length) {
+        name = args[0];
+      }
+      return pm2.restart(name, (error, proc) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          return cli.terminate(-1);
+        }
+        cli.logger(`PM2 restart Project  ${name}`);
+        this.tablePm2(cli, proc);
+        return pm2.disconnect(() => cli.terminate(0));
+      });
+      break;
+    case "delete":
+      cli.keepAlive = true;
+      if (args.length) {
+        name = args[0];
+      }
+      return pm2.delete(name, (error, proc) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          return cli.terminate(-1);
+        }
+        cli.logger(`PM2 delete Project  ${name}`);
+        this.tablePm2(cli, proc);
+        return pm2.disconnect(() => cli.terminate(0));
+      });
+      break;
+    case "kill":
+      cli.keepAlive = true;
+      return new Promise(async (resolve, reject) => {
+        const util = require("node:util");
+        const exec = util.promisify(require("node:child_process").exec);
+        let ret = null;
+        try {
+          const {
+            stdout,
+            stderr
+          } = await exec("npx pm2 kill");
+          if (stderr) {
+            cli.log(`Kill PM2 MANAGER ${stderr}`, "WARNING");
+          } else {
+            cli.log(`Kill PM2 MANAGER success ${stdout}`);
+            ret = 0;
+            return resolve(process.exit(ret));
           }
+        } catch (e) {
+          cli.log(`Kill PM2 MANAGER ${e}`, "ERROR");
         }
-        if (cli.commander.hasOwnProperty('help')) {
-          cli.clear();
-          cli.showHelp();
-          return Promise.resolve();
+        try {
+          const {
+            stdout,
+            stderr
+          } = await exec("pkill pm2");
+          if (stderr) {
+            cli.log(`pkill pm2 ${stderr}`, "WARNING");
+          } else {
+            cli.log(`pkill pm2 success ${stdout}`);
+            ret = 0;
+          }
+        } catch (e) {
+          cli.log(`pkill pm2 ${e}`, "WARNING");
         }
-        let error = new Error("No nodefony trunk detected !");
-        throw error;
+        try {
+          const {
+            stdout,
+            stderr
+          } = await exec("killall pm2");
+          if (stderr) {
+            cli.log(`killall pm2  ${stderr}`, "WARNING");
+          } else {
+            cli.log(`killall pm2 success ${stdout}`);
+            ret = 0;
+          }
+        } catch (e) {
+          cli.log(`killall pm2 ${e}`, "WARNING");
+        }
+        if (ret = 0) {
+          return resolve(process.exit(ret));
+        }
+        return resolve(process.exit(-1));
+      });
+    case "status":
+    case "list":
+      cli.keepAlive = true;
+      return pm2.list((error, processDescriptionList) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          return cli.terminate(-1);
+        }
+        this.tablePm2(cli, processDescriptionList);
+        return pm2.disconnect(() => pm2.disconnect(() => cli.terminate(0)));
+      });
+      break;
+    case "log":
+    case "logs":
+      cli.keepAlive = true;
+      let myname = null;
+      let line = 20;
+      if (this.isTrunk) {
+        myname = nodefony.projectName;
+      } else {
+        myname = "all";
+      }
+      if (args.length) {
+        myname = args[0];
+        if (args[1]) {
+          line = args[1];
+        }
+      }
+      cli.reset();
+      cli.logger(`PM2 LOG MANAGEMENT project : ${myname}  line : ${line}`, "INFO");
+      pm2.streamLogs(myname, line);
+      break;
+    case "clean-log":
+      cli.keepAlive = true;
+      return pm2.flush((error, result) => {
+        if (error) {
+          cli.logger(error, "ERROR");
+          return cli.terminate(-1);
+        }
+        cli.logger(`clean log ${nodefony.projectName}`);
+        this.tablePm2(cli, result);
+        return pm2.disconnect(() => cli.terminate(0));
+      });
+      break;
+    case "pm2-logrotate":
+      return cli.npm(["run", "pm2", "install", "pm2-logrotate"]);
+    case "pm2-save":
+      return cli.npm(["run", "pm2", "save"]);
+    case "pm2-startup":
+      return cli.spawn("npx", ["pm2", "startup"], {
+        cwd: process.cwd(),
+        env: process.env,
+        stdio: "inherit"
+      }).then((code) => {
+        cli.log("[PM2] Init System found To setup the Startup Script, copy/paste the previous command :)");
+        return code;
+      })
+        .catch((e) => {
+          cli.log(e, "ERROR");
+        });
+    case "pm2-unstartup":
+      return cli.npm(["run", "pm2", "unstartup"]);
+    case "outdated":
+      return cli.setCommand("nodefony:outdated");
+    case "test":
+      return cli.setCommand("unitest:launch:all");
+      // case "dependencies":
+      // return cli.setCommand("nodefony:bundles:dependencies");
+    default:
+      if (cli.kernel) {
+        return await cli.kernel.matchCommand()
+          .then((command) => {
+            let name = "";
+            if (command && command.name) {
+              name = command.name;
+            }
+            cli.logger(`${cli.getEmoji("checkered_flag")}`, "INFO", `Command ${name}`);
+            return command;
+          })
+          .catch((error) => {
+            throw error;
+            // this.logger(error, "ERROR", `COMMAND`);
+          });
+      }
+      if (this.appKernel) {
+        environment = "prod";
+        cli.setType("CONSOLE");
+        process.env.MODE_START = "NODEFONY_CONSOLE";
+        this.manageCache(cli);
+        try {
+          const kernel = new this.appKernel(environment, cli, options);
+          return await kernel.start()
+            .catch((e) => {
+              throw e;
+            });
+        } catch (e) {
+          console.error(e);
+          throw e;
+        }
+      }
+      if (cli.commander.hasOwnProperty("help")) {
+        cli.clear();
+        cli.showHelp();
+        return Promise.resolve();
+      }
+      const error = new Error("No nodefony trunk detected !");
+      throw error;
     }
   }
 
-  tablePm2(cli, apps) {
-    //console.log(apps)
+  tablePm2 (cli, apps) {
+    // console.log(apps)
     let table = null;
     table = cli.displayTable([], {
       head: [
@@ -901,16 +889,16 @@ class Nodefony {
         cli.clc.blue("memory"),
         cli.clc.blue("user"),
         cli.clc.blue("watching")
-      ],
-      //colWidths: [30, 15, 20, 15]
+      ]
+      // colWidths: [30, 15, 20, 15]
     });
     apps.forEach((ele) => {
-      //console.log(ele.pm2_env)
-      //console.log(ele)
+      // console.log(ele.pm2_env)
+      // console.log(ele)
       let cpu = "-";
       let memory = "-";
       if (ele.monit) {
-        cpu = ele.monit.cpu + "%";
+        cpu = `${ele.monit.cpu}%`;
         memory = nodefony.cli.niceBytes(ele.monit.memory);
       }
       let exec_mode = "-";
@@ -967,7 +955,7 @@ class Nodefony {
   /*
    * PM2
    */
-  pm2Start(cli, options) {
+  pm2Start (cli, options) {
     return new Promise((resolve, reject) => {
       try {
         this.setPm2Config();
@@ -985,7 +973,7 @@ class Nodefony {
         }
         this.pm2Config.apps[0].vizion = false;
       } catch (e) {
-        return reject(e)
+        return reject(e);
       }
       pm2.connect((err) => {
         if (err) {
@@ -995,12 +983,12 @@ class Nodefony {
         console.log(util.inspect(this.pm2Config, {
           depth: 10
         }));
-        pm2.start(this.pm2Config, (err /*, apps*/ ) => {
+        pm2.start(this.pm2Config, (err /* , apps*/) => {
           if (err) {
             cli.logger(err.stack || err, "ERROR");
             return reject(err);
           }
-          cli.logger(`PM2 started`)
+          cli.logger("PM2 started");
           process.nextTick(async () => {
             try {
               pm2.list((err, processDescriptionList) => {
@@ -1013,7 +1001,7 @@ class Nodefony {
                   if (err) {
                     cli.logger(err, "WARNING");
                   }
-                  cli.logger(`PM2 SAVING process`);
+                  cli.logger("PM2 SAVING process");
                   if (result.success) {
                     cli.logger(`${process.platform} PM2 process saved `);
                   }
@@ -1045,39 +1033,38 @@ Examples with pm2 native tools :
 $ npx pm2 monit
 $ npx pm2 --lines 1000 logs
                     `);
-                  return resolve(options.daemon)
+                  return resolve(options.daemon);
                 });
               });
             } catch (e) {
-
               return reject(e);
             }
           });
         });
       });
-    })
+    });
   }
 
-  async preProd(environment, cli, options) {
-    const instances = require('os').cpus().length;
+  async preProd (environment, cli, options) {
+    const instances = require("os").cpus().length;
     if (cluster.isMaster) {
       for (let i = 0; i < instances; i++) {
         cluster.fork();
       }
-      cluster.on('disconnect', function( /*worker*/ ) {
-        console.error('disconnect!');
+      cluster.on("disconnect", (/* worker*/) => {
+        console.error("disconnect!");
       });
-      cluster.on('fork', (worker) => {
-        let wid = worker.id;
-        worker.on('message', (msg) => {
+      cluster.on("fork", (worker) => {
+        const wid = worker.id;
+        worker.on("message", (msg) => {
           if (msg && msg.worker === wid) {
             return;
           }
-          Object.keys(cluster.workers).forEach(function(id) {
+          Object.keys(cluster.workers).forEach((id) => {
             if (id !== wid) {
-              //console.log("CLUSTER SEND FROM  "+ wid + " to " + id)
+              // console.log("CLUSTER SEND FROM  "+ wid + " to " + id)
               cluster.workers[id].send(nodefony.extend(msg, {
-                worker: wid,
+                worker: wid
               }));
             }
           });
@@ -1086,9 +1073,9 @@ $ npx pm2 --lines 1000 logs
     } else {
       const kernel = new nodefony.appKernel(environment, cli, options);
       return await kernel.start()
-        .catch(e => {
+        .catch((e) => {
           cli.log(e, "ERROR");
-          throw e
+          throw e;
         });
     }
   }

@@ -2,11 +2,11 @@ const request = require("request");
 
 const defaultOptions = {
 
-  method: 'GET',
+  method: "GET",
   timeout: 1500,
-  "User-Agent": `${nodefony.projectName}@${nodefony.projectVersion}`,
-  //auth: null
-  /*{
+  "User-Agent": `${nodefony.projectName}@${nodefony.projectVersion}`
+  // auth: null
+  /* {
     user: null,
     pass: null,
     sendImmediately: true,
@@ -16,12 +16,11 @@ const defaultOptions = {
 
 
 class Request extends nodefony.Service {
-
-  constructor(baseUrl, options, service) {
+  constructor (baseUrl, options, service) {
     super("request", service.container, null, defaultOptions);
     this.baseUrl = null;
     this.service = service;
-    let type = nodefony.typeOf(baseUrl);
+    const type = nodefony.typeOf(baseUrl);
     switch (true) {
     case type === "string":
       this.baseUrl = url.parse(baseUrl);
@@ -41,14 +40,14 @@ class Request extends nodefony.Service {
     }
   }
 
-  authenticate(myrequest, sendImmediately = true, bearer = null) {
+  authenticate (myrequest, sendImmediately = true, bearer = null) {
     return myrequest.auth(this.options.auth.login, this.options.auth.passwd, sendImmediately, bearer);
   }
 
-  checkUrl(uri, options, container) {
+  checkUrl (uri, options, container) {
     let myurl = null;
     let myoptions = nodefony.extend(true, {}, this.options);
-    let type = nodefony.typeOf(uri);
+    const type = nodefony.typeOf(uri);
     switch (true) {
     case type === "string":
       if (uri === "") {
@@ -57,23 +56,19 @@ class Request extends nodefony.Service {
         } else {
           throw new nodefony.requestError("http request Bad url", null, container);
         }
-      } else {
-        if (this.baseUrl) {
-          if (/^\//.test(uri)) {
-            if (/\/$/.test(this.baseUrl.path)) {
-              uri = uri.replace(/\/(.*)/, "$1");
-            }
-            myurl = url.parse(`${this.baseUrl.href}${uri}`);
-          } else {
-            if (/\/$/.test(this.baseUrl.path)) {
-              myurl = url.parse(`${this.baseUrl.href}${uri}`);
-            } else {
-              myurl = url.parse(`${this.baseUrl.href}/${uri}`);
-            }
+      } else if (this.baseUrl) {
+        if ((/^\//).test(uri)) {
+          if ((/\/$/).test(this.baseUrl.path)) {
+            uri = uri.replace(/\/(.*)/, "$1");
           }
+          myurl = url.parse(`${this.baseUrl.href}${uri}`);
+        } else if ((/\/$/).test(this.baseUrl.path)) {
+          myurl = url.parse(`${this.baseUrl.href}${uri}`);
         } else {
-          myurl = url.parse(uri);
+          myurl = url.parse(`${this.baseUrl.href}/${uri}`);
         }
+      } else {
+        myurl = url.parse(uri);
       }
       if (options) {
         myoptions = nodefony.extend(true, myoptions, options);
@@ -89,12 +84,12 @@ class Request extends nodefony.Service {
     return myoptions;
   }
 
-  http(uri, options, container) {
+  http (uri, options, container) {
     let req = null;
     return new Promise((resolve, reject) => {
       try {
         const myoptions = this.checkUrl(uri, options, container);
-        this.log(`${JSON.stringify(myoptions, null," ")}`, "DEBUG");
+        this.log(`${JSON.stringify(myoptions, null, " ")}`, "DEBUG");
         req = request(myoptions, (error, response, body) => {
           if (error) {
             return reject(new nodefony.requestError(error, response, container));
@@ -102,12 +97,12 @@ class Request extends nodefony.Service {
           const json = response.toJSON();
           if (json) {
             this.log(`${json.request.method} ${json.request.uri.href}`, "DEBUG");
-            this.log(`${JSON.stringify(json, null," ")}`, "DEBUG");
+            this.log(`${JSON.stringify(json, null, " ")}`, "DEBUG");
           }
           return resolve({
-            response: response,
-            body: body,
-            json: json
+            response,
+            body,
+            json
           });
         });
         return req;
@@ -117,32 +112,29 @@ class Request extends nodefony.Service {
     });
   }
 
-  GET(url, options = {}) {
+  GET (url, options = {}) {
     options.method = "GET";
     return this.http(url, options);
   }
 
-  POST(url, options) {
+  POST (url, options) {
     options.method = "POST";
     return this.http(url, options);
   }
-
 }
 
 module.exports = class requestClient extends nodefony.Service {
-
-  constructor(container) {
+  constructor (container) {
     super("requestClient", container);
     this.request = this.create(this);
     this.engine = request;
   }
 
-  create(baseUrl, options) {
+  create (baseUrl, options) {
     return new Request(baseUrl, options, this);
   }
 
-  http(url, options, container) {
+  http (url, options, container) {
     return this.request.http(url, options, container);
   }
-
 };

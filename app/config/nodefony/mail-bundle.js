@@ -30,7 +30,8 @@ module.exports = {
   nodemailer: {
     default: "free",
     transporters: {
-      /*free: {
+
+      /* free: {
         host: "smtp.free.fr",
         port: 465,
         secure: true, // true for 465, false for other ports

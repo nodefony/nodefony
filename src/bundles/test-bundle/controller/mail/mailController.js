@@ -6,18 +6,17 @@
  *
  *  @Route ("/nodefony/test/mail")
  */
-const puppeteer = require('puppeteer');
+const puppeteer = require("puppeteer");
 
 module.exports = class mailController extends nodefony.controller {
-
-  constructor(container, context) {
+  constructor (container, context) {
     super(container, context);
   }
 
   /**
    *   @Route ("", name="nodefony-mail-default")
    */
-  mailAction() {
+  mailAction () {
     this.hideDebugBar();
     return this.mailer.sendTestMail(null, null, this.context)
       .catch((e) => {
@@ -25,13 +24,13 @@ module.exports = class mailController extends nodefony.controller {
       });
   }
 
-  async renderPdf(html) {
+  async renderPdf (html) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(html);
     await page.emulateMediaType("print");
-    let buffer = await page.pdf({
-      format: 'A4',
+    const buffer = await page.pdf({
+      format: "A4",
       printBackground: true
     });
     await browser.close();
@@ -41,35 +40,33 @@ module.exports = class mailController extends nodefony.controller {
   /**
    *  @Route ("/responsive", name="nodefony-mail-responsive")
    */
-  mail2Action() {
+  mail2Action () {
     this.hideDebugBar();
     return this.render("test-bundle:mail:responsive.mail.html.twig", {
-        name: this.kernel.projectName
-      })
+      name: this.kernel.projectName
+    })
       .then(async (html) => {
-        let buffer = await this.renderPdf(html);
+        const buffer = await this.renderPdf(html);
         return this.mailer.juiceResources(html, {}, this.context)
-          .then((htmlp) => {
-            return this.sendMail({
-                to: "ccamensuli@gmail.com", // list of receivers`
-                from: "ccamensuli@free.fr",
-                subject: `${this.kernel.projectName} ✔`, // Subject line
-                //text: "Hello world?", // plain text body
-                html: htmlp, // html body
-                attachments: [{ // binary buffer as an attachment
-                  filename: 'nodefony.pdf',
-                  content: buffer
-                }]
-              })
-              .then((info) => {
-                this.log(info);
-                return html;
-              })
-              .catch(e => {
-                throw e;
-              });
+          .then((htmlp) => this.sendMail({
+            to: "ccamensuli@gmail.com", // list of receivers`
+            from: "ccamensuli@free.fr",
+            subject: `${this.kernel.projectName} ✔`, // Subject line
+            // text: "Hello world?", // plain text body
+            html: htmlp, // html body
+            attachments: [{ // binary buffer as an attachment
+              filename: "nodefony.pdf",
+              content: buffer
+            }]
           })
-          .catch(e => {
+            .then((info) => {
+              this.log(info);
+              return html;
+            })
+            .catch((e) => {
+              throw e;
+            }))
+          .catch((e) => {
             throw e;
           });
       })
@@ -82,12 +79,11 @@ module.exports = class mailController extends nodefony.controller {
   /**
    *
    */
-  footerAction() {
-    let version = this.kernel.settings.version;
+  footerAction () {
+    const {version} = this.kernel.settings;
     return this.render("test:mail:mail.footer.html.twig", {
-      version: version,
+      version,
       year: new Date().getFullYear()
     });
   }
-
 };

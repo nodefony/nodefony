@@ -7,7 +7,7 @@ const migrateTask = require(path.resolve(__dirname, "migrateTask.js"));
 const seedeersTask = require(path.resolve(__dirname, "seedeersTask.js"));
 
 class sequelizeCommand extends nodefony.Command {
-  constructor(cli, bundle) {
+  constructor (cli, bundle) {
     super("sequelize", cli, bundle);
     this.setTask("create", createTask);
     this.setTask("sync", syncTask);
@@ -18,21 +18,24 @@ class sequelizeCommand extends nodefony.Command {
     this.setTask("seedeers", seedeersTask);
   }
 
-  showHelp() {
-    this.setHelp("sequelize:migrate",
+  showHelp () {
+    this.setHelp(
+      "sequelize:migrate",
       "Apply all Migrations pending for all connectors"
     );
-    this.setHelp("sequelize:revert",
+    this.setHelp(
+      "sequelize:revert",
       "Revert all Migrations executed for all connectors"
     );
     super.showHelp();
   }
 
-  migrate(){
-    return this.tasks["migrate"].up();
+  migrate () {
+    return this.tasks.migrate.up();
   }
-  revert(){
-    return this.tasks["migrate"].revert();
+
+  revert () {
+    return this.tasks.migrate.revert();
   }
 }
 module.exports = sequelizeCommand;

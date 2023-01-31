@@ -1,10 +1,8 @@
 nodefony.register("Context", () => {
-
-  const colorLogEvent = clc.cyan.bgBlue(`EVENT CONTEXT`);
+  const colorLogEvent = clc.cyan.bgBlue("EVENT CONTEXT");
   const Context = class Context extends nodefony.Service {
-
-    constructor(container, request, response, type) {
-      super(type + " CONTEXT", container);
+    constructor (container, request, response, type) {
+      super(`${type} CONTEXT`, container);
       this.container.addScope("subRequest");
       this.type = type;
       this.set("context", this);
@@ -21,7 +19,7 @@ nodefony.register("Context", () => {
       this.sessionAutoStart = this.sessionService.sessionAutoStart;
       // CSRF
       this.csrfService = this.get("csrf");
-      //parse cookies
+      // parse cookies
       this.cookies = {};
       this.crossDomain = null;
       this.secureArea = null;
@@ -38,22 +36,22 @@ nodefony.register("Context", () => {
       this.accessControl = null;
       this.isControlledAccess = false;
       this.contentLength = false;
-      this.cleaned = false
+      this.cleaned = false;
       this.once("onRequest", () => {
         this.requested = true;
       });
     }
 
-    log(pci, severity, msgid, msg) {
+    log (pci, severity, msgid, msg) {
       if (!msgid) {
         msgid = this.type;
       }
       return super.log(pci, severity, msgid, msg);
     }
 
-    logRequest(httpError) {
+    logRequest (httpError) {
       try {
-        let txt = `${clc.cyan("URL")} : ${this.url} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}`;
+        const txt = `${clc.cyan("URL")} : ${this.url} ${clc.cyan("FROM")} : ${this.remoteAddress} ${clc.cyan("ORIGIN")} : ${this.originUrl.host}`;
         let mgid = "";
         if (httpError) {
           this.errorLog = true;
@@ -71,39 +69,42 @@ nodefony.register("Context", () => {
       } catch (e) {}
     }
 
-    fire() {
+    fire () {
       this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
       return super.emit.apply(this, arguments);
     }
-    fireAsync() {
-      this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
-      return super.emitAsync.apply(this, arguments);
-    }
-    emit() {
-      this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
-      return super.emit.apply(this, arguments);
-    }
-    emitAsync() {
+
+    fireAsync () {
       this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
       return super.emitAsync.apply(this, arguments);
     }
 
-    controller() {
-      let pattern = Array.prototype.shift.call(arguments);
-      let data = Array.prototype.slice.call(arguments);
+    emit () {
+      this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      return super.emit.apply(this, arguments);
+    }
+
+    emitAsync () {
+      this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
+      return super.emitAsync.apply(this, arguments);
+    }
+
+    controller () {
+      const pattern = Array.prototype.shift.call(arguments);
+      const data = Array.prototype.slice.call(arguments);
       return new nodefony.subRequest(this, pattern, data);
     }
 
-    render(subRequest) {
+    render (subRequest) {
       return subRequest.handle();
     }
 
-    getRoute() {
+    getRoute () {
       return this.resolver.getRoute();
     }
 
-    clean() {
-      this.cleaned = true
+    clean () {
+      this.cleaned = true;
       this.kernelHttp = null;
       delete this.kernelHttp;
       this.router = null;
@@ -142,116 +143,117 @@ nodefony.register("Context", () => {
       super.clean();
     }
 
-    getRequest() {
+    getRequest () {
       return this.request;
     }
 
-    getResponse() {
+    getResponse () {
       return this.response;
     }
 
-    addCookie(cookie) {
+    addCookie (cookie) {
       if (cookie instanceof nodefony.cookies.cookie) {
         this.cookies[cookie.name] = cookie;
       } else {
-        let error = new Error("addCookie cookie not valid !!");
+        const error = new Error("addCookie cookie not valid !!");
         this.log(cookie, "ERROR");
         throw error;
       }
     }
 
-    getCookies(){
-      let tab = [];
-      for (let cookie in this.cookies){
-        tab.push(this.cookies[cookie])
+    getCookies () {
+      const tab = [];
+      for (const cookie in this.cookies) {
+        tab.push(this.cookies[cookie]);
       }
-      return tab
+      return tab;
     }
 
-    parseCookies() {
+    parseCookies () {
       return nodefony.cookies.cookiesParser(this);
     }
 
-    getSession() {
+    getSession () {
       return this.session;
     }
 
-    saveSession() {
+    saveSession () {
       return this.sessionService.saveSession(this);
     }
 
-    getCookieSession(name) {
+    getCookieSession (name) {
       if (this.cookies[name]) {
         return this.cookies[name];
       }
       return null;
     }
-    hasSession() {
-      return (!!this.cookieSession);
+
+    hasSession () {
+      return Boolean(this.cookieSession);
     }
 
-    isValidDomain() {
+    isValidDomain () {
       return this.kernelHttp.isValidDomain(this);
     }
-    isCrossDomain() {
+
+    isCrossDomain () {
       return this.kernelHttp.corsManager.isCrossDomain(this);
     }
 
-    getUser() {
+    getUser () {
       return this.user || null;
     }
 
-    getToken() {
+    getToken () {
       return this.token || null;
     }
 
-    generateAbsoluteUrl(name, variables) {
+    generateAbsoluteUrl (name, variables) {
       try {
-        let host = this.request.url.protocol + "//" + this.request.url.host;
+        const host = `${this.request.url.protocol}//${this.request.url.host}`;
         return this.router.generatePath.call(this.router, name, variables, host);
       } catch (e) {
         throw e;
       }
     }
 
-    is_granted(role) {
+    is_granted (role) {
       if (!this.token) {
-        //throw new nodefony.Error(`is_granted method No token found !! `);
+        // throw new nodefony.Error(`is_granted method No token found !! `);
         return false;
       }
-      if (typeof (role) === "string") {
+      if (typeof role === "string") {
         return this.token.hasRole(role);
-      } else {
-        throw new nodefony.Error(`is_granted Bad role type you must give role example "ROLE_USER" actually : ${role}`);
       }
+      throw new nodefony.Error(`is_granted Bad role type you must give role example "ROLE_USER" actually : ${role}`);
     }
 
-    getFlashBag(key) {
+    getFlashBag (key) {
       if (this.session) {
-        let res = this.session.getFlashBag(key);
+        const res = this.session.getFlashBag(key);
         return res;
       }
       return null;
     }
 
-    setCookie(cookie) {
+    setCookie (cookie) {
       if (cookie) {
         return this.response.addCookie(cookie);
       }
     }
 
-    setContextJson() {}
+    setContextJson () {}
 
-    createCookie(name, value, settings) {
+    createCookie (name, value, settings) {
       try {
-        let cookie = new nodefony.cookies.cookie(name, value, settings);
+        const cookie = new nodefony.cookies.cookie(name, value, settings);
         return this.setCookie(cookie);
       } catch (e) {
         throw e;
       }
     }
 
-    canDisplayBar() {
+    canDisplayBar () {
       if (!this.kernelHttp.monitoringBundle) {
         return false;
       }
@@ -273,7 +275,8 @@ nodefony.register("Context", () => {
       if (this.timeoutExpired) {
         return false;
       }
-      /*if (!this.resolver.route) {
+
+      /* if (!this.resolver.route) {
         return false;
       }
       if (!this.resolver.resolve) {
@@ -283,7 +286,7 @@ nodefony.register("Context", () => {
       case this.response.body instanceof Buffer:
         this.response.body = this.response.body.toString(this.response.encoding);
         break;
-      case (typeof this.response.body === "string"):
+      case typeof this.response.body === "string":
         break;
       default:
         return false;
@@ -294,15 +297,15 @@ nodefony.register("Context", () => {
       return false;
     }
 
-    displayDebugBar( /*data*/ ) {
+    displayDebugBar (/* data*/) {
       if (this.canDisplayBar()) {
         try {
           if (this.kernelHttp.debugView) {
-            let result = this.kernelHttp.debugView.render(this.kernelHttp.extendTemplate(this.profiling, this));
-            this.response.body = this.response.body.replace("</body>", result + "\n </body>");
+            const result = this.kernelHttp.debugView.render(this.kernelHttp.extendTemplate(this.profiling, this));
+            this.response.body = this.response.body.replace("</body>", `${result}\n </body>`);
           }
           if (this.type === "HTTP2" && this.pushAllowed) {
-            //this.pushAsset();
+            // this.pushAsset();
           }
         } catch (e) {
           throw e;
@@ -310,50 +313,38 @@ nodefony.register("Context", () => {
       }
     }
 
-    pushAsset() {
-      let publicPath = this.kernelHttp.monitoringBundle.publicPath;
-      let bundleName = this.kernelHttp.monitoringBundle.bundleName;
+    pushAsset () {
+      const {publicPath} = this.kernelHttp.monitoringBundle;
+      const {bundleName} = this.kernelHttp.monitoringBundle;
       return this.response.push(path.resolve(publicPath, "assets", "js", "debugBar.js"), {
-          path: "/" + bundleName + "/assets/js/debugBar.js"
-        })
-        .then(() => {
-          return this.response.push(path.resolve(publicPath, "assets", "css", "debugBar.css"), {
-            path: "/" + bundleName + "/assets/css/debugBar.css"
-          });
-        })
-        .then(() => {
-          return this.response.push(path.resolve(publicPath, "images", "http2.png"), {
-            path: "/" + bundleName + "/images/http2.png"
-          });
-        })
-        .then(() => {
-          return this.response.push(path.resolve(publicPath, "images", "nodejs_logo.png"), {
-            path: "/" + bundleName + "/images/nodejs_logo.png"
-          });
-        })
-        .then(() => {
-          return this.response.push(path.resolve(publicPath, "images", "window-close.ico"), {
-            path: "/" + bundleName + "/images/window-close.ico"
-          });
-        })
-        .then(() => {
-          return this.response.push(path.resolve(this.kernelHttp.frameworkBundle.publicPath, "images", "nodefony-logo.png"), {
-            path: "/" + this.kernelHttp.frameworkBundle.bundleName + "/images/nodefony-logo.png"
-          });
-        }).catch(() => {
+        path: `/${bundleName}/assets/js/debugBar.js`
+      })
+        .then(() => this.response.push(path.resolve(publicPath, "assets", "css", "debugBar.css"), {
+          path: `/${bundleName}/assets/css/debugBar.css`
+        }))
+        .then(() => this.response.push(path.resolve(publicPath, "images", "http2.png"), {
+          path: `/${bundleName}/images/http2.png`
+        }))
+        .then(() => this.response.push(path.resolve(publicPath, "images", "nodejs_logo.png"), {
+          path: `/${bundleName}/images/nodejs_logo.png`
+        }))
+        .then(() => this.response.push(path.resolve(publicPath, "images", "window-close.ico"), {
+          path: `/${bundleName}/images/window-close.ico`
+        }))
+        .then(() => this.response.push(path.resolve(this.kernelHttp.frameworkBundle.publicPath, "images", "nodefony-logo.png"), {
+          path: `/${this.kernelHttp.frameworkBundle.bundleName}/images/nodefony-logo.png`
+        }))
+        .catch(() => {
           Promise.resolve();
         });
     }
 
-    saveProfile() {
+    saveProfile () {
       if (this.profiling) {
 
       }
-      return new Promise((resolve /*, reject*/ ) => {
-        return resolve(this);
-      });
+      return new Promise((resolve /* , reject*/) => resolve(this));
     }
-
   };
   return Context;
 });
