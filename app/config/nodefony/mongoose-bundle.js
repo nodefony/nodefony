@@ -10,6 +10,7 @@
  */
 
 const connectors = {};
+// eslint-disable-next-line no-unused-vars
 const vault = async () => {
   const serviceVault = kernel.get("vault");
   return await serviceVault.getSecret({
