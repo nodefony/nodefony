@@ -70,4 +70,9 @@ watch       : false
 #
 redis :
   debug       : true
+  globalOptions :
+    socket : 
+      host: "localhost"
+      port: 6379
+      family: "IPv4"
   connections : ~

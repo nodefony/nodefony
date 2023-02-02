@@ -9,6 +9,7 @@ class redisConnection extends nodefony.Service {
 
   log (pci, severity, msgid, msg) {
     if (!msgid) {
+      // eslint-disable-next-line no-param-reassign
       msgid = `\x1b[36mREDIS CONNECTION ${this.name} \x1b[0m`;
     }
     return super.log(pci, severity, msgid, msg);
@@ -136,7 +137,7 @@ class Redis extends nodefony.services.Connections {
   }
 
   retry_strategy (retries) {
-    return Math.min(retries * 50, 500);
+    return Math.min(retries * 100, 10000);
   }
 
   displayTable (client, severity = "DEBUG") {
