@@ -143,6 +143,8 @@ module.exports = {
     "max-lines": ["off"],
     "global-require": ["off"],
     "max-classes-per-file": ["off"],
-    "no-useless-catch": ["off"]
+    "no-useless-catch": ["off"],
+    "max-params": ["error", 6],
+    "no-async-promise-executor": ["off"]
   }
 };
