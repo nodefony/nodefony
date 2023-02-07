@@ -10,29 +10,24 @@ module.exports = class installProject extends nodefony.Builder {
     return super.log(pci, severity, msgid, msg);
   }
 
-  async install (cwd = path.resolve("."), args, interactive) {
-    return new Promise((resolve, reject) => this.installFramework(cwd)
-      .then(() => this.cli.packageManager.call(this.cli, ["install"], cwd)
-        .then(() => {
-          if (false && nodefony.isCore && process.platform !== "win32") {
-            return this.npmLink(path.resolve("."), path.resolve("src", "nodefony"))
-              .catch((e) => reject(e));
-          }
-          return cwd;
-        })
-        .then(() => {
-          this.cli.parseNodefonyCommand("install", [cwd, args, interactive]);
-          return resolve(cwd);
-        })
-        .catch((e) => reject(e))));
+  install (cwd = path.resolve("."), args = [], interactive = false) {
+    return this.installFramework(cwd)
+      .then(() => this.cli.packageManager(["install"], cwd))
+      .then(async () => {
+        await this.cli.parseNodefonyCommand("install", [cwd, args, interactive]);
+        return cwd;
+      })
+      .catch((e) => {
+        throw e;
+      });
   }
 
-  async build (cwd = path.resolve("."), args, interactive) {
+  async build (cwd = path.resolve("."), args = [], interactive = false) {
     await this.generateCertificates(cwd);
     return cwd;
   }
 
-  rebuild (cwd = path.resolve("."), args, interactive) {
+  rebuild (cwd = path.resolve("."), args = [], interactive = false) {
     let cmd = null;
     switch (nodefony.packageManager) {
     case "yarn":
@@ -49,11 +44,11 @@ module.exports = class installProject extends nodefony.Builder {
     } catch (e) {
       throw e;
     }
-    return this.cli.packageManager.call(this.cli, cmd, cwd, "production")
+    return this.cli.packageManager(cmd, cwd, "production")
       .then(() => cwd);
   }
 
-  async npmLink (cwd = path.resolve("."), argv = []) {
+  npmLink (cwd = path.resolve("."), argv = []) {
     return new Promise((resolve, reject) => {
       let tab = ["link"];
       if (argv) {
@@ -79,7 +74,7 @@ module.exports = class installProject extends nodefony.Builder {
     });
   }
 
-  async generateCertificates (cwd = path.resolve(".")) {
+  generateCertificates (cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
       try {
         const directory = path.resolve(cwd, "config", "certificates");
@@ -105,7 +100,7 @@ module.exports = class installProject extends nodefony.Builder {
     });
   }
 
-  async installFramework (cwd = path.resolve(".")) {
+  installFramework (cwd = path.resolve(".")) {
     return new Promise((resolve, reject) => {
       this.log("Create Framework directories");
       try {

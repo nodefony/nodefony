@@ -221,6 +221,7 @@ module.exports = class cliStart extends nodefony.cliKernel {
     return this.runMenu(reload);
   }
 
+  // eslint-disable-next-line max-lines-per-function, complexity
   async start (command, args) {
     // this.log(`Commnand : ${command} Arguments : ${args}`, "DEBUG", "CLI START");
     this.started = true;
@@ -233,7 +234,6 @@ module.exports = class cliStart extends nodefony.cliKernel {
       } catch (e) {
         throw e;
       }
-      break;
     case "rebuild":
       try {
         if (nodefony.isTrunk) {

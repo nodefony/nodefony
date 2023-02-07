@@ -10,7 +10,7 @@ const {
   OpenApi3Strategy
 } = require("@alt3/sequelize-to-json-schemas");
 
-const myerror = function (err) {
+const myerror = function myerror (err) {
   if (this.state !== "DISCONNECTED") {
     this.orm.kernel.fire("onError", err, this);
   }
@@ -88,14 +88,15 @@ class connectionDB {
     this.settings = options;
   }
 
-  async close () {
+  close () {
     if (this.db) {
       this.log(`Close connection ${this.name}`);
-      this.db.close()
+      return this.db.close()
         .catch((e) => {
           throw e;
         });
     }
+    return Promise.resolve();
   }
 
   toObject () {
@@ -147,6 +148,7 @@ class connectionDB {
       case "sqlite":
         config.options.storage = path.resolve(config.dbname);
         break;
+      default:
       }
       let {username} = config;
       let {password} = config;
@@ -175,6 +177,7 @@ class connectionDB {
         this.log(e, "WARNING");
       }
       this.log("Try Connect engine database", "DEBUG");
+      // eslint-disable-next-line new-cap
       conn = new this.orm.engine(config.dbname, username, password, config.options);
       // process.nextTick(() => {
       return conn
@@ -193,10 +196,7 @@ class connectionDB {
     return conn;
   }
 
-  log (pci, severity, msgid, msg) {
-    if (!msgid) {
-      msgid = `CONNECTION Sequelize ${this.name}`;
-    }
+  log (pci, severity, msgid = `CONNECTION Sequelize ${this.name}`, msg = null) {
     return this.orm.log(pci, severity, msgid, msg);
   }
 }
@@ -237,11 +237,12 @@ class sequelize extends nodefony.Orm {
       case "SequelizeHostNotReachableError":
       case "SequelizeInvalidConnectionError":
       case "SequelizeConnectionTimedOutError":
-      case "SequelizeInstanceError":
+      case "SequelizeInstanceError": {
         let parser = "";
         if (error.errors && error.errors.length) {
           error.errors.map((ele) => {
             parser += `\n\tfield ${ele.path} : ${ele.message}`;
+            return parser;
           });
         }
         return ` ${clc.red(error.message)}
@@ -251,6 +252,7 @@ class sequelize extends nodefony.Orm {
             ${clc.red("fields :")} ${error.fields}
             ${clc.red("errors :")} ${parser}
             ${clc.green("Stack :")} ${error.stack}`;
+      }
       default:
         return `${clc.red(error.message)}`;
       }
@@ -269,6 +271,7 @@ class sequelize extends nodefony.Orm {
   boot () {
     return new Promise((resolve, reject) => {
       super.boot();
+
       this.kernel.once("onBoot", async (/* kernel*/) => {
         this.settings = this.getParameters("bundles.sequelize");
         this.debug = this.settings.debug;
@@ -303,7 +306,7 @@ class sequelize extends nodefony.Orm {
         }
       });
 
-      this.kernel.once("onReady", async () => {
+      this.kernel.once("onReady", () => {
         if (this.kernel.type === "SERVER") {
           this.displayTable("INFO");
         } else {
@@ -328,6 +331,7 @@ class sequelize extends nodefony.Orm {
             conn[3] = `${this.settings.connectors[dbname][data].host}:${this.settings.connectors[dbname][data].port}`;
           }
           break;
+        default:
         }
       }
       if (this.connections[dbname]) {
@@ -358,9 +362,16 @@ class sequelize extends nodefony.Orm {
 
   async createConnection (name, config) {
     try {
+      if (this.connections[name]) {
+        delete this.connections[name];
+      }
+      // eslint-disable-next-line new-cap
       this.connections[name] = new connectionDB(name, config.driver, config, this);
     } catch (e) {
       throw e;
+    }
+    if (this.kernel.cli.command === "sequelize" && this.kernel.cli.task === "create") {
+      return Promise.resolve();
     }
     return await this.connections[name].connect(config.driver, config)
       .catch((e) => {
@@ -378,7 +389,7 @@ class sequelize extends nodefony.Orm {
       const db = connection.getConnection();
       return db.transaction.bind(db);
     }
-    throw new error(`transaction not found for CONNECTOR : ${name}`);
+    throw new Error(`transaction not found for CONNECTOR : ${name}`);
   }
 
   async startTransaction (entityName, options) {
@@ -387,7 +398,7 @@ class sequelize extends nodefony.Orm {
       throw new Error(`Entity : ${entityName} not found`);
     }
     const {db} = entity;
-    return await db.transaction.call(db, options);
+    return await db.transaction(options);
   }
 
   getTransaction (entityName) {

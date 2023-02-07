@@ -1,20 +1,21 @@
 const mysql = require("mysql2/promise");
 const pgtools = require("pgtools");
 
-const createMysql = function (settings) {
+const createMysql = function createMysql (connector, settings) {
   return mysql.createConnection({
     host: settings.options.host || "127.0.0.1",
     port: settings.options.port || "3306",
     user: settings.username || "root",
     password: settings.password || "root"
   }).then((connection) => connection.query(`CREATE DATABASE IF NOT EXISTS ${settings.dbname};`)
-    .then((result) => {
+    .then(async (result) => {
+      await this.ormService.createConnection(connector, settings);
       this.log(`Database : ${settings.dbname} create or successfully checked`, "INFO", "mysql");
       return result;
     }));
 };
 
-const createPostgres = function (settings) {
+const createPostgres = function createPostgres (connector, settings) {
   return new Promise((resolve, reject) => {
     const config = {
       user: settings.username || "root",
@@ -22,7 +23,7 @@ const createPostgres = function (settings) {
       port: settings.options.port,
       host: settings.options.host
     };
-    pgtools.createdb(config, settings.dbname, (err, res) => {
+    pgtools.createdb(config, settings.dbname, async (err, res) => {
       if (err) {
         if (err && err.pgErr && err.pgErr.code === "42P04") {
           this.log(`Database : ${settings.dbname}  successfully checked`, "INFO", "postgres");
@@ -30,13 +31,14 @@ const createPostgres = function (settings) {
         }
         return reject(err);
       }
+      await this.ormService.createConnection(connector, settings);
       this.log(`Database : ${settings.dbname}  successfull created`, "INFO", "postgres");
       return resolve(res);
     });
   });
 };
 
-const deletePostgresDb = function (settings) {
+/* const deletePostgresDb = function deletePostgresDb (settings) {
   return new Promise((resolve, reject) => {
     const config = {
       user: settings.username || "root",
@@ -51,7 +53,7 @@ const deletePostgresDb = function (settings) {
       return resolve(res);
     });
   });
-};
+};*/
 
 class createTask extends nodefony.Task {
   constructor (name, command) {
@@ -72,13 +74,20 @@ class createTask extends nodefony.Task {
         const conn = this.ormService.settings.connectors[connector];
         switch (conn.driver) {
         case "mysql":
-          await createMysql.call(this, conn);
+          await createMysql.call(this, connector, conn)
+            .then((res) => res)
+            .catch((e) => {
+              throw e;
+            });
           break;
         case "postgres":
-          await createPostgres.call(this, conn);
+          await createPostgres.call(this, connector, conn)
+            .then((res) => res)
+            .catch((e) => {
+              throw e;
+            });
           break;
         default:
-          continue;
         }
       }
     } catch (e) {

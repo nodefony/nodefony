@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-lines-per-function
 module.exports = nodefony.register.call(nodefony.commands, "nodefony", () => {
   class nodefonyCommand extends nodefony.Command {
     constructor (cli, kernel) {
@@ -9,7 +10,7 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", () => {
       return super.showHelp();
     }
 
-    async install (cwd, args = [], interactive = false) {
+    async install (cwd, args = []/* , interactive = false*/) {
       try {
         let strategy = null;
         let force = false;
@@ -34,12 +35,12 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", () => {
       }
     }
 
-    async build (cwd, args = [], interactive = false) {
+    build (cwd, args = [], interactive = false) {
       this.log("BUILD NODEFONY FRAMEWORK");
       return this.install(cwd, args, interactive);
     }
 
-    async rebuild (cwd, args, interactive = false) {
+    rebuild (cwd /* args , interactive = false*/) {
       try {
         // await this.listPackage(cwd);
         return cwd;
@@ -54,10 +55,6 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", () => {
       switch (this.orm) {
       case "sequelize":
         return this.installSequelize(force, strategy || this.cli.kernel.getOrmStrategy())
-
-        /* .then(() => {
-              return this.generateSequelizeFixture();
-            })*/
           .catch((e) => {
             throw e;
           });

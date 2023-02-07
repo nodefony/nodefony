@@ -18,6 +18,20 @@ const {createHash} = crypto;
  *	CLASS ROUTE
  *
  */
+
+/*
+/(\/)? - matches an optional forward slash (/) at the beginning of the route.
+
+(\.)? - matches an optional dot (.) after the optional forward slash.
+
+\{([^}]+)\} - matches a string enclosed in curly braces ({}), capturing the string inside the braces as a group.
+
+(?:\(([^)]*)\))? - matches an optional string enclosed in parentheses (()), capturing the string inside the parentheses as a group.
+
+(\?)? - matches an optional question mark (?) at the end of the route.
+
+The g flag at the end of the expression makes the pattern match all occurrences in the input string, rather than just the first one.
+*/
 const regRoute = /(\/)?(\.)?\{([^}]+)\}(?:\(([^)]*)\))?(\?)?/g;
 
 class Route {

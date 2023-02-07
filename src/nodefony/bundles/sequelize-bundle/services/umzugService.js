@@ -219,7 +219,7 @@ class umzug extends nodefony.Service {
           const {name} = this.sequelizeService.connections[connection];
           const db = this.sequelizeService.connections[connection].getConnection();
           if (!db) {
-            throw new error(`Connector ${name} not found`);
+            throw new Error(`Connector ${name} not found`);
           }
           let migrator = null;
           if (type === "migrate") {
