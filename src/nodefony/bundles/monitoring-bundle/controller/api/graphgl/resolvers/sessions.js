@@ -1,6 +1,7 @@
 module.exports = {
   Query: {
     //  provides all functions for each API endpoint
+    // eslint-disable-next-line max-lines-per-function
     getSessions (obj, field, context, info) {
       const {
         username,
@@ -12,13 +13,13 @@ module.exports = {
       const sessionServices = context.get("sessions");
       const storage = sessionServices.settings.handler;
       switch (storage) {
-      case "orm":
+      case "orm": {
         const orm = context.getORM();
         const ormName = context.kernel.getOrm();
         const sessionEntity = orm.getEntity("session");
         const userEntity = orm.getEntity("user");
         switch (ormName) {
-        case "sequelize":
+        case "sequelize": {
           const options = {
             include: [{
               model: userEntity,
@@ -26,14 +27,16 @@ module.exports = {
             }]
           };
           if (query && query.type && query.type === "dataTable") {
-            options.offset = parseInt(query.startIndex, 10);
+            options.offset = parseInt(query.startIndex || 0, 10);
             options.limit = parseInt(query.itemsPerPage, 10);
             if (query.sortBy && query.sortBy.length) {
               options.order = [];
+              // eslint-disable-next-line max-depth
               for (let i = 0; i < query.sortBy.length; i++) {
                 const {key} = query.sortBy[i];
                 const {order} = query.sortBy[i];
                 const tab = [];
+                // eslint-disable-next-line max-depth
                 if (key === "user") {
                   tab.push("username");
                 } else {
@@ -51,7 +54,7 @@ module.exports = {
                     sessions: results.rows
                   };
                 } catch (e) {
-                  throw new nodefony.Error(error);
+                  throw new nodefony.Error(e);
                 }
               })
               .catch((error) => {
@@ -70,14 +73,8 @@ module.exports = {
                 throw new nodefony.Error(error);
               }
             });
-
-          break;
-        case "mongoose":
-
-          /* let sessions = {
-            rows: null,
-            count: 0
-          };*/
+        }
+        case "mongoose": {
           const sort = {};
           if (field.query && field.query.order.length) {
             for (let i = 0; i < field.query.order.length; i++) {
@@ -93,32 +90,33 @@ module.exports = {
             // .sort(sort)
             // .skip(parseInt(field.query.start, 10))
             // .limit(parseInt(field.query.length, 10))
-            .then(async (result) =>
-              // sessions.rows = result;
-              // sessions.count = await sessionEntity.count();
-              result // JSON.stringify(sessions);
-            )
             .then((result) => result)
             .catch((e) => {
               throw e;
             });
         }
+        default:
+        }
         break;
+      }
       case "files":
         throw new nodefony.Error("session.storage.file not implemented");
       case "memcached":
         throw new nodefony.Error("session.storage.memcached not implemented");
+      default:
+        throw new nodefony.Error(`${storage} not implemented`);
       }
+      return null;
     },
 
-    getSessionsByUser (obj, field, context, info) {
+    getSessionsByUser (obj, field, context/* , info*/) {
       const sessionServices = context.get("sessions");
       const storage = sessionServices.settings.handler;
       const {
         username
       } = field;
       switch (storage) {
-      case "orm":
+      case "orm": {
         const orm = context.getORM();
         const ormName = context.kernel.getOrm();
         const sessionEntity = orm.getEntity("session");
@@ -141,7 +139,6 @@ module.exports = {
                 throw new nodefony.Error(error);
               }
             });
-          break;
         case "mongoose":
           return sessionEntity.find({}, {})
             .populate({
@@ -153,23 +150,21 @@ module.exports = {
             // .sort(sort)
             // .skip(parseInt(field.query.start, 10))
             // .limit(parseInt(field.query.length, 10))
-            .then(async (result) =>
-              // console.log("passs", result)
-              result.filter((session) => {
-                if (session.username) {
-                  if (session.username.username === username) {
-                    return session;
-                  }
+            .then((result) => result.filter((session) => {
+              if (session.username) {
+                if (session.username.username === username) {
+                  return session;
                 }
-              }))
+              }
+              return null;
+            }))
             .catch((e) => {
               throw e;
             });
-          break;
         default:
           throw new nodefony.Error(` ORM ${ormName} not implemented`);
         }
-        break;
+      }
       case "files":
         throw new nodefony.Error("session.storage.file not implemented");
       case "memcached":
