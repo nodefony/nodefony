@@ -145,6 +145,9 @@ module.exports = {
     "max-classes-per-file": ["off"],
     "no-useless-catch": ["off"],
     "max-params": ["error", 6],
-    "no-async-promise-executor": ["off"]
+    "no-async-promise-executor": ["off"],
+    "no-plusplus": ["off"],
+    "no-underscore-dangle": ["off"],
+    "no-param-reassign": ["off"]
   }
 };
