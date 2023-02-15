@@ -148,6 +148,7 @@ module.exports = {
     "no-async-promise-executor": ["off"],
     "no-plusplus": ["off"],
     "no-underscore-dangle": ["off"],
-    "no-param-reassign": ["off"]
+    "no-param-reassign": ["off"],
+    "no-negated-condition": ["off"]
   }
 };
