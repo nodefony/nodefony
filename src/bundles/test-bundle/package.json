@@ -13,13 +13,13 @@
     "javascript"
   ],
   "dependencies": {
-    "puppeteer": "19.7.0",
+    "puppeteer": "19.7.3",
     "querystring": "0.2.1",
     "request": "^2.88.2",
     "websocket": "^1.0.34"
   },
   "devDependencies": {
-    "@babel/core": "7.20.12",
+    "@babel/core": "7.21.0",
     "@babel/preset-env": "^7.20.2",
     "@popperjs/core": "2.11.6",
     "babel-loader": "9.1.2",
@@ -38,7 +38,7 @@
     "node-fetch": "^3.3.0",
     "nodefony-client": "6.0.2",
     "rxjs": "7.8.0",
-    "sass": "1.58.1",
+    "sass": "1.58.3",
     "sass-loader": "^13.2.0",
     "terser-webpack-plugin": "5.3.6",
     "webpack": "^5.75.0",
