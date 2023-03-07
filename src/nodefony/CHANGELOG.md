@@ -1,3 +1,29 @@
+## [7.0.0-beta.14](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.15...v7.0.0-beta.14) (2023-03-07)
+
+## [7.0.0-beta.15](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.14...v7.0.0-beta.15) (2023-03-07)
+
+
+### Bug Fixes
+
+* **builder:** rename skeleton package.json ([d7f047a](https://github.com/nodefony/nodefony/commit/d7f047a3735efd1c7ea77e65eb2a40a6c1b4886a))
+* **datatable:** monitoring add datatable vuetify lab ([5de67f3](https://github.com/nodefony/nodefony/commit/5de67f369d7207a624ba4c9c87fd5b35d21114d0))
+* **datatable:** offset null ([3788257](https://github.com/nodefony/nodefony/commit/3788257d39336621a1ecb911aea2af75109d39a1))
+* **eslint:** add config eslint and rules ([f782f45](https://github.com/nodefony/nodefony/commit/f782f456a1fbd83377287f8a9e10f2e0a815944e))
+* **eslint:** add rules ([27b3912](https://github.com/nodefony/nodefony/commit/27b39122bee0c9e4f08ddbf1744099fa5fab57d5))
+* **eslint:** add rules ([32f28ff](https://github.com/nodefony/nodefony/commit/32f28ff3193b9e9448f854befdde4b9ad067ea8c))
+* **eslint:** add rules ([7c20f34](https://github.com/nodefony/nodefony/commit/7c20f34ea5468a1639baba889dca60f5317611e0))
+* **eslint:** change config | add rules ([091c81e](https://github.com/nodefony/nodefony/commit/091c81ee74d0f1ef742314aa1578f079047e5267))
+* **eslint:** fix rules ([b9ea975](https://github.com/nodefony/nodefony/commit/b9ea975da67481f09f79357a10270487500c8516))
+* **eslint:** upgrade rules ([ba0d412](https://github.com/nodefony/nodefony/commit/ba0d41247dd007c95431d6638ef862ba658054e6))
+* **security:** clean session and security management ([5e47b05](https://github.com/nodefony/nodefony/commit/5e47b05815382d8db689a1dce77ed355e84ef2a9))
+* **sequelize:** create database on install ([48215da](https://github.com/nodefony/nodefony/commit/48215dac1a0284ad3d84a99975d059d5d1011189))
+* **sequelize:** reformat config ([676b062](https://github.com/nodefony/nodefony/commit/676b062a12cb8617f647f083faef7f192d4bac0c))
+
+
+### Performance Improvements
+
+* **extend:** nodefony.extend ([2c0e3ef](https://github.com/nodefony/nodefony/commit/2c0e3ef26f7fd6f0318910ecd574dca5f6b62815))
+
 ## [7.0.0-beta.14](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.13...v7.0.0-beta.14) (2023-01-06)
 
 
