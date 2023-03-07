@@ -1,0 +1,60 @@
+{% extends './base.html.twig' %}
+
+{% set error = getFlashBag("error") %}
+{% set info = getFlashBag("info") %}
+
+{% block body %}
+
+<div class="hello">
+
+  <img class=displayed src=/framework-bundle/images/nodefony-logo.png>
+  
+  <h1>{{ name }}</h1>
+  <h2>{{ description }}</h2>
+  <div class="progress-6 nodefony-signin"></div>
+  {% if user %}
+    <h2> {{user.username}} </h2>
+    <h3> {{user.surname}}  {{ user.name}}</h3>
+    <h4> {{user.email}} </h4>
+    <span>
+    <!--button onclick="location.href='http://localhost:8080/realms/nodefony/protocol/openid-connect/logout';">Logout</button-->
+     <button onclick="location.href='/keycloak/logout';">Logout</button>
+    </span>
+  {% endif %}
+  <img class="displayed"  style=" width:10%; height:10%" src="/framework-bundle/images/nodejs/nodejs-new-pantone-black.png">  
+  
+   <script type="text/javascript" src="{{CDN('javascript')}}/keycloak-bundle/assets/js/keycloak.js"></script>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+   <script>
+      {% if user %}
+        window.localStorage.setItem("username", '{{user.username}}')
+      {% endif %}
+      {% if token %}
+        window.localStorage.setItem("token", '{{token}}')
+      {% endif %}
+      {% if refresh %}
+        window.localStorage.setItem("refresh-token", '{{refresh}}')
+      {% endif %}
+
+      {% if error %}
+
+      setTimeout(()=>{
+       // window.location.href = '{{redirect}}'
+      },5000)
+
+      {% else %}
+      setTimeout(()=>{
+        //window.location.href = '{{redirect}}'
+      },2000)
+          
+      {% endif %}
+       
+    </script>
+   
+
+{% endblock %}
