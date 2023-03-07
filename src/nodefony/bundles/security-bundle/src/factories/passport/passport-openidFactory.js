@@ -2,6 +2,7 @@
  *	PASSPORT OPENID  FACTORY
  */
 const oauth2Strategy = require("passport-oauth2");
+const {Agent} = require("https");
 
 const openidStrategy = class openidStrategy extends oauth2Strategy {
   constructor (options, verify) {
@@ -35,7 +36,7 @@ const openidStrategy = class openidStrategy extends oauth2Strategy {
     return options;
   }
 };
-
+// eslint-disable-next-line max-lines-per-function
 module.exports = nodefony.registerFactory("passport-openid", () => {
   const Factory = class openidFactory extends nodefony.passeportFactory {
     constructor (security, settings) {
@@ -49,27 +50,32 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
       require("https").globalAgent.options.rejectUnauthorized = this.rejectUnauthorized;
     }
 
-    http (url, options) {
-      this.request = this.get("requestClient");
+    fetch (url, options = {}) {
+      const {fetch} = this.get("fetch");
       const settings = nodefony.extend({
-        agentOptions: {
-          rejectUnauthorized: this.rejectUnauthorized
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
         }
+
+        /* agent: new Agent({
+          rejectUnauthorized:  this.rejectUnauthorized,
+        })*/
       }, options);
-      return this.request.http(url, settings, this.container);
+      return fetch(url, settings);
     }
 
     discoverOpenIdConnect (Url, options) {
       if (Url) {
-        if (typeof url === "string") {
+        if (typeof Url === "string") {
           this.urlDiscovry = url.parse(Url);
         } else {
           this.urlDiscovry = Url;
         }
       }
       this.log(`openID DISCOVERY url : ${this.urlDiscovry.href}`, "INFO");
-      return this.http(this.urlDiscovry.href, options)
-        .then((response) => response.json.body)
+      return this.fetch(this.urlDiscovry.href, options)
+        .then(async (response) => await response.json())
         .catch((e) => {
           this.log(e, "ERROR");
           throw e;
@@ -93,6 +99,7 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
           case "end_session_endpoint":
             this.logoutUrl = json.end_session_endpoint;
             break;
+          default:
           }
         }
       }
@@ -108,7 +115,7 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
         this.loadDiscovry = false;
       }
       if (this.loadDiscovry === true && this.security.kernel.type !== "CONSOLE") {
-        return this.discoverOpenIdConnect(this.urlDiscovry, {
+        this.kernel.on("onReady", () => this.discoverOpenIdConnect(this.urlDiscovry, {
           json: true,
           timeout: 10000
         }).then((discovery) => {
@@ -142,7 +149,7 @@ module.exports = nodefony.registerFactory("passport-openid", () => {
           .catch((e) => {
             this.log(e, "ERROR");
             throw e;
-          });
+          }));
       }
       return new Promise((resolve, reject) => {
         try {

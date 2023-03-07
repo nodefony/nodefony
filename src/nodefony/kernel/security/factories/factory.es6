@@ -3,7 +3,7 @@ class Factory extends nodefony.Service {
     super(name, security.container, security.notificationsCenter);
     this.settings = settings || {};
     this.security = security;
-    this.providerName = this.settings.provider || this.security.providerName;
+    this.providerName = this.settings.provider || this.security.providerName;
     this.provider = null;
     this.kernel.once("onReady", () => {
       // console.log("onReady factory", this.name, this.providerName)
@@ -12,6 +12,7 @@ class Factory extends nodefony.Service {
           this.providerName = this.security.providerName;
         }
       }
+      // eslint-disable-next-line no-negated-condition
       if (this.providerName !== this.security.providerName) {
         if (this.providerName) {
           this.provider = this.security.getProvider(this.providerName);
@@ -46,7 +47,9 @@ class Factory extends nodefony.Service {
           throw e;
         });
     }
-    return new Promise((resolve) => resolve(context));
+    return new Promise((resolve) => {
+      resolve(context);
+    });
   }
 
   authenticate (context) {
@@ -56,17 +59,17 @@ class Factory extends nodefony.Service {
       try {
         token = this.createToken(context, this.provider);
         if (!this.supportsToken(token)) {
-          return reject(new nodefony.Error(`Factory ${this.name} Token Unauthorized !! `));
+          reject(new nodefony.Error(`Factory ${this.name} Token Unauthorized !! `));
         }
-        return this.authenticateToken(token)
-          .then((token) => {
+        this.authenticateToken(token)
+          .then((Token) => {
             token.setAuthenticated(true);
             token.setFactory(this.name);
-            return resolve(token);
+            return resolve(Token);
           })
           .catch((e) => reject(e));
       } catch (e) {
-        return reject(e);
+        reject(e);
       }
     });
   }
@@ -75,10 +78,12 @@ class Factory extends nodefony.Service {
     let token = null;
     if (context.metaSecurity) {
       if (context.metaSecurity.token && context.metaSecurity.token.user) {
+        // eslint-disable-next-line new-cap
         token = new nodefony.security.tokens.userPassword(context.metaSecurity.token.user);
         token.unserialize(context.metaSecurity.token);
       }
     } else {
+      // eslint-disable-next-line new-cap
       token = new nodefony.security.tokens.userPassword();
     }
     token.setProvider(provider || this.provider);
@@ -94,7 +99,9 @@ class Factory extends nodefony.Service {
       return provider.authenticate(token);
     }
     if (!this.provider) {
-      return new Promise((resolve) => resolve(token));
+      return new Promise((resolve) => {
+        resolve(token);
+      });
     }
     return this.provider.authenticate(token);
   }

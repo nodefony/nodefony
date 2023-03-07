@@ -2,6 +2,7 @@
  *
  *    CLASS SESSION
  */
+// eslint-disable-next-line init-declarations
 let crypto;
 try {
   crypto = require("node:crypto");
@@ -17,8 +18,9 @@ const {
 } = crypto;
 
 
+// eslint-disable-next-line max-lines-per-function
 nodefony.register("Session", () => {
-  const checkSecureReferer = function (context) {
+  const checkSecureReferer = function checkSecureReferer (context) {
     let host = null;
     switch (this.context.type) {
     case "HTTP":
@@ -28,24 +30,27 @@ nodefony.register("Session", () => {
       break;
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
+      // eslint-disable-next-line prefer-destructuring
       host = this.context.request.httpRequest.headers.host;
       break;
+    default:
     }
     const meta = this.getMetaBag("host");
     if (host === meta) {
       return host;
     }
     this.manager.log(`SESSION START WARNING REFERRER NOT SAME, HOST : ${host} ,META STORAGE :${meta}`, "WARNING");
+    // eslint-disable-next-line no-throw-literal
     throw {
       meta,
       host
     };
   };
 
-  const setMetasSession = function () {
+  const setMetasSession = function setMetasSession (cookieSetting = {}) {
     // let time = new Date();
     let ua = null;
-    this.setMetaBag("lifetime", this.settings.cookie.maxAge);
+    this.setMetaBag("lifetime", cookieSetting.maxAge || this.settings.cookie.maxAge);
     this.setMetaBag("context", this.contextSession || null);
     this.setMetaBag("request", this.context.type);
     // this.setMetaBag("created", time);
@@ -53,7 +58,9 @@ nodefony.register("Session", () => {
       this.setMetaBag("remoteAddress", this.context.getRemoteAddress());
       this.setMetaBag("host", this.context.getHost());
       ua = this.context.getUserAgent();
-    } catch (e) {}
+    } catch (e) {
+      this.log(e, "DEBUG");
+    }
     if (ua) {
       this.setMetaBag("user_agent", ua);
     } else {
@@ -110,24 +117,27 @@ nodefony.register("Session", () => {
       return decrypted;
     }
 
-    create (lifetime, id) {
+    create (lifetime, id, settingsCookie = {}) {
       this.id = id || this.setId();
-      setMetasSession.call(this);
+      const defaultSetting = nodefony.extend({}, this.settings.cookie);
+      settingsCookie = nodefony.extend(defaultSetting, settingsCookie);
       this.manager.log(`NEW SESSION CREATE : ${this.id}`, "DEBUG");
       try {
-        this.cookieSession = this.setCookieSession(lifetime);
+        this.cookieSession = this.setCookieSession(lifetime, settingsCookie);
+        setMetasSession.call(this, settingsCookie);
+        this.status = "active";
+        return this;
       } catch (e) {
-        this.log(e, "WARNING");
-        throw new Error("Request Finish can't create cookieSession");
+        this.log(e, "ERROR");
+        throw new Error("Request can't create cookieSession");
         // this.log(`,"WARNING")
       }
-      this.status = "active";
-      return this;
     }
 
     start (context, contextSession) {
       this.context = context;
       if (!contextSession) {
+        // eslint-disable-next-line prefer-destructuring
         contextSession = this.contextSession;
       }
       if (this.settings.use_only_cookies) {
@@ -177,6 +187,7 @@ nodefony.register("Session", () => {
       default:
         return true;
       }
+      return true;
     }
 
     async getSession (contextSession) {
@@ -221,7 +232,7 @@ nodefony.register("Session", () => {
                 this.contextSession = contextSession;
                 return this.create(this.lifetime, null);
               }
-              await this.remove();
+              await this.removeSession();
               this.manager.log(`STRATEGY MIGRATE SESSION  ==> ${this.name} : ${this.id}`, "DEBUG");
               this.migrated = true;
               this.contextSession = contextSession;
@@ -236,14 +247,15 @@ nodefony.register("Session", () => {
           this.contextSession = contextSession;
           return new Promise((resolve, reject) => {
             try {
-              return resolve(this.create(this.lifetime, null));
+              resolve(this.create(this.lifetime, null));
             } catch (e) {
-              return reject(e);
+              reject(e);
             }
           });
         case "none":
           this.strategyNone = true;
           break;
+        default:
         }
         if (!this.strategyNone) {
           return new Promise((resolve /* , reject*/) => resolve(this));
@@ -302,12 +314,13 @@ nodefony.register("Session", () => {
       // let lastUsed = new Date(this.getMetaBag("lastUsed")).getTime();
       const now = new Date().getTime();
       if (this.lifetime === 0) {
-        /* if ( lastUsed && lastUsed + ( this.settings.gc_maxlifetime * 1000 ) < now ){
-                this.manager.log("SESSION INVALIDE gc_maxlifetime    ==> " + this.name + " : "+ this.id, "WARNING");
-                return false ;
-            }*/
+        // if ( lastUsed && lastUsed + ( this.settings.gc_maxlifetime * 1000 ) < now ){
+        //     this.manager.log("SESSION INVALIDE gc_maxlifetime    ==> " + this.name + " : "+ this.id, "WARNING");
+        //     return false ;
+        // }
         return true;
       }
+      // eslint-disable-next-line no-mixed-operators
       if (lastUsed && lastUsed + this.lifetime * 1000 < now) {
         this.manager.log(`SESSION INVALIDE lifetime   ==> ${this.name} : ${this.id}`, "WARNING");
         return false;
@@ -359,7 +372,8 @@ nodefony.register("Session", () => {
       } else {
         this.log(`ADD FlashBag : ${key}`, "DEBUG");
       }
-      return this.flashBag[key] = value;
+      this.flashBag[key] = value;
+      return value;
     }
 
     flashBags () {
@@ -380,26 +394,45 @@ nodefony.register("Session", () => {
       }
     }
 
-    deleteCookieSession () {
-      const settings = nodefony.extend({}, this.settings.cookie);
-      const cookie = new nodefony.cookies.cookie(this.name, "", settings);
-      this.context.response.setCookie(cookie);
-      this.cookieSession = null;
-      this.context.cookieSession = null;
-      return cookie;
+    deleteCookieSession (cookie = null) {
+      if (this.context && this.context.response) {
+        if (cookie) {
+          cookie.expires = new Date(null);
+        } else if (this.cookieSession) {
+          this.cookieSession.expires = new Date(null);
+          cookie = this.cookieSession;
+        } else {
+          // eslint-disable-next-line new-cap
+          cookie = new nodefony.cookies.cookie(this.name, "", {
+            expires: new Date(null)
+            // path: "/"
+          });
+        }
+        this.context.response.setCookie(cookie);
+        this.cookieSession = null;
+        this.context.cookieSession = null;
+        return cookie;
+      }
+      return this.cookieSession;
     }
 
-    setCookieSession (leftTime) {
-      let settings = null;
-      if (leftTime) {
-        settings = nodefony.extend({}, this.settings.cookie);
-        settings.maxAge = leftTime;
-      } else {
-        settings = this.settings.cookie;
+    setCookieSession (leftTime, settings = {}) {
+      if (this.context && this.context.response) {
+        // let settings = null;
+        const defaultsettings = nodefony.extend({}, this.settings.cookie);
+        settings = nodefony.extend(defaultsettings, settings);
+        if (leftTime) {
+          settings.maxAge = leftTime;
+        }
+        // eslint-disable-next-line new-cap
+        const cookie = new nodefony.cookies.cookie(this.name, this.id, settings);
+        // this.context.response.setCookie(cookie);
+        this.context.response.addCookie(cookie);
+        this.cookieSession = cookie;
+        this.context.cookieSession = cookie;
+        return cookie;
       }
-      const cookie = new nodefony.cookies.cookie(this.name, this.id, settings);
-      this.context.response.addCookie(cookie);
-      return cookie;
+      return null;
     }
 
     serialize (user) {
@@ -429,68 +462,80 @@ nodefony.register("Session", () => {
       this.username = obj.user || obj.username;
     }
 
-    async remove (cookieDelete) {
-      if (this.saved) {
+    removeSession (cookieDelete = null) {
+      if (this.saved === true) {
         return this.storage.destroy(this.id, this.contextSession)
           .then(() => {
             if (cookieDelete) {
-              this.deleteCookieSession();
-              this.saved = true;
+              this.deleteCookieSession(cookieDelete);
             }
+            this.saved = true;
+            return true;
           })
           .catch((e) => {
             this.manager.log(e, "ERROR");
             throw e;
           });
       }
+      if (cookieDelete) {
+        this.deleteCookieSession(cookieDelete);
+      }
+      return Promise.resolve(true);
     }
 
-    delete (cookieDelete = false) {
+    delete (cookieDelete) {
       return this.destroy(cookieDelete);
     }
 
     destroy (cookieDelete) {
       this.clear();
-      return this.remove(cookieDelete);
+      return this.removeSession(cookieDelete);
     }
 
     clear () {
       delete this.protoService;
-      this.protoService = function () {};
+      // eslint-disable-next-line no-empty-function
+      this.protoService = function protoService () {};
       delete this.protoParameters;
-      this.protoParameters = function () {};
+      // eslint-disable-next-line no-empty-function
+      this.protoParameters = function protoParameters () {};
       delete this.services;
+      // eslint-disable-next-line new-cap
       this.services = new this.protoService();
       delete this.parameters;
+      // eslint-disable-next-line new-cap
       this.parameters = new this.protoParameters();
       this.clearFlashBags();
     }
 
-    async invalidate (lifetime, id) {
+    async invalidate (lifetime = this.lifetime, id = null, settingsCookie = null) {
       this.manager.log(`INVALIDATE SESSION ==>${this.name} : ${this.id}`, "DEBUG");
-      if (!lifetime) {
-        lifetime = this.lifetime;
-      }
-      return await this.destroy()
-        .then(() => this.create(lifetime, id))
+      this.saved = true;
+      return await this.destroy(this.cookieSession)
+        .then(() => {
+          this.saved = false;
+          return this.create(lifetime, id, settingsCookie);
+        })
         .catch((e) => {
           throw e;
         });
     }
 
-    async migrate (destroy, lifetime, id) {
+    async migrate (destroy, lifetime = this.lifetime, id = null, settingsCookie = null) {
       this.manager.log(`MIGRATE SESSION ==>${this.name} : ${this.id}`, "DEBUG");
-      if (!lifetime) {
-        lifetime = this.lifetime;
-      }
       try {
         if (destroy) {
-          await this.remove(destroy)
+          this.saved = true;
+          await this.removeSession(this.cookieSession)
+            .then((ret) => {
+              this.saved = false;
+              return ret;
+            })
             .catch((e) => {
               throw e;
             });
         }
-        return this.create(lifetime, id);
+        return this.create(lifetime, id, settingsCookie);
       } catch (e) {
         this.log(e, "WARNING");
         return this;
@@ -501,8 +546,11 @@ nodefony.register("Session", () => {
       let ip = "";
       try {
         ip = this.context.getRemoteAddress();
-      } catch (e) {}
+      } catch (e) {
+        this.log(e, "DEBUG");
+      }
       const date = new Date().getTime();
+      // eslint-disable-next-line no-mixed-operators
       const concat = ip + date + this.randomValueHex(16) + Math.random() * 10;
       let hash = null;
       switch (this.settings.hash_function) {
@@ -522,6 +570,7 @@ nodefony.register("Session", () => {
 
     getId (value) {
       const res = this.decrypt(value);
+      // eslint-disable-next-line prefer-destructuring
       this.contextSession = res.split(":")[1];
       return value;
     }

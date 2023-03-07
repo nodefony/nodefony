@@ -14,6 +14,7 @@ const validator = require("validator");
  */
 class userEntity extends nodefony.Entity {
   constructor (bundle) {
+
     /*
      *   @param bundle instance
      *   @param Entity name
@@ -36,6 +37,7 @@ class userEntity extends nodefony.Entity {
       });*/
   }
 
+  // eslint-disable-next-line max-lines-per-function
   getSchema () {
     return {
       username: {
@@ -57,13 +59,14 @@ class userEntity extends nodefony.Entity {
       },
       password: {
         type: DataTypes.STRING(256),
-        allowNull: false,
-        validate: {
+        allowNull: false
+
+        /* validate: {
           min: {
             args: [[4]],
             msg: "password  allow 4 characters min  "
           }
-        }
+        }*/
       },
       "2fa": {
         type: DataTypes.BOOLEAN,
@@ -182,6 +185,7 @@ class userEntity extends nodefony.Entity {
       modelName: this.name,
       hooks: {
         beforeCreate: (user) => {
+          console.log("beforeCreate", user);
           this.validPassword(user.password);
           return this.encode(user.password)
             .then((hash) => {

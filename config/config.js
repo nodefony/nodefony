@@ -114,6 +114,7 @@ module.exports = {
       // "webAssembly-bundle": "file:src/bundles/webAssembly-bundle",
       // "ia-bundle": "file:src/bundles/ia-bundle",
       // "vault-bundle": "file:src/bundles/vault-bundle"
+      // "keycloak-bundle": "file:src/bundles/keycloak-bundle"
     },
 
     /**

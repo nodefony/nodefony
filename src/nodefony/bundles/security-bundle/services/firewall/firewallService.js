@@ -1,6 +1,7 @@
 let passport = null;
 let nodefonyPassport = null;
 try {
+  // eslint-disable-next-line no-unused-vars
   passport = require("passport");
   // nodefonyPassport = require("@nodefony/passport-wrapper");
   nodefonyPassport = require(path.resolve(__dirname, "..", "..", "src", "passport", "passportFramework.js"));
@@ -8,13 +9,13 @@ try {
   this.log(e);
 }
 
-const pluginReader = (function () {
-  const replaceKey = function (key) {
+const pluginReader = (function pluginReader () {
+  const replaceKey = function replaceKey (key) {
     const tab = ["firewall", "user", "encoder"];
     return tab.indexOf(key) >= 0 ? `${key}s` : key;
   };
 
-  const arrayToObject = function (tab) {
+  const arrayToObject = function arrayToObject (tab) {
     let obj = {};
     for (let i = 0; i < tab.length; i++) {
       for (const key in tab[i]) {
@@ -40,7 +41,7 @@ const pluginReader = (function () {
     return obj instanceof Object && Object.keys(obj).length === 0 ? null : obj;
   };
 
-  const importXmlConfig = function (xml, prefix, callback, parser) {
+  const importXmlConfig = function importXmlConfig (xml, prefix, callback, parser) {
     if (parser) {
       xml = this.render(xml, parser.data, parser.options);
     }
@@ -51,24 +52,26 @@ const pluginReader = (function () {
         case "config":
           config = arrayToObject(node[key]);
           break;
+        default:
         }
       }
     });
 
     if (callback) {
-      callback.call(this, this.xmlToJson.call(this, {
+      callback.call(this, this.xmlToJson({
         security: config
       }));
     } else {
       return config;
     }
+    return config;
   };
 
-  const getObjectSecurityXML = function (file, callback, parser) {
+  const getObjectSecurityXML = function getObjectSecurityXML (file, callback, parser) {
     importXmlConfig.call(this, file, "", callback, parser);
   };
 
-  const getObjectSecurityJSON = function (file, callback, parser) {
+  const getObjectSecurityJSON = function getObjectSecurityJSON (file, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -77,7 +80,7 @@ const pluginReader = (function () {
     }
   };
 
-  const getObjectSecurityYml = function (file, callback, parser) {
+  const getObjectSecurityYml = function getObjectSecurityYml (file, callback, parser) {
     if (parser) {
       file = this.render(file, parser.data, parser.options);
     }
@@ -115,8 +118,10 @@ module.exports = class security extends nodefony.Service {
     // this.passport = passport ;
     this.nodefonyPassport = nodefonyPassport;
     this.corsManager = cors;
+    // eslint-disable-next-line func-names
     this.reader = (function (context) {
       const func = context.get("reader").loadPlugin("security", pluginReader);
+      // eslint-disable-next-line func-names
       return function (result) {
         try {
           return func(result, context.nodeReader.bind(context));
@@ -126,11 +131,12 @@ module.exports = class security extends nodefony.Service {
       };
     }(this));
     this.securedAreas = {};
+    // eslint-disable-next-line new-cap
     this.providerManager = new nodefony.providerManager(this);
     this.set("providerManager", this.providerManager);
     this.sessionStrategy = "invalidate";
     // listen KERNEL EVENTS
-    this.once("onBoot", async () => {
+    this.once("onBoot", () => {
       this.sessionService = this.get("sessions");
       this.authorizationService = this.get("authorization");
       this.orm = this.get(this.kernel.settings.orm);
@@ -153,6 +159,7 @@ module.exports = class security extends nodefony.Service {
       case "HTTP2":
         this.httpsReady = this.get("http2Server").ready;
         break;
+      default:
       }
     });
   }
@@ -167,9 +174,9 @@ module.exports = class security extends nodefony.Service {
       return new Promise((resolve, reject) => {
         try {
           context.resolver.log(`bypassFirewall ${context.url}`, "DEBUG");
-          return resolve(context.handle());
+          resolve(context.handle());
         } catch (e) {
-          return reject(e);
+          reject(e);
         }
       });
     }
@@ -179,6 +186,7 @@ module.exports = class security extends nodefony.Service {
     case "HTTP":
     case "HTTP2":
       context.response.setHeaders(this.settings[context.scheme]);
+      // eslint-disable-next-line no-promise-executor-return
       return new Promise((resolve, reject) => this.handle(context)
         .then((ctx) => {
           switch (true) {
@@ -193,7 +201,6 @@ module.exports = class security extends nodefony.Service {
               }
               return reject(e);
             }
-            break;
           default:
             return resolve(ctx);
           }
@@ -223,6 +230,8 @@ module.exports = class security extends nodefony.Service {
           // context.fire("onError", context.container, error);
           throw error;
         });
+    default:
+      return null;
     }
   }
 
@@ -237,6 +246,7 @@ module.exports = class security extends nodefony.Service {
     }
     for (const area in this.securedAreas) {
       if (this.securedAreas[area].match(context)) {
+        // eslint-disable-next-line no-warning-comments
         // FIXME PRIORITY
         context.security = this.securedAreas[area];
         const state = context.security.stateLess ? "STATELESS" : "STATEFULL";
@@ -273,9 +283,9 @@ module.exports = class security extends nodefony.Service {
       }
       return factory;
     }
-    for (const area in this.securedAreas) {
-      if (this.securedAreas[area].nbFactories) {
-        factory = this.securedAreas[area].getFactory(name);
+    for (const myarea in this.securedAreas) {
+      if (this.securedAreas[myarea].nbFactories) {
+        factory = this.securedAreas[myarea].getFactory(name);
       }
       if (factory) {
         return factory;
@@ -290,6 +300,7 @@ module.exports = class security extends nodefony.Service {
       if (context.metaSecurity) {
         if (context.security && context.metaSecurity.token) {
           if (context.security.name !== context.metaSecurity.firewall) {
+            // eslint-disable-next-line max-depth
             if (context.metaSecurity.token.factory === "anonymous") {
               return null;
             }
@@ -335,13 +346,15 @@ module.exports = class security extends nodefony.Service {
         switch (next) {
         case 204:
           return 204;
-        case 401:
+        case 401: {
           const error = new Error(`CROSS DOMAIN Unauthorized REQUEST REFERER : ${context.originUrl.href}`);
           error.code = next;
           throw error;
+        }
         case 200:
           this.log(`\x1b[34m CROSS DOMAIN  \x1b[0mREQUEST REFERER : ${context.originUrl.href}`, "DEBUG");
           return 200;
+        default:
         }
       } else if (this.kernel.domainCheck) {
         const error = new Error(`CROSS DOMAIN Unauthorized REQUEST REFERER : ${context.originUrl.href}`);
@@ -351,6 +364,7 @@ module.exports = class security extends nodefony.Service {
         return 200;
       }
     }
+    return 200;
   }
 
   startSession (context, state = "statefull") {
@@ -368,7 +382,7 @@ module.exports = class security extends nodefony.Service {
                 .then(() => {
                   throw error;
                 })
-                .catch((e) => {
+                .catch((/* e*/) => {
                   throw error;
                 });
             });
@@ -385,13 +399,14 @@ module.exports = class security extends nodefony.Service {
                   .then(() => {
                     throw error;
                   })
-                  .catch((e) => {
+                  .catch((/* e*/) => {
                     throw error;
                   });
               });
           }
           return context;
         }
+        throw new Error("Bad arguments ");
       })
       .catch((e) => {
         throw e;
@@ -403,39 +418,40 @@ module.exports = class security extends nodefony.Service {
       try {
         if (context.type === "HTTP" && this.httpsReady) {
           if (context.security && context.security.redirect_Https) {
-            return resolve(this.redirectHttps(context));
+            resolve(this.redirectHttps(context));
+            return;
           }
         }
         if (context.security && context.security.stateLess) {
           if (context.sessionAutoStart /* || context.hasSession()*/) {
-            return this.startSession(context, "stateless")
+            this.startSession(context, "stateless")
               .then((ctx) => resolve(ctx))
               .catch((error) => {
                 if (!error.code) {
                   error.code = 401;
                 }
-                return reject(error);
+                reject(error);
               });
           }
-          return this.handleStateLess(context)
+          this.handleStateLess(context)
             .then((ctx) => resolve(ctx))
             .catch((error) => {
               if (!error.code) {
                 error.code = 401;
               }
-              return reject(error);
+              reject(error);
             });
         }
-        return this.handleStateFull(context)
+        this.handleStateFull(context)
           .then((ctx) => resolve(ctx))
           .catch((error) => {
             if (!error.code) {
               error.code = 401;
             }
-            return reject(error);
+            reject(error);
           });
       } catch (error) {
-        return reject(error);
+        reject(error);
       }
     });
   }
@@ -503,17 +519,21 @@ module.exports = class security extends nodefony.Service {
           throw e;
         });
     }
-    return new Promise((resolve) => resolve(context));
+    return new Promise((resolve) => {
+      resolve(context);
+    });
   }
 
   setSessionStrategy (strategy) {
     if (strategy in optionStrategy) {
       this.log(`Set Session Strategy  : ${strategy}`, "DEBUG");
-      return this.sessionStrategy = strategy;
+      this.sessionStrategy = strategy;
+      return strategy;
     }
     throw new Error("sessionStrategy strategy not found");
   }
 
+  // eslint-disable-next-line max-lines-per-function, complexity
   nodeReader (obj) {
     obj = obj.security;
     for (const ele in obj) {
@@ -523,9 +543,11 @@ module.exports = class security extends nodefony.Service {
           const param = obj[ele][firewall];
           const area = this.addSecuredArea(firewall);
           if (!area) {
+            // eslint-disable-next-line no-continue
             continue;
           }
           for (const config in param) {
+            // eslint-disable-next-line max-depth
             switch (config) {
             case "pattern":
               area.setPattern(param[config]);
@@ -534,23 +556,29 @@ module.exports = class security extends nodefony.Service {
               area.setCors(param[config]);
               break;
             case "form_login":
+              // eslint-disable-next-line max-depth
               if (param[config].login_path) {
                 area.setFormLogin(param[config].login_path);
               }
+              // eslint-disable-next-line max-depth
               if (param[config].check_path) {
                 area.setCheckLogin(param[config].check_path);
               }
+              // eslint-disable-next-line max-depth
               if (param[config].default_target_path) {
                 area.setDefaultTarget(param[config].default_target_path);
               }
+              // eslint-disable-next-line max-depth
               if (param[config].always_use_default_target_path) {
                 area.setAlwaysUseDefaultTarget(param[config].always_use_default_target_path);
               }
               break;
             case "remember_me":
+              // eslint-disable-next-line no-warning-comments
               // TODO
               break;
             case "logout":
+              // eslint-disable-next-line no-warning-comments
               // TODO
               break;
             case "stateless":
@@ -563,15 +591,16 @@ module.exports = class security extends nodefony.Service {
               area.setProviderName(param[config]);
               break;
             case "context":
+              // eslint-disable-next-line max-depth
               if (param[config]) {
-                this.once("onBoot", async () => {
+                this.once("onBoot", () => {
                   area.setContextSession(param[config]);
                   this.sessionService.addContextSession(param[config]);
                 });
               }
               break;
             default:
-              this.once("onBoot", async () => {
+              this.once("onBoot", () => {
                 if (config in nodefony.security.factories) {
                   area.setFactory(config, param[config]);
                 } else {
@@ -584,18 +613,18 @@ module.exports = class security extends nodefony.Service {
         }
         break;
       case "session_fixation_strategy":
-        this.once("onBoot", async () => {
+        this.once("onBoot", () => {
           this.setSessionStrategy(obj[ele]);
           this.sessionService.setSessionStrategy(this.sessionStrategy);
         });
         break;
       case "access_control":
-        this.once("onBoot", async () => {
+        this.once("onBoot", () => {
           this.authorizationService.setAccessControl(obj[ele]);
         });
         break;
       case "encoders":
-        this.once("onBoot", async () => {
+        this.once("onBoot", () => {
           this.orm.prependOnceListener("onOrmReady", () => {
             for (const entity in obj[ele]) {
               try {
@@ -603,9 +632,11 @@ module.exports = class security extends nodefony.Service {
                   const myEntity = this.orm.entities[entity];
                   if (obj[ele][entity].algorithm) {
                     const algo = obj[ele][entity].algorithm;
+                    // eslint-disable-next-line max-depth
                     if (algo in nodefony.encoders) {
                       delete obj[ele][entity].algorithm;
                       myEntity.setEncoder(new nodefony.encoders[algo](obj[ele][entity]));
+                      // eslint-disable-next-line no-continue
                       continue;
                     }
                     throw new Error(`Encoder algorithm ${algo} not registered ! `);
@@ -629,6 +660,7 @@ module.exports = class security extends nodefony.Service {
           }
         }
         break;
+      default:
       }
     }
   }
@@ -640,6 +672,7 @@ module.exports = class security extends nodefony.Service {
       return this.securedAreas[name];
     }
     this.log(`securedAreas :${name} already exist `, "WARNING");
+    return null;
   }
 
   getSecuredArea (name) {
@@ -651,6 +684,7 @@ module.exports = class security extends nodefony.Service {
 
   log (pci, severity, msgid, msg) {
     if (!msgid) {
+      // eslint-disable-next-line no-param-reassign
       msgid = "\x1b[36mFIREWALL\x1b[0m";
     }
     return super.log(pci, severity, msgid, msg);

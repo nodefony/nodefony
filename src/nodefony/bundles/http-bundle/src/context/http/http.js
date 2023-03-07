@@ -1,5 +1,6 @@
 const mime = require("mime");
 
+// eslint-disable-next-line max-lines-per-function
 nodefony.register.call(nodefony.context, "http", () => {
   const Http = class httpContext extends nodefony.Context {
     constructor (container, request, response, type) {

@@ -28,6 +28,30 @@ class defaultController extends nodefony.Controller {
     // this.startSession();
   }
 
+
+  /**
+   *    @Route ("/nodefony/keycloak/callback",
+   *      name="monitoring-callback-keycloak")
+   */
+  keycloakCallbackAction () {
+    const {token} = this.context;
+    // console.log(this.query, token);
+
+    this.setContextHtml();
+    const user = this.getUser();
+    return this.render("keycloak-bundle::index.html.twig", {
+      name: this.bundle.name,
+      description: this.bundle.package.description,
+      username: user ? user.username : null,
+      user,
+      token: token ? token.accessToken : null,
+      refreshToken: token ? token.refreshToken : null,
+      redirect: "/nodefony",
+      error: this.query.error,
+      errorDescription: this.query.error_description
+    });
+  }
+
   /**
    *    @Route ("/nodefony*",
    *      name="monitoring-index")
@@ -43,6 +67,7 @@ class defaultController extends nodefony.Controller {
       description: this.bundle.package.description
     });
   }
+
 
   /**
    *    @Route ("/nodefony/manifest.json",

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /*
  * Module dependencies.
  */
@@ -6,7 +7,7 @@ const http = require("http");
 /*
  *  Expose constructors.
  */
-module.exports = function (Firewall) {
+module.exports = function PassportFramework (Firewall) {
   class passportNodefony {
     constructor (firewall) {
       this.firewall = firewall;
@@ -38,6 +39,7 @@ module.exports = function (Firewall) {
       }
 
       return (context, next) => {
+        // eslint-disable-next-line no-plusplus
         for (let i = 0; i < name.length; i++) {
           try {
             this.setStrategy(name[i], context, this.options, next);
@@ -58,24 +60,21 @@ module.exports = function (Firewall) {
           return this.callback(null, false, challenges, statuses);
         }
 
-        if (this.options.failureFlash) {
-
-        }
-        if (this.options.failureMessage) {
-
-        }
+        if (this.options.failureFlash) {}
+        if (this.options.failureMessage) {}
         if (this.options.failureRedirect) {
           this.redirect = this.options.failureRedirect;
         }
-
         if (this.options.failWithError) {}
       };
     }
 
+    // eslint-disable-next-line max-lines-per-function
     setStrategy (name, context, options, next) {
       // Get the strategy, which will be used as prototype from which to create
       // a new instance.  Action functions will then be bound to the strategy
       // within the context of the HTTP request/response pair.
+      // eslint-disable-next-line no-underscore-dangle
       const prototype = this.passport._strategy(name);
       if (!prototype) {
         if (this.callback) {

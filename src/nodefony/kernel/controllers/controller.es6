@@ -479,6 +479,7 @@ class Controller extends nodefony.Service {
       if (file instanceof nodefony.fileClass) {
         File = file;
       } else if (typeof file === "string") {
+        // eslint-disable-next-line new-cap
         File = new nodefony.fileClass(file);
       } else {
         throw new Error(`File argument bad type for getFile :${typeof file}`);
@@ -730,9 +731,9 @@ class Controller extends nodefony.Service {
   }
 
   logout () {
-    if (this.security) {
+    if (this.context.security) {
       this.log(`Logout Controller : ${this.name}`, "DEBUG");
-      return this.security.logout(this.context)
+      return this.context.security.logout(this.context)
         .then(() => true)
         .catch((e) => {
           throw e;
@@ -740,14 +741,17 @@ class Controller extends nodefony.Service {
     }
     return new Promise((resolve, reject) => {
       if (this.context.session) {
-        return this.context.session.invalidate()
-          .then(() => resolve(true))
+        this.context.session.invalidate()
+          .then(() => {
+            resolve(true);
+          })
           .catch((e) => {
             this.log(e, "ERROR");
-            return reject(e);
+            reject(e);
           });
+        return;
       }
-      return resolve(true);
+      resolve(true);
     });
   }
 

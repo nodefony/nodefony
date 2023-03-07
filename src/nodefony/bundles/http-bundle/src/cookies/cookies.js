@@ -1,6 +1,7 @@
 const cookieLib = require("cookie");
 const MS = require("ms");
 
+// eslint-disable-next-line max-lines-per-function
 nodefony.register("cookies", () => {
   const encode = encodeURIComponent;
   const decode = decodeURIComponent;
@@ -16,12 +17,12 @@ nodefony.register("cookies", () => {
     secret: "!nodefony.secret!"
   };
 
-  const parse = function (strToParse) {
+  const parse = function parse (strToParse) {
     return cookieLib.parse(strToParse);
   };
 
 
-  const getRequestcookies = function (context) {
+  const getRequestcookies = function getRequestcookies (context) {
     let cookies = null;
     switch (context.type) {
     case "HTTP":
@@ -34,14 +35,17 @@ nodefony.register("cookies", () => {
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
       if (context.request.cookies) {
+        // eslint-disable-next-line prefer-destructuring
         cookies = context.request.cookies;
       }
       break;
+    default:
+      throw new Error("getRequestcookies Bad Type");
     }
     return parse(cookies);
   };
 
-  const cookiesParser = function (context) {
+  const cookiesParser = function cookiesParser (context) {
     let cookies = null;
     let co = null;
     switch (context.type) {
@@ -63,6 +67,7 @@ nodefony.register("cookies", () => {
     case "WEBSOCKET":
     case "WEBSOCKET SECURE":
       if (context.request.cookies) {
+        // eslint-disable-next-line prefer-destructuring
         cookies = context.request.cookies;
       }
       if (cookies) {
@@ -72,6 +77,8 @@ nodefony.register("cookies", () => {
         }
       }
       break;
+    default:
+      throw new Error("cookiesParser Bad Type");
     }
   };
 
@@ -163,7 +170,7 @@ nodefony.register("cookies", () => {
         if (maxage === 0) {
           this.expires = null;
         } else {
-          const res = new Date().getTime() + maxage * 1000;
+          const res = (new Date().getTime() + maxage) * 1000;
           this.expires = new Date(res);
         }
         return this.expires;
@@ -179,6 +186,7 @@ nodefony.register("cookies", () => {
         return ms;
       case "string":
         try {
+          // eslint-disable-next-line new-cap
           res = MS(ms) / 1000;
         } catch (e) {
           res = ms;
@@ -200,7 +208,8 @@ nodefony.register("cookies", () => {
         if (s > 0) {
           this.maxAge = s; // en seconde
         } else {
-          throw new Error(`Espires / Max-Age : ${s} Error Espires`);
+          this.maxAge = null;
+          // throw new Error(`Espires / Max-Age : ${s} Error Espires`);
         }
       } else {
         this.maxAge = this.originalMaxAge;
@@ -223,7 +232,7 @@ nodefony.register("cookies", () => {
         .createHmac("sha256", `${val}.${secret}`)
         .update(val)
         .digest("base64")
-        .replace(/\=+$/, "");
+        .replace(/[=]+$/u, "");
     }
 
     unsign (val, secret) {
@@ -237,6 +246,7 @@ nodefony.register("cookies", () => {
         val = this.value;
       }
       if (!secret) {
+        // eslint-disable-next-line prefer-destructuring
         secret = this.settings.secret;
       }
       return this.sign(val, secret) === val ? val : false;
@@ -289,7 +299,7 @@ nodefony.register("cookies", () => {
         obj.samesite = this.sameSite;
       }
       if (this.expires) {
-        obj.expires = this.expires.toUTCString();
+        obj.expires = this.expires;// .toUTCString();
       }
       if (this.httpOnly) {
         obj.httponly = true;

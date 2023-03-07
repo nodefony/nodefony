@@ -1,5 +1,6 @@
 const WebSocketServer = require("websocket");
 const http = require("http");
+/* eslint-disable max-lines-per-function */
 nodefony.register("wsResponse", () => {
   const {CLOSE_DESCRIPTIONS} = WebSocketServer.connection;
 

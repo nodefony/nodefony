@@ -1,3 +1,4 @@
+/* eslint-disable no-undefined */
 /*
  *
  *    SERVICE SESSION
@@ -9,7 +10,7 @@ module.exports = class sessions extends nodefony.Service {
     super("SESSIONS", httpKernel.container, httpKernel.notificationsCenter);
     this.httpKernel = httpKernel;
     this.sessionStrategy = "none";
-    this.once("onBoot", async () => {
+    this.once("onBoot", () => {
       this.settings = this.container.getParameters("bundles.http").session;
       this.proba = parseInt(this.settings.gc_probability, 10);
       this.divisor = parseInt(this.settings.gc_divisor, 10);
@@ -53,6 +54,7 @@ module.exports = class sessions extends nodefony.Service {
     }
     try {
       if (storage) {
+        // eslint-disable-next-line new-cap
         this.storage = new storage(this);
         this.on("onReady", () => {
           this.storage.open("default");
@@ -71,19 +73,22 @@ module.exports = class sessions extends nodefony.Service {
     return new Promise((resolve, reject) => {
       if (context.sessionStarting) {
         if (context.session) {
-          return resolve(context.session);
+          resolve(context.session);
+          return;
         }
-        return context.once("onSessionStart", (session, error) => {
+        context.once("onSessionStart", (session, error) => {
           if (session) {
             return resolve(session);
           }
           return reject(error || new Error("Bad Session"));
         });
+        return;
       }
       if (context.session) {
         if (context.session.status === "active") {
           this.log(`SESSION ALLREADY STARTED ==> ${context.session.name} : ${context.session.id}`, "DEBUG");
-          return resolve(context.session);
+          resolve(context.session);
+          return;
         }
       }
       let inst = null;
@@ -96,16 +101,20 @@ module.exports = class sessions extends nodefony.Service {
         inst = this.createSession(this.defaultSessionName, this.settings);
       } catch (e) {
         context.fire("onSessionStart", null, e);
-        return reject(e);
+        reject(e);
+        throw e;
       }
-      return inst.start(context, sessionContext)
-        .then(async (session) => {
+      inst.start(context, sessionContext)
+        .then((session) => {
           try {
             context.session = session;
+            if (context.method !== "WEBSOCKET" && context.request && context.request.request) {
+              context.request.request.session = session;
+            }
             context.sessionStarting = false;
             session.setMetaBag("url", url.parse(context.url));
             if (context.cleaned) {
-              return reject(e);
+              return reject(new Error("context already cleaned"));
             }
             context.fire("onSessionStart", session, null);
             return resolve(session);

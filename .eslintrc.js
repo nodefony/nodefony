@@ -149,6 +149,7 @@ module.exports = {
     "no-plusplus": ["off"],
     "no-underscore-dangle": ["off"],
     "no-param-reassign": ["off"],
-    "no-negated-condition": ["off"]
+    "no-negated-condition": ["off"],
+    "no-promise-executor-return": ["off"]
   }
 };

@@ -16,6 +16,7 @@ const fromCookieExtractor = function fromCookieExtractor (nameCookie) {
   };
 };
 
+// eslint-disable-next-line max-lines-per-function
 module.exports = nodefony.registerFactory("passport-jwt", () => {
   class jwtFactory extends nodefony.passeportFactory {
     constructor (security, settings) {
@@ -49,13 +50,14 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
     }
 
     getStrategy (options = {}) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         try {
           const opt = nodefony.extend(true, {}, options);
           opt.jwtFromRequest = this.getExtractor(options);
-          opt.secretOrKey = this.getSecretOrKeyConfig(options.secretOrKey);
+          opt.secretOrKey = await this.getSecretOrKeyConfig(options.secretOrKey);
           const strategy = new JwtStrategy(opt, (jwt_payload, done) => {
             this.log(`TRY AUTHORISATION ${this.name}`, "DEBUG");
+            // console.log(jwt_payload);
             const mytoken = new nodefony.security.tokens.jwt(jwt_payload);
             mytoken.unserialize(mytoken);
             this.authenticateToken(mytoken)
@@ -213,16 +215,23 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
     }
 
     getSecretOrKeyConfig (options) {
-      const type = nodefony.typeOf(options);
-      switch (type) {
-      case "string":
-        this.publicKey = options;
-        break;
-      default:
-        this.getCertificats();
-        break;
-      }
-      return this.publicKey;
+      return new Promise(async (resolve, reject) => {
+        const type = nodefony.typeOf(options);
+        switch (type) {
+        case "string":
+          this.publicKey = options;
+          break;
+        case "function":
+          const res = await options(this);
+          this.privateKey = res.privateKey;
+          this.publicKey = res.publicKey;
+          break;
+        default:
+          this.getCertificats();
+          break;
+        }
+        return resolve(this.publicKey);
+      });
     }
   }
   return jwtFactory;

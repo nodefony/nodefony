@@ -13,6 +13,7 @@ const stripAinsi = function (val) {
   return typeof val === "string" ? val.replace(ansiRegex(), "") : val;
 };
 
+// eslint-disable-next-line max-lines-per-function
 module.exports = nodefony.register("Response", () => {
   const Response = class httpResponse {
     constructor (response, container) {
@@ -65,6 +66,25 @@ module.exports = nodefony.register("Response", () => {
         return this.cookies[cookie.name] = cookie;
       }
       throw new Error("Response addCookies not valid cookies");
+    }
+
+    deleteCookie (cookie) {
+      if (cookie instanceof nodefony.cookies.cookie) {
+        if (this.cookies[cookie.name]) {
+          delete this.cookies[cookie.name];
+          return true;
+        }
+        return false;
+      }
+      throw new Error("Response delCookie not valid cookies");
+    }
+
+    deleteCookieByName (name) {
+      if (this.cookies[name]) {
+        delete this.cookies[name];
+        return true;
+      }
+      return false;
     }
 
     setCookies () {

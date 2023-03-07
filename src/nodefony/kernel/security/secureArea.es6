@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 module.exports = nodefony.register("SecuredArea", () => {
   // context security
   class securedArea extends nodefony.Service {
@@ -7,7 +8,7 @@ module.exports = nodefony.register("SecuredArea", () => {
       this.router = this.get("router");
       this.sessionContext = "default";
       this.cors = null;
-      this.pattern = /.*/;
+      this.pattern = /.*/u;
       this.factories = [];
       this.nbFactories = 0;
       this.provider = null;
@@ -71,6 +72,7 @@ module.exports = nodefony.register("SecuredArea", () => {
       }
     }
 
+    // eslint-disable-next-line complexity
     handleError (context, e) {
       let securityError = null;
       switch (true) {
@@ -141,6 +143,7 @@ module.exports = nodefony.register("SecuredArea", () => {
             context.resolver = this.overrideURL(context, this.formLogin);
             return context;
           } catch (e) {
+            // eslint-disable-next-line new-cap
             return new nodefony.securityError(e, 500, this, context);
           }
         } else {
@@ -149,10 +152,10 @@ module.exports = nodefony.register("SecuredArea", () => {
           }
           return securityError;
         }
-        break;
       case "WEBSOCKET":
       case "WEBSOCKET SECURE":
         return securityError;
+      default:
       }
     }
 
@@ -180,6 +183,7 @@ module.exports = nodefony.register("SecuredArea", () => {
     }
 
     handle (context) {
+      // eslint-disable-next-line no-promise-executor-return
       return new Promise((resolve, reject) => this.handleFactories(context)
         .then((token) => {
           let target = this.defaultTarget;
@@ -245,8 +249,7 @@ module.exports = nodefony.register("SecuredArea", () => {
             return resolve(context);
           }
           return resolve(this.redirect(context, target));
-
-          return resolve(context);
+          // return resolve(context);
         })
         .catch((error) => {
           if (!error) {
@@ -303,8 +306,9 @@ module.exports = nodefony.register("SecuredArea", () => {
           return this.factories[index];
         }
         this.log(`FACTORY :${auth}NOT registered `, "ERROR");
-        throw new Error(`FACTORY :${auth}NOT registered `);
+        throw new Error(`FACTORY :${auth} NOT registered `);
       }
+      throw new Error(`FACTORY :${auth} bad args`);
     }
 
     getFactory (name) {
@@ -335,9 +339,11 @@ module.exports = nodefony.register("SecuredArea", () => {
 
     setStateLess (state) {
       if (state === null) {
-        return this.stateLess = true;
+        this.stateLess = true;
+        return true;
       }
-      return this.stateLess = state || false;
+      this.stateLess = state || false;
+      return state || false;
     }
 
     overrideURL (context, myUrl, target = null) {

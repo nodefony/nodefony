@@ -4,11 +4,11 @@ class passeportFactory extends nodefony.Factory {
 
     // this.passport = security.firewall.passport;
     const passport = security.firewall.newPassport();
-    this.passport = passport.framework(security.firewall.nodefonyPassport(security.firewall));
-    // console.log(this.passport)
+    this.passport = passport.framework(security.firewall.nodefonyPassport(security.firewall, passport));
 
     this.getStrategy(this.settings)
       .then((strategy) => {
+        // eslint-disable-next-line no-underscore-dangle
         if (this.name in this.passport._strategies) {
           this.log(`Passport Strategy ${this.name} Already Defined in firewall !!!
             ${clc.green("Only one Factory with passport strategy type must be use in firewall config")}
@@ -29,6 +29,7 @@ class passeportFactory extends nodefony.Factory {
   }
 
   getStrategy (/* options*/) {
+    // eslint-disable-next-line no-promise-executor-return
     return new Promise((resolve, reject) => reject(new Error("Passport Factory must redefine getStrategy method")));
   }
 
@@ -50,7 +51,7 @@ class passeportFactory extends nodefony.Factory {
           return resolve(null);
         });
       } catch (error) {
-        return reject(error);
+        reject(error);
       }
     });
   }

@@ -112,16 +112,17 @@ class Token {
     if (this.provider) {
       const {user} = context;
       return this.provider.loadUserByUsername(user.username)
-        .then((user) => {
+        .then((User) => {
           this.roles = [];
           this.user = null;
-          this.setUser(user);
+          this.setUser(User);
           if (context && context.session) {
             context.session.setMetaBag("security.token", this.serialize());
           }
-          return user;
+          return User;
         });
     }
+    return null;
   }
 
   serialize () {

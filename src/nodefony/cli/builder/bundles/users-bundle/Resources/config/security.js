@@ -45,7 +45,7 @@ module.exports = {
     firewalls: {
       // SECURITY AREA  <passport-local>
       nodefony_area: {
-        pattern: /^\/secure/,
+        pattern: /^\/secure/u,
         provider: "nodefony",
         form_login: {
           login_path: "/login/secure",
@@ -62,7 +62,7 @@ module.exports = {
       },
       // SECURITY AREA LOGIN API  <passport-local>
       login_api_area: {
-        pattern: /^\/api\/jwt\/login/,
+        pattern: /^\/api\/jwt\/login/u,
         provider: "nodefony",
         "passport-local": {
           usernameField: "username",
@@ -74,7 +74,7 @@ module.exports = {
       },
       // SECURITY AREA  API  <passport-jwt>
       api_area: {
-        pattern: /^\/api/,
+        pattern: /^\/api/u,
         redirectHttps: true,
         stateless: true,
         "passport-jwt": {

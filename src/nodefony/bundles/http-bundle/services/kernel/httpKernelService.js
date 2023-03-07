@@ -369,19 +369,19 @@ class httpKernel extends nodefony.Service {
             if (context.csrf) {
               const token = await this.csrfService.handle(context);
               if (token) {
-                this.log("CSRF TOKEN OK", "DEBUG");
+                this.log("CSRF TOKEN OK", "DEBUG");
               }
             }
             return resolve(res);
           }
           // SESSIONS
           try {
-            const session = await this.startSession(context);
+            await this.startSession(context);
             // CSRF TOKEN
             if (context.csrf) {
               const token = await this.csrfService.handle(context);
               if (token) {
-                this.log("CSRF TOKEN OK", "DEBUG");
+                this.log("CSRF TOKEN OK", "DEBUG");
               }
             }
             return resolve(context);

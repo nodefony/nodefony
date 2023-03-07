@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-lines-per-function
 nodefony.register("Context", () => {
   const colorLogEvent = clc.cyan.bgBlue("EVENT CONTEXT");
   const Context = class Context extends nodefony.Service {
