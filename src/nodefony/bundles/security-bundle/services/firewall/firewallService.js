@@ -432,6 +432,7 @@ module.exports = class security extends nodefony.Service {
                 }
                 reject(error);
               });
+            return;
           }
           this.handleStateLess(context)
             .then((ctx) => resolve(ctx))
@@ -441,6 +442,7 @@ module.exports = class security extends nodefony.Service {
               }
               reject(error);
             });
+          return;
         }
         this.handleStateFull(context)
           .then((ctx) => resolve(ctx))
