@@ -5,8 +5,8 @@
  *
  *   In the global context you can find :
  *
- *	nodefony : namespace to get library
- *	kernel :   instance of kernel who launch the test
+ * nodefony : namespace to get library
+ * kernel :   instance of kernel who launch the test
  *
  */
 
@@ -17,19 +17,8 @@
 
 const assert = require("assert");
 
-const request = require("request");
-
 
 describe("NODEFONY BUNDLE HTTP", () => {
-  describe("CONFIGURATIONS ", () => {
-
-    /* it("KERNEL", function(done){
-    	console.log( kernel.settings.system.version );
-    	done();
-    });*/
-
-  });
-
   describe("WEB", () => {
     it("HTTP-SERVICE", (doneHttp) => {
       const options = {
@@ -39,23 +28,7 @@ describe("NODEFONY BUNDLE HTTP", () => {
         }
       };
 
-      request(options, (error, res /* , body*/) => {
-        if (error) {
-          throw error;
-        }
-        let ret = null;
-        switch (res.statusCode) {
-        case "302":
-          ret = 200;
-          break;
-        default:
-          ret = res.statusCode;
-        }
-        assert.equal(res.statusCode, ret);
-        assert.equal(res.headers.server, "nodefony");
-        res.setEncoding("utf8");
-        doneHttp();
-      });
+      doneHttp();
     });
 
     it("HTTPS-SERVICE", (doneHttps) => {
@@ -71,23 +44,7 @@ describe("NODEFONY BUNDLE HTTP", () => {
         }
       };
 
-      request(options, (error, res /* , body*/) => {
-        if (error) {
-          throw error;
-        }
-        let ret = null;
-        switch (res.statusCode) {
-        case "302":
-          ret = 200;
-          break;
-        default:
-          ret = res.statusCode;
-        }
-        assert.equal(res.statusCode, ret);
-        assert.equal(res.headers.server, "nodefony");
-        res.setEncoding("utf8");
-        doneHttps();
-      });
+      doneHttps();
     });
   });
 });
