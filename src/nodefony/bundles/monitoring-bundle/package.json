@@ -46,7 +46,7 @@
     "@vue/cli-service": "5.0.8",
     "ansi-to-html": "0.7.2",
     "clean-webpack-plugin": "4.0.0",
-    "core-js": "3.29.0",
+    "core-js": "3.29.1",
     "graphiql": "2.4.0",
     "highlight.js": "^11.7.0",
     "html-webpack-plugin": "5.5.0",
