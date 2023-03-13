@@ -1,4 +1,15 @@
-## [7.0.0-beta.14](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.15...v7.0.0-beta.14) (2023-03-07)
+## [7.0.0-beta.16](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.15...v7.0.0-beta.16) (2023-03-13)
+
+
+### Features
+
+* **keycloak:** add service for admin-client lib ([312d896](https://github.com/nodefony/nodefony/commit/312d896914b31dc22e2d86e3b46e749ce7ec8e3e))
+
+
+### Bug Fixes
+
+* **firewall:** return on handle ([66e6223](https://github.com/nodefony/nodefony/commit/66e6223f47518b7e479429af6229c87ec2bd011a))
+* **security:** add tokenName jwt check ([259844f](https://github.com/nodefony/nodefony/commit/259844f864e7be07414e7da0bd8c49e4f716cf8e))
 
 ## [7.0.0-beta.15](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.14...v7.0.0-beta.15) (2023-03-07)
 
