@@ -1,7 +1,7 @@
 /**
 *
 *
-*	nodefony-starter CONFIG BUNDLE  keycloak-bundle
+* nodefony-starter CONFIG BUNDLE  keycloak-bundle
 *
 * ===============================================================================
 *
@@ -13,8 +13,8 @@
 */
 
 module.exports = {
-  type        : "sandbox",
-  locale      : "en_en",
+  type: "sandbox",
+  locale: "en_en",
 
   /**
    *    WATCHERS
@@ -45,12 +45,12 @@ module.exports = {
 
   /**
    *
-   *	Insert here the bundle-specific configurations
+   * Insert here the bundle-specific configurations
    *
-   *	You can also override config of another bundle
-   *	with the name of the bundle
+   * You can also override config of another bundle
+   * with the name of the bundle
    *
-   *	example : create an other database connector
+   * example : create an other database connector
    */
 
 };

@@ -47,7 +47,7 @@ module.exports = {
           // clientSecret: "RuNvDZuEfc2cRGkOjfNwOIOUgu0NtDDJ",
           callbackURL: "https://localhost:5152/nodefony/keycloak/callback",
           callbackLogoutURL: "https://localhost:5152/nodefony/keycloak/callback/logout",
-          scope: "profile roles email address",
+          scope: "profile roles email address token",
           maxAge: 3600,
           cookieSettings: {
             maxAge: 300,
