@@ -1,5 +1,6 @@
+/* eslint-disable no-undefined */
 /*
- *	PASSPORT JSON WEB TOKEN  FACTORY JWT
+ * PASSPORT JSON WEB TOKEN  FACTORY JWT
  */
 const JwtStrategy = require("passport-jwt").Strategy;
 const {ExtractJwt} = require("passport-jwt");
@@ -7,6 +8,7 @@ const jwt = require("jsonwebtoken");
 
 const fromCookieExtractor = function fromCookieExtractor (nameCookie) {
   const name = nameCookie || "jwt";
+  // eslint-disable-next-line func-names
   return function (req) {
     let token = null;
     if (req && req.cookies && req.cookies[name]) {
@@ -57,9 +59,18 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
           opt.secretOrKey = await this.getSecretOrKeyConfig(options.secretOrKey);
           const strategy = new JwtStrategy(opt, (jwt_payload, done) => {
             this.log(`TRY AUTHORISATION ${this.name}`, "DEBUG");
-            // console.log(jwt_payload);
-            const mytoken = new nodefony.security.tokens.jwt(jwt_payload);
+            // console.log("PAYLOAD", jwt_payload);
+            // console.log();
+            // console.log(jwt_payload.exp ? require("moment")(jwt_payload.exp * 1000).format("LLLLL") : "");
+            let mytoken = null;
+            if (jwt_payload.tokenName && nodefony.security.tokens[jwt_payload.tokenName]) {
+              mytoken = new nodefony.security.tokens[jwt_payload.tokenName](jwt_payload);
+            } else {
+              // eslint-disable-next-line new-cap
+              mytoken = new nodefony.security.tokens.jwt(jwt_payload);
+            }
             mytoken.unserialize(mytoken);
+            // console.log(mytoken);
             this.authenticateToken(mytoken)
               .then((token) => {
                 done(null, token);
@@ -80,11 +91,13 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
     createToken (context = null /* , providerName = null*/) {
       if (context.metaSecurity) {
         if (context.metaSecurity.token) {
+          // eslint-disable-next-line new-cap
           const token = new nodefony.security.tokens.jwt(context.metaSecurity.token.jwtToken);
           token.unserialize(context.metaSecurity.token);
           return token;
         }
       }
+      // eslint-disable-next-line new-cap
       return new nodefony.security.tokens.jwt();
     }
 
@@ -174,6 +187,7 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
     }
 
     setPrivateKey (key) {
+      // eslint-disable-next-line no-return-assign
       return this.privateKey = key;
     }
 
@@ -198,14 +212,11 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
           }
           throw new Error(`Factory passport-jwt jwtFromRequest JWT Extractor not found  : ${options} `);
         }
-        break;
       case "object":
         if (options.extractor) {
           return this.getExtractorConfig(options.extractor, options.params);
         }
         throw new Error(`Factory passport-jwt bad config Extractor jwtFromRequest : ${options} `);
-
-        break;
       case null:
       case undefined:
         return ExtractJwt.fromAuthHeaderAsBearerToken();
@@ -221,11 +232,12 @@ module.exports = nodefony.registerFactory("passport-jwt", () => {
         case "string":
           this.publicKey = options;
           break;
-        case "function":
+        case "function": {
           const res = await options(this);
           this.privateKey = res.privateKey;
           this.publicKey = res.publicKey;
           break;
+        }
         default:
           this.getCertificats();
           break;
