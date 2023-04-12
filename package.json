@@ -55,29 +55,29 @@
   },
   "dependencies": {
     "graphql": "16.6.0",
-    "mongoose": "7.0.1",
-    "pm2": "^5.2.2",
+    "mongoose": "7.0.3",
+    "pm2": "5.3.0",
     "pm2-logrotate": "^2.7.0",
-    "sequelize": "6.29.3",
-    "webpack": "5.76.1",
-    "webpack-dev-server": "4.11.1"
+    "sequelize": "6.31.0",
+    "webpack": "5.79.0",
+    "webpack-dev-server": "4.13.2"
   },
   "devDependencies": {
-    "@babel/core": "7.21.0",
-    "@babel/eslint-parser": "7.19.1",
+    "@babel/core": "7.21.4",
+    "@babel/eslint-parser": "7.21.3",
     "@mapbox/node-pre-gyp": "1.0.10",
     "conventional-changelog-cli": "^2.2.2",
-    "eslint": "8.36.0",
+    "eslint": "8.38.0",
     "eslint-config-standard": "17.0.0",
     "eslint-plugin-html": "7.1.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-markdown": "3.0.0",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-vue": "9.9.0",
+    "eslint-plugin-vue": "9.10.0",
     "markdown-eslint-parser": "1.2.1",
     "node-gyp": "9.3.1",
-    "vue-eslint-parser": "9.1.0"
+    "vue-eslint-parser": "9.1.1"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "README.md"

@@ -11,7 +11,7 @@
     "nodemailer"
   ],
   "dependencies": {
-    "juice": "8.1.0",
+    "juice": "9.0.0",
     "nodemailer": "6.9.1"
   },
   "devDependencies": {

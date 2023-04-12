@@ -12,13 +12,13 @@
   ],
   "dependencies": {
     "querystring": "^0.2.1",
-    "semver": "^7.3.8",
-    "webpack": "5.76.1"
+    "semver": "7.4.0",
+    "webpack": "5.79.0"
   },
   "devDependencies": {
-    "@babel/core": "7.21.0",
-    "@babel/preset-env": "^7.20.2",
-    "@popperjs/core": "2.11.6",
+    "@babel/core": "7.21.4",
+    "@babel/preset-env": "7.21.4",
+    "@popperjs/core": "2.11.7",
     "babel-loader": "9.1.2",
     "bootstrap": "^5.2.3",
     "clean-webpack-plugin": "^4.0.0",
@@ -27,9 +27,9 @@
     "font-awesome": "^4.7.0",
     "jquery": "3.6.4",
     "memory-fs": "^0.5.0",
-    "mini-css-extract-plugin": "2.7.3",
-    "sass": "1.59.2",
-    "sass-loader": "^13.2.0",
+    "mini-css-extract-plugin": "2.7.5",
+    "sass": "1.62.0",
+    "sass-loader": "13.2.2",
     "terser-webpack-plugin": "5.3.7",
     "webpack-merge": "^5.8.0"
   },
