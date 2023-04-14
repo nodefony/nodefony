@@ -15,7 +15,30 @@ const createMysql = function createMysql (connector, settings) {
     }));
 };
 
-const createPostgres = function createPostgres (connector, settings) {
+
+// eslint-disable-next-line func-style
+async function createPostgres (connector, settings) {
+  try {
+    const config = {
+      user: settings.username || "root",
+      password: settings.password || "root",
+      port: settings.options.port,
+      host: settings.options.host
+    };
+    await pgtools.createdb(config, settings.dbname);
+    await this.ormService.createConnection(connector, settings);
+    this.log(`Database : ${settings.dbname}  successfull created`, "INFO", "postgres");
+  } catch (err) {
+    if (err && err.cause.code && err.cause.code === "42P04") {
+      this.log(`Database : ${settings.dbname}  successfully checked`, "INFO", "postgres");
+      return;
+    }
+    throw err;
+  }
+}
+
+
+/* const createPostgres = function createPostgres (connector, settings) {
   return new Promise((resolve, reject) => {
     const config = {
       user: settings.username || "root",
@@ -36,7 +59,7 @@ const createPostgres = function createPostgres (connector, settings) {
       return resolve(res);
     });
   });
-};
+};*/
 
 /* const deletePostgresDb = function deletePostgresDb (settings) {
   return new Promise((resolve, reject) => {

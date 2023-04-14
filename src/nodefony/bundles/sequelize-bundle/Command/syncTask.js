@@ -56,16 +56,22 @@ class generateTask extends nodefony.Task {
     });
   }
 
-  entities (options) {
-    return new Promise((resolve, reject) => {
+  entities (options, nowait = false) {
+    return new Promise(async (resolve, reject) => {
       try {
+        if (nowait) {
+          await this.ormService.fireAsync("onOrmReady", this.ormService);
+          return this.installEntities(options)
+            .then((ele) => resolve(ele))
+            .catch((e) => reject(e));
+        }
         // let tab = [];
         if (this.ormService.ready) {
           return this.installEntities(options)
             .then((ele) => resolve(ele))
             .catch((e) => reject(e));
         }
-        this.ormService.listen(this, "onOrmReady", (/* service*/) => this.installEntities(options)
+        return this.ormService.listen(this, "onOrmReady", (/* service*/) => this.installEntities(options)
           .then((ele) => resolve(ele))
           .catch((e) => reject(e)));
       } catch (e) {

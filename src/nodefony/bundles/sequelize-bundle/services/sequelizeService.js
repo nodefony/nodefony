@@ -88,11 +88,12 @@ class connectionDB {
     this.settings = options;
   }
 
-  close () {
+  async close () {
     if (this.db) {
       this.log(`Close connection ${this.name}`);
-      return this.db.close()
+      return await this.db.close()
         .catch((e) => {
+          this.log(e, "ERROR");
           throw e;
         });
     }
@@ -211,9 +212,7 @@ class sequelize extends nodefony.Orm {
     super("sequelize", container, kernel, autoLoader);
     this.engine = Sequelize;
     this.strategy = "migrate";
-    this.kernel.on("onTerminate", async () => {
-      await this.closeConnections();
-    });
+    this.kernel.once("onTerminate", async () => await this.closeConnections());
   }
 
   static isError (error) {

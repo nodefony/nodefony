@@ -27,7 +27,10 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", () => {
           force = true;
         }
         this.log("INSTALL NODEFONY FRAMEWORK");
-        return await this.installOrm(force, strategy);
+        return await this.installOrm(force, strategy)
+          .catch((e) => {
+            throw e;
+          });
         // return await this.displayInfo(cwd);
       } catch (error) {
         this.log(error, "ERROR");
@@ -76,7 +79,10 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", () => {
       try {
         command = this.cli.getCommand("sequelize", "sequelize");
         task = command.getTask("create");
-        res = await task.database();
+        res = await task.database()
+          .catch((e) => {
+            throw e;
+          });
       } catch (e) {
         this.log(e, "WARNING");
       }
@@ -88,21 +94,45 @@ module.exports = nodefony.register.call(nodefony.commands, "nodefony", () => {
         // with migrate
         if (!force && strategy === "migrate") {
           task = command.getTask("migrate");
-          await task.up();
-          await task.status();
+          await task.up()
+            .catch((e) => {
+              throw e;
+            });
+          await task.status()
+            .catch((e) => {
+              throw e;
+            });
           task = command.getTask("sync");
-          await task.entities(force);
+          await task.entities({force}, true)
+            .catch((e) => {
+              throw e;
+            });
           task = command.getTask("seedeers");
-          await task.up();
-          return await task.status();
+          await task.up()
+            .catch((e) => {
+              throw e;
+            });
+          return await task.status()
+            .catch((e) => {
+              throw e;
+            });
         }
         // with sysnc
         if (strategy === "sync") {
           task = command.getTask("sync");
-          await task.entities(force);
+          await task.entities({force}, true)
+            .catch((e) => {
+              throw e;
+            });
           task = command.getTask("seedeers");
-          await task.up();
-          return await task.status();
+          await task.up()
+            .catch((e) => {
+              throw e;
+            });
+          return await task.status()
+            .catch((e) => {
+              throw e;
+            });
         }
       } catch (e) {
         this.log(e, "ERROR");
