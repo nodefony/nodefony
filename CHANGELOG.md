@@ -1,3 +1,10 @@
+## [7.0.0-beta.17](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.16...v7.0.0-beta.17) (2023-04-14)
+
+
+### Bug Fixes
+
+* **install:** debug nodefony install on create postgres database  with pgtool ([81a4293](https://github.com/nodefony/nodefony/commit/81a42935c6dc2047097f6374149ff4d9d01d826e))
+
 ## [7.0.0-beta.16](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.15...v7.0.0-beta.16) (2023-03-13)
 
 
