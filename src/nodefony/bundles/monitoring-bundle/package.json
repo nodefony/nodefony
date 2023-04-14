@@ -28,7 +28,7 @@
     "useragent": "2.3.0"
   },
   "devDependencies": {
-    "@apollo/client": "3.7.11",
+    "@apollo/client": "3.7.12",
     "@babel/core": "7.21.4",
     "@babel/preset-env": "7.21.4",
     "@babel/preset-react": "7.18.6",
@@ -46,7 +46,7 @@
     "@vue/cli-service": "5.0.8",
     "ansi-to-html": "0.7.2",
     "clean-webpack-plugin": "4.0.0",
-    "core-js": "3.30.0",
+    "core-js": "3.30.1",
     "graphiql": "2.4.1",
     "highlight.js": "^11.7.0",
     "html-webpack-plugin": "5.5.0",
@@ -57,7 +57,7 @@
     "nodefony-client": "6.0.2",
     "raw-loader": "4.0.2",
     "register-service-worker": "^1.7.2",
-    "reveal.js": "^4.4.0",
+    "reveal.js": "4.5.0",
     "roboto-fontface": "*",
     "sass": "1.62.0",
     "sass-loader": "13.2.2",
