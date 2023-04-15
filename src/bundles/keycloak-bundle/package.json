@@ -27,7 +27,7 @@
     "expose-loader": "4.1.0",
     "favicons": "7.1.2",
     "favicons-webpack-plugin": "6.0.0",
-    "html-webpack-plugin": "^5.5.0",
+    "html-webpack-plugin": "5.5.1",
     "imports-loader": "4.0.1",
     "mini-css-extract-plugin": "2.7.5",
     "node-gyp": "^9.3.1",
@@ -37,7 +37,7 @@
     "style-loader": "3.3.2",
     "terser-webpack-plugin": "5.3.7",
     "webpack": "5.79.0",
-    "webpack-dev-server": "4.13.2",
+    "webpack-dev-server": "4.13.3",
     "webpack-merge": "^5.8.0"
   },
   "license": "",

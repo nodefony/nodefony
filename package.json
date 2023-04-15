@@ -60,7 +60,7 @@
     "pm2-logrotate": "^2.7.0",
     "sequelize": "6.31.0",
     "webpack": "5.79.0",
-    "webpack-dev-server": "4.13.2"
+    "webpack-dev-server": "4.13.3"
   },
   "devDependencies": {
     "@babel/core": "7.21.4",
@@ -74,7 +74,7 @@
     "eslint-plugin-markdown": "3.0.0",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-vue": "9.10.0",
+    "eslint-plugin-vue": "9.11.0",
     "markdown-eslint-parser": "1.2.1",
     "node-gyp": "9.3.1",
     "vue-eslint-parser": "9.1.1"
