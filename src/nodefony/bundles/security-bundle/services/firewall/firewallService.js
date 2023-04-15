@@ -627,7 +627,7 @@ module.exports = class security extends nodefony.Service {
         break;
       case "encoders":
         this.once("onBoot", () => {
-          this.orm.prependOnceListener("onOrmReady", () => {
+          this.orm.prependListener("onOrmReady", () => {
             for (const entity in obj[ele]) {
               try {
                 if (entity in this.orm.entities) {
