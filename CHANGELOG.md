@@ -1,3 +1,11 @@
+## [7.0.0-beta.18](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.17...v7.0.0-beta.18) (2023-04-17)
+
+
+### Bug Fixes
+
+* **encoder:**  debug encoder event orm ready ([5cbf418](https://github.com/nodefony/nodefony/commit/5cbf418260794bb7ecff73c593d0e3cc0d92cfe0))
+* **sequelize:** create database debug sync not apply acciociate method (relations) ([205a7dd](https://github.com/nodefony/nodefony/commit/205a7ddd5072fadd01ba8ccbf63d6f30c58d2962))
+
 ## [7.0.0-beta.17](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.16...v7.0.0-beta.17) (2023-04-14)
 
 
