@@ -1,3 +1,10 @@
+## [7.0.0-beta.20](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.19...v7.0.0-beta.20) (2023-04-17)
+
+
+### Bug Fixes
+
+* **sequelize:** debug associate call twice ([a82504e](https://github.com/nodefony/nodefony/commit/a82504ef1ae7b92e65eabd17feb507f6fd668ea1))
+
 ## [7.0.0-beta.19](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.18...v7.0.0-beta.19) (2023-04-17)
 
 
