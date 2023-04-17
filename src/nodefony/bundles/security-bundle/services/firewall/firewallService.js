@@ -643,7 +643,7 @@ module.exports = class security extends nodefony.Service {
                     }
                     throw new Error(`Encoder algorithm ${algo} not registered ! `);
                   }
-                  throw new Error(`In configuration Entity ${entity} Encoder algorithm not defined ! `);
+                  // throw new Error(`In configuration Entity ${entity} Encoder algorithm not defined ! `);
                 }
               } catch (e) {
                 throw e;
