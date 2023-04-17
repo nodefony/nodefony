@@ -296,7 +296,7 @@ class sequelize extends nodefony.Orm {
         }
       });
 
-      this.prependOnceListener("onOrmReady", async () => {
+      this.prependListener("onOrmReady", async () => {
         for (const entity in this.entities) {
           if (this.entities[entity].model && this.entities[entity].model.associate) {
             await this.entities[entity].model.associate(this.entities[entity].db.models);
@@ -369,9 +369,10 @@ class sequelize extends nodefony.Orm {
     } catch (e) {
       throw e;
     }
-    if (this.kernel.cli.command === "sequelize" && this.kernel.cli.task === "create") {
+
+    /* if (this.kernel.cli.command === "sequelize" && this.kernel.cli.task === "create") {
       return Promise.resolve();
-    }
+    }*/
     return await this.connections[name].connect(config.driver, config)
       .catch((e) => {
         throw e;
