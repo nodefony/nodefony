@@ -1,3 +1,10 @@
+## [7.0.0-beta.19](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.18...v7.0.0-beta.19) (2023-04-17)
+
+
+### Bug Fixes
+
+* **sequelize:** debug nodefony install command (sync) ([f5dc570](https://github.com/nodefony/nodefony/commit/f5dc570d5d52878d7cfa28a2ae656587cec7e1b1))
+
 ## [7.0.0-beta.18](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.17...v7.0.0-beta.18) (2023-04-17)
 
 
