@@ -212,6 +212,8 @@ class sequelize extends nodefony.Orm {
     super("sequelize", container, kernel, autoLoader);
     this.engine = Sequelize;
     this.strategy = "migrate";
+    this.isAssociated = false;
+    this.forceAssociated = false;
     this.kernel.once("onTerminate", async () => await this.closeConnections());
   }
 
@@ -297,12 +299,16 @@ class sequelize extends nodefony.Orm {
       });
 
       this.prependListener("onOrmReady", async () => {
+        if (this.isAssociated && !this.forceAssociated) {
+          return;
+        }
         for (const entity in this.entities) {
           if (this.entities[entity].model && this.entities[entity].model.associate) {
             await this.entities[entity].model.associate(this.entities[entity].db.models);
             this.log(`ASSOCIATE model : ${this.entities[entity].model.name}`, "DEBUG");
           }
         }
+        this.isAssociated = true;
       });
 
       this.kernel.once("onReady", () => {

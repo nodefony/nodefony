@@ -26,6 +26,7 @@ async function createPostgres (connector, settings) {
       host: settings.options.host
     };
     await pgtools.createdb(config, settings.dbname);
+    this.ormService.forceAssociated = true;
     await this.ormService.createConnection(connector, settings);
     this.log(`Database : ${settings.dbname}  successfull created`, "INFO", "postgres");
   } catch (err) {
