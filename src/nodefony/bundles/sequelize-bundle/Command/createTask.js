@@ -9,6 +9,7 @@ const createMysql = function createMysql (connector, settings) {
     password: settings.password || "root"
   }).then((connection) => connection.query(`CREATE DATABASE IF NOT EXISTS ${settings.dbname};`)
     .then(async (result) => {
+      this.ormService.forceAssociated = true;
       await this.ormService.createConnection(connector, settings);
       this.log(`Database : ${settings.dbname} create or successfully checked`, "INFO", "mysql");
       return result;
@@ -98,6 +99,7 @@ class createTask extends nodefony.Task {
         const conn = this.ormService.settings.connectors[connector];
         switch (conn.driver) {
         case "mysql":
+        case "mariadb":
           await createMysql.call(this, connector, conn)
             .then((res) => res)
             .catch((e) => {
