@@ -7,7 +7,7 @@ jobs:
     strategy:
       matrix:
         os:              [ubuntu-latest]
-        node-version:    [16.x,18.x,19.x]
+        node-version:    [16.x,18.x,20.x]
       fail-fast:         false
     steps:
     - name:              Use latest NPM
@@ -86,7 +86,7 @@ jobs:
     strategy:
       matrix:
         os:              [macOS-latest]
-        node-version:    [16.x,18.x,19.x]
+        node-version:    [16.x,18.x,20.x]
       fail-fast:         false
     steps:
     - name:              Use latest NPM
@@ -154,7 +154,7 @@ jobs:
     strategy:
       matrix:
         os:              [windows-latest]
-        node-version:    [16.x,18.x,19.x]
+        node-version:    [16.x,18.x,20.x]
       fail-fast:         false
     steps:
     - name:              Use latest NPM on windows
