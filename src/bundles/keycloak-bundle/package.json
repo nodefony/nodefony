@@ -13,12 +13,12 @@
   ],
   "repository": {},
   "dependencies": {
-    "@keycloak/keycloak-admin-client": "21.0.2",
+    "@keycloak/keycloak-admin-client": "21.1.1",
     "passport-openidconnect": "0.1.1"
   },
   "devDependencies": {
-    "@babel/core": "7.21.4",
-    "@babel/preset-env": "7.21.4",
+    "@babel/core": "7.21.8",
+    "@babel/preset-env": "7.21.5",
     "@mapbox/node-pre-gyp": "1.0.10",
     "babel-loader": "^9.1.0",
     "clean-webpack-plugin": "^4.0.0",
@@ -31,12 +31,12 @@
     "imports-loader": "4.0.1",
     "mini-css-extract-plugin": "2.7.5",
     "node-gyp": "^9.3.1",
-    "sass": "1.62.0",
+    "sass": "1.62.1",
     "sass-loader": "13.2.2",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "3.3.2",
     "terser-webpack-plugin": "5.3.7",
-    "webpack": "5.79.0",
+    "webpack": "5.81.0",
     "webpack-dev-server": "4.13.3",
     "webpack-merge": "^5.8.0"
   },
