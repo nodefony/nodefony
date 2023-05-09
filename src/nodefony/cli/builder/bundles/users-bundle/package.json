@@ -48,8 +48,8 @@
     "stream": "0.0.2",
     "style-loader": "3.3.2",
     "svg-inline-loader": "^0.8.2",
-    "terser-webpack-plugin": "5.3.7",
-    "webpack": "5.81.0",
+    "terser-webpack-plugin": "5.3.8",
+    "webpack": "5.82.0",
     "webpack-merge": "^5.8.0"
   },
   "license": "CECILL-B",

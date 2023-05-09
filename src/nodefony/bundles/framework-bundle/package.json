@@ -13,7 +13,7 @@
   "dependencies": {
     "querystring": "^0.2.1",
     "semver": "7.5.0",
-    "webpack": "5.81.0"
+    "webpack": "5.82.0"
   },
   "devDependencies": {
     "@babel/core": "7.21.8",
@@ -30,7 +30,7 @@
     "mini-css-extract-plugin": "2.7.5",
     "sass": "1.62.1",
     "sass-loader": "13.2.2",
-    "terser-webpack-plugin": "5.3.7",
+    "terser-webpack-plugin": "5.3.8",
     "webpack-merge": "^5.8.0"
   },
   "repository": {

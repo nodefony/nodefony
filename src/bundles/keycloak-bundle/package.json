@@ -35,9 +35,9 @@
     "sass-loader": "13.2.2",
     "sitemap-webpack-plugin": "^1.1.1",
     "style-loader": "3.3.2",
-    "terser-webpack-plugin": "5.3.7",
-    "webpack": "5.81.0",
-    "webpack-dev-server": "4.13.3",
+    "terser-webpack-plugin": "5.3.8",
+    "webpack": "5.82.0",
+    "webpack-dev-server": "4.15.0",
     "webpack-merge": "^5.8.0"
   },
   "license": "",
