@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 // const Table = require('cli-table3');
 const asciify = require("asciify");
 let inquirer = null;
@@ -17,6 +18,13 @@ const cliTableImport = async () => {
       throw e;
     });
 };
+
+const nodeEmojiImport = async () => await import("node-emoji")
+  .then((esmFS) => esmFS)
+  .catch((e) => {
+    throw e;
+  });
+
 const {
   program,
   command
@@ -66,6 +74,7 @@ const defaultOptions = {
 };
 
 class CLI extends nodefony.Service {
+  // eslint-disable-next-line complexity
   constructor (name, container, notificationsCenter, options) {
     switch (arguments.length) {
     case 0:
@@ -129,6 +138,10 @@ class CLI extends nodefony.Service {
         .catch((e) => {
           this.log(e, "WARNING");
           // Table = require("cli-table3")
+        });
+      this.emoji = await nodeEmojiImport()
+        .catch((e) => {
+          this.log(e, "WARNING");
         });
       this.initPrompt();
     });
@@ -360,7 +373,6 @@ class CLI extends nodefony.Service {
   initUi () {
     this.clc = clc;
     this.clui = require("clui");
-    this.emoji = require("node-emoji");
     this.spinner = null;
     this.blankLine = function () {
       const myLine = new this.clui.Line().fill();
