@@ -32,8 +32,8 @@
     "nodefony": "bin/nodefony"
   },
   "dependencies": {
-    "@babel/core": "7.21.8",
-    "@babel/parser": "7.21.9",
+    "@babel/core": "7.22.1",
+    "@babel/parser": "7.22.4",
     "@graphql-tools/merge": "9.0.0",
     "@graphql-tools/schema": "10.0.0",
     "@graphql-tools/utils": "10.0.0",
@@ -78,12 +78,12 @@
     "semver": "7.5.1",
     "shelljs": "^0.8.5",
     "shortid": "^2.2.16",
-    "simple-git": "3.18.0",
+    "simple-git": "3.19.0",
     "spdx": "^0.5.2",
     "twig": "1.16.0",
     "uuid": "9.0.0",
-    "webpack": "5.83.1",
-    "xml2js": "0.5.0",
+    "webpack": "5.85.0",
+    "xml2js": "0.6.0",
     "yarn": "1.22.19"
   },
   "devDependencies": {
