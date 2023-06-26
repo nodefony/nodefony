@@ -13,12 +13,12 @@
   "dependencies": {
     "@alt3/sequelize-to-json-schemas": "^0.3.56",
     "cls-hooked": "^4.2.2",
-    "mariadb": "3.1.2",
-    "mysql2": "3.3.3",
+    "mariadb": "3.2.0",
+    "mysql2": "3.4.2",
     "pg": "8.11.0",
     "pg-hstore": "^2.3.4",
     "pgtools": "1.0.0",
-    "sequelize": "6.32.0",
+    "sequelize": "6.32.1",
     "sqlite3": "5.1.6",
     "tedious": "16.1.0",
     "umzug": "3.2.1"
@@ -38,6 +38,6 @@
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",
   "readmeFilename": "readme.md",
   "devDependencies": {
-    "sequelize-cli": "6.6.0"
+    "sequelize-cli": "6.6.1"
   }
 }
