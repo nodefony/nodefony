@@ -11,11 +11,11 @@
     "nodemailer"
   ],
   "dependencies": {
-    "juice": "9.0.0",
-    "nodemailer": "6.9.3"
+    "juice": "9.1.0",
+    "nodemailer": "6.9.4"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "1.0.10"
+    "@mapbox/node-pre-gyp": "1.0.11"
   },
   "repository": {
     "type": "git",

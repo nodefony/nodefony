@@ -16,7 +16,7 @@
     "shortid": "^2.2.16"
   },
   "devDependencies": {
-    "@mapbox/node-pre-gyp": "1.0.10"
+    "@mapbox/node-pre-gyp": "1.0.11"
   },
   "licenses": [
     {
