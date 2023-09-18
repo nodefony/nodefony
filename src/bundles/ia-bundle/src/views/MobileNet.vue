@@ -1,12 +1,12 @@
 <template>
-<div class="">
+<div  class="pa-5">
   <img width="100" height="100" alt="ml5" src="../assets/tsf.jpeg">
   <h1>IA Tensorflow.js</h1>
   <img width="100" height="100" alt="Vue logo" src="../assets/logo.png" />
   <img width="250" height="100" alt="ml5" src="../assets/ml5_logo_purple.png" style="margin-left:20px">
   <img width="100" height="100" alt="ml5" src="../assets/p5js.svg" style="margin-left:20px">
   <h1>Image classification using MobileNet and p5.js</h1>
-  <video width="200" height="200" autoplay tabindex="-1" id="vjs_video_3_html5_api" webkit-playsinline="" playsinline="playsinline" class="vjs-tech" loop="" preload="auto" src="blob:https://pv.viewsurf.com/d6666520-7692-40a9-a946-6d1a2d94e5c6" muted="muted"></video>
+  
 </div>
 </template>
 
@@ -22,14 +22,14 @@ import daurade from "@/assets/daurade.jpg";
 import voiture from "@/assets/voiture.jpg";
 import aigle from "@/assets/aigle.jpg";
 export default {
-  name: 'HelloWorld',
+  name: 'MobileNet',
   props: {
     msg: String
   },
   data() {
     return {
       classifier: null,
-      img: bird,
+      img: daurade,
       P5: null
     }
   },
@@ -39,7 +39,7 @@ export default {
 
   mounted() {
     new p5(this.init, 'canvas');
-    console.log(tfjs, tfvis)
+    //console.log(tfjs, tfvis)
     tfvis.visor().surface({
       name: 'My First Surface',
       tab: 'Input Data'
@@ -66,12 +66,12 @@ export default {
       //this.P5.image(this.$img, 0, 0, this.$img.width / 2, this.$img.height / 2);
     },
     preload() {
-      this.$img = this.P5.loadImage(bird)
+      this.$img = this.P5.loadImage(aigle)
 
       ml5.imageClassifier('MobileNet')
         .then((classifier) => {
 
-          console.log(classifier.model)
+          //console.log(classifier.model)
           const surface = {
             name: 'Model Summary',
             tab: 'Model Inspection'

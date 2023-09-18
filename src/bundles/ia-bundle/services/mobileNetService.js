@@ -2,9 +2,9 @@ const tf = require("@tensorflow/tfjs-node");
 //const tf = require('@tensorflow/tfjs-node-gpu');
 const mobilenet = require('@tensorflow-models/mobilenet');
 const fs = require("fs");
-const {
+/*const {
   GPU
-} = require('gpu.js')
+} = require('gpu.js')*/
 
 class mobileNet extends nodefony.Service {
 

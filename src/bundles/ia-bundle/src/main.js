@@ -4,4 +4,8 @@ import i18n from './i18n'
 import store from './store'
 import router from './router'
 
-createApp(App).use(router).use(store).use(i18n).mount('#app')
+
+import vuetify from './plugins/vuetify'
+
+createApp(App).use(router).use(store).use(i18n).use(vuetify).mount('#app')
+

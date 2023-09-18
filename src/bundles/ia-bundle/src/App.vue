@@ -1,8 +1,18 @@
 <template>
-<div>
+  
+
+  <v-app id="inspire">
+  <v-app-bar extended>
+      <v-app-bar-nav-icon to="/">
+        <img width="50" height="50" alt="ml5" src="@/assets/tsf.jpeg">
+      </v-app-bar-nav-icon>
+      <v-app-bar-title>TensorFlow Demo </v-app-bar-title>
+    </v-app-bar>
+
   <router-link to="/"></router-link>
-</div>
-<router-view />
+    <router-view />
+</v-app>
+
 </template>
 
 <style>
