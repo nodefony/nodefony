@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "juice": "9.1.0",
-    "nodemailer": "6.9.4"
+    "nodemailer": "6.9.5"
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "1.0.11"
