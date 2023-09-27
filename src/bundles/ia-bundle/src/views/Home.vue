@@ -39,9 +39,9 @@
               Entrainez le modèle avec des images issues de fichiers ou de votre webcam.
             </v-card-text>
             <template v-slot:actions>
-              <v-btn color="primary" variant="text">View More</v-btn>
+              
 
-              <v-btn color="primary" variant="text">Go</v-btn>
+              <v-btn color="primary" variant="text" to="/audio">Go</v-btn>
             </template>
           </v-card>
 
@@ -53,9 +53,9 @@
               Entrainez le modèle avec des images issues de fichiers ou de votre webcam.
             </v-card-text>
             <template v-slot:actions>
-              <v-btn color="primary" variant="text">View More</v-btn>
+              
 
-              <v-btn color="primary" variant="text">Go</v-btn>
+              <v-btn color="primary" variant="text" to="/motion">Go</v-btn>
             </template>
           </v-card>
         </v-col>

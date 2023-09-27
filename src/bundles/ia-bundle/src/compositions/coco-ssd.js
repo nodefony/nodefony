@@ -9,8 +9,10 @@ import {
   defineEmits
 } from "vue"
 
-import * as tfjs from '@tensorflow/tfjs';
+
 import * as cocoSsd from '@tensorflow-models/coco-ssd'
+import * as tfjs from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs-core';
 
 const Cocossd = () => {
 
@@ -21,8 +23,8 @@ const Cocossd = () => {
 
   })
 
-  onMounted(() => {
-
+   onMounted(async () => {
+    await tf.ready();
   })
 
   const getUserMediaSupported = () => {
