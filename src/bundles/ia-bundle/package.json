@@ -22,7 +22,7 @@
     "@tensorflow/tfjs-vis": "^1.5.1",
     "asciify-image": "0.1.10",
     "clean-webpack-plugin": "^4.0.0",
-    "core-js": "^3.26.1",
+    "core-js": "3.33.0",
     "danfojs": "1.1.2",
     "danfojs-node": "1.1.2",
     "jpeg-js": "0.4.4",
@@ -33,7 +33,7 @@
     "sass-loader": "13.3.2",
     "scikitjs": "1.24.0",
     "vue": "^3.2.45",
-    "vue-i18n": "9.4.1",
+    "vue-i18n": "9.5.0",
     "vue-router": "4.2.5",
     "vuetify": "3.3.19",
     "vuex": "^4.1.0"
