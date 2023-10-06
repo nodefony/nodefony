@@ -30,7 +30,7 @@
     "precss": "^4.0.0",
     "raw-loader": "^4.0.2",
     "resolve-url-loader": "5.0.0",
-    "sass": "1.68.0",
+    "sass": "1.69.0",
     "sass-loader": "13.3.2",
     "style-loader": "3.3.3",
     "terser-webpack-plugin": "5.3.9",

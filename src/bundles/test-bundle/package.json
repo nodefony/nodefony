@@ -13,7 +13,7 @@
     "javascript"
   ],
   "dependencies": {
-    "puppeteer": "21.3.6",
+    "puppeteer": "21.3.7",
     "querystring": "0.2.1",
     "request": "^2.88.2",
     "websocket": "^1.0.34"
@@ -38,7 +38,7 @@
     "node-fetch": "3.3.2",
     "nodefony-client": "6.0.2",
     "rxjs": "7.8.1",
-    "sass": "1.68.0",
+    "sass": "1.69.0",
     "sass-loader": "13.3.2",
     "terser-webpack-plugin": "5.3.9",
     "webpack": "5.88.2",
