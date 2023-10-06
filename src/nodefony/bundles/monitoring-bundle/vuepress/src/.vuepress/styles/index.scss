@@ -1,1 +1,23 @@
 // place your custom styles here
+@import url('https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap');
+
+.vp-site-name {
+  font-size: 2rem;
+  font-family: "Gochi Hand" !important;
+  color: #0167b8
+}
+
+
+#main-title {
+  color: #0167b8;
+  font-family: "Gochi Hand" !important;
+  margin: .5rem 0;
+  background: linear-gradient(120deg, var(--theme-color-light), var(--theme-color) 30%, #0167b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 3.6rem;
+  font-family: var(--font-family);
+  line-height: 1.5;
+  -webkit-text-fill-color: transparent;
+}

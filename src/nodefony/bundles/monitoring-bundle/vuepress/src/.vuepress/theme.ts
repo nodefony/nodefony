@@ -16,7 +16,9 @@ export default hopeTheme({
 
   repo: "nodefony/nodefony",
 
-  docsDir: "src/nodefony/bundles/monitoring-bundle/vuepress",
+  docsBranch: 'dev',
+
+  docsDir: "src/nodefony/bundles/monitoring-bundle/vuepress/src",
 
   locales: {
     "/": {
