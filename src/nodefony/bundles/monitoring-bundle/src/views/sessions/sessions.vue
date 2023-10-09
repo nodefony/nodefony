@@ -1,37 +1,39 @@
 <template >
   <v-window class="h-100">
 
-    <v-data-table-server fixed-header
-                         :loading="loading"
-                         :headers="headers"
-                         :items="sessions"
-                         :items-length="totalSessions"
-                         :search="search"
-                         item-value="name"
-                         density="compact"
-                         :items-per-page="itemsPerPage"
-                         @update:options="options = $event"
-                         class="elevation-5">
+    <v-data-table-server
+      fixed-header
+      :loading="loading"
+      :headers="headers"
+      :items="sessions"
+      :items-length="totalSessions"
+      :search="search"
+      item-value="name"
+      density="compact"
+      :items-per-page="itemsPerPage"
+      @update:options="options = $event"
+      class="elevation-5">
 
-      <template v-slot:item.user="{ item }">
-        <v-chip v-if="getUser(item.raw.user || item.raw.username)"
-                density="compact">
-          {{getUser(item.raw.user || item.raw.username)}}
-        </v-chip>
+
+      <template v-slot:item="{ item }">
+        <tr>
+          <td >
+            <v-chip v-if="item.user && getUser(item.user || item.username)"
+                    density="compact">
+              {{getUser(item.user || item.username)}}
+            </v-chip>
+          </td>
+          <td>{{item.session_id}}</td>
+          <td>{{item.context}}</td>
+          <td>{{JSON.stringify(item.Attributes, null, " ")}}</td>
+          <td>{{moment(item.updatedAt)}}</td>
+          <td> {{moment(item.createdAt)}}</td>
+
+
+        </tr>
       </template>
-      <template v-slot:item.updatedAt="{ item }">
-        <v-chip density="compact">
-          {{moment(item.raw.updatedAt)}}
-        </v-chip>
-      </template>
-      <template v-slot:item.createdAt="{ item }">
-        <v-chip density="compact">
-          {{moment(item.raw.createdAt)}}
-        </v-chip>
-      </template>
-      <template v-slot:item.Attributes="{ item }">
-        {{JSON.stringify(item.raw.Attributes, null, " ")}}
-      </template>
+
+
       <template v-slot:top>
         <v-toolbar color="#233056"
                    theme="dark"
@@ -164,7 +166,7 @@ export default {
   watch: {
     options: {
       handler (value) {
-        console.log(value);
+        // console.log(value);
       },
       deep: true
     }
@@ -193,13 +195,14 @@ export default {
       return 0;
     }
   },
-  beforeMount () {},
-  mounted () {},
+  // beforeMount () {},
+  // mounted () {},
   methods: {
     getUser (user) {
       if (user && user.username) {
         return user.username;
       }
+      return null;
     }
   }
 };

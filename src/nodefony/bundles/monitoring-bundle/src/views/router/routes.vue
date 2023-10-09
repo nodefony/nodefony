@@ -46,7 +46,8 @@
         </v-card-title>
       </template>
 
-      <template v-slot:item.requirements="{ item }">
+      <template v-if="item"
+                v-slot:item.requirements="{ item }">
         <v-chip v-if="getMethods(item.raw.requirements.method)"
                 v-for='method in item.raw.requirements.method'
                 density="compact">

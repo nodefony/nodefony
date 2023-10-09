@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /*
  *   MODEFONY FRAMEWORK UNIT TEST
  *
@@ -5,8 +6,8 @@
  *
  *   In the global context you can find :
  *
- *	nodefony : namespace to get library
- *	kernel :   instance of kernel who launch the test
+ *  nodefony : namespace to get library
+ *  kernel :   instance of kernel who launch the test
  *
  */
 const http = require("http");

@@ -1,8 +1,8 @@
 /**
- *	@class graphqlController
- *	@constructor
- *	@param {class} container
- *	@param {class} context
+ *@class graphqlController
+ *  @constructor
+ *  @param {class} container
+ *  @param {class} context
  *  @Route ("/api")
  */
 
@@ -74,44 +74,6 @@ module.exports = class graphqlController extends nodefony.Controller {
       throw e;
     }
   }
-
-  /**
-   *    @Method ({"WEBSOCKET"})
-   *    @Route (
-   *     "/ws/graphql",
-   *      name="api-nodefony-ws-graphql",
-   *      requirements={"protocol" = "graphql-transport-ws"}
-   *    )
-   */
-  /* graphqlWsAction(message) {
-    if(message){
-      console.log("pass message", message)
-    }else{
-      console.log("PASS HAND",this.context.connection.pong)
-
-      console.log("pass hanshake")
-    }
-  }*/
-
-  /* static provider(context) {
-    const UsersProvider = usersStaticProvider(context);
-    const prov = nodefony.extend(
-      //Nodefony,
-      //Router,
-      //Config,
-      //Bundle,
-      //Services,
-      //Orm,
-      //Sessions,
-      //Requests,
-      //Migrations,
-      //Logs
-    );
-    if (UsersProvider) {
-      return nodefony.extend(prov, UsersProvider)
-    }
-    return prov
-  }*/
 
   static schema (context) {
     return nodefony.api.Graphql.makeExecutableSchema({
