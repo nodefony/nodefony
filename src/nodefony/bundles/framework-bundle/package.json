@@ -28,7 +28,7 @@
     "jquery": "3.7.1",
     "memory-fs": "^0.5.0",
     "mini-css-extract-plugin": "2.7.6",
-    "sass": "1.69.0",
+    "sass": "1.69.2",
     "sass-loader": "13.3.2",
     "terser-webpack-plugin": "5.3.9",
     "webpack-merge": "5.9.0"
