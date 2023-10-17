@@ -1,3 +1,19 @@
+## [7.0.0-beta.21](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.20...v7.0.0-beta.21) (2023-10-17)
+
+
+### Features
+
+* ia flow dev ([0cf61b0](https://github.com/nodefony/nodefony/commit/0cf61b0c925d845a9e874e7e624be8474b8ea08d))
+* upgrade ia bundle add demo cam ([8b505e6](https://github.com/nodefony/nodefony/commit/8b505e6d493039a3a40afc89c33075d8f662c2d7))
+
+
+### Bug Fixes
+
+* debug images debugbar ([2f8116d](https://github.com/nodefony/nodefony/commit/2f8116d6c18224653ffa48772333f6cedb5c37aa))
+* monitoring sessions datatable ([d2666f7](https://github.com/nodefony/nodefony/commit/d2666f7edb86d8fe01f7e56037b9d6237911130d))
+* **sequelize:** debug mariadb create database ([b451d2c](https://github.com/nodefony/nodefony/commit/b451d2c7e4e2b2d8d68ca275a51de2afb903272d))
+* vuepress ([2797bf9](https://github.com/nodefony/nodefony/commit/2797bf954a18e5b185f1e4895a0e98c9f9bee877))
+
 ## [7.0.0-beta.20](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.19...v7.0.0-beta.20) (2023-04-17)
 
 
@@ -334,33 +350,33 @@
 
 ## [6.10.0](https://github.com/nodefony/nodefony/compare/v6.9.1...v6.10.0) (2021-12-31)
 
-### [6.9.1](https://github.com/nodefony/nodefony/compare/v6.9.0...v6.9.1) (2021-10-13)
+## [6.9.1](https://github.com/nodefony/nodefony/compare/v6.9.0...v6.9.1) (2021-10-13)
 
 ## [6.9.0](https://github.com/nodefony/nodefony/compare/v6.6.0...v6.9.0) (2021-10-12)
 
 ## [6.6.0](https://github.com/nodefony/nodefony/compare/v6.5.7...v6.6.0) (2021-09-09)
 
-### [6.5.7](https://github.com/nodefony/nodefony/compare/v6.5.6...v6.5.7) (2021-07-21)
+## [6.5.7](https://github.com/nodefony/nodefony/compare/v6.5.6...v6.5.7) (2021-07-21)
 
-### [6.5.6](https://github.com/nodefony/nodefony/compare/v6.5.5...v6.5.6) (2021-07-01)
+## [6.5.6](https://github.com/nodefony/nodefony/compare/v6.5.5...v6.5.6) (2021-07-01)
 
-### [6.5.5](https://github.com/nodefony/nodefony/compare/v6.5.4...v6.5.5) (2021-06-16)
+## [6.5.5](https://github.com/nodefony/nodefony/compare/v6.5.4...v6.5.5) (2021-06-16)
 
-### [6.5.4](https://github.com/nodefony/nodefony/compare/v6.5.3...v6.5.4) (2021-04-30)
+## [6.5.4](https://github.com/nodefony/nodefony/compare/v6.5.3...v6.5.4) (2021-04-30)
 
-### [6.5.3](https://github.com/nodefony/nodefony/compare/v6.5.2...v6.5.3) (2021-04-27)
+## [6.5.3](https://github.com/nodefony/nodefony/compare/v6.5.2...v6.5.3) (2021-04-27)
 
-### [6.5.2](https://github.com/nodefony/nodefony/compare/v6.5.1...v6.5.2) (2021-04-23)
+## [6.5.2](https://github.com/nodefony/nodefony/compare/v6.5.1...v6.5.2) (2021-04-23)
 
-### [6.5.1](https://github.com/nodefony/nodefony/compare/v6.5.0...v6.5.1) (2021-03-29)
+## [6.5.1](https://github.com/nodefony/nodefony/compare/v6.5.0...v6.5.1) (2021-03-29)
 
 ## [6.5.0](https://github.com/nodefony/nodefony/compare/v6.4.3...v6.5.0) (2021-03-19)
 
-### [6.4.3](https://github.com/nodefony/nodefony/compare/v6.4.2...v6.4.3) (2021-03-09)
+## [6.4.3](https://github.com/nodefony/nodefony/compare/v6.4.2...v6.4.3) (2021-03-09)
 
-### [6.4.2](https://github.com/nodefony/nodefony/compare/v6.4.1...v6.4.2) (2021-02-26)
+## [6.4.2](https://github.com/nodefony/nodefony/compare/v6.4.1...v6.4.2) (2021-02-26)
 
-### [6.4.1](https://github.com/nodefony/nodefony/compare/v6.4.0...v6.4.1) (2021-02-20)
+## [6.4.1](https://github.com/nodefony/nodefony/compare/v6.4.0...v6.4.1) (2021-02-20)
 
 ## [6.4.0](https://github.com/nodefony/nodefony/compare/v6.3.0...v6.4.0) (2021-02-19)
 
@@ -370,7 +386,7 @@
 
 ## [6.1.0](https://github.com/nodefony/nodefony/compare/v6.0.1...v6.1.0) (2020-11-16)
 
-### [6.0.1](https://github.com/nodefony/nodefony/compare/v6.0.0...v6.0.1) (2020-10-12)
+## [6.0.1](https://github.com/nodefony/nodefony/compare/v6.0.0...v6.0.1) (2020-10-12)
 
 ## [6.0.0](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.16...v6.0.0) (2020-10-12)
 
@@ -406,35 +422,35 @@
 
 ## [6.0.0-beta.1](https://github.com/nodefony/nodefony/compare/v5.1.1...v6.0.0-beta.1) (2020-02-13)
 
-### [5.1.1](https://github.com/nodefony/nodefony/compare/v5.1.0...v5.1.1) (2019-11-04)
+## [5.1.1](https://github.com/nodefony/nodefony/compare/v5.1.0...v5.1.1) (2019-11-04)
 
 ## [5.1.0](https://github.com/nodefony/nodefony/compare/v5.0.9...v5.1.0) (2019-10-30)
 
-### [5.0.9](https://github.com/nodefony/nodefony/compare/v5.0.8...v5.0.9) (2019-10-03)
+## [5.0.9](https://github.com/nodefony/nodefony/compare/v5.0.8...v5.0.9) (2019-10-03)
 
-### [5.0.8](https://github.com/nodefony/nodefony/compare/v5.0.7...v5.0.8) (2019-09-26)
+## [5.0.8](https://github.com/nodefony/nodefony/compare/v5.0.7...v5.0.8) (2019-09-26)
 
-### [5.0.7](https://github.com/nodefony/nodefony/compare/v5.0.6...v5.0.7) (2019-09-17)
+## [5.0.7](https://github.com/nodefony/nodefony/compare/v5.0.6...v5.0.7) (2019-09-17)
 
-### [5.0.6](https://github.com/nodefony/nodefony/compare/v5.0.5...v5.0.6) (2019-09-17)
+## [5.0.6](https://github.com/nodefony/nodefony/compare/v5.0.5...v5.0.6) (2019-09-17)
 
-### [5.0.5](https://github.com/nodefony/nodefony/compare/v5.0.4...v5.0.5) (2019-09-11)
+## [5.0.5](https://github.com/nodefony/nodefony/compare/v5.0.4...v5.0.5) (2019-09-11)
 
-### [5.0.4](https://github.com/nodefony/nodefony/compare/v5.0.3...v5.0.4) (2019-08-26)
+## [5.0.4](https://github.com/nodefony/nodefony/compare/v5.0.3...v5.0.4) (2019-08-26)
 
-### [5.0.3](https://github.com/nodefony/nodefony/compare/v5.0.2...v5.0.3) (2019-08-14)
+## [5.0.3](https://github.com/nodefony/nodefony/compare/v5.0.2...v5.0.3) (2019-08-14)
 
-### [5.0.2](https://github.com/nodefony/nodefony/compare/v5.0.1...v5.0.2) (2019-08-05)
+## [5.0.2](https://github.com/nodefony/nodefony/compare/v5.0.1...v5.0.2) (2019-08-05)
 
-### [5.0.1](https://github.com/nodefony/nodefony/compare/v5.0.0...v5.0.1) (2019-08-01)
+## [5.0.1](https://github.com/nodefony/nodefony/compare/v5.0.0...v5.0.1) (2019-08-01)
 
 ## [5.0.0](https://github.com/nodefony/nodefony/compare/v4.3.3...v5.0.0) (2019-07-29)
 
-### [4.3.3](https://github.com/nodefony/nodefony/compare/v4.3.2...v4.3.3) (2019-04-10)
+## [4.3.3](https://github.com/nodefony/nodefony/compare/v4.3.2...v4.3.3) (2019-04-10)
 
-### [4.3.2](https://github.com/nodefony/nodefony/compare/v4.3.1...v4.3.2) (2019-04-10)
+## [4.3.2](https://github.com/nodefony/nodefony/compare/v4.3.1...v4.3.2) (2019-04-10)
 
-### [4.3.1](https://github.com/nodefony/nodefony/compare/v4.3.0...v4.3.1) (2019-03-23)
+## [4.3.1](https://github.com/nodefony/nodefony/compare/v4.3.0...v4.3.1) (2019-03-23)
 
 ## [4.3.0](https://github.com/nodefony/nodefony/compare/v4.2.0-beta.2...v4.3.0) (2019-03-22)
 
@@ -494,25 +510,25 @@
 
 ## [4.0.0-beta.0](https://github.com/nodefony/nodefony/compare/v3.2.2...v4.0.0-beta.0) (2018-06-15)
 
-### [3.2.2](https://github.com/nodefony/nodefony/compare/v3.2.1...v3.2.2) (2018-01-12)
+## [3.2.2](https://github.com/nodefony/nodefony/compare/v3.2.1...v3.2.2) (2018-01-12)
 
-### [3.2.1](https://github.com/nodefony/nodefony/compare/v3.2.0...v3.2.1) (2018-01-12)
+## [3.2.1](https://github.com/nodefony/nodefony/compare/v3.2.0...v3.2.1) (2018-01-12)
 
 ## [3.2.0](https://github.com/nodefony/nodefony/compare/v3.1.4...v3.2.0) (2018-01-08)
 
-### [3.1.4](https://github.com/nodefony/nodefony/compare/v3.1.3...v3.1.4) (2017-12-20)
+## [3.1.4](https://github.com/nodefony/nodefony/compare/v3.1.3...v3.1.4) (2017-12-20)
 
-### [3.1.3](https://github.com/nodefony/nodefony/compare/v3.1.2...v3.1.3) (2017-11-22)
+## [3.1.3](https://github.com/nodefony/nodefony/compare/v3.1.2...v3.1.3) (2017-11-22)
 
 ## [3.1.0](https://github.com/nodefony/nodefony/compare/v3.0.3...v3.1.0) (2017-11-20)
 
-### [3.0.3](https://github.com/nodefony/nodefony/compare/v3.0.2...v3.0.3) (2017-10-09)
+## [3.0.3](https://github.com/nodefony/nodefony/compare/v3.0.2...v3.0.3) (2017-10-09)
 
-### [3.0.2](https://github.com/nodefony/nodefony/compare/v3.0.1...v3.0.2) (2017-09-18)
+## [3.0.2](https://github.com/nodefony/nodefony/compare/v3.0.1...v3.0.2) (2017-09-18)
 
-### [3.0.1](https://github.com/nodefony/nodefony/compare/v3.0.0...v3.0.1) (2017-09-14)
+## [3.0.1](https://github.com/nodefony/nodefony/compare/v3.0.0...v3.0.1) (2017-09-14)
 
-### [2.1.4](https://github.com/nodefony/nodefony/compare/v2.1.3...v2.1.4) (2017-05-08)
+## [2.1.4](https://github.com/nodefony/nodefony/compare/v2.1.3...v2.1.4) (2017-05-08)
 
-### [2.1.3](https://github.com/nodefony/nodefony/compare/v2.1.2...v2.1.3) (2017-04-29)
+## [2.1.3](https://github.com/nodefony/nodefony/compare/v2.1.2...v2.1.3) (2017-04-29)
 
