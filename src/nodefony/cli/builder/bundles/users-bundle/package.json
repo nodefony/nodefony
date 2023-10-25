@@ -49,7 +49,7 @@
     "style-loader": "3.3.3",
     "svg-inline-loader": "^0.8.2",
     "terser-webpack-plugin": "5.3.9",
-    "webpack": "5.89.0",
+    "webpack": "5.76.0",
     "webpack-merge": "5.10.0"
   },
   "license": "CECILL-B",
