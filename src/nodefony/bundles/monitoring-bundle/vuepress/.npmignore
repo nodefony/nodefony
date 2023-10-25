@@ -1,0 +1,41 @@
+#Ignore vin backup
+*.swp
+*.swn
+*.swo
+#emacs
+*~
+# macos
+.DS_Store
+
+*.[oa]
+
+# Eclipse file
+/.project
+/.settings
+
+
+node_modules
+
+.temp
+.cache
+/dist
+/src
+
+.git
+.github
+.travis
+.travis.yml
+.babelrc
+.jshintrc
+.jshintignore
+.gitmodules
+.bithoundrc
+.grenrc.json
+.editorconfig
+.core
+
+npm-debug.log
+yarn-error.log
+
+
+

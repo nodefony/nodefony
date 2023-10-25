@@ -35,18 +35,18 @@ let unitTest = true;
 let domainCheck = false;
 
 switch (kernel.appEnvironment) {
-case "production":
-case "development":
-default:
-  certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
-  certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
-  certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
-  CDN = null;
-  statics = true;
-  documentation = true;
-  monitoring = true;
-  unitTest = true;
-  domainCheck = true;
+  case "production":
+  case "development":
+  default:
+    certificats.key = path.resolve("config", "certificates", "server", "privkey.pem");
+    certificats.cert = path.resolve("config", "certificates", "server", "fullchain.pem");
+    certificats.ca = path.resolve("config", "certificates", "ca", "nodefony-root-ca.crt.pem");
+    CDN = null;
+    statics = true;
+    documentation = true;
+    monitoring = true;
+    unitTest = true;
+    domainCheck = true;
 }
 
 module.exports = {

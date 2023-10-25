@@ -13,7 +13,7 @@
     "javascript"
   ],
   "dependencies": {
-    "puppeteer": "21.3.8",
+    "puppeteer": "21.4.1",
     "querystring": "0.2.1",
     "request": "^2.88.2",
     "websocket": "^1.0.34"
@@ -29,7 +29,7 @@
     "css-loader": "6.8.1",
     "expose-loader": "4.1.0",
     "font-awesome": "^4.7.0",
-    "formdata-node": "5.0.1",
+    "formdata-node": "6.0.3",
     "imports-loader": "4.0.1",
     "jquery": "3.7.1",
     "less": "4.2.0",
@@ -38,7 +38,7 @@
     "node-fetch": "3.3.2",
     "nodefony-client": "6.0.2",
     "rxjs": "7.8.1",
-    "sass": "1.69.3",
+    "sass": "1.69.4",
     "sass-loader": "13.3.2",
     "terser-webpack-plugin": "5.3.9",
     "webpack": "5.89.0",

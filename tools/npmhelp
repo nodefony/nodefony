@@ -15,6 +15,10 @@ npm publish --tag beta
 #Scoped Package with tag
 npm publish --access=public
 
+
+#Test and create tarball
+npm pack
+
    _   _  __     __  __  __
   | \ | | \ \   / / |  \/  |
   |  \| |  \ \ / /  | |\/| |
