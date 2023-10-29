@@ -76,7 +76,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-vue": "9.18.1",
     "markdown-eslint-parser": "1.2.1",
-    "node-gyp": "9.4.1",
+    "node-gyp": "10.0.0",
     "vue-eslint-parser": "9.3.2"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",

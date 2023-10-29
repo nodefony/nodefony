@@ -48,7 +48,7 @@
     "@vue/cli-service": "5.0.8",
     "@vue/compiler-sfc": "3.3.7",
     "expose-loader": "4.1.0",
-    "node-gyp": "9.4.1",
+    "node-gyp": "10.0.0",
     "vue-cli-plugin-i18n": "^2.3.1",
     "webpack-dev-server": "4.15.1"
   },
