@@ -1,3 +1,7 @@
+const {
+
+  Op
+} = nodefony.Sequelize;
 module.exports = {
   Query: {
     //  provides all functions for each API endpoint
@@ -29,10 +33,10 @@ module.exports = {
           if (query && query.type && query.type === "dataTable") {
             // console.log(query);
             let index = query.startIndex || 1;
-            let page = query.page || 1;
             index = parseInt(index, 10);
-            page = parseInt(page, 10);
-            options.offset = page ? page - 1 : index - 1;
+            let page = query.page || index;
+            page = parseInt(page, 10) - 1;
+            options.offset = page * query.itemsPerPage;
             options.limit = parseInt(query.itemsPerPage, 10);
             if (query.sortBy && query.sortBy.length) {
               options.order = [];
@@ -52,12 +56,17 @@ module.exports = {
               }
             }
             if (query.search) {
-              options.where = {
-                username: query.search
+              options.include[0].required = true;
+              options.include[0].where = {
+              // options.where = {
+                username: {
+                  [Op.startsWith]: query.search
+                }
               };
             }
             if (username) {
-              options.where = {
+              options.include[0].required = true;
+              options.include[0].where = {
                 username
               };
             }
