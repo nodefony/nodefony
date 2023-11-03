@@ -14,7 +14,7 @@
 
 // const crypto = require('crypto');
 const path = require("path");
-const readFile = function (Path) {
+const readFile = function readFile (Path) {
   try {
     return fs.readFileSync(Path, {
       encoding: "utf8"
@@ -24,7 +24,7 @@ const readFile = function (Path) {
     throw e;
   }
 };
-const randomSecret = function () {
+const randomSecret = function randomSecret () {
   const sercretPath = path.resolve("config", "certificates", "ca", "private", "ca.key.pem");
   return readFile(sercretPath);
 };

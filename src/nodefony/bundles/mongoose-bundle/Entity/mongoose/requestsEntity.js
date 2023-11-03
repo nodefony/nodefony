@@ -36,8 +36,8 @@ const schema = {
   scheme: {
     type: String
   },
-  username: {
-    type: String,
+  user: {
+    type: Schema.Types.ObjectId,
     ref: "user"
   },
   data: {
@@ -46,12 +46,6 @@ const schema = {
 };
 module.exports = class requests extends nodefony.Entity {
   constructor (bundle) {
-    /*
-     *   @param bundle instance
-     *   @param Entity name
-     *   @param orm name
-     *   @param connection name
-     */
     super(bundle, "requests", "mongoose", "nodefony");
   }
 

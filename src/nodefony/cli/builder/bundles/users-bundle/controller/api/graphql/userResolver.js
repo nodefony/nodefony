@@ -47,7 +47,7 @@ module.exports = {
       }
     },
 
-    async updateUser (obj, field, context, info) {
+    updateUser (obj, field, context, info) {
       const user = context.getUser();
       const usersService = context.get("users");
       const orm = context.kernel.getORM();
@@ -102,7 +102,7 @@ module.exports = {
         });
     },
 
-    async deleteUser (obj, field, context, info) {
+    deleteUser (obj, field, context, info) {
       const {
         username
       } = field;
@@ -111,7 +111,7 @@ module.exports = {
       return usersService.delete(username, user);
     },
 
-    async deleteUsers (obj, field, context, info) {
+    deleteUsers (obj, field, context, info) {
       const {
         users
       } = field;

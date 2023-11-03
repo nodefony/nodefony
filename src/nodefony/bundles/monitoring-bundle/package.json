@@ -47,7 +47,7 @@
     "ansi-to-html": "0.7.2",
     "clean-webpack-plugin": "4.0.0",
     "core-js": "3.33.2",
-    "graphiql": "3.0.6",
+    "graphiql": "3.0.8",
     "graphql-ws": "5.14.2",
     "highlight.js": "11.9.0",
     "html-webpack-plugin": "5.5.3",

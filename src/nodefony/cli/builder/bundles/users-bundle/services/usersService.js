@@ -1,3 +1,6 @@
+/* eslint-disable consistent-return */
+/* eslint-disable default-case */
+/* eslint-disable max-lines-per-function */
 module.exports = class users extends nodefony.Service {
   constructor (container) {
     super("users", container);
@@ -91,13 +94,9 @@ module.exports = class users extends nodefony.Service {
     case "search":
     case "list":
       if (!obj.isAdmin) {
-        if (obj.isUser) {
-
-        } else {
+        if (!obj.isUser) {
           throw new nodefony.authorizationError("User not authorized", 403);
         }
-      } else {
-
       }
       break;
     case "find":
@@ -284,8 +283,7 @@ module.exports = class users extends nodefony.Service {
           });
       } catch (e) {
         throw await this.sanitizeError(e, transaction);
-      } finally {}
-      break;
+      } finally { }
     case "sequelize":
       try {
         const {
@@ -331,7 +329,6 @@ module.exports = class users extends nodefony.Service {
       } catch (e) {
         throw await this.sanitizeError(e, transaction);
       }
-      break;
     case "mongoose":
       try {
         return this.entity.create([query], {
@@ -364,13 +361,13 @@ module.exports = class users extends nodefony.Service {
             if (!user) {
               throw new nodefony.Error(`User ${username} not found`);
             }
-            return user.remove({
+            return user.deleteOne({
               force: true
               // session: transaction
             })
-              .then(async (user) =>
+              .then(async (state) =>
               // await transaction.commitTransaction();
-                user)
+                ({username}))
               .catch(async (e) => {
                 throw await this.sanitizeError(e, transaction);
               });
@@ -381,7 +378,6 @@ module.exports = class users extends nodefony.Service {
       } catch (e) {
         throw await this.sanitizeError(e, transaction);
       }
-      break;
     case "sequelize":
       try {
         return this.entity.findOne({

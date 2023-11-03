@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /*
  *   MODEFONY FRAMEWORK UNIT TEST
  *
@@ -46,8 +47,8 @@ describe("BUNDLE users", () => {
   });
 
   describe("API LOGIN", () => {
-    beforeEach(() => {});
-    before(() => {});
+    beforeEach(() => { });
+    before(() => { });
 
     it("LOGIN JWT", async () => {
       // const formData = new global.FormData()

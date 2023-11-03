@@ -11,8 +11,8 @@ const schema = {
     type: String,
     default: "default"
   },
-  username: {
-    type: String,
+  user: {
+    type: Schema.Types.ObjectId,
     ref: "user"
   },
   Attributes: {
@@ -31,12 +31,6 @@ const schema = {
 
 module.exports = class session extends nodefony.Entity {
   constructor (bundle) {
-    /*
-     *   @param bundle instance
-     *   @param Entity name
-     *   @param orm name
-     *   @param connection name
-     */
     super(bundle, "session", "mongoose", "nodefony");
   }
 
@@ -48,7 +42,7 @@ module.exports = class session extends nodefony.Entity {
         updatedAt: "updatedAt"
       }
     });
-    mySchema.statics.fetchAll = function (callback) {
+    mySchema.statics.fetchAll = function fetchAll (callback) {
       return this.findAll().then((result) => callback(null, result))
         .catch((error) => {
           if (error) {

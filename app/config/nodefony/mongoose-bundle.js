@@ -23,24 +23,23 @@ const vault = async () => {
 };
 
 switch (kernel.appEnvironment.environment) {
-case "production":
-case "development":
-default:
-  connectors.nodefony = {
-    host: "localhost",
-    port: 27017,
-    dbname: "nodefony",
-    // credentials: vault,
-    settings: {
-      user: "nodefony",
-      pass: "nodefony",
-      maxPoolSize: 50,
-      useNewUrlParser: true,
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 5000,
-      connectTimeoutMS: 5000
-    }
-  };
+  case "production":
+  case "development":
+  default:
+    connectors.nodefony = {
+      host: "localhost",
+      port: 27017,
+      dbname: "nodefony",
+      // credentials: vault,
+      settings: {
+        user: "nodefony",
+        pass: "nodefony",
+        maxPoolSize: 50,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 5000,
+        connectTimeoutMS: 5000
+      }
+    };
 }
 
 module.exports = {

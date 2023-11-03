@@ -13,8 +13,8 @@ let connectors = {}
 const vault = async () => {
   const serviceVault = kernel.get("vault");
   return await serviceVault.getSecret({
-      path: "nodefony/data/database/mongo/connector/nodefony"
-    })
+    path: "nodefony/data/database/mongo/connector/nodefony"
+  })
     .then((secret) => {
       return secret.data.data
     })
@@ -36,7 +36,6 @@ switch (kernel.appEnvironment.environment) {
         user: "nodefony",
         pass: "nodefony",
         maxPoolSize: 50,
-        useNewUrlParser: true,
         serverSelectionTimeoutMS: 5000,
         socketTimeoutMS: 5000,
         connectTimeoutMS: 5000

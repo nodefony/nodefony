@@ -91,7 +91,7 @@ export default {
       search: "",
       itemsPerPage: 12,
       options: {
-        startIndex: 0,
+        // startIndex: 0,
         itemsPerPage: 12,
         order: [
           ["updatedAt", "asc"]

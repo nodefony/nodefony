@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 module.exports = {
   Query: {
     //  provides all functions for each API endpoint
@@ -42,14 +43,13 @@ module.exports = {
           });
       case "mongoose":
         return requestsEntity.find({})
-          .populate("username")
+          .populate("user")
           .then((results) =>
             // console.log(results)
             JSON.stringify({
               count: Object.keys(results).length,
               rows: results
             }));
-        break;
       }
     },
 
@@ -73,6 +73,15 @@ module.exports = {
           }]
         })
           .then((results) => JSON.stringify(results))
+          .catch((error) => {
+            context.log(error, "ERROR");
+            throw new nodefony.Error(error);
+          });
+      case "mongoose":
+        return requestsEntity.findById(id)
+          .populate("user")
+          .lean({versionKey: false})
+          .then((result) => JSON.stringify(result))
           .catch((error) => {
             context.log(error, "ERROR");
             throw new nodefony.Error(error);

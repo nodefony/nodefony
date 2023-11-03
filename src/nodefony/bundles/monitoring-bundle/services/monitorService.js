@@ -870,7 +870,7 @@ module.exports = class Monitor extends nodefony.Service {
             protocol: context.protocol,
             time: context.profiling.timeRequest,
             scheme: context.scheme,
-            username: myuser ? myuser._id : null,
+            user: myuser ? myuser._id : null,
             data
           })
             .then((request) => {

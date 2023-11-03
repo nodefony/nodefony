@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 const {Schema} = require("mongoose");
 
 /*
@@ -9,12 +10,6 @@ const {Schema} = require("mongoose");
  */
 module.exports = class jwt extends nodefony.Entity {
   constructor (bundle) {
-    /*
-     *   @param bundle instance
-     *   @param Entity name
-     *   @param orm name
-     *   @param connection name
-     */
     super(bundle, "jwt", "mongoose", "nodefony");
   }
 
@@ -46,96 +41,109 @@ module.exports = class jwt extends nodefony.Entity {
       }
     });
 
-    mySchema.statics.getRefreshToken = function (token) {
+    mySchema.statics.getRefreshToken = function getRefreshToken (token) {
       const request = {
         refreshToken: token
       };
       return this.findOne(request);
     };
 
-    mySchema.statics.setRefreshToken = async function (username, token, refreshToken, active = true) {
+    mySchema.statics.setRefreshToken = async function setRefreshToken (username, token, refreshToken, active = true) {
       let session = null;
       try {
-        session = await db.startSession.call(db);
+        session = await db.startSession();
+        await session.startTransaction();
         return this.create({
           username,
           refreshToken,
           token,
           active
         })
-          .then((mytoken) => {
-            session.commitTransaction();
+          .then(async (mytoken) => {
+            await session.commitTransaction();
+            await session.endSession();
             return mytoken;
           })
-          .catch((e) => {
-            session.abortTransaction();
+          .catch(async (e) => {
+            await session.abortTransaction();
+            await session.endSession();
             throw e;
           });
       } catch (e) {
         if (session) {
-          session.abortTransaction();
+          await session.abortTransaction();
+          await session.endSession();
         }
         throw e;
       }
     };
 
-    mySchema.statics.updateRefreshToken = async function (username, token, refreshToken) {
+    mySchema.statics.updateRefreshToken = async function updateRefreshToken (username, token, refreshToken) {
       let session = null;
       try {
-        session = await db.startSession.call(db);
+        session = await db.startSession();
+        await session.startTransaction();
         return this.update({
           username,
           refreshToken
         }, {
           token
         })
-          .then((mytoken) => {
-            session.commitTransaction();
+          .then(async (mytoken) => {
+            await session.commitTransaction();
+            await session.endSession();
             return mytoken;
           })
-          .catch((e) => {
-            session.abortTransaction();
+          .catch(async (e) => {
+            await session.abortTransaction();
+            await session.endSession();
             throw e;
           });
       } catch (e) {
         if (session) {
-          session.abortTransaction();
+          await session.abortTransaction();
+          await session.endSession();
         }
         throw e;
       }
     };
 
-    mySchema.statics.deleteRefreshToken = async function (refreshToken) {
+    mySchema.statics.deleteRefreshToken = async function deleteRefreshToken (refreshToken) {
       let session = null;
       try {
-        session = await db.startSession.call(db);
+        session = await db.startSession();
+        await session.startTransaction();
         let res = null;
         res = this.deleteMany({
           refreshToken
         });
         return res
-          .then((mytoken) => {
-            session.commitTransaction();
+          .then(async (mytoken) => {
+            await session.commitTransaction();
+            await session.endSession();
             if (mytoken.deletedCount) {
               return true;
             }
             return false;
-          }).catch((e) => {
-            session.abortTransaction();
+          }).catch(async (e) => {
+            await session.abortTransaction();
+            await session.endSession();
             throw e;
           });
       } catch (e) {
         if (session) {
-          session.abortTransaction();
+          await session.abortTransaction();
+          await session.endSession();
         }
         throw e;
       }
     };
 
-    mySchema.statics.truncate = async function (username) {
+    mySchema.statics.truncate = async function truncate (username) {
       let session = null;
       try {
-        session = await db.startSession.call(db);
+        session = await db.startSession();
+        await session.startTransaction();
         let res = null;
         if (!username) {
           res = this.remove();
@@ -145,16 +153,19 @@ module.exports = class jwt extends nodefony.Entity {
           });
         }
         return res
-          .then((mytoken) => {
-            session.commitTransaction();
+          .then(async (mytoken) => {
+            await session.commitTransaction();
+            await session.endSession();
             return mytoken.deletedCount;
-          }).catch((e) => {
-            session.abortTransaction();
+          }).catch(async (e) => {
+            await session.abortTransaction();
+            await session.endSession();
             throw e;
           });
       } catch (e) {
         if (session) {
-          session.abortTransaction();
+          await session.abortTransaction();
+          await session.endSession();
         }
         throw e;
       }

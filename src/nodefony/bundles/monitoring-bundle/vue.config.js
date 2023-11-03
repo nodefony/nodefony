@@ -31,7 +31,7 @@ try {
     watch = true;
   }
   debug = kernel.debug ? "*" : false;
-} catch (e) {}
+} catch (e) { }
 
 const vuetifyDir = path.dirname(require.resolve("vuetify"));
 const packageVuetify = require(path.resolve(vuetifyDir, "..", "package.json"));
@@ -46,7 +46,7 @@ try {
   process.env.VUE_APP_DOMAIN = kernel.domain;
   process.env.VUE_APP_HTTP_PORT = kernel.httpPort;
   process.env.VUE_APP_HTTPS_PORT = kernel.httpsPort;
-} catch (e) {}
+} catch (e) { }
 
 module.exports = defineConfig({
   lintOnSave: false,
@@ -137,7 +137,8 @@ module.exports = defineConfig({
       extensions: [".js", ".json", ".jsx", ".css", ".mjs"],
       fallback: {
         "path": false,
-        "assert": false
+        "assert": false,
+        "querystring": require.resolve("querystring-es3")
       }
       // modules: [nodeModule]
     },

@@ -1,5 +1,6 @@
+/* eslint-disable max-lines-per-function */
 nodefony.register.call(nodefony.session.storage, "mongoose", () => {
-  const finderGC = function (msMaxlifetime, contextSession) {
+  const finderGC = function finderGC (msMaxlifetime, contextSession) {
     const where = {
       context: contextSession,
       updatedAt: {
@@ -70,7 +71,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", () => {
       })
         .then((result) => {
           if (result) {
-            return result.remove({
+            return result.deleteOne({
               force: true
             }).then((session) => {
               this.manager.logger(`DB DESTROY SESSION context : ${session.context} ID : ${session.session_id} DELETED`);
@@ -112,7 +113,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", () => {
         };
       }
       return this.entity.findOne(where)
-        .populate("username")
+        .populate("user")
         .then((result) => {
           if (result) {
             return {
@@ -140,7 +141,7 @@ nodefony.register.call(nodefony.session.storage, "mongoose", () => {
         const myuser = await this.userEntity.findOne({
           username: data.username.username
         });
-        data.username = myuser._id;
+        data.user = myuser._id;
       }
       return this.entity.updateOne({
         session_id: id,

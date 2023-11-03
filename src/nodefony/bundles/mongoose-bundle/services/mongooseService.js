@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 /**
  *   SERVIVE Mongoose
  */
@@ -10,9 +11,7 @@ const defaultconfigServer = {
 };
 
 const defaultConfigConnection = {
-  socketTimeoutMS: 0,
-  keepAlive: true
-  // useNewUrlParser: true,
+  socketTimeoutMS: 0
   // replicaSet: 'rs'
 };
 
@@ -214,20 +213,13 @@ class mongoose extends nodefony.Orm {
       throw new Error(`Entity : ${entityName} not found`);
     }
     const {db} = entity;
-    const session = await db.startSession.call(db);
+    const session = await db.startSession();
     await session.startTransaction();
     return session;
   }
 
-  async getTransaction (entityName) {
-    const entity = this.getNodefonyEntity(entityName);
-    if (!entity) {
-      throw new Error(`Entity : ${entityName} not found`);
-    }
-    const {db} = entity;
-    const session = await db.startSession.bind(db);
-    await session.startTransaction();
-    return session;
+  getTransaction (entityName) {
+    return this.startTransaction(entityName);
   }
 
   getConnectorsList (name = null) {
@@ -295,6 +287,7 @@ class mongoose extends nodefony.Orm {
     return obj;
   }
 
+  // eslint-disable-next-line complexity
   getOpenApiSchema (entity) {
     const attr = {
       type: "object",

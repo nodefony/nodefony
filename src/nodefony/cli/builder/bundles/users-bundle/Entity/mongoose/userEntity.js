@@ -12,12 +12,6 @@ const validator = require("validator");
 
 class userEntity extends nodefony.Entity {
   constructor (bundle) {
-    /*
-     *   @param bundle instance
-     *   @param Entity name
-     *   @param orm name
-     *   @param connection name
-     */
     super(bundle, "user", "mongoose", "nodefony");
   }
 
@@ -73,7 +67,7 @@ class userEntity extends nodefony.Entity {
             if (value === "") {
               return true;
             }
-            return validator.matches(value, /[^\w]|_|-|.|'/g);
+            return validator.matches(value, /[^\w]|_|-|.|'/gu);
           },
           message: "name allow alphanumeric characters {VALUE}"
         }
@@ -86,7 +80,7 @@ class userEntity extends nodefony.Entity {
             if (value === "") {
               return true;
             }
-            return validator.matches(value, /[^\w]|_|-|.|'/g);
+            return validator.matches(value, /[^\w]|_|-|.|'/gu);
           },
           message: "surname allow alphanumeric characters {VALUE}"
         }
