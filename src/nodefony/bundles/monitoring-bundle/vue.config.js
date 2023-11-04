@@ -188,7 +188,7 @@ module.exports = defineConfig({
         filename: path.resolve("Resources", "views", "base.html.twig"),
         template: path.resolve("Resources", "templates", "base.html.twig"),
         title: bundleConfig.name,
-        // favicon: dev ? "./Resources/public/images/app-logo.png" : false,
+        favicon: "./Resources/public/img/icons/favicon.png",
         cache: dev,
         minify: {
           collapseWhitespace: true,
@@ -207,7 +207,7 @@ module.exports = defineConfig({
         filename: path.resolve("Resources", "views", "base.graphiql.html.twig"),
         template: path.resolve("Resources", "templates", "base.html.twig"),
         title: bundleConfig.name,
-        // favicon: dev ? "./Resources/public/images/app-logo.png" : false,
+        favicon: "./Resources/public/img/icons/favicon.png",
         cache: dev,
         inject: "body",
         minify: {
@@ -227,7 +227,7 @@ module.exports = defineConfig({
         filename: path.resolve("Resources", "views", "analyser.html.twig"),
         template: path.resolve("Resources", "templates", "base.html.twig"),
         title: bundleConfig.name,
-        // favicon: dev ? "./Resources/public/images/app-logo.png" : false,
+        favicon: "./Resources/public/img/icons/favicon.png",
         cache: dev,
         inject: "body",
         minify: {
