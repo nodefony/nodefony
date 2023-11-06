@@ -1,3 +1,17 @@
+## [7.0.0-beta.21](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.22...v7.0.0-beta.21) (2023-11-06)
+
+## [7.0.0-beta.22](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.21...v7.0.0-beta.22) (2023-11-06)
+
+
+### Features
+
+* upgrade mongoose 8 ([931dd18](https://github.com/nodefony/nodefony/commit/931dd183fa35f1e9ba9b224285b85140f973b7bc))
+
+
+### Bug Fixes
+
+* debug monitoring session dataTable ([8f71504](https://github.com/nodefony/nodefony/commit/8f71504f8517d50b81b5c77c06e7262011024fa2))
+
 ## [7.0.0-beta.21](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.20...v7.0.0-beta.21) (2023-10-17)
 
 
