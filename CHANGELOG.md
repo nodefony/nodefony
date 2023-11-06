@@ -1,5 +1,3 @@
-## [7.0.0-beta.21](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.22...v7.0.0-beta.21) (2023-11-06)
-
 ## [7.0.0-beta.22](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.21...v7.0.0-beta.22) (2023-11-06)
 
 
