@@ -492,14 +492,14 @@ class SandBox extends nodefony.Builder {
       const scss = {
         name: "scss",
         type: "directory",
-        childs: [{
+        childs: [/*{
           name: "awesome",
           type: "copy",
           path: path.resolve(this.sandboxSkeleton, "bootstrap", "awesome"),
           params: {
             recurse: true
           }
-        }]
+        }*/]
       };
       scss.childs.push({
         name: this.cli.response.command === "project" ? "app.scss" : `${this.response.name}.scss`,

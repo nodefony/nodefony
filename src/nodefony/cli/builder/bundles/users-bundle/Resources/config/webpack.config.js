@@ -15,13 +15,11 @@ const bundleName = package.name;
 const publicPath = `/${bundleName}-bundle/assets/`;
 
 let config = null;
-let dev = true;
 const debug = kernel.debug ? "*" : false;
 if (kernel.environment === "dev") {
   config = require("./webpack/webpack.dev.config.js");
 } else {
   config = require("./webpack/webpack.prod.config.js");
-  dev = false;
 }
 
 

@@ -1,8 +1,10 @@
 @import "~bootstrap/scss/bootstrap";
 
-$fa-font-path: "~font-awesome/fonts";
-@import '~font-awesome/scss/font-awesome.scss';
-//@import './awesome/font-awesome.config.js';
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/brands";
 @import "./app.scss";
 
 // Custom.scss
@@ -11,7 +13,8 @@ $fa-font-path: "~font-awesome/fonts";
 // Required
 /*@import "node_modules/bootstrap/scss/functions";
 @import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
+@import "node_modules/bootstrap/scss/mixins";d
+i 
 
 // Optional
 @import "node_modules/bootstrap/scss/reboot";

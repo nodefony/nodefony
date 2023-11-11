@@ -25,8 +25,11 @@ const readFile = function readFile (Path) {
   }
 };
 const randomSecret = function randomSecret () {
-  const sercretPath = path.resolve("config", "certificates", "ca", "private", "ca.key.pem");
-  return readFile(sercretPath);
+  if(  path && path.resolve){
+    const sercretPath = path.resolve(kernel.path,"config", "certificates", "ca", "private", "ca.key.pem");
+    return readFile(sercretPath);
+  }
+  return null
 };
 
 module.exports = {
@@ -51,7 +54,7 @@ module.exports = {
    *      }
    *
    */
-  watch: false,
+  watch: true,
 
   /**
    *
@@ -72,6 +75,9 @@ module.exports = {
       path: "/users",
       maxAge: 200
     }
+  },
+  webAuthn:{
+    enabled : true
   },
   jwt: {
     token: {
