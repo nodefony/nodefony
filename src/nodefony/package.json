@@ -59,8 +59,8 @@
     "mime": "3.0.0",
     "moment": "2.29.4",
     "node-cron": "3.0.3",
-    "node-emoji": "2.1.0",
-    "npm": "10.2.3",
+    "node-emoji": "2.1.1",
+    "npm": "10.2.4",
     "pm2": "5.3.0",
     "promise": "8.3.0",
     "request": "2.88.2",
@@ -69,16 +69,16 @@
     "shortid": "2.2.16",
     "simple-git": "3.20.0",
     "spdx": "0.5.2",
-    "twig": "1.16.0",
+    "twig": "1.17.1",
     "uuid": "9.0.1",
     "webpack": "5.89.0",
     "xml2js": "0.6.2",
-    "yarn": "1.22.19"
+    "yarn": "1.22.21"
   },
   "devDependencies": {
     "babel-loader": "9.1.3",
     "babel-polyfill": "6.26.0",
-    "eslint": "8.53.0",
+    "eslint": "8.54.0",
     "webpack-cli": "5.1.4",
     "webpack-merge": "5.10.0"
   },
