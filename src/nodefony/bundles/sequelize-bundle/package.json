@@ -20,7 +20,7 @@
     "pgtools": "1.0.1",
     "sequelize": "6.35.1",
     "sqlite3": "5.1.6",
-    "tedious": "16.6.0",
+    "tedious": "16.6.1",
     "umzug": "3.4.0"
   },
   "repository": {

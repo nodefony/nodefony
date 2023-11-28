@@ -26,7 +26,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "7.23.3",
     "@babel/preset-react": "7.23.3",
-    "@fortawesome/fontawesome-free": "6.4.2",
+    "@fortawesome/fontawesome-free": "6.5.0",
     "@mapbox/node-pre-gyp": "1.0.11",
     "@popperjs/core": "2.11.8",
     "babel-loader": "9.1.3",
