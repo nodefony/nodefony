@@ -186,3 +186,10 @@ git push -u origin master
 **/
 git remote add origin git@github.com:ccamensuli/myproject.git
 git push -u origin master
+
+
+// GPG  https://gpgtools.org/ 
+gpg --list-secret-keys --keyid-format LONG
+git config --global commit.gpgSign true
+git config --global user.signingkey KEY_ID
+
