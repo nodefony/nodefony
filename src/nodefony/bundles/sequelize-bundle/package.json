@@ -14,14 +14,14 @@
     "@alt3/sequelize-to-json-schemas": "^0.3.56",
     "cls-hooked": "^4.2.2",
     "mariadb": "3.2.3",
-    "mysql2": "3.7.0",
+    "mysql2": "3.9.1",
     "pg": "8.11.3",
     "pg-hstore": "^2.3.4",
     "pgtools": "1.0.1",
     "sequelize": "6.35.2",
     "sqlite3": "5.1.7",
     "tedious": "16.6.1",
-    "umzug": "3.5.0"
+    "umzug": "3.6.1"
   },
   "repository": {
     "type": "git",
