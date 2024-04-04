@@ -4,10 +4,10 @@ const Module = require("module");
 let myrequire = null;
 let mypackage = null;
 
-const makeRequireFunction = function makeRequireFunction (mod) {
+const makeRequireFunction = function makeRequireFunction(mod) {
   const myModule = mod.constructor;
 
-  function myRequire (path) {
+  function myRequire(path) {
     try {
       exports.requireDepth += 1;
       return mod.require(path);
@@ -16,17 +16,21 @@ const makeRequireFunction = function makeRequireFunction (mod) {
     }
   }
 
-  function resolve (request, options) {
+  function resolve(request, options) {
     if (typeof request !== "string") {
-      throw new new Error(`resolve arg must be a string  ERR_INVALID_ARG_TYPE : ${request}`)();
+      throw new new Error(
+        `resolve arg must be a string  ERR_INVALID_ARG_TYPE : ${request}`
+      )();
     }
     return myModule._resolveFilename(request, mod, false, options);
   }
   myRequire.resolve = resolve;
 
-  function paths (request) {
+  function paths(request) {
     if (typeof request !== "string") {
-      throw new new Error(`paths arg must be a string  ERR_INVALID_ARG_TYPE : ${request}`)();
+      throw new new Error(
+        `paths arg must be a string  ERR_INVALID_ARG_TYPE : ${request}`
+      )();
     }
     return myModule._resolveLookupPaths(request, mod, true);
   }
@@ -37,7 +41,7 @@ const makeRequireFunction = function makeRequireFunction (mod) {
   myRequire.cache = myModule._cache;
   return myRequire;
 };
-const createRequireFromPath = function createRequireFromPath (filename) {
+const createRequireFromPath = function createRequireFromPath(filename) {
   const m = new Module(filename, module);
   m.filename = filename;
   m.paths = Module._nodeModulePaths(path.dirname(filename));
@@ -76,21 +80,21 @@ const bundlesCore = {
   "redis-bundle": "redis",
   "mongoose-bundle": "mongoose",
   "elastic-bundle": "elastic",
-  "mail-bundle": "mail"
+  "mail-bundle": "mail",
 };
 
 const defaultEnvEnable = {
   dev: true,
   development: true,
   prod: true,
-  production: true
+  production: true,
 };
 
 const defaultOptions = {
   events: {
     nbListeners: 60,
-    captureRejections: true
-  }
+    captureRejections: true,
+  },
 };
 
 const colorLogEvent = clc.cyan.bgBlue("EVENT KERNEL");
@@ -108,14 +112,19 @@ const colorLogEvent = clc.cyan.bgBlue("EVENT KERNEL");
  *
  */
 class Kernel extends nodefony.Service {
-  constructor (environment, cli, options) {
-    super("KERNEL", cli.container, cli.notificationsCenter, nodefony.extend({}, defaultOptions, options));
+  constructor(environment, cli, options) {
+    super(
+      "KERNEL",
+      cli.container,
+      cli.notificationsCenter,
+      nodefony.extend({}, defaultOptions, options)
+    );
     this.cli = cli;
     this.type = cli.type;
     this.package = mypackage;
     this.debug = Boolean(cli.commander.opts().debug) || false;
     this.appEnvironment = {
-      environment: process.env.NODE_ENV
+      environment: process.env.NODE_ENV,
     };
     this.setEnv(environment);
     // Manage Kernel Container
@@ -154,7 +163,11 @@ class Kernel extends nodefony.Service {
     this.bundlesPath = path.resolve(this.rootDir, "src", "bundles");
     this.appPath = nodefony.appPath; // path.resolve(this.rootDir, "app");
     this.configPath = nodefony.kernelConfigPath; // path.resolve(this.rootDir, "config", "config.yml");
-    this.generateConfigPath = path.resolve(this.rootDir, "config", "generatedConfig.yml");
+    this.generateConfigPath = path.resolve(
+      this.rootDir,
+      "config",
+      "generatedConfig.yml"
+    );
     this.publicPath = path.resolve(this.rootDir, "web");
     this.nodefonyPath = this.autoLoader.dirname;
     this.cacheLink = path.resolve(this.rootDir, "tmp", "assestLink");
@@ -170,9 +183,14 @@ class Kernel extends nodefony.Service {
       this.injection = new nodefony.Injection(this.container);
       this.set("injection", this.injection);
       this.setCli();
-      this.cli.createDirectory(path.resolve(this.rootDir, "tmp"), null, (file) => {
-        this.tmpDir = file;
-      }, true);
+      this.cli.createDirectory(
+        path.resolve(this.rootDir, "tmp"),
+        null,
+        (file) => {
+          this.tmpDir = file;
+        },
+        true
+      );
       this.git = this.cli.setGitPath(this.rootDir);
       this.once("onPostReady", () => {
         if (process.getuid && process.getuid() === 0) {
@@ -181,15 +199,15 @@ class Kernel extends nodefony.Service {
         // this.clean();
         this.postReady = true;
         switch (this.environment) {
-        case "production":
-        case "prod":
-        case "preprod":
-        case "preproduction":
-          this.clean();
-          break;
-        default:
-          this.clean();
-          myrequire = null;
+          case "production":
+          case "prod":
+          case "preprod":
+          case "preproduction":
+            this.clean();
+            break;
+          default:
+            this.clean();
+            myrequire = null;
         }
       });
     } catch (e) {
@@ -198,7 +216,7 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  clean () {
+  clean() {
     require.cache = null;
     delete require.cache;
     myrequire.cache = null;
@@ -206,7 +224,7 @@ class Kernel extends nodefony.Service {
     myrequire = null;
   }
 
-  drop_root () {
+  drop_root() {
     try {
       process.setgid("nobody");
       process.setuid("nobody");
@@ -217,12 +235,13 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  getLocalExternalIP () {
-    return [].concat(...Object.values(os.networkInterfaces()))
+  getLocalExternalIP() {
+    return []
+      .concat(...Object.values(os.networkInterfaces()))
       .find((details) => !details.internal);
   }
 
-  getNetworkInterfaces () {
+  getNetworkInterfaces() {
     const nets = os.networkInterfaces();
     const devices = Object.create(null); // or just '{}', an empty object
     for (const name of Object.keys(nets)) {
@@ -238,9 +257,10 @@ class Kernel extends nodefony.Service {
     return devices;
   }
 
-  start () {
+  start() {
     if (!this.started) {
-      return this.cli.showAsciify(this.projectName)
+      return this.cli
+        .showAsciify(this.projectName)
         .then(async () => {
           this.cli.showBanner();
           this.cli.blankLine();
@@ -256,10 +276,9 @@ class Kernel extends nodefony.Service {
             throw e;
           }
           this.started = true;
-          return await this.boot()
-            .catch((e) => {
-              throw e;
-            });
+          return await this.boot().catch((e) => {
+            throw e;
+          });
         })
         .catch(async (e) => {
           throw e;
@@ -267,27 +286,23 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  loadCommand () {
+  loadCommand() {
     try {
-      return this.cli.loadCommand()
-        .then((commands) => {
-          if (this.debug) {
-            this.displayCommand(commands);
-          }
-          return commands;
-        });
+      return this.cli.loadCommand().then((commands) => {
+        if (this.debug) {
+          this.displayCommand(commands);
+        }
+        return commands;
+      });
     } catch (e) {
       this.log(e, "ERROR");
       this.terminate(e.code || 1);
     }
   }
 
-  displayCommand (commands) {
+  displayCommand(commands) {
     const table = this.cli.displayTable([], {
-      head: [
-        "BUNDLES",
-        "COMMAND NAME"
-      ]
+      head: ["BUNDLES", "COMMAND NAME"],
     });
     for (const bundle in commands) {
       const cmd = commands[bundle];
@@ -301,7 +316,7 @@ class Kernel extends nodefony.Service {
     this.log(`\n${table.toString()}`, "DEBUG");
   }
 
-  async matchCommand () {
+  async matchCommand() {
     try {
       return await this.cli.matchCommand();
     } catch (e) {
@@ -309,17 +324,30 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  setCli () {
+  setCli() {
     if (this.typeCluster === "worker") {
       this.cli.setPid();
     }
     this.cli.setProcessTitle(this.projectName);
-    this.cli.setCommandVersion(this.isCore ? this.version : nodefony.projectVersion);
+    if (this.cli.commander.options.length) {
+      const index = this.cli.commander.options.findIndex((value) => {
+        if (value.flags === "-v, --version") {
+          return value;
+        }
+      });
+      if (index >= 0) {
+        // @ts-ignore
+        this.cli.commander.options.splice(index, 1);
+      }
+    }
+    this.cli.setCommandVersion(
+      this.isCore ? this.version : nodefony.projectVersion
+    );
     // this.cli.syslog.removeAllListeners();
     this.cli.syslog.reset();
   }
 
-  isBundleCore (name) {
+  isBundleCore(name) {
     if (name in bundlesCore) {
       return true;
     }
@@ -337,7 +365,7 @@ class Kernel extends nodefony.Service {
     return false;
   }
 
-  getRegisteredBundles (name = null) {
+  getRegisteredBundles(name = null) {
     if (name) {
       const bundle = this.getBundle(name);
       if (bundle) {
@@ -347,7 +375,7 @@ class Kernel extends nodefony.Service {
           package: bundle.package,
           path: bundle.path,
           version: bundle.package.version,
-          registred: true
+          registred: true,
         };
       }
       return null;
@@ -362,17 +390,17 @@ class Kernel extends nodefony.Service {
         package: bundle.package,
         path: bundle.path,
         version: bundle.version,
-        registred: true
+        registred: true,
       };
       tab.push(ob);
     }
     return tab;
   }
 
-  async getUnregistredBundle (nameBundle) {
+  async getUnregistredBundle(nameBundle) {
     const finder = new nodefony.Finder2({
       recurse: false,
-      depth: 1
+      depth: 1,
     });
     let result = await finder
       .in(this.bundlesPath)
@@ -432,7 +460,7 @@ class Kernel extends nodefony.Service {
     return null;
   }
 
-  loadBundleUnregister (name, bundle) {
+  loadBundleUnregister(name, bundle) {
     try {
       const mypackage = path.resolve(bundle.path, "package.json");
       const pack = require(mypackage);
@@ -442,7 +470,7 @@ class Kernel extends nodefony.Service {
         package: pack,
         path: bundle.path,
         version: pack.version,
-        registred: false
+        registred: false,
       };
     } catch (e) {
       this.log(e, "WARNING");
@@ -450,12 +478,12 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  async getUnregistredBundles () {
+  async getUnregistredBundles() {
     let tab = [];
     // unregistered
     const finder = new nodefony.Finder2({
       recurse: false,
-      depth: 1
+      depth: 1,
     });
     let result = await finder
       .in(this.bundlesPath)
@@ -517,53 +545,57 @@ class Kernel extends nodefony.Service {
     return tab;
   }
 
-  setEnv (environment) {
+  setEnv(environment) {
     if (environment in defaultEnvEnable) {
       switch (environment) {
-      case "dev":
-      case "development":
-        this.environment = "dev";
-        if (!this.appEnvironment.environment) {
-          this.appEnvironment.environment = "development";
-        }
-        break;
-      default:
-        this.environment = "prod";
-        if (!this.appEnvironment.environment) {
-          this.appEnvironment.environment = "production";
-        }
+        case "dev":
+        case "development":
+          this.environment = "dev";
+          if (!this.appEnvironment.environment) {
+            this.appEnvironment.environment = "development";
+          }
+          break;
+        default:
+          this.environment = "prod";
+          if (!this.appEnvironment.environment) {
+            this.appEnvironment.environment = "production";
+          }
       }
     }
   }
 
-  setNodeEnv (environment) {
+  setNodeEnv(environment) {
     if (environment in defaultEnvEnable) {
       switch (environment) {
-      case "dev":
-      case "development":
-        process.env.NODE_ENV = "development";
-        process.env.BABEL_ENV = "development";
-        break;
-      default:
-        process.env.NODE_ENV = "production";
-        process.env.BABEL_ENV = "production";
+        case "dev":
+        case "development":
+          process.env.NODE_ENV = "development";
+          process.env.BABEL_ENV = "development";
+          break;
+        default:
+          process.env.NODE_ENV = "production";
+          process.env.BABEL_ENV = "production";
       }
     }
     process.env.NODE_DEBUG = this.debug;
   }
 
-  logEnv () {
+  logEnv() {
     let txt = `      \x1b ${this.cli.clc.blue(this.type)} `;
     txt += ` ${this.cli.clc.magenta("Cluster")} : ${this.typeCluster} `;
-    txt += ` ${this.cli.clc.magenta("Nodefony Environment")} : ${this.environment}  `;
+    txt += ` ${this.cli.clc.magenta("Nodefony Environment")} : ${
+      this.environment
+    }  `;
     if (this.appEnvironment) {
-      txt += ` ${this.cli.clc.magenta("App Environment")} : ${this.appEnvironment.environment}  `;
+      txt += ` ${this.cli.clc.magenta("App Environment")} : ${
+        this.appEnvironment.environment
+      }  `;
     }
     txt += ` ${this.cli.clc.magenta("Debug")} : ${this.debug}\n`;
     return txt;
   }
 
-  readKernelConfig () {
+  readKernelConfig() {
     try {
       if (path.basename(this.configPath) === "config.js") {
         this.settings = this.autoLoader.load(this.configPath, true);
@@ -599,7 +631,7 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  checkPath (myPath) {
+  checkPath(myPath) {
     if (!myPath) {
       return null;
     }
@@ -610,13 +642,16 @@ class Kernel extends nodefony.Service {
     return path.resolve(this.rootDir, myPath);
   }
 
-  getConfigBunbles () {
+  getConfigBunbles() {
     const config = [];
     if (this.settings && this.settings.system && this.settings.system.bundles) {
       for (const bundle in this.settings.system.bundles) {
         let res = null;
         try {
-          res = this.searchPackage(bundle, this.settings.system.bundles[bundle]);
+          res = this.searchPackage(
+            bundle,
+            this.settings.system.bundles[bundle]
+          );
           config.push(res);
         } catch (e) {
           this.log(e, "WARNING");
@@ -627,7 +662,7 @@ class Kernel extends nodefony.Service {
     return config;
   }
 
-  checkBundlesExist (yml, nameConfig, pathConfig, remove) {
+  checkBundlesExist(yml, nameConfig, pathConfig, remove) {
     if (yml && yml.system && yml.system.bundles) {
       for (const bundle in yml.system.bundles) {
         let exist = null;
@@ -641,15 +676,20 @@ class Kernel extends nodefony.Service {
           if (remove) {
             try {
               fs.writeFileSync(pathConfig, yaml.dump(yml), {
-                encoding: "utf8"
+                encoding: "utf8",
               });
-              this.log(`${nameConfig} : ${bundle} Bundle don't exist in file : ${pathConfig}`, "WARNING");
+              this.log(
+                `${nameConfig} : ${bundle} Bundle don't exist in file : ${pathConfig}`,
+                "WARNING"
+              );
               this.log(`Update Config  : ${pathConfig}`);
             } catch (e) {
               this.log(e, "ERROR");
             }
           } else {
-            const error = new Error(`${nameConfig} : ${bundle} Bundle don't exist in file : ${pathConfig}`);
+            const error = new Error(
+              `${nameConfig} : ${bundle} Bundle don't exist in file : ${pathConfig}`
+            );
             this.log(error, "ERROR");
             this.log(`Config file : ${pathConfig}`);
             this.log(yml.system.bundles);
@@ -670,14 +710,21 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  readGeneratedConfig () {
+  readGeneratedConfig() {
     let exist = null;
     try {
       exist = fs.existsSync(this.generateConfigPath);
       if (exist) {
         try {
-          const yml = yaml.load(fs.readFileSync(this.generateConfigPath, "utf8"));
-          this.checkBundlesExist(yml, "Generated Config", this.generateConfigPath, true);
+          const yml = yaml.load(
+            fs.readFileSync(this.generateConfigPath, "utf8")
+          );
+          this.checkBundlesExist(
+            yml,
+            "Generated Config",
+            this.generateConfigPath,
+            true
+          );
           return yml;
         } catch (e) {
           throw e;
@@ -690,7 +737,7 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  searchPackage (name, mypath) {
+  searchPackage(name, mypath) {
     let res = null;
     let error = null;
     if (mypath && mypath !== "*") {
@@ -704,28 +751,42 @@ class Kernel extends nodefony.Service {
               if (myrequire) {
                 try {
                   res = myrequire.resolve(`${name}`);
-                  const {version} = myrequire(path.resolve(path.dirname(res), "package.json"));
+                  const { version } = myrequire(
+                    path.resolve(path.dirname(res), "package.json")
+                  );
                   if (version === mypath) {
                     if (this.type === "SERVER") {
-                      this.log(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "DEBUG");
+                      this.log(
+                        `Find NPM Bundle Package : ${name}@${mypath} in : ${res}`,
+                        "DEBUG"
+                      );
                     }
                     return `${name}`;
                   }
-                  throw new Error(`Can not found NPM Bundle Package : ${name}@${mypath}`);
+                  throw new Error(
+                    `Can not found NPM Bundle Package : ${name}@${mypath}`
+                  );
                 } catch (e) {
                   error = e;
                 }
               }
               try {
                 res = require.resolve(`${name}`);
-                const {version} = myrequire(path.resolve(path.dirname(res), "package.json"));
+                const { version } = myrequire(
+                  path.resolve(path.dirname(res), "package.json")
+                );
                 if (version === mypath) {
                   if (this.type === "SERVER") {
-                    this.log(`Find NPM Bundle Package : ${name}@${mypath} in : ${res}`, "DEBUG");
+                    this.log(
+                      `Find NPM Bundle Package : ${name}@${mypath} in : ${res}`,
+                      "DEBUG"
+                    );
                   }
                   return `${name}`;
                 }
-                throw new Error(`Can not found NPM Bundle Package : ${name}@${mypath}`);
+                throw new Error(
+                  `Can not found NPM Bundle Package : ${name}@${mypath}`
+                );
               } catch (e) {
                 if (error) {
                   throw error;
@@ -741,7 +802,10 @@ class Kernel extends nodefony.Service {
           try {
             myrequire.resolve(res);
             if (this.type === "SERVER") {
-              this.log(`Find Local Bundle Package : ${name} in : ${res}`, "DEBUG");
+              this.log(
+                `Find Local Bundle Package : ${name} in : ${res}`,
+                "DEBUG"
+              );
             }
             return res;
           } catch (e) {}
@@ -804,7 +868,10 @@ class Kernel extends nodefony.Service {
         res = null;
         res = require.resolve(`@nodefony/${name}`);
         if (this.type === "SERVER") {
-          this.log(`Find NPM Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
+          this.log(
+            `Find NPM Bundle Package : @nodefony/${name} in : ${res}`,
+            "DEBUG"
+          );
         }
         return `@nodefony/${name}`;
       } catch (e) {}
@@ -832,27 +899,52 @@ class Kernel extends nodefony.Service {
       res = path.resolve(this.nodefonyPath, "..", "..", "src", "bundles", name);
       require.resolve(res);
       if (this.type === "SERVER") {
-        this.log(`Find Core Local Bundle Package : ${name} in : ${res}`, "DEBUG");
+        this.log(
+          `Find Core Local Bundle Package : ${name} in : ${res}`,
+          "DEBUG"
+        );
       }
       return res;
     } catch (e) {}
     try {
       res = null;
-      const globalPath = path.resolve(process.execPath, "..", "..", "lib", "node_modules", "nodefony", "bundle");
+      const globalPath = path.resolve(
+        process.execPath,
+        "..",
+        "..",
+        "lib",
+        "node_modules",
+        "nodefony",
+        "bundle"
+      );
       res = path.resolve(globalPath, `@nodefony/${name}`);
       require.resolve(res);
       if (this.type === "SERVER") {
-        this.log(`Find Global Core Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
+        this.log(
+          `Find Global Core Bundle Package : @nodefony/${name} in : ${res}`,
+          "DEBUG"
+        );
       }
       return res;
     } catch (e) {}
     try {
       res = null;
-      const globalPath = path.resolve(process.execPath, "..", "..", "lib", "node_modules", "nodefony", "node_modules");
+      const globalPath = path.resolve(
+        process.execPath,
+        "..",
+        "..",
+        "lib",
+        "node_modules",
+        "nodefony",
+        "node_modules"
+      );
       res = path.resolve(globalPath, `@nodefony/${name}`);
       require.resolve(res);
       if (this.type === "SERVER") {
-        this.log(`Find Global Bundle Package : @nodefony/${name} in : ${res}`, "DEBUG");
+        this.log(
+          `Find Global Bundle Package : @nodefony/${name} in : ${res}`,
+          "DEBUG"
+        );
       }
       return res;
     } catch (e) {
@@ -866,7 +958,7 @@ class Kernel extends nodefony.Service {
   /**
    *  @method boot
    */
-  async boot () {
+  async boot() {
     /*
      *  BUNDLES
      */
@@ -888,18 +980,20 @@ class Kernel extends nodefony.Service {
         bundles.push(res);
       }*/
       switch (this.settings.orm) {
-      case "sequelize":
-        res = this.searchPackage("sequelize-bundle");
-        bundles.push(res);
-        break;
-      case "mongoose":
-        res = this.searchPackage("mongoose-bundle");
-        bundles.push(res);
-        break;
-      default:
-        const error = new Error(`nodefony can't load ORM : ${this.settings.orm}`);
-        this.log(error, "ERROR");
-        throw error;
+        case "sequelize":
+          res = this.searchPackage("sequelize-bundle");
+          bundles.push(res);
+          break;
+        case "mongoose":
+          res = this.searchPackage("mongoose-bundle");
+          bundles.push(res);
+          break;
+        default:
+          const error = new Error(
+            `nodefony can't load ORM : ${this.settings.orm}`
+          );
+          this.log(error, "ERROR");
+          throw error;
       }
       if (this.settings.system.realtime) {
         res = this.searchPackage("realtime-bundle");
@@ -943,32 +1037,32 @@ class Kernel extends nodefony.Service {
     }
 
     switch (this.isInstall()) {
-    case "install":
-      return await this.install(bundles)
-        .catch((e) => {
+      case "install":
+        return await this.install(bundles).catch((e) => {
           throw e;
         });
-    case "rebuild":
-      return await this.rebuild(bundles)
-        .catch((e) => {
+      case "rebuild":
+        return await this.rebuild(bundles).catch((e) => {
           throw e;
         });
-    default:
-      return await this.preRegister(bundles)
-        .then(() => this)
-        .catch((e) => {
-          throw e;
-        });
+      default:
+        return await this.preRegister(bundles)
+          .then(() => this)
+          .catch((e) => {
+            throw e;
+          });
     }
   }
 
-  async install (coreBundles = []) {
+  async install(coreBundles = []) {
     const bundles = coreBundles.concat(this.configBundle, [this.appPath]);
     try {
       for (let i = 0; i < bundles.length; i++) {
         let bundleFile = null;
         try {
-          bundleFile = new nodefony.fileClass(path.resolve(bundles[i], "package.json"));
+          bundleFile = new nodefony.fileClass(
+            path.resolve(bundles[i], "package.json")
+          );
         } catch (e) {
           const Path = this.isNodeModule(bundles[i]);
           if (Path) {
@@ -987,23 +1081,24 @@ class Kernel extends nodefony.Service {
           }
         }
       }
-      return await this.preRegister(coreBundles)
-        .catch((e) => {
-          throw e;
-        });
+      return await this.preRegister(coreBundles).catch((e) => {
+        throw e;
+      });
     } catch (e) {
       this.log(e, "ERROR");
       throw e;
     }
   }
 
-  async rebuild (coreBundles) {
+  async rebuild(coreBundles) {
     const bundles = coreBundles.concat(this.configBundle, [this.appPath]);
     try {
       for (let i = 0; i < bundles.length; i++) {
         let bundleFile = null;
         try {
-          bundleFile = new nodefony.fileClass(path.resolve(bundles[i], "package.json"));
+          bundleFile = new nodefony.fileClass(
+            path.resolve(bundles[i], "package.json")
+          );
         } catch (e) {
           const Path = this.isNodeModule(bundles[i]);
           if (Path) {
@@ -1015,23 +1110,21 @@ class Kernel extends nodefony.Service {
         }
         await this.cli.rebuildPackage(bundleFile, "production");
       }
-      return await this.preRegister(coreBundles)
-        .catch((e) => {
-          throw e;
-        });
+      return await this.preRegister(coreBundles).catch((e) => {
+        throw e;
+      });
     } catch (e) {
       this.log(e, "ERROR");
       throw e;
     }
   }
 
-  async preRegister (bundles) {
+  async preRegister(bundles) {
     try {
       // this.fire("onPreRegister", this);
-      await this.emitAsync("onPreRegister", this)
-        .catch((e) => {
-          throw e;
-        });
+      await this.emitAsync("onPreRegister", this).catch((e) => {
+        throw e;
+      });
       this.preRegistered = true;
       return await this.registerBundles(bundles)
         .then(async (res) => {
@@ -1046,10 +1139,9 @@ class Kernel extends nodefony.Service {
               }
               // this.fire("onRegister", this);
               await this.emitAsync("onRegister", this);
-              return await this.initializeBundles()
-                .catch((e) => {
-                  throw e;
-                });
+              return await this.initializeBundles().catch((e) => {
+                throw e;
+              });
             })
             .catch((e) => {
               throw e;
@@ -1064,7 +1156,7 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  async onReady () {
+  async onReady() {
     return new Promise((resolve, reject) => {
       // process.nextTick(() => {
       try {
@@ -1093,7 +1185,7 @@ class Kernel extends nodefony.Service {
    *  initialisation  all bundles
    *  @method initializeBundles
    */
-  async initializeBundles () {
+  async initializeBundles() {
     const tab = [];
     try {
       this.app = await this.initApplication();
@@ -1110,7 +1202,10 @@ class Kernel extends nodefony.Service {
       throw e;
     }
     for (const name in this.bundles) {
-      this.log(`\x1b[36m INITIALIZE Bundle :  ${name.toUpperCase()}\x1b[0m`, "DEBUG");
+      this.log(
+        `\x1b[36m INITIALIZE Bundle :  ${name.toUpperCase()}\x1b[0m`,
+        "DEBUG"
+      );
       try {
         tab.push(await this.bundles[name].initialize());
       } catch (e) {
@@ -1178,7 +1273,11 @@ class Kernel extends nodefony.Service {
           if (command && command.name) {
             name = command.name;
           }
-          this.log(`${this.cli.getEmoji("checkered_flag")}`, "INFO", `Command ${name}`);
+          this.log(
+            `${this.cli.getEmoji("checkered_flag")}`,
+            "INFO",
+            `Command ${name}`
+          );
           return command;
         })
         .catch((error) => {
@@ -1196,19 +1295,19 @@ class Kernel extends nodefony.Service {
       });
   }
 
-  getOrm () {
+  getOrm() {
     return this.settings.orm;
   }
 
-  getOrmStrategy () {
+  getOrmStrategy() {
     return this.getORM().settings.strategy;
   }
 
-  getORM () {
+  getORM() {
     return this.get(this.getOrm());
   }
 
-  initServers () {
+  initServers() {
     // create HTTP server
     let http = null;
     let http2 = null;
@@ -1238,14 +1337,19 @@ class Kernel extends nodefony.Service {
    *  CLUSTERS
    *
    */
-  clusterIsMaster () {
+  clusterIsMaster() {
     return cluster.isMaster;
   }
 
-  initCluster () {
+  initCluster() {
     this.processId = process.pid;
     this.process = process;
-    if (this.console && this.cli && this.cli.commander && this.cli.commander.opts().json) {
+    if (
+      this.console &&
+      this.cli &&
+      this.cli.commander &&
+      this.cli.commander.opts().json
+    ) {
       return;
     }
     if (cluster.isMaster) {
@@ -1266,32 +1370,32 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  fire () {
+  fire() {
     this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
     return super.fire.apply(this, arguments);
   }
 
-  emit () {
+  emit() {
     this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
     return super.fire.apply(this, arguments);
   }
 
-  emitAsync () {
+  emitAsync() {
     this.log(`${colorLogEvent} ${arguments[0]}`, "DEBUG");
     return super.emitAsync.apply(this, arguments);
   }
 
-  sendMessage (message) {
+  sendMessage(message) {
     return process.send({
       type: "process:msg",
-      data: message
+      data: message,
     });
   }
 
   /**
    *  @method initializeLog
    */
-  initializeLog () {
+  initializeLog() {
     if (this.type === "CONSOLE") {
       return this.cli.initSyslog(this.environment, this.debug);
     }
@@ -1307,23 +1411,26 @@ class Kernel extends nodefony.Service {
   /**
    *  @method getTemplate
    */
-  getTemplate (name) {
+  getTemplate(name) {
     return nodefony.templates[name];
   }
 
   /**
    *  @method initTemplate
    */
-  initTemplate () {
+  initTemplate() {
     const classTemplate = this.getTemplate(this.settings.templating);
-    this.templating = new classTemplate(this.container, this.settings[this.settings.templating]);
+    this.templating = new classTemplate(
+      this.container,
+      this.settings[this.settings.templating]
+    );
     this.set("templating", this.templating);
   }
 
   /**
    *  @method log
    */
-  log (pci, severity, msgid, msg) {
+  log(pci, severity, msgid, msg) {
     if (!msgid) {
       msgid = this.cli.clc.magenta("KERNEL");
     }
@@ -1335,7 +1442,7 @@ class Kernel extends nodefony.Service {
    *  @method getBundle
    *  @param {String} name
    */
-  getBundle (name) {
+  getBundle(name) {
     this.regBundleName.test(name);
     const res = regBundleName.exec(name);
     if (res) {
@@ -1357,7 +1464,7 @@ class Kernel extends nodefony.Service {
    *  @method getBundles
    *  @param {String} name
    */
-  getBundles (name) {
+  getBundles(name) {
     if (name) {
       return this.getBundle(name);
     }
@@ -1369,62 +1476,73 @@ class Kernel extends nodefony.Service {
    *  @method getBundleName
    *  @param {String} str
    */
-  getBundleName (str) {
+  getBundleName(str) {
     if (str === "app") {
       return str;
     }
     let ret = null;
     switch (typeof str) {
-    case "string":
-      ret = regBundleName.exec(str);
-      if (ret) {
-        return ret[1] || ret[2];
-      }
-      throw new Error(`Bundle Bad Name :${str}`);
-    case "function":
-      ret = regClassBundle.exec(str.name);
-      if (ret) {
-        return ret[1];
-      }
-      throw new Error(`Bundle Bad Name :${str.name}`);
-    default:
-      throw new Error(`Bundle Bad Name :${str}`);
+      case "string":
+        ret = regBundleName.exec(str);
+        if (ret) {
+          return ret[1] || ret[2];
+        }
+        throw new Error(`Bundle Bad Name :${str}`);
+      case "function":
+        ret = regClassBundle.exec(str.name);
+        if (ret) {
+          return ret[1];
+        }
+        throw new Error(`Bundle Bad Name :${str.name}`);
+      default:
+        throw new Error(`Bundle Bad Name :${str}`);
     }
   }
 
-  getBundleClass (Class, Path) {
+  getBundleClass(Class, Path) {
     try {
       switch (true) {
-      case Class instanceof nodefony.fileClass:
-        return this.getBundleClass(require(Class.path), require.resolve(Class.path));
-      case typeof Class === "function":
-        if (Class.toString().indexOf("class") >= 0) {
-          Class.prototype.path = path.dirname(Path);
-          Class.prototype.autoLoader = this.autoLoader;
-          return {
-            class: Class,
-            name: this.getBundleName(Class)
-          };
-        }
-        throw new Error(`getBundleClass Bad Bundle Class : ${Class.toString()} Path : ${Path}`);
+        case Class instanceof nodefony.fileClass:
+          return this.getBundleClass(
+            require(Class.path),
+            require.resolve(Class.path)
+          );
+        case typeof Class === "function":
+          if (Class.toString().indexOf("class") >= 0) {
+            Class.prototype.path = path.dirname(Path);
+            Class.prototype.autoLoader = this.autoLoader;
+            return {
+              class: Class,
+              name: this.getBundleName(Class),
+            };
+          }
+          throw new Error(
+            `getBundleClass Bad Bundle Class : ${Class.toString()} Path : ${Path}`
+          );
 
-        break;
-      case typeof Class === "string":
-        return this.getBundleClass(require(Class), require.resolve(Class));
-      default:
-        throw new Error(`getBundleClass Bad Bundle Class : ${typeof Class} Path : ${Path}`);
+          break;
+        case typeof Class === "string":
+          return this.getBundleClass(require(Class), require.resolve(Class));
+        default:
+          throw new Error(
+            `getBundleClass Bad Bundle Class : ${typeof Class} Path : ${Path}`
+          );
       }
     } catch (e) {
       throw e;
     }
   }
 
-  loadBundle (file, loader) {
+  loadBundle(file, loader) {
     try {
       const bundle = this.getBundleClass(file);
       try {
         this.log(`${bundle.name} : ${file.path}`, "DEBUG", "LOADER BUNDLE");
-        this.bundles[bundle.name] = new bundle.class(bundle.name, this, this.container);
+        this.bundles[bundle.name] = new bundle.class(
+          bundle.name,
+          this,
+          this.container
+        );
         this.bundles[bundle.name].loader = loader;
         // console.log(bundle.name, this.notificationsCenter._events)
       } catch (e) {
@@ -1437,7 +1555,7 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  isPathExist (Path) {
+  isPathExist(Path) {
     try {
       const mypath = path.resolve(Path);
       if (fs.existsSync(mypath)) {
@@ -1448,28 +1566,25 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  isConsole () {
+  isConsole() {
     return this.type === "CONSOLE";
   }
 
-  isInstall () {
-    if (this.cli.command === "nodefony" &&
+  isInstall() {
+    if (
+      this.cli.command === "nodefony" &&
       this.cli.task === "bundles" &&
-      this.cli.action === "install") {
-      return "install";
-    }
-    if (this.cli.command === "nodefony" &&
-      this.cli.task === "build"
+      this.cli.action === "install"
     ) {
       return "install";
     }
-    if (this.cli.command === "nodefony" &&
-      this.cli.task === "rebuild"
-    ) {
+    if (this.cli.command === "nodefony" && this.cli.task === "build") {
+      return "install";
+    }
+    if (this.cli.command === "nodefony" && this.cli.task === "rebuild") {
       return "rebuild";
     }
-    if (this.cli.command === "nodefony" &&
-      this.cli.task === "install") {
+    if (this.cli.command === "nodefony" && this.cli.task === "install") {
       return "install";
     }
     if (this.cli.command === "install") {
@@ -1480,7 +1595,7 @@ class Kernel extends nodefony.Service {
     return false;
   }
 
-  async isBundleDirectory (dir) {
+  async isBundleDirectory(dir) {
     const directory = this.isPathExist(dir);
     if (directory) {
       const finder = new nodefony.Finder2({
@@ -1488,7 +1603,7 @@ class Kernel extends nodefony.Service {
         excludeDir: nodefony.Bundle.excludeDir(),
         exclude: nodefony.Bundle.exclude(),
         recurse: false,
-        match: this.regBundle
+        match: this.regBundle,
       });
       const result = await finder.in(directory);
       return result.getFiles();
@@ -1496,7 +1611,7 @@ class Kernel extends nodefony.Service {
     return false;
   }
 
-  isNodeModule (module) {
+  isNodeModule(module) {
     // console.log(module)
     let error = null;
     try {
@@ -1518,48 +1633,53 @@ class Kernel extends nodefony.Service {
    *  @method
    *  @param {array} bundles
    */
-  registerBundles (bundles) {
+  registerBundles(bundles) {
     return new Promise(async (resolve, reject) => {
       switch (nodefony.typeOf(bundles)) {
-      case "array":
-        try {
-          for (let i = 0; i < bundles.length; i++) {
-            let Path = await this.isBundleDirectory(bundles[i]);
-            if (Path && Path.length) {
-              try {
-                const bundle = this.loadBundle(Path[0], "filesystem");
-                await bundle.find();
-              } catch (e) {
-                this.log(e, "ERROR");
-                throw e;
-              }
-            } else {
-              try {
-                Path = this.isNodeModule(bundles[i]);
-                if (Path) {
-                  const bundle = this.loadBundle(Path, "package");
+        case "array":
+          try {
+            for (let i = 0; i < bundles.length; i++) {
+              let Path = await this.isBundleDirectory(bundles[i]);
+              if (Path && Path.length) {
+                try {
+                  const bundle = this.loadBundle(Path[0], "filesystem");
                   await bundle.find();
-                } else {
-                  this.log("GLOBAL CONFIG REGISTER : ", "INFO");
-                  this.log(this.configBundle, "INFO");
-                  const gene = this.readGeneratedConfig();
-                  if (gene) {
-                    this.log("GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ", "INFO");
-                    this.log(gene, "INFO");
-                  }
+                } catch (e) {
+                  this.log(e, "ERROR");
+                  throw e;
                 }
-              } catch (e) {
-                this.log(e, "ERROR");
-                throw e;
+              } else {
+                try {
+                  Path = this.isNodeModule(bundles[i]);
+                  if (Path) {
+                    const bundle = this.loadBundle(Path, "package");
+                    await bundle.find();
+                  } else {
+                    this.log("GLOBAL CONFIG REGISTER : ", "INFO");
+                    this.log(this.configBundle, "INFO");
+                    const gene = this.readGeneratedConfig();
+                    if (gene) {
+                      this.log(
+                        "GENERATED CONFIG REGISTER file ./config/GeneratedConfig.yml : ",
+                        "INFO"
+                      );
+                      this.log(gene, "INFO");
+                    }
+                  }
+                } catch (e) {
+                  this.log(e, "ERROR");
+                  throw e;
+                }
               }
             }
+            return resolve(bundles);
+          } catch (e) {
+            return reject(e);
           }
-          return resolve(bundles);
-        } catch (e) {
-          return reject(e);
-        }
-      default:
-        return reject(new Error("registerBundles argument bundles must be an array "));
+        default:
+          return reject(
+            new Error("registerBundles argument bundles must be an array ")
+          );
       }
     });
   }
@@ -1568,9 +1688,9 @@ class Kernel extends nodefony.Service {
    *  initialisation application bundle
    *  @method initApplication
    */
-  async initApplication () {
+  async initApplication() {
     const app = class appBundle extends nodefony.Bundle {
-      constructor (name, myKernel, myContainer) {
+      constructor(name, myKernel, myContainer) {
         super(name, myKernel, myContainer);
       }
     };
@@ -1599,7 +1719,7 @@ class Kernel extends nodefony.Service {
   }
 
   // CONFIG
-  readConfigFile (bundle, Path, callback) {
+  readConfigFile(bundle, Path, callback) {
     try {
       this.log(`${bundle} CONFIG LOAD FILE :${Path}`, "DEBUG", "KERNEL READER");
       return this.reader.readConfig(Path, this.name, callback);
@@ -1609,7 +1729,7 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  readRoutingFile (bundle, Path) {
+  readRoutingFile(bundle, Path) {
     // ROUTING
     try {
       this.log(`${bundle} ROUTER LOAD FILE :${Path}`, "DEBUG", "KERNEL READER");
@@ -1617,64 +1737,107 @@ class Kernel extends nodefony.Service {
       if (router) {
         return router.reader(Path, this.name);
       }
-      this.log(`${bundle} Router service not ready to LOAD FILE :${Path}`, "WARNING", "KERNEL READER");
+      this.log(
+        `${bundle} Router service not ready to LOAD FILE :${Path}`,
+        "WARNING",
+        "KERNEL READER"
+      );
     } catch (e) {
-      this.log(e, "ERROR", `BUNDLE ${this.name.toUpperCase()} CONFIG ROUTING :${Path}`);
+      this.log(
+        e,
+        "ERROR",
+        `BUNDLE ${this.name.toUpperCase()} CONFIG ROUTING :${Path}`
+      );
       throw e;
     }
   }
 
-  readServicesFile (bundle, Path, callback) {
+  readServicesFile(bundle, Path, callback) {
     try {
       this.log(`${bundle} LOAD FILE :${Path}`, "DEBUG", "KERNEL READER");
       return this.get("injection").reader(Path, this.name);
     } catch (e) {
-      this.log(e, "ERROR", `BUNDLE ${this.name.toUpperCase()} CONFIG SERVICE :${Path}`);
+      this.log(
+        e,
+        "ERROR",
+        `BUNDLE ${this.name.toUpperCase()} CONFIG SERVICE :${Path}`
+      );
       throw e;
     }
   }
 
-  readSecurityFile (bundle, Path, callback) {
+  readSecurityFile(bundle, Path, callback) {
     try {
       const firewall = this.get("security");
       if (firewall) {
-        this.log(`${bundle} SECURITY LOAD FILE :${Path}`, "DEBUG", "KERNEL READER");
+        this.log(
+          `${bundle} SECURITY LOAD FILE :${Path}`,
+          "DEBUG",
+          "KERNEL READER"
+        );
         return firewall.reader(Path, this.name);
       }
-      this.log(`${bundle} SECURITY LOAD FILE :${Path} BUT SERVICE NOT READY`, "WARNING");
+      this.log(
+        `${bundle} SECURITY LOAD FILE :${Path} BUT SERVICE NOT READY`,
+        "WARNING"
+      );
     } catch (e) {
-      this.log(e, "ERROR", `BUNDLE ${this.name.toUpperCase()} CONFIG SECURITY :${Path}`);
+      this.log(
+        e,
+        "ERROR",
+        `BUNDLE ${this.name.toUpperCase()} CONFIG SECURITY :${Path}`
+      );
       throw e;
     }
   }
 
-  findConfigFile (ele, callback) {
+  findConfigFile(ele, callback) {
     const name = this.name.toUpperCase();
     switch (true) {
-    case (/^config\..*$/).test(ele.name):
-      try {
-        return this.kernel.readConfigFile.call(this, name, ele.path, callback);
-      } catch (e) {
-        throw e;
-      }
-    case (/^routing\..*$/).test(ele.name):
-      try {
-        return this.kernel.readRoutingFile.call(this, name, ele.path, callback);
-      } catch (e) {
-        throw e;
-      }
-    case (/^services\..*$/).test(ele.name):
-      try {
-        return this.kernel.readServicesFile.call(this, name, ele.path, callback);
-      } catch (e) {
-        throw e;
-      }
-    case (/^security\..*$/).test(ele.name):
-      try {
-        return this.kernel.readSecurityFile.call(this, name, ele.path, callback);
-      } catch (e) {
-        throw e;
-      }
+      case /^config\..*$/.test(ele.name):
+        try {
+          return this.kernel.readConfigFile.call(
+            this,
+            name,
+            ele.path,
+            callback
+          );
+        } catch (e) {
+          throw e;
+        }
+      case /^routing\..*$/.test(ele.name):
+        try {
+          return this.kernel.readRoutingFile.call(
+            this,
+            name,
+            ele.path,
+            callback
+          );
+        } catch (e) {
+          throw e;
+        }
+      case /^services\..*$/.test(ele.name):
+        try {
+          return this.kernel.readServicesFile.call(
+            this,
+            name,
+            ele.path,
+            callback
+          );
+        } catch (e) {
+          throw e;
+        }
+      case /^security\..*$/.test(ele.name):
+        try {
+          return this.kernel.readSecurityFile.call(
+            this,
+            name,
+            ele.path,
+            callback
+          );
+        } catch (e) {
+          throw e;
+        }
     }
   }
 
@@ -1682,7 +1845,7 @@ class Kernel extends nodefony.Service {
    *
    *  @method readConfig
    */
-  readConfig (error, result, callback) {
+  readConfig(error, result, callback) {
     if (error) {
       throw error;
     } else {
@@ -1699,30 +1862,54 @@ class Kernel extends nodefony.Service {
     }
   }
 
-  memoryUsage (message) {
+  memoryUsage(message) {
     // let memory =  process.memoryUsage() ;
-    const {memory} = this.stats();
+    const { memory } = this.stats();
     for (const ele in memory) {
       switch (ele) {
-      case "rss":
-        this.log(`${message || ele} ( Resident Set Size ) PID ( ${this.processId} ) : ${nodefony.cli.niceBytes(memory[ele])}`, "DEBUG", `MEMORY ${ele}`);
-        break;
-      case "heapTotal":
-        this.log(`${message || ele} ( Total Size of the Heap ) PID ( ${this.processId} ) : ${nodefony.cli.niceBytes(memory[ele])}`, "DEBUG", `MEMORY ${ele}`);
-        break;
-      case "heapUsed":
-        this.log(`${message || ele} ( Heap actually Used ) PID ( ${this.processId} ) : ${nodefony.cli.niceBytes(memory[ele])}`, "DEBUG", `MEMORY ${ele}`);
-        break;
-      case "external":
-        this.log(`${message || ele} PID ( ${this.processId} ) : ${nodefony.cli.niceBytes(memory[ele])}`, "DEBUG", `MEMORY ${ele}`);
-        break;
+        case "rss":
+          this.log(
+            `${message || ele} ( Resident Set Size ) PID ( ${
+              this.processId
+            } ) : ${nodefony.cli.niceBytes(memory[ele])}`,
+            "DEBUG",
+            `MEMORY ${ele}`
+          );
+          break;
+        case "heapTotal":
+          this.log(
+            `${message || ele} ( Total Size of the Heap ) PID ( ${
+              this.processId
+            } ) : ${nodefony.cli.niceBytes(memory[ele])}`,
+            "DEBUG",
+            `MEMORY ${ele}`
+          );
+          break;
+        case "heapUsed":
+          this.log(
+            `${message || ele} ( Heap actually Used ) PID ( ${
+              this.processId
+            } ) : ${nodefony.cli.niceBytes(memory[ele])}`,
+            "DEBUG",
+            `MEMORY ${ele}`
+          );
+          break;
+        case "external":
+          this.log(
+            `${message || ele} PID ( ${
+              this.processId
+            } ) : ${nodefony.cli.niceBytes(memory[ele])}`,
+            "DEBUG",
+            `MEMORY ${ele}`
+          );
+          break;
       }
     }
   }
 
-  stats () {
+  stats() {
     const stat = {
-      memory: {}
+      memory: {},
       // cpu:process.cpuUsage()
     };
     const memory = process.memoryUsage();
@@ -1736,7 +1923,7 @@ class Kernel extends nodefony.Service {
    *
    *  @method terminate
    */
-  async terminate (code) {
+  async terminate(code) {
     if (code === undefined) {
       code = 0;
     }

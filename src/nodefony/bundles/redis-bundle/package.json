@@ -12,7 +12,7 @@
     "javascript"
   ],
   "dependencies": {
-    "redis": "4.6.12",
+    "redis": "4.6.13",
     "shortid": "^2.2.16"
   },
   "devDependencies": {
@@ -25,7 +25,5 @@
     }
   ],
   "readmeFilename": "readme.md",
-  "contributors": [
-    {}
-  ]
+  "contributors": []
 }
