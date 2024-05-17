@@ -358,7 +358,10 @@ class CLI extends nodefony.Service {
   initCommander () {
     if (this.options.commander) {
       this.commander = program;
-      if (this.options.version) {
+      const optionOptExists = this.commander.options.some(
+        (opt) => opt.short === "-v" || opt.long === "--version"
+      );
+      if (!optionOptExists && this.options.version) {
         this.setCommandVersion(this.options.version);
       }
       return program;
