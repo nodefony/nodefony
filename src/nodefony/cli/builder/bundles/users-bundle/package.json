@@ -17,7 +17,7 @@
   "repository": {},
   "dependencies": {
     "@withshepherd/faker": "5.5.5",
-    "mongoose-paginate-v2": "1.8.0",
+    "mongoose-paginate-v2": "1.8.1",
     "validator": "13.12.0"
   },
   "devDependencies": {
@@ -42,7 +42,7 @@
     "jquery": "3.7.1",
     "mini-css-extract-plugin": "2.9.0",
     "node-gyp": "10.1.0",
-    "sass": "1.77.1",
+    "sass": "1.77.2",
     "sass-loader": "14.2.1",
     "sequelize-cli": "6.6.2",
     "stream": "0.0.2",
