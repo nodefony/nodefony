@@ -1,25 +1,23 @@
-## [7.0.0-beta.21](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.22...v7.0.0-beta.21) (2023-11-06)
+## [7.0.0](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.22...v7.0.0) (2024-05-19)
 
+### Bug Fixes
+
+* debud commander  setVersion ([4d6cab8](https://github.com/nodefony/nodefony/commit/4d6cab8bd30d75a67cad5012ceb17dc644d5fe77))
 ## [7.0.0-beta.22](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.21...v7.0.0-beta.22) (2023-11-06)
-
 
 ### Features
 
 * upgrade mongoose 8 ([931dd18](https://github.com/nodefony/nodefony/commit/931dd183fa35f1e9ba9b224285b85140f973b7bc))
 
-
 ### Bug Fixes
 
 * debug monitoring session dataTable ([8f71504](https://github.com/nodefony/nodefony/commit/8f71504f8517d50b81b5c77c06e7262011024fa2))
-
 ## [7.0.0-beta.21](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.20...v7.0.0-beta.21) (2023-10-17)
-
 
 ### Features
 
 * ia flow dev ([0cf61b0](https://github.com/nodefony/nodefony/commit/0cf61b0c925d845a9e874e7e624be8474b8ea08d))
 * upgrade ia bundle add demo cam ([8b505e6](https://github.com/nodefony/nodefony/commit/8b505e6d493039a3a40afc89c33075d8f662c2d7))
-
 
 ### Bug Fixes
 
@@ -27,51 +25,38 @@
 * monitoring sessions datatable ([d2666f7](https://github.com/nodefony/nodefony/commit/d2666f7edb86d8fe01f7e56037b9d6237911130d))
 * **sequelize:** debug mariadb create database ([b451d2c](https://github.com/nodefony/nodefony/commit/b451d2c7e4e2b2d8d68ca275a51de2afb903272d))
 * vuepress ([2797bf9](https://github.com/nodefony/nodefony/commit/2797bf954a18e5b185f1e4895a0e98c9f9bee877))
-
 ## [7.0.0-beta.20](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.19...v7.0.0-beta.20) (2023-04-17)
-
 
 ### Bug Fixes
 
 * **sequelize:** debug associate call twice ([a82504e](https://github.com/nodefony/nodefony/commit/a82504ef1ae7b92e65eabd17feb507f6fd668ea1))
-
 ## [7.0.0-beta.19](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.18...v7.0.0-beta.19) (2023-04-17)
-
 
 ### Bug Fixes
 
 * **sequelize:** debug nodefony install command (sync) ([f5dc570](https://github.com/nodefony/nodefony/commit/f5dc570d5d52878d7cfa28a2ae656587cec7e1b1))
-
 ## [7.0.0-beta.18](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.17...v7.0.0-beta.18) (2023-04-17)
-
 
 ### Bug Fixes
 
 * **encoder:**  debug encoder event orm ready ([5cbf418](https://github.com/nodefony/nodefony/commit/5cbf418260794bb7ecff73c593d0e3cc0d92cfe0))
 * **sequelize:** create database debug sync not apply acciociate method (relations) ([205a7dd](https://github.com/nodefony/nodefony/commit/205a7ddd5072fadd01ba8ccbf63d6f30c58d2962))
-
 ## [7.0.0-beta.17](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.16...v7.0.0-beta.17) (2023-04-14)
-
 
 ### Bug Fixes
 
 * **install:** debug nodefony install on create postgres database  with pgtool ([81a4293](https://github.com/nodefony/nodefony/commit/81a42935c6dc2047097f6374149ff4d9d01d826e))
-
 ## [7.0.0-beta.16](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.15...v7.0.0-beta.16) (2023-03-13)
-
 
 ### Features
 
 * **keycloak:** add service for admin-client lib ([312d896](https://github.com/nodefony/nodefony/commit/312d896914b31dc22e2d86e3b46e749ce7ec8e3e))
 
-
 ### Bug Fixes
 
 * **firewall:** return on handle ([66e6223](https://github.com/nodefony/nodefony/commit/66e6223f47518b7e479429af6229c87ec2bd011a))
 * **security:** add tokenName jwt check ([259844f](https://github.com/nodefony/nodefony/commit/259844f864e7be07414e7da0bd8c49e4f716cf8e))
-
 ## [7.0.0-beta.15](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.14...v7.0.0-beta.15) (2023-03-07)
-
 
 ### Bug Fixes
 
@@ -89,18 +74,14 @@
 * **sequelize:** create database on install ([48215da](https://github.com/nodefony/nodefony/commit/48215dac1a0284ad3d84a99975d059d5d1011189))
 * **sequelize:** reformat config ([676b062](https://github.com/nodefony/nodefony/commit/676b062a12cb8617f647f083faef7f192d4bac0c))
 
-
 ### Performance Improvements
 
 * **extend:** nodefony.extend ([2c0e3ef](https://github.com/nodefony/nodefony/commit/2c0e3ef26f7fd6f0318910ecd574dca5f6b62815))
-
 ## [7.0.0-beta.14](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.13...v7.0.0-beta.14) (2023-01-06)
-
 
 ### Features
 
 * **sequelize:** add sync alter on cli || manage response prompt ([e4ce684](https://github.com/nodefony/nodefony/commit/e4ce684e2625d788c3d97d6088b37b2dabb3fdc1))
-
 
 ### Bug Fixes
 
@@ -108,17 +89,13 @@
 * **sequelize:** add users seeder ([ab36609](https://github.com/nodefony/nodefony/commit/ab3660978c6700cd90a9ea0cd98e5815dc616667))
 * **sequelize:** hash user  password on seed ([765e1c9](https://github.com/nodefony/nodefony/commit/765e1c9483a1ae3740fdd6720395ad453035dba7))
 * **sequelize:** sync and seed on install ([7a8cd21](https://github.com/nodefony/nodefony/commit/7a8cd21a233d7af59b4b5cddecb07f298633c11e))
-
 ## [7.0.0-beta.13](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.12...v7.0.0-beta.13) (2023-01-03)
-
 
 ### Bug Fixes
 
 * **documentation:** debug enviroment url swagger and graphiql ([c35adc0](https://github.com/nodefony/nodefony/commit/c35adc04cc31b740f679af75888744f197a191e9))
 * **monitoring:** clean bundle ([20237fa](https://github.com/nodefony/nodefony/commit/20237fa54fec5d02bb987a7e2f04bad1e368bc8f))
-
 ## [7.0.0-beta.12](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.11...v7.0.0-beta.12) (2023-01-02)
-
 
 ### Bug Fixes
 
@@ -128,15 +105,12 @@
 * **command:** debug install and build command no args ([ed9cbb9](https://github.com/nodefony/nodefony/commit/ed9cbb96247ba694939f8531f7ac6f973efd3a37))
 * **realtime:** change url realtime  when proxy ([8ea0a8b](https://github.com/nodefony/nodefony/commit/8ea0a8b25c1feb022977dd01a8827c987ae19ab2))
 * **vault:** clean vault bundle ([9effab2](https://github.com/nodefony/nodefony/commit/9effab2cf443344a7677163ac4d360585533461e))
-
 ## [7.0.0-beta.11](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.10...v7.0.0-beta.11) (2022-12-28)
-
 
 ### Features
 
 * **environment:** add app environement management ([c596742](https://github.com/nodefony/nodefony/commit/c596742846101a8b7a1fefead132381cf06518df))
 * **orm:** add migrate sql file umzug ([08ac513](https://github.com/nodefony/nodefony/commit/08ac51371f6d109f1221543708b90bf43e9af9b0))
-
 
 ### Bug Fixes
 
@@ -177,11 +151,8 @@
 * **vault:** new bundle vault | manage secrets credentials (orm)  async with vault ([c06ab30](https://github.com/nodefony/nodefony/commit/c06ab30c65befb62cae2588a2959c01224cfad87))
 * **vue:** debug vue cli ([f83ed11](https://github.com/nodefony/nodefony/commit/f83ed117aad6cf76b6bf26fcb61ea65f6b15c366))
 * **webpack:** clean log debug ([7a0a263](https://github.com/nodefony/nodefony/commit/7a0a2635416f409ca84602c47bbc7a442e94df59))
-
 ## [7.0.0-beta.10](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.9...v7.0.0-beta.10) (2022-11-26)
-
 ## [7.0.0-beta.9](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.8...v7.0.0-beta.9) (2022-11-26)
-
 
 ### Features
 
@@ -189,7 +160,6 @@
 * **monitoring:** add webpack analyzer ([63904e5](https://github.com/nodefony/nodefony/commit/63904e52b4531566a6b14a9c03beeeb8fa143f9d))
 * **pnpm:** add package manager pnpm ([24b81b0](https://github.com/nodefony/nodefony/commit/24b81b09c55098f9c6d624f51eb0e21c0554b1ad))
 * **vuepress:** add vuepress SSR for documentation ([ca5a6bd](https://github.com/nodefony/nodefony/commit/ca5a6bdca3ac7aee77d8f74c1bd90e5b9e5b6cb1))
-
 
 ### Bug Fixes
 
@@ -203,14 +173,11 @@
 * **pnpm:** add pnmp in builder ([34d1f64](https://github.com/nodefony/nodefony/commit/34d1f64213c04b5c29b4c04a794278f830757d8e))
 * **server-static:** max age type ([4e4e7fe](https://github.com/nodefony/nodefony/commit/4e4e7fe5c2263015c8a23766e766ad79ad602769))
 * **webpack:** debug cache config webpack ([fc1eced](https://github.com/nodefony/nodefony/commit/fc1eceddb1aeb32c1da09542eabf45ef4485da20))
-
 ## [7.0.0-beta.8](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.7...v7.0.0-beta.8) (2022-10-07)
-
 
 ### Features
 
 * **monitoring:** add user activity ([ea28412](https://github.com/nodefony/nodefony/commit/ea28412e4ea604b4607b18a4a5f423ae595e46c2))
-
 
 ### Bug Fixes
 
@@ -222,9 +189,7 @@
 * **security:** cross domain test widcard ([05ac01c](https://github.com/nodefony/nodefony/commit/05ac01ccd5b28cb8452ea2370fab90ab8085b00b))
 * **user:** debug casse ([0eb20da](https://github.com/nodefony/nodefony/commit/0eb20dacdf5b5224b49b371bd340ecdf911efea4))
 * **webpack:** fix complile close event ([08ab81c](https://github.com/nodefony/nodefony/commit/08ab81ca93e17aba13f8a60af4151da7721fef59))
-
 ## [7.0.0-beta.7](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.6...v7.0.0-beta.7) (2022-09-20)
-
 
 ### Bug Fixes
 
@@ -233,9 +198,7 @@
 * **monitoring:** user stepper debug ([ff8c1ac](https://github.com/nodefony/nodefony/commit/ff8c1ac6adf1eab291a114aaf673ffdca0fd49f9))
 * **vis:** new api delete EOL lib ([e4f265f](https://github.com/nodefony/nodefony/commit/e4f265f25d92419f5f346d543a15779219f909cf))
 * **webpack:** debug watcher ignore ([11c801e](https://github.com/nodefony/nodefony/commit/11c801e0a9ced0010424349636fa3b41fc1d2372))
-
 ## [7.0.0-beta.6](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.5...v7.0.0-beta.6) (2022-09-19)
-
 
 ### Bug Fixes
 
@@ -245,40 +208,29 @@
 * **module:** add cli-table3 whit import ([ea6237d](https://github.com/nodefony/nodefony/commit/ea6237dd890dfa7b883109cac932dc9404995e4c))
 * **monitoring:** debug api ([17bde95](https://github.com/nodefony/nodefony/commit/17bde9532b0095d07ddbbdbccc8e92cd440ad36d))
 * rebase ([a08b42f](https://github.com/nodefony/nodefony/commit/a08b42f2d83653a7071b776c436647dba30c6775))
-
 ## [7.0.0-beta.5](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.4...v7.0.0-beta.5) (2022-09-14)
-
 
 ### Bug Fixes
 
 * **kernel:** debug life cycle bundle ready for waitingReady ([7661509](https://github.com/nodefony/nodefony/commit/766150926d40c7f63803aeb7fcb13f0b5d525f48))
-
 ## [7.0.0-beta.4](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.3...v7.0.0-beta.4) (2022-09-14)
-
 
 ### Bug Fixes
 
 * **build:** debug config who use node_module ([af79a8a](https://github.com/nodefony/nodefony/commit/af79a8ac39a79a4a0f796c5fe75f5e0bd1653310))
-
 ## [7.0.0-beta.3](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.2...v7.0.0-beta.3) (2022-09-13)
-
 
 ### Bug Fixes
 
 * **build:** mv dev deps from deps monitoring | add graphql deps on root ([f0b1520](https://github.com/nodefony/nodefony/commit/f0b152058409b6373d3a877d36a55390f149a9f6))
 * **monitoring:** change path bundle when not nodefony core ([36796d8](https://github.com/nodefony/nodefony/commit/36796d810b8d1662cbb0748c63162183616427a8))
-
 ## [7.0.0-beta.2](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.1...v7.0.0-beta.2) (2022-09-13)
-
 
 ### Bug Fixes
 
 * **sequelize:** get nodefony instance ([5682640](https://github.com/nodefony/nodefony/commit/56826406bc5040feee7e6065c8f5d4585b1838d4))
-
 ## [7.0.0-beta.1](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.0...v7.0.0-beta.1) (2022-09-12)
-
 ## [7.0.0-beta.0](https://github.com/nodefony/nodefony/compare/v6.12.0...v7.0.0-beta.0) (2022-09-12)
-
 
 ### Features
 
@@ -296,7 +248,6 @@
 * **monitoring:** migration ([68eb367](https://github.com/nodefony/nodefony/commit/68eb3677556493af969f2bb50e1b2e5607daedd0))
 * **sequelize:** add methods for transactions ([0bfe3b6](https://github.com/nodefony/nodefony/commit/0bfe3b67560647e3685f15dd0d69301a974651ab))
 * **user:** graphql resolver add mutation ([c672520](https://github.com/nodefony/nodefony/commit/c672520d6265ed6b4edf4d61000caa3eaaf1af54))
-
 
 ### Bug Fixes
 
@@ -357,192 +308,97 @@
 * **watcher:** close hook on restart service ([18995ea](https://github.com/nodefony/nodefony/commit/18995ea3c4c11c8667855cbcd4b223e0c1d920f3))
 * **webpack:** change log severity ([2532fc8](https://github.com/nodefony/nodefony/commit/2532fc8b222c2493c6a91642ad96590425df61f9))
 * **websocket:** add session parse on handshake, add cookie  [#46](https://github.com/nodefony/nodefony/issues/46) ([b847ea9](https://github.com/nodefony/nodefony/commit/b847ea9097b6449ba9cc7bfe128d14bb5fb4ca5b))
-
 ## [6.12.0](https://github.com/nodefony/nodefony/compare/v6.11.0...v6.12.0) (2022-03-18)
-
 ## [6.11.0](https://github.com/nodefony/nodefony/compare/v6.10.0...v6.11.0) (2022-02-25)
-
 ## [6.10.0](https://github.com/nodefony/nodefony/compare/v6.9.1...v6.10.0) (2021-12-31)
-
 ## [6.9.1](https://github.com/nodefony/nodefony/compare/v6.9.0...v6.9.1) (2021-10-13)
-
 ## [6.9.0](https://github.com/nodefony/nodefony/compare/v6.6.0...v6.9.0) (2021-10-12)
-
 ## [6.6.0](https://github.com/nodefony/nodefony/compare/v6.5.7...v6.6.0) (2021-09-09)
-
 ## [6.5.7](https://github.com/nodefony/nodefony/compare/v6.5.6...v6.5.7) (2021-07-21)
-
 ## [6.5.6](https://github.com/nodefony/nodefony/compare/v6.5.5...v6.5.6) (2021-07-01)
-
 ## [6.5.5](https://github.com/nodefony/nodefony/compare/v6.5.4...v6.5.5) (2021-06-16)
-
 ## [6.5.4](https://github.com/nodefony/nodefony/compare/v6.5.3...v6.5.4) (2021-04-30)
-
 ## [6.5.3](https://github.com/nodefony/nodefony/compare/v6.5.2...v6.5.3) (2021-04-27)
-
 ## [6.5.2](https://github.com/nodefony/nodefony/compare/v6.5.1...v6.5.2) (2021-04-23)
-
 ## [6.5.1](https://github.com/nodefony/nodefony/compare/v6.5.0...v6.5.1) (2021-03-29)
-
 ## [6.5.0](https://github.com/nodefony/nodefony/compare/v6.4.3...v6.5.0) (2021-03-19)
-
 ## [6.4.3](https://github.com/nodefony/nodefony/compare/v6.4.2...v6.4.3) (2021-03-09)
-
 ## [6.4.2](https://github.com/nodefony/nodefony/compare/v6.4.1...v6.4.2) (2021-02-26)
-
 ## [6.4.1](https://github.com/nodefony/nodefony/compare/v6.4.0...v6.4.1) (2021-02-20)
-
 ## [6.4.0](https://github.com/nodefony/nodefony/compare/v6.3.0...v6.4.0) (2021-02-19)
-
 ## [6.3.0](https://github.com/nodefony/nodefony/compare/v6.2.0...v6.3.0) (2021-02-17)
-
 ## [6.2.0](https://github.com/nodefony/nodefony/compare/v6.1.0...v6.2.0) (2021-01-04)
-
 ## [6.1.0](https://github.com/nodefony/nodefony/compare/v6.0.1...v6.1.0) (2020-11-16)
-
 ## [6.0.1](https://github.com/nodefony/nodefony/compare/v6.0.0...v6.0.1) (2020-10-12)
-
 ## [6.0.0](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.16...v6.0.0) (2020-10-12)
-
 ## [6.0.0-beta.16](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.15...v6.0.0-beta.16) (2020-09-20)
-
 ## [6.0.0-beta.15](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.14...v6.0.0-beta.15) (2020-07-17)
-
 ## [6.0.0-beta.14](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.13...v6.0.0-beta.14) (2020-07-13)
-
 ## [6.0.0-beta.13](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.12...v6.0.0-beta.13) (2020-06-25)
-
 ## [6.0.0-beta.12](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.11...v6.0.0-beta.12) (2020-06-12)
-
 ## [6.0.0-beta.11](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.10...v6.0.0-beta.11) (2020-05-27)
-
 ## [6.0.0-beta.10](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.9...v6.0.0-beta.10) (2020-05-14)
-
 ## [6.0.0-beta.9](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.8...v6.0.0-beta.9) (2020-05-06)
-
 ## [6.0.0-beta.8](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.7...v6.0.0-beta.8) (2020-04-16)
-
 ## [6.0.0-beta.7](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.6...v6.0.0-beta.7) (2020-03-25)
-
 ## [6.0.0-beta.6](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.5...v6.0.0-beta.6) (2020-03-12)
-
 ## [6.0.0-beta.5](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.4...v6.0.0-beta.5) (2020-03-10)
-
 ## [6.0.0-beta.4](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.3...v6.0.0-beta.4) (2020-03-09)
-
 ## [6.0.0-beta.3](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.2...v6.0.0-beta.3) (2020-03-08)
-
 ## [6.0.0-beta.2](https://github.com/nodefony/nodefony/compare/v6.0.0-beta.1...v6.0.0-beta.2) (2020-02-25)
-
 ## [6.0.0-beta.1](https://github.com/nodefony/nodefony/compare/v5.1.1...v6.0.0-beta.1) (2020-02-13)
-
 ## [5.1.1](https://github.com/nodefony/nodefony/compare/v5.1.0...v5.1.1) (2019-11-04)
-
 ## [5.1.0](https://github.com/nodefony/nodefony/compare/v5.0.9...v5.1.0) (2019-10-30)
-
 ## [5.0.9](https://github.com/nodefony/nodefony/compare/v5.0.8...v5.0.9) (2019-10-03)
-
 ## [5.0.8](https://github.com/nodefony/nodefony/compare/v5.0.7...v5.0.8) (2019-09-26)
-
 ## [5.0.7](https://github.com/nodefony/nodefony/compare/v5.0.6...v5.0.7) (2019-09-17)
-
 ## [5.0.6](https://github.com/nodefony/nodefony/compare/v5.0.5...v5.0.6) (2019-09-17)
-
 ## [5.0.5](https://github.com/nodefony/nodefony/compare/v5.0.4...v5.0.5) (2019-09-11)
-
 ## [5.0.4](https://github.com/nodefony/nodefony/compare/v5.0.3...v5.0.4) (2019-08-26)
-
 ## [5.0.3](https://github.com/nodefony/nodefony/compare/v5.0.2...v5.0.3) (2019-08-14)
-
 ## [5.0.2](https://github.com/nodefony/nodefony/compare/v5.0.1...v5.0.2) (2019-08-05)
-
 ## [5.0.1](https://github.com/nodefony/nodefony/compare/v5.0.0...v5.0.1) (2019-08-01)
-
 ## [5.0.0](https://github.com/nodefony/nodefony/compare/v4.3.3...v5.0.0) (2019-07-29)
-
 ## [4.3.3](https://github.com/nodefony/nodefony/compare/v4.3.2...v4.3.3) (2019-04-10)
-
 ## [4.3.2](https://github.com/nodefony/nodefony/compare/v4.3.1...v4.3.2) (2019-04-10)
-
 ## [4.3.1](https://github.com/nodefony/nodefony/compare/v4.3.0...v4.3.1) (2019-03-23)
-
 ## [4.3.0](https://github.com/nodefony/nodefony/compare/v4.2.0-beta.2...v4.3.0) (2019-03-22)
-
 ## [4.2.0-beta.2](https://github.com/nodefony/nodefony/compare/v4.2.0-beta.1...v4.2.0-beta.2) (2019-01-25)
-
 ## [4.2.0-beta.1](https://github.com/nodefony/nodefony/compare/v4.1.0-beta.4...v4.2.0-beta.1) (2019-01-23)
-
 ## [4.1.0-beta.4](https://github.com/nodefony/nodefony/compare/v4.1.0-beta.3...v4.1.0-beta.4) (2019-01-11)
-
 ## [4.1.0-beta.3](https://github.com/nodefony/nodefony/compare/v4.1.0-beta.2...v4.1.0-beta.3) (2019-01-08)
-
 ## [4.1.0-beta.2](https://github.com/nodefony/nodefony/compare/v4.1.0-beta.1...v4.1.0-beta.2) (2019-01-06)
-
 ## [4.1.0-beta.1](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.22...v4.1.0-beta.1) (2019-01-06)
-
 ## [4.0.0-beta.22](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.21...v4.0.0-beta.22) (2018-12-22)
-
 ## [4.0.0-beta.21](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.20...v4.0.0-beta.21) (2018-12-20)
-
 ## [4.0.0-beta.20](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.19...v4.0.0-beta.20) (2018-12-18)
-
 ## [4.0.0-beta.19](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.18...v4.0.0-beta.19) (2018-12-17)
-
 ## [4.0.0-beta.18](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.17...v4.0.0-beta.18) (2018-12-15)
-
 ## [4.0.0-beta.17](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.16...v4.0.0-beta.17) (2018-12-15)
-
 ## [4.0.0-beta.16](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.15...v4.0.0-beta.16) (2018-12-14)
-
 ## [4.0.0-beta.15](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.14...v4.0.0-beta.15) (2018-12-14)
-
 ## [4.0.0-beta.14](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.13...v4.0.0-beta.14) (2018-11-14)
-
 ## [4.0.0-beta.13](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.12...v4.0.0-beta.13) (2018-11-13)
-
 ## [4.0.0-beta.12](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.11...v4.0.0-beta.12) (2018-11-12)
-
 ## [4.0.0-beta.11](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.10...v4.0.0-beta.11) (2018-11-09)
-
 ## [4.0.0-beta.10](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.9...v4.0.0-beta.10) (2018-10-30)
-
 ## [4.0.0-beta.9](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.8...v4.0.0-beta.9) (2018-10-12)
-
 ## [4.0.0-beta.8](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.7...v4.0.0-beta.8) (2018-09-27)
-
 ## [4.0.0-beta.7](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.5...v4.0.0-beta.7) (2018-09-18)
-
 ## [4.0.0-beta.5](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.4...v4.0.0-beta.5) (2018-09-13)
-
 ## [4.0.0-beta.4](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.3...v4.0.0-beta.4) (2018-09-07)
-
 ## [4.0.0-beta.3](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.2...v4.0.0-beta.3) (2018-09-06)
-
 ## [4.0.0-beta.2](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.1...v4.0.0-beta.2) (2018-09-04)
-
 ## [4.0.0-beta.1](https://github.com/nodefony/nodefony/compare/v4.0.0-beta.0...v4.0.0-beta.1) (2018-08-24)
-
 ## [4.0.0-beta.0](https://github.com/nodefony/nodefony/compare/v3.2.2...v4.0.0-beta.0) (2018-06-15)
-
 ## [3.2.2](https://github.com/nodefony/nodefony/compare/v3.2.1...v3.2.2) (2018-01-12)
-
 ## [3.2.1](https://github.com/nodefony/nodefony/compare/v3.2.0...v3.2.1) (2018-01-12)
-
 ## [3.2.0](https://github.com/nodefony/nodefony/compare/v3.1.4...v3.2.0) (2018-01-08)
-
 ## [3.1.4](https://github.com/nodefony/nodefony/compare/v3.1.3...v3.1.4) (2017-12-20)
-
 ## [3.1.3](https://github.com/nodefony/nodefony/compare/v3.1.2...v3.1.3) (2017-11-22)
-
 ## [3.1.0](https://github.com/nodefony/nodefony/compare/v3.0.3...v3.1.0) (2017-11-20)
-
 ## [3.0.3](https://github.com/nodefony/nodefony/compare/v3.0.2...v3.0.3) (2017-10-09)
-
 ## [3.0.2](https://github.com/nodefony/nodefony/compare/v3.0.1...v3.0.2) (2017-09-18)
-
 ## [3.0.1](https://github.com/nodefony/nodefony/compare/v3.0.0...v3.0.1) (2017-09-14)
-
 ## [2.1.4](https://github.com/nodefony/nodefony/compare/v2.1.3...v2.1.4) (2017-05-08)
-
 ## [2.1.3](https://github.com/nodefony/nodefony/compare/v2.1.2...v2.1.3) (2017-04-29)
-
