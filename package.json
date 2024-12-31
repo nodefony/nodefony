@@ -1,6 +1,6 @@
 {
   "name": "nodefony-core",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Core Nodefony Node.js Web Framework",
   "main": "./src/nodefony/core/autoloader.es6",
   "scripts": {
@@ -54,29 +54,29 @@
     "node": ">=12"
   },
   "dependencies": {
-    "graphql": "16.9.0",
-    "mongoose": "8.5.2",
-    "pm2": "5.4.2",
+    "graphql": "^16.10.0",
+    "mongoose": "^8.9.3",
+    "pm2": "^5.4.3",
     "pm2-logrotate": "2.7.0",
-    "sequelize": "6.37.3",
-    "webpack": "5.93.0",
-    "webpack-dev-server": "5.0.4"
+    "sequelize": "^6.37.5",
+    "webpack": "^5.97.1",
+    "webpack-dev-server": "^5.2.0"
   },
   "devDependencies": {
-    "@babel/core": "7.25.2",
-    "@babel/eslint-parser": "7.25.1",
+    "@babel/core": "^7.26.0",
+    "@babel/eslint-parser": "^7.25.9",
     "@mapbox/node-pre-gyp": "1.0.11",
     "conventional-changelog-cli": "5.0.0",
-    "eslint": "9.8.0",
+    "eslint": "^9.17.0",
     "eslint-config-standard": "17.1.0",
-    "eslint-plugin-html": "8.1.1",
-    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-html": "^8.1.2",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-markdown": "5.1.0",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "7.0.0",
-    "eslint-plugin-vue": "9.27.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-vue": "^9.32.0",
     "markdown-eslint-parser": "1.2.1",
-    "node-gyp": "10.2.0",
+    "node-gyp": "^11.0.0",
     "vue-eslint-parser": "9.4.3"
   },
   "author": "Christophe CAMENSULI <ccamensuli@gmail.com>",

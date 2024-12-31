@@ -13,15 +13,15 @@
   "dependencies": {
     "@alt3/sequelize-to-json-schemas": "^0.3.56",
     "cls-hooked": "^4.2.2",
-    "mariadb": "3.3.1",
-    "mysql2": "3.11.0",
-    "pg": "8.12.0",
+    "mariadb": "^3.4.0",
+    "mysql2": "^3.12.0",
+    "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
     "pgtools": "1.0.1",
-    "sequelize": "6.37.3",
+    "sequelize": "^6.37.5",
     "sqlite3": "5.1.7",
-    "tedious": "18.3.0",
-    "umzug": "3.8.1"
+    "tedious": "^18.6.1",
+    "umzug": "^3.8.2"
   },
   "repository": {
     "type": "git",

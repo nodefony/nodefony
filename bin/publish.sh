@@ -242,7 +242,7 @@ menu () {
 ##########
 clear;
 
-version=`nodefony version`;
+version=`npx nodefony version`;
 pathproject=$(pwd);
 pathbundles=$(pwd)"/src/nodefony/bundles";
 pathdemo=$(pwd)"/src/bundles";

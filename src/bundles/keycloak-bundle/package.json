@@ -13,8 +13,8 @@
   ],
   "repository": {},
   "dependencies": {
-    "@keycloak/keycloak-admin-client": "25.0.2",
-    "passport-openidconnect": "0.1.2"
+    "@keycloak/keycloak-admin-client": "^26.0.7",
+    "passport-openidconnect": "^0.1.2"
   },
   "devDependencies": {
     "@babel/core": "7.25.2",
