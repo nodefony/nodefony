@@ -1,3 +1,4 @@
+## [7.0.1](https://github.com/nodefony/nodefony/compare/v7.0.0...v7.0.1) (2025-01-03)
 ## [7.0.0](https://github.com/nodefony/nodefony/compare/v7.0.0-beta.22...v7.0.0) (2024-05-19)
 
 ### Bug Fixes

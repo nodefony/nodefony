@@ -3,6 +3,8 @@
 </p>
 <h1 align="center">NODEFONY V7</h1>
 
+
+
 [![npm package](https://nodei.co/npm/nodefony.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/nodefony)
 
 [![Issues Status](https://img.shields.io/github/issues/nodefony/nodefony.svg)](https://github.com/nodefony/nodefony/issues) [![Build Status](https://github.com/nodefony/nodefony/workflows/nodefony/badge.svg)](https://github.com/nodefony/nodefony/actions) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/495/badge)](https://bestpractices.coreinfrastructure.org/projects/495)
@@ -10,6 +12,11 @@
 Nodefony is Node.js full-stack web framework.
 
 Nodefony can be used to develop a complete solution to create a Fullstack Web Application, Secure Api, or Microservices.
+
+
+## Note on Migration to TypeScript
+
+> **Important:** This repository is undergoing a migration to TypeScript. You can follow the progress and contribute at [nodefony-core](https://github.com/nodefony/nodefony-core). During this period, this repository will receive only security updates for its packages.
 
 
 ## Table of content
@@ -76,16 +83,20 @@ Evolution priorities for the next version will focus on robustness, unit testing
 
 You can follow Nodefony build with github actions at **<https://github.com/nodefony/nodefony/actions>**
 
-## Nodefony implement modules with CommonJS and ECMAScript 6 ( Class, Inheritance ).
-The development framework will not be ported to typescript, but will wait for the version with type syntax in Emacsript
+## Nodefony Module Implementation
 
-**[proposal-type-annotations](https://github.com/tc39/proposal-type-annotations)**
+Nodefony implements modules with CommonJS and ECMAScript 6 (Class, Inheritance). The development framework has now decided to migrate to TypeScript to leverage its type-checking capabilities and improve code quality and maintainability. [nodefony-core](https://github.com/nodefony/nodefony-core). 
+
+For more information on TypeScript, see the [TypeScript documentation](https://www.typescriptlang.org/).
+
+The proposal for type annotations in ECMAScript is still relevant and can be followed here: [proposal-type-annotations](https://github.com/tc39/proposal-type-annotations).
+
 
 ## **Resources for Newcomers**
 
 #### -  **[Nodefony Starter Demo](https://nodefony.net)**
 
-#### -  **[Nodefony CORE](https://github.com/nodefony/nodefony)**
+#### -  **[Nodefony Github](https://github.com/nodefony/nodefony)**
 
 #### -  **[Nodefony Documentation](https://nodefony.net/documentation/nodefony)**
 
