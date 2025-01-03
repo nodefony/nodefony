@@ -1,6 +1,6 @@
 {
   "name": "@nodefony/monitoring-bundle",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "private": false,
   "main": "monitoringBundle.js",
   "keywords": [
