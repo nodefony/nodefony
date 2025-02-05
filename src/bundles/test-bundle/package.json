@@ -13,14 +13,14 @@
     "javascript"
   ],
   "dependencies": {
-    "puppeteer": "^23.11.1",
+    "puppeteer": "24.2.0",
     "querystring": "0.2.1",
     "request": "^2.88.2",
     "websocket": "1.0.35"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.0",
-    "@babel/preset-env": "^7.26.0",
+    "@babel/core": "7.26.7",
+    "@babel/preset-env": "7.26.7",
     "@popperjs/core": "2.11.8",
     "babel-loader": "^9.2.1",
     "bootstrap": "5.3.3",
@@ -32,13 +32,13 @@
     "formdata-node": "6.0.3",
     "imports-loader": "5.0.0",
     "jquery": "3.7.1",
-    "less": "^4.2.1",
+    "less": "4.2.2",
     "less-loader": "12.2.0",
     "mini-css-extract-plugin": "^2.9.2",
     "node-fetch": "3.3.2",
     "nodefony-client": "6.0.3",
     "rxjs": "7.8.1",
-    "sass": "^1.83.0",
+    "sass": "1.83.4",
     "sass-loader": "14.2.1",
     "string-width": "^7.2.0",
     "terser-webpack-plugin": "^5.3.11",

@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "graphql": "^16.10.0",
-    "mongoose": "8.9.5",
+    "mongoose": "8.9.7",
     "pm2": "^5.4.3",
     "pm2-logrotate": "2.7.0",
     "sequelize": "^6.37.5",
@@ -65,7 +65,7 @@
   "devDependencies": {
     "@babel/core": "7.26.7",
     "@babel/eslint-parser": "7.26.5",
-    "@mapbox/node-pre-gyp": "1.0.11",
+    "@mapbox/node-pre-gyp": "2.0.0",
     "conventional-changelog-cli": "5.0.0",
     "eslint": "9.19.0",
     "eslint-config-standard": "17.1.0",
