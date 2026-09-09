@@ -1,0 +1,188 @@
+import { defineConfig, use } from "nodefony";
+import type { env } from "./env";
+// ── La config des modules — un fichier par module, sous `nodefony/config/` ───
+// C'est LÀ que se pose la configuration d'un module dès qu'elle porte plus
+// qu'un réglage : ce dossier est déjà dans l'`include` du tsconfig et dans le
+// glob du bundler, donc un fichier oublié y reste au moins typechecké — à la
+// racine, il serait invisible tant que personne ne l'importe.
+//
+// La forme est imposée : `(ctx) => ({ … }) satisfies I<Module>ConfigInput`. Le
+// `satisfies` n'est pas décoratif — sans lui une clé inconnue compile, puis Zod
+// la retire EN SILENCE au boot ; `npx nodefony doctor` refuse un fragment qui
+// s'en passe. Ce fichier-ci reste l'INDEX : quels modules, dans quel ordre.
+import { devkitConfig } from "./nodefony/config/devkit";
+import { securityConfig } from "./nodefony/config/security";
+
+// ── Registre de config des modules — À GARDER ────────────────────────────────
+// Ces ré-exports n'existent QUE pour faire entrer dans le programme TypeScript
+// l'augmentation `declare module "nodefony"` que chaque module publie dans ses
+// types. Sans elles, `use("@nodefony/x", { … })` retombe sur
+// `Record<string, unknown>` : une clé mal orthographiée COMPILE, puis Zod la
+// retire EN SILENCE au boot et le module démarre sur son défaut — on croit avoir
+// réglé quelque chose sans l'avoir réglé, et rien ne le dit.
+//
+// Un ré-export plutôt qu'un `import type { … }` : il compte comme une
+// UTILISATION du type, donc il traverse `noUnusedLocals` (TS6133) si l'app
+// active ce réglage un jour.
+//
+// Y AJOUTER une ligne en montant un module dont on configure les clés.
+export type { IHttpConfigInput } from "@nodefony/http";
+export type { IFrameworkConfigInput } from "@nodefony/framework";
+export type { IDrizzleConfigInput } from "@nodefony/drizzle";
+export type { IRealtimeConfigInput } from "@nodefony/realtime";
+export type { ISecurityConfigInput } from "@nodefony/security";
+export type { IFrontendConfigInput } from "@nodefony/frontend";
+export type { IStudioConfigInput } from "@nodefony/studio";
+export type { IRedisConfigInput } from "@nodefony/redis";
+export type { IDevkitConfigInput } from "@nodefony/devkit";
+
+/**
+ * Configuration de l'application — seulement les ÉCARTS aux défauts du
+ * framework (deep-merge au boot). Le par-environnement passe par `ctx`
+ * (isProd/isDev/env typé), jamais par un fichier parallèle.
+ *
+ * Ce fichier est l'INDEX ORDONNÉ des modules : ce qui est monté, dans quel
+ * ordre, sous quelle politique. La configuration d'un module, elle, vit dans
+ * `nodefony/config/<module>.ts` dès qu'elle porte plus qu'un réglage — les
+ * fichiers importés ci-dessus en sont l'exemple.
+ *
+ * Voir la config RÉSOLUE, valeur ET provenance : `npx nodefony inspect config`,
+ * ou la console Studio. Guide complet : `docs/guides/configuration.md`.
+ */
+export default defineConfig<typeof env>((ctx) => ({
+  /**
+   * Interface d'écoute. En container, écouter TOUTES les interfaces : le port
+   * mapping Docker/k8s n'atteint jamais un bind sur 127.0.0.1.
+   */
+  domain: ctx.isProd ? "0.0.0.0" : "127.0.0.1",
+
+  /**
+   * Écoute HTTP et HTTPS. Rien ici ⇒ défauts du framework (5151, et 5152 en
+   * HTTP/2) ; un port est une propriété du DÉPLOIEMENT et se déclare par
+   * l'environnement — cf `.env`.
+   *
+   * HTTPS est actif même en dev parce que les API navigateur modernes exigent
+   * un contexte sécurisé (WebRTC/getUserMedia, presse-papiers, service workers,
+   * notifications). Le certificat de développement est généré au premier boot —
+   * via **mkcert** s'il est installé (autorité locale de confiance, zéro
+   * avertissement navigateur), sinon auto-signé.
+   *
+   * - Ne garder qu'un port, en clair (TLS terminé à l'ingress) : `https: false`.
+   * - Inspecter ou regénérer le certificat : `npx nodefony http:certificates`.
+   */
+  servers: {
+    ...((ctx.env.NF_PORT ?? ctx.env.PORT)
+      ? { http: { port: ctx.env.NF_PORT ?? ctx.env.PORT } }
+      : {}),
+    ...(ctx.env.NF_PORT_HTTPS
+      ? { https: { port: ctx.env.NF_PORT_HTTPS } }
+      : {}),
+  },
+
+  log: {
+    debug: ctx.isProd ? [] : "*",
+    /** stdout = contrat cloud-native (collecteur de logs de l'orchestrateur). */
+    driver: ctx.env.NF_LOG_DRIVER,
+  },
+
+  /**
+   * Manifeste ORDONNÉ des modules — l'ordre du tableau = l'ordre de chargement.
+   * La `policy` d'une entrée FILTRE, elle ne réordonne jamais :
+   *
+   * - `"mandatory"` → socle de l'app : toujours chargé, non filtrable
+   *   (déclare l'intention « sans lui, cette app n'a pas de sens ») ;
+   * - `"optional"` → défaut : chargé, sauf si sa GARDE `when` dit non ;
+   * - `"dev"` → chargé UNIQUEMENT hors production : outillage, démo, consoles
+   *   (0 coût prod — un module non listé n'est même pas importé).
+   *
+   * La garde `when` rend un booléen : `false` ⇒ le module n'est pas chargé du
+   * tout. Elle reçoit la config résolue — `when: (config) => …` — mais peut
+   * l'ignorer et fermer sur `ctx`, ce que fait redis plus bas
+   * (`when: () => !!ctx.infra.cache`) : la question qu'il pose porte sur
+   * l'ENVIRONNEMENT (une URL Redis est-elle déclarée ?), pas sur sa propre
+   * configuration. Décider d'après `config` sert quand la réponse dépend d'une
+   * clé du module lui-même.
+   */
+  modules: [
+    /**
+     * ORM Drizzle (SQL). Sans `NF_DATABASE_URL` : sqlite LOCAL, et l'app
+     * persiste out-of-the-box (users, sessions, jetons). Déclare
+     * `NF_DATABASE_URL` (postgres://…) pour pointer une vraie base.
+     */
+    "@nodefony/drizzle",
+
+    /** Socle serveur : HTTP/WS natifs + probes /livez /readyz. */
+    use("@nodefony/http", {}),
+
+    /** Router + controllers + décorateurs (`@controller`, `@route`). */
+    "@nodefony/framework",
+
+    /**
+     * Socket Nodefony (canaux duplex multiplexés). Backplane `cluster` = IPC
+     * intra-pod, 0 dépendance externe ; `redis` = opt-in cross-pod.
+     */
+    use("@nodefony/realtime", { backplane: { driver: "cluster" } }),
+
+    /**
+     * Firewall applicatif + audit — chaque requête passe le pipeline sécurité.
+     * Les zones sont validées Zod au boot (config invalide = fail-closed).
+     */
+    use("@nodefony/security", securityConfig(ctx)),
+
+    /**
+     * Builder Vite + statics : sert le frontend de l'app (HMR en dev).
+     *
+     * L'origine que le NAVIGATEUR utilise pour les assets se dérive du `Host`
+     * de la requête : rien à configurer pour développer depuis une autre
+     * machine, un conteneur ou un tunnel — chacun reçoit l'origine par
+     * laquelle il est arrivé. Codespaces/Gitpod : détection automatique.
+     *
+     * `publicOrigin: "https://mon-proxy.example.com:{port}"` force une origine
+     * unique quand un frontal la réécrit ; `{port}` suit le port réel de Vite.
+     * Un réglage explicite gagne toujours sur la dérivation.
+     */
+    use("@nodefony/frontend", {
+      publicOrigin: "",
+    }),
+
+    /**
+     * Console d'administration → `/nodefony` : modules chargés, routes, config
+     * résolue, sessions, logs.
+     *
+     * `policy: "dev"` parce que c'est une surface d'ADMIN : absente de la
+     * production. Pour l'y garder — choix ASSUMÉ — protège `/nodefony` par une
+     * zone firewall, PUIS passe la policy à `"mandatory"`.
+     *
+     * `ui: "static"` sert les assets pré-buildés du paquet npm (rien à
+     * recompiler). `"auto"`/`"vite"` feraient passer l'UI Studio par TON serveur
+     * Vite — pour développer Studio lui-même — et exigeraient ses plugins dans
+     * TES devDependencies (une app Vue/Angular n'a pas `@vitejs/plugin-react`).
+     */
+    use("@nodefony/studio", { ui: "static" }, { policy: "dev" }),
+
+    /**
+     * Accès Redis générique — chargé par la DÉCLARATION de l'infra cache :
+     * `NF_REDIS_URL` présente ⇔ module chargé (un seul signal, pas de magie
+     * localhost). Consommateurs : backplane realtime `redis`, sessions,
+     * idempotence.
+     */
+    use("@nodefony/redis", undefined, {
+      when: () => !!ctx.infra.cache,
+    }),
+
+    /**
+     * Outillage de DÉVELOPPEMENT — la porte HTTP de la carte de visite de cette
+     * application (`/nodefony/devkit`). La même carte au terminal ne dépend PAS
+     * de ce module : `npx nodefony card` est servie par le cœur et répond même
+     * ici retiré, application non construite ou environnement non posé.
+     *
+     * `policy: "dev"` : ce qu'il expose (modules chargés, chemins de
+     * documentation, commandes à lancer) aide pendant le développement et n'est,
+     * en production, qu'une divulgation de ton architecture. Un module non chargé
+     * n'est même pas importé — le coût en production est nul, pas « faible ».
+     *
+     * Il est en `devDependencies` : `npm ci --omit=dev` ne l'installe pas.
+     */
+    use("@nodefony/devkit", devkitConfig(ctx), { policy: "dev" }),
+  ],
+}));

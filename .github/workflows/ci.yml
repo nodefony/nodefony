@@ -1,0 +1,32 @@
+# CI de nodefony — générée par `nodefony create app`.
+#
+# C'est ICI que vit le filet complet, pas dans des hooks git : `verify`
+# enchaîne typecheck, lint, tests et `nodefony doctor`, puis la suite e2e
+# démarre l'application POUR DE VRAI (--detach --wait) et l'interroge en HTTP.
+# Un hook local est un doublon contournable (--no-verify) ; la forge, non.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          # Le plancher des `engines` du framework — la forge éprouve la
+          # version la plus ANCIENNE qu'on prétend servir.
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # typecheck + lint + tests + `nodefony doctor` — l'ordre du script.
+      - run: npm run verify
+
+      # L'application DÉMARRE et répond en HTTP : la seule preuve qui compte.
+      - run: npm run test:e2e
