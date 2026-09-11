@@ -1,0 +1,24 @@
+Copyright (c) 2026 — nodefony
+
+Tous droits réservés.
+
+Ce fichier est posé par `nodefony create app`, et il dit le défaut JURIDIQUE :
+sans licence explicite, personne n'est autorisé à copier, modifier ou
+redistribuer ce logiciel. C'est le bon défaut pour une application privée —
+celle-ci naît d'ailleurs `"private": true` et `"license": "UNLICENSED"` dans son
+`package.json`.
+
+Si ce logiciel doit être partagé ou publié, REMPLACE ce fichier par le texte de
+la licence retenue (MIT, Apache-2.0, BSD-3-Clause, GPL-3.0…) et aligne le champ `license` du
+`package.json` sur son identifiant SPDX. Les deux doivent dire la même chose :
+le champ est ce que lisent les outils, le fichier est ce que lisent les humains.
+
+---
+
+Ce que cette licence ne couvre PAS : les dépendances tierces. Elles restent sous
+leur propre licence, et les licences permissives (MIT, BSD, Apache-2.0) exigent
+toutes que leur notice de copyright voyage avec les distributions. Le relevé de
+ce qui est redistribué vit dans THIRD-PARTY-NOTICES.md :
+
+    npm run licenses            # le relevé, et ce qui n'a pas été examiné
+    npm run licenses:write      # (re)génère THIRD-PARTY-NOTICES.md

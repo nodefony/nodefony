@@ -1,0 +1,86 @@
+{
+  "name": "nodefony",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "description": "Application Nodefony — générée par `nodefony create app`",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "allowScripts": {
+    "better-sqlite3": false
+  },
+  "scripts": {
+    "prepare": "node --eval \"const f=require('node:fs');if(f.existsSync('.githooks'))try{require('node:child_process').execSync('git config core.hooksPath .githooks',{stdio:'ignore'})}catch{}\"",
+    "dev": "nodefony development",
+    "build": "rolldown -c rolldown.config.ts && nodefony frontend:build",
+    "start": "nodefony production",
+    "stop": "nodefony stop",
+    "status": "nodefony status",
+    "test": "vitest run",
+    "coverage:setup": "npm i -D @vitest/coverage-v8",
+    "coverage": "vitest run --coverage",
+    "test:e2e": "npm run build && vitest run -c vitest.e2e.config.ts",
+    "typecheck": "tsgo --noEmit",
+    "verify": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build && npm run doctor",
+    "doctor": "nodefony doctor",
+    "doctor:live": "nodefony doctor --live",
+    "audit:deps": "npm audit --omit=dev",
+    "licenses": "nodefony licenses",
+    "licenses:write": "nodefony licenses --write",
+    "inspect": "nodefony inspect",
+    "ai:sync": "nodefony ai:sync",
+    "see:setup": "npm i -D playwright axe-core",
+    "see": "node node_modules/@nodefony/devkit/skills/nodefony-browser/scripts/inspect.mjs",
+    "watch:screen": "node node_modules/@nodefony/devkit/skills/nodefony-browser/scripts/watch.mjs",
+    "audit:setup": "npm i -D playwright lighthouse",
+    "audit:web": "node node_modules/@nodefony/devkit/skills/nodefony-browser/scripts/audit.mjs",
+    "clean": "node --eval \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "lint": "oxlint --deny-warnings",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down"
+  },
+  "dependencies": {
+    "nodefony": "^10.0.0-alpha.5",
+    "@nodefony/http": "^10.0.0-alpha.5",
+    "@nodefony/framework": "^10.0.0-alpha.5",
+    "@nodefony/orm-core": "^10.0.0-alpha.5",
+    "@nodefony/drizzle": "^10.0.0-alpha.5",
+    "drizzle-orm": "0.45.2",
+    "better-sqlite3": "13.0.3",
+    "@nodefony/user": "^10.0.0-alpha.5",
+    "@node-rs/argon2": "^2.2.1",
+    "@nodefony/realtime": "^10.0.0-alpha.5",
+    "@nodefony/security": "^10.0.0-alpha.5",
+    "@nodefony/frontend": "^10.0.0-alpha.5",
+    "@nodefony/studio": "^10.0.0-alpha.5",
+    "@nodefony/redis": "^10.0.0-alpha.5",
+    "zod": "^4.6.1"
+  },
+  "devDependencies": {
+    "@nodefony/devkit": "^10.0.0-alpha.5",
+    "@types/node": "^26.5.1",
+    "drizzle-kit": "0.31.10",
+    "@typescript/native-preview": "^7.0.0-dev.20260707.2",
+    "oxlint": "^1.82.0",
+    "prettier": "^3.9.6",
+    "rolldown": "^1.2.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "vite": "^8.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.0"
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "^0.28.2"
+    }
+  }
+}
