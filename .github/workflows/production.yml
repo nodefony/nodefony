@@ -250,13 +250,15 @@ jobs:
           # connecte avec la constante de son décor, et c'est donc la chaîne qui
           # doit semer CE compte-là.
           #
-          # Lue dans le décor, jamais recopiée ici : deux copies divergeraient
-          # au premier changement, et le cas du cookie tomberait en 401 — un
-          # rouge qui accuserait le proxy alors que seule l'identité manquait.
-          PASSWORD=$(grep -oE 'ADMIN_PASSWORD = "[^"]+"' tests/e2e.setup.ts | head -1 | cut -d'"' -f2)
+          # Lue à SA source — la constante que le décor importe lui-même de
+          # `nodefony/testing` —, jamais recopiée ici ni extraite du texte de
+          # `tests/e2e.setup.ts` : un motif sur le source casse sans bruit le
+          # jour où la valeur y cesse d'être littérale, et le cas du cookie
+          # tomberait en 401 — un rouge qui accuserait le proxy.
+          PASSWORD=$(node --input-type=module -e 'const { E2E_ADMIN_PASSWORD } = await import("nodefony/testing"); process.stdout.write(E2E_ADMIN_PASSWORD ?? "")')
           if [ -z "$PASSWORD" ]; then
-            echo "::error::identité du décor e2e introuvable dans tests/e2e.setup.ts"
-            echo "::error::(constante ADMIN_PASSWORD) — sans elle la suite ne peut pas se connecter"
+            echo "::error::identité du décor e2e introuvable : E2E_ADMIN_PASSWORD absent de nodefony/testing"
+            echo "::error::sans elle la suite ne peut pas se connecter"
             exit 1
           fi
           echo "NF_CI_ADMIN_PASSWORD=$PASSWORD" >> "$GITHUB_ENV"
