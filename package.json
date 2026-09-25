@@ -1,0 +1,111 @@
+{
+  "name": "nodefony",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "Application Nodefony — générée par `nodefony create app`",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "allowScripts": {
+    "better-sqlite3": false
+  },
+  "scripts": {
+    "prepare": "node --eval \"const f=require('node:fs');if(f.existsSync('.githooks'))try{require('node:child_process').execSync('git config core.hooksPath .githooks',{stdio:'ignore'})}catch{}\"",
+    "dev": "nodefony development",
+    "build": "rolldown -c rolldown.config.ts && nodefony frontend:build",
+    "start": "nodefony production",
+    "stop": "nodefony stop",
+    "status": "nodefony status",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "test:e2e": "npm run build && vitest run -c vitest.e2e.config.ts",
+    "typecheck": "tsgo --noEmit",
+    "verify": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build && npm run doctor",
+    "doctor": "nodefony doctor",
+    "doctor:live": "nodefony doctor --live",
+    "audit:deps": "npm audit --omit=dev",
+    "licenses": "nodefony licenses",
+    "licenses:write": "nodefony licenses --write",
+    "inspect": "nodefony inspect",
+    "ai:sync": "nodefony ai:sync",
+    "see": "nodefony see",
+    "clean": "node --eval \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "lint": "oxlint --deny-warnings",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down"
+  },
+  "nodefony": {
+    "scripts": {
+      "prepare": "Branche les hooks git du projet, s'il y en a. Lancé par npm à l'installation.",
+      "dev": "Démarre l'application en développement (rechargement à chaud).",
+      "build": "Compile l'application, bundles frontend compris.",
+      "start": "Démarre l'application en production, au premier plan.",
+      "stop": "Arrête proprement l'application qui tourne.",
+      "status": "Dit si l'application tourne, et sur quels ports.",
+      "test": "Lance les tests unitaires (aucun serveur requis).",
+      "test:e2e": "Bâtit, démarre un vrai serveur, et éprouve les routes de bout en bout.",
+      "coverage": "Lance les tests en mesurant la couverture.",
+      "typecheck": "Contrôle les types sans rien produire.",
+      "lint": "Passe le linter, tout avertissement étant une erreur.",
+      "format": "Réécrit le code au format du projet.",
+      "verify": "La passe complète avant de livrer : types, lint, format, tests, build, diagnostic.",
+      "doctor": "Diagnostique l'application : config, services, ports, dépendances.",
+      "doctor:live": "Le même diagnostic, contre l'application qui tourne.",
+      "clean": "Supprime le dossier dist.",
+      "audit:deps": "Cherche les vulnérabilités connues des dépendances de production.",
+      "licenses": "Liste les licences des dépendances.",
+      "licenses:write": "Écrit le rapport de licences dans un fichier.",
+      "inspect": "Interroge l'application : routes, services, config effective.",
+      "ai:sync": "Installe dans le projet les compétences d'agent des paquets présents.",
+      "see": "Mesure un écran dans un navigateur piloté — ajouter -- --watch, --audit ou --install.",
+      "format:check": "Contrôle le format sans rien réécrire.",
+      "infra:up": "Démarre les services d'infrastructure (base, cache) par docker compose.",
+      "infra:down": "Arrête et retire ces services."
+    }
+  },
+  "dependencies": {
+    "nodefony": "^10.0.0-alpha.9",
+    "@nodefony/http": "^10.0.0-alpha.9",
+    "@nodefony/framework": "^10.0.0-alpha.9",
+    "@nodefony/orm-core": "^10.0.0-alpha.9",
+    "@nodefony/drizzle": "^10.0.0-alpha.9",
+    "drizzle-orm": "0.45.3",
+    "better-sqlite3": "13.0.3",
+    "@nodefony/user": "^10.0.0-alpha.9",
+    "@node-rs/argon2": "^2.2.1",
+    "@nodefony/realtime": "^10.0.0-alpha.9",
+    "@nodefony/security": "^10.0.0-alpha.9",
+    "@nodefony/frontend": "^10.0.0-alpha.9",
+    "@nodefony/studio": "^10.0.0-alpha.9",
+    "@nodefony/redis": "^10.0.0-alpha.9",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@nodefony/devkit": "^10.0.0-alpha.9",
+    "@types/node": "^26.6.2",
+    "drizzle-kit": "0.31.11",
+    "@typescript/native-preview": "^7.0.0-dev.20260707.2",
+    "oxlint": "^1.85.0",
+    "prettier": "^3.9.9",
+    "rolldown": "^1.2.11",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "vite": "^8.3.1",
+    "@vitejs/plugin-react": "^6.1.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.1",
+    "@vitest/coverage-v8": "5.0.1"
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "^0.28.2"
+    }
+  }
+}
