@@ -1,0 +1,13 @@
+/*
+ * La couleur du front de cette page — la SEULE chose qui change d'un front à
+ * l'autre. La mise en page, la palette et le mouvement vivent dans
+ * `showcase.css`, partagée, qui lit `--nf-front` pour le badge du front.
+ *
+ * Pourquoi un fichier CSS et non le bloc de styles du composant : Angular
+ * renomme ce qu'il déclare dans `styles: [...]` (encapsulation de vue). Les
+ * quatre fronts utilisent donc le même mécanisme, un import CSS que Vite
+ * injecte globalement.
+ */
+:root {
+  --nf-front: #61dafb;
+}
