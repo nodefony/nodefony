@@ -1,0 +1,63 @@
+{
+  "name": "@nodefony/demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Démo de nodefony — ce que Nodefony sait faire, dans du code qui tourne",
+  "main": "dist/index.js",
+  "//types": "La SOURCE, pas un .d.ts généré : ce module est privé, il ne part jamais sur npm. Pointer index.ts rend son type de config lisible sans build préalable — sinon le premier `npm run typecheck` d'une app fraîche échoue sur des types pas encore produits.",
+  "types": "./index.ts",
+  "scripts": {
+    "build": "rolldown -c rolldown.config.ts",
+    "clean": "node --eval \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "typecheck": "tsgo --noEmit",
+    "test": "vitest run"
+  },
+  "nodefony": {
+    "configSchema": "./dist/nodefony/config/configSchema.js"
+  },
+  "peerDependencies": {
+    "nodefony": "^10.0.3",
+    "@nodefony/framework": "^10.0.3",
+    "@nodefony/http": "^10.0.3",
+    "@connectrpc/connect": "2.3.0",
+    "@connectrpc/connect-node": "2.3.0",
+    "@bufbuild/protobuf": "2.17.0",
+    "@nodefony/ai": "^10.0.3",
+    "@nodefony/drizzle": "^10.0.3",
+    "@nodefony/frontend": "^10.0.3",
+    "@nodefony/orm-core": "^10.0.3",
+    "@nodefony/realtime": "^10.0.3",
+    "@nodefony/security": "^10.0.3",
+    "@nodefony/user": "^10.0.3"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "vite": "^8.3.8",
+    "@vitejs/plugin-react": "^6.3.0",
+    "@types/react": "^19.3.1",
+    "@types/react-dom": "^19.3.0",
+    "three": "^0.187.0",
+    "@types/three": "^0.187.0",
+    "highlight.js": "^11.12.0",
+    "katex": "^0.19.1",
+    "@connectrpc/connect": "2.3.0",
+    "@connectrpc/connect-node": "2.3.0",
+    "@bufbuild/protobuf": "2.17.0"
+  },
+  "peerDependenciesMeta": {
+    "@connectrpc/connect": {
+      "optional": true
+    },
+    "@connectrpc/connect-node": {
+      "optional": true
+    },
+    "@bufbuild/protobuf": {
+      "optional": true
+    }
+  }
+}
